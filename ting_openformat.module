@@ -2,7 +2,6 @@
 // @TODO; implement entity
 // hook_entity_info etc..
 
-
 // load search info and hook
 module_load_include('inc', 'ting_openformat','ting_openformat.search');
 

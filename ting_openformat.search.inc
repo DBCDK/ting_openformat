@@ -59,8 +59,6 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   // static cache result - used in hook_ding_facetbrowser, ting_search etc.
   drupal_static('ting_search_results', $result);
 
-  dpm($result);
-
   foreach($result->collections as $collection) {
     $search_results[] = _ting_openformat_set_search_result($collection->formattedCollection);
   }
@@ -87,7 +85,6 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
  **/
 
 function _ting_openformat_set_search_result($formattedCollection) {
-  // dpm($formattedCollection);
   $variables['results'] = array($formattedCollection->all ());
 
   $result = array(
@@ -97,7 +94,7 @@ function _ting_openformat_set_search_result($formattedCollection) {
     'user' => '',
     'date' => '',
     //snippet' => '<div style="color:red; font-size:3em">TESTHEST</div>',
-    'snippet' => theme('ting_openformat_searchresults_view', $variables),
+    'snippet' => theme('ting-openformat-searchresults', $variables),
   );
   return $result;
 }
