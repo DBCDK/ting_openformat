@@ -37,8 +37,6 @@ if (module_exists('search')) {
  */
 function ting_openformat_ting_openformat_search_result_content_type_render($subtype, $conf, $args, $pane_context, $incoming_content) {
   $search_info = search_get_info();
-
-  dpm($conf);
   /* if (empty($search_info[$conf['type']])) {
     return;
     }*/

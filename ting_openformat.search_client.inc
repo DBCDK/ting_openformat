@@ -33,8 +33,10 @@ class ting_client_class {
     }
     $result = self::execute($request);
 
+    if( $result ) {
     // hand cachekey to calling method
-    $result->cacheKey = $request->cacheKey();
+      $result->cacheKey = $request->cacheKey();
+    }
 
     return $result;
   }
@@ -51,10 +53,16 @@ class ting_client_class {
       return $res;
     }
     catch (TingClientException $e) {
-      timer_stop('ting');
-      watchdog('ting client', 'Error performing request: ' . $e->getMessage(), NULL, WATCHDOG_ERROR, 'http://' . $_SERVER["HTTP_HOST"] . request_uri());
+      timer_stop('search_client');
+      // set message if ting-client throws an exeception
+      drupal_set_message( $e->getMessage(). '. ' . self::_set_internal_error_message(),'error');
+      watchdog('ting client', 'Error performing request: ' . $e->getMessage() , NULL, WATCHDOG_ERROR, 'http://' . $_SERVER["HTTP_HOST"] . request_uri());
       return FALSE;
     }
+  }
+
+  private static function _set_internal_error_message() {
+    return t('Please contact site administrator if problem persists');
   }
 
   /* \brief

@@ -49,6 +49,10 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   $client = new ting_client_class();
   $result = $client->do_search($params);
 
+  if( !$result ) {
+    return array();
+  }
+
   // set facets for result
   _ting_openformat_facet_cache($client, $result, $params);
 
@@ -90,11 +94,12 @@ function _ting_openformat_set_search_result($formattedCollection) {
   $result = array(
     'link' => 'HEST',
     'type' => '',
-    'title' => 'KROKODULLE',
+    'title' => $formattedCollection->formattedCollection->work->title->titleFull->{'$'},
+    //'title' => 'HEST',
     'user' => '',
     'date' => '',
     //snippet' => '<div style="color:red; font-size:3em">TESTHEST</div>',
-    'snippet' => theme('ting-openformat-searchresults', $variables),
+    'snippet' => theme('ting_openformat_search_results', $variables),
   );
   return $result;
 }
