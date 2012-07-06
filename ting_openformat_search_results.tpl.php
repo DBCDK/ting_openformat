@@ -1,13 +1,11 @@
 <?php
 $search_result = drupal_static('ting_search_results');
-$work = $variables['results'][0]->work;
-$mani = $variables['results'][0]->manifestation;
 ?>
 
 
 
 <?php
-if( is_object($mani) ){
+/*if( is_object($mani) ){
   print $mani->type->{'$'};
 }
 elseif( is_array($mani) ){
@@ -18,7 +16,7 @@ elseif( is_array($mani) ){
     }
     $set[]=$festation->type->{'$'};
   }
-}
+  }*/
 ?>
 
 <div></div>
@@ -26,7 +24,7 @@ elseif( is_array($mani) ){
 <div class="ting_openformat_toggle" style="border:1px solid #CCCCCC">TOGGLE ME
 <div class="ting_openformat_search_result_more">
 <?php
-if( is_object($mani) ){
+  /*if( is_object($mani) ){
   if( isset($mani->details->contributors) ) {
     print $mani->details->contributors->{'$'};
   }
@@ -41,7 +39,7 @@ elseif( is_array($mani) ){
       $set[]=$festation->details->contributors->{'$'};
     }
   }
-}
+  }*/
 ?>
 </div>
 </div>

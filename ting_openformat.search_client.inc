@@ -37,7 +37,7 @@ class ting_client_class {
 
     if( $result ) {
     // hand cachekey to calling method
-      $result->cacheKey = $request->cacheKey();
+       $result->cacheKey = $request->cacheKey();
     }
 
     return $result;
@@ -69,7 +69,8 @@ class ting_client_class {
    **/
   private function execute($request) {
     $cache = FALSE;
-    if( $res = $this->get_from_cache($request,$cache) ){
+    if(FALSE){
+    // if( $res = $this->get_from_cache($request,$cache) ){
       return $res;
     }
     else{
