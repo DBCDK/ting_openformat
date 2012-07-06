@@ -19,14 +19,6 @@ function ting_openformat_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
-      'vid' => array(
-        'description' => 'The current {ting_openformat_manifestation_revision}.vid version identifier.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-
-        'not null' => TRUE,
-        'default' => 0,
-      ),
       'ding_entity_id' => array(
         'description' => 'The ting_openformat manifestation id.',
         'type' => 'varchar',
@@ -38,19 +30,14 @@ function ting_openformat_schema() {
     'indexes' => array(
       'ding_entity_id' => array('ding_entity_id'),
     ),
-    'unique keys' => array(
-      'vid' => array('vid'),
-    ),
-    'foreign keys' => array(
-      'ting_openformat_manifestation_revision' => array(
-        'table' => 'ting_openformat_manifestation_revision',
-        'columns' => array('vid' => 'vid'),
-      ),
-    ), 
     'primary key' => array('tid'),
   );
 
-  $schema['ting_openformat_manifestation_revision'] = array(
+  // ... also make a cache table in case we decide to cache som entities
+  $schema['cache_ting_openformat_entities'] = drupal_get_schema_unprocessed('system', 'cache');
+
+
+  /*$schema['ting_openformat_manifestation_revision'] = array(
     'description' => 'Stores information about each saved version of a {ting_openformat_manifestation}.',
     'fields' => array(
       'tid' => array(
@@ -83,6 +70,23 @@ function ting_openformat_schema() {
         'columns' => array('tid' => 'tid'),
       ),
     ),
-  );
+    );*/
+
+
+
   return $schema;
+}
+
+/**
+ * Implements hook_update_N;
+ * install ting_openformat_manifestation table;
+ * install cache_ting_openformat_entities table
+ */
+function ting_openformat_update_7005() {
+  try{
+  drupal_install_schema('ting_openformat');
+  }
+  catch(Exception $e){
+    //do nothing; tables are probably already installed
+  }
 }

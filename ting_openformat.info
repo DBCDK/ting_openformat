@@ -5,11 +5,14 @@ version = "7.x-0.1"
 core = 7.x
 files[] = ting_openformat.module
 files[] = templates/ting-openformat-search-results.tpl.php
+files[] = ting_openformat.admin.inc
 scripts[] = js/ting_openformat.js
-;files[] = ting_openformat.controllers.inc
+files[] = ting_openformat.controllers.inc
+files[] = ting_openformat.entities.inc
 ;files[] = ting_openformat.search.inc
 dependencies[] = search
 dependencies[] = ting_client
+
 
 ;package = Features
 dependencies[] = ctools

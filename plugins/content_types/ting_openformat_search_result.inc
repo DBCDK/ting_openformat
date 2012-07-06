@@ -55,8 +55,10 @@ function ting_openformat_ting_openformat_search_result_content_type_render($subt
   $search_result=search_data($keys, $info['module'], $conditions);
 
   $output = "<ol class=\"search-results $conf[type]-results\">\n";
-  foreach ($search_result['#results'] as $result) {    // $build = ting_collection_view($collection, 'teaser');
-    $output .= theme('search_result', array('result' => $result, 'module' => $conf['type']));
+  if( isset($search_result['#results']) ) {
+    foreach ($search_result['#results'] as $result) {    // $build = ting_collection_view($collection, 'teaser');
+      $output .= theme('search_result', array('result' => $result, 'module' => $conf['type']));
+    }
   }
   $output .= "</ol>\n";
   // $output .= theme('ting_search_pager', array('tags' => NULL,));

@@ -2,7 +2,7 @@
 // @TODO; implement entity
 // hook_entity_info etc..
 
-// load search info and hook
+// load search info and hooks
 module_load_include('inc', 'ting_openformat','ting_openformat.search');
 
 /**
@@ -16,7 +16,6 @@ function ting_openformat_ctools_plugin_directory($module, $plugin) {
     return "plugins/$plugin";
   }
 }
-
 
 /**
  * Implement hook_ctools_plugin_api().
@@ -66,59 +65,13 @@ function ting_openformat_menu() {
     'page arguments'=> array('ting_openformat_client_admin_form'),
     'access arguments' => array('administer openformat settings'),
     // 'type' => MENU_LOCAL_ACTION,
-    //'file' => 'ting.admin.inc',
+    'file' => 'ting_openformat.admin.inc',
   );
 
   return $items;
 }
 
-
-// PJO TESTING
-function ting_openformat_client_admin_form($form_state) {
-  $form = array();
-
-  $form['openformat']['search_client_name'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Search client tab name'),
-    '#default_value' => variable_get('search_client_name', 'HEST'),
-  );
-
-  $form['#submit'] = array('ting_openformat_client_admin_form_submit');
-
-  $form['buttons']['save'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save changes'),
-  );
-
-  return $form;
-}
-
-function ting_openformat_client_admin_form_submit($form, $form_state) {
-  variable_set('search_client_name', $form_state['values']['search_client_name']);
-  // rebuild menu
-  menu_rebuild();
-  drupal_set_message(t('The changes has been saved'));
-}
-
-/**
- * Implements hook_form_FORMID_alter.
- * make openformat a dropdownlist.
- * add bibliotekdkWorkDisplay to ting_admin form
- */
-function ting_openformat_form_ting_admin_ting_settings_alter (&$form, &$form_state) {
-  if( isset ($form['ting']['ting_search_openformat'] ) ) {
-    $dkabm = $form['ting']['ting_search_openformat']['#default_value'];
-    $element = &$form['ting']['ting_search_openformat'];
-    // change type to select
-    $element['#type'] = 'select';
-    // set the original option (dkabm)
-    $element['#options']['dkabm'] = $dkabm;
-    // add bibliotekdkWorkDisplay to options
-    $element['#options']['bibliotekdkWorkDisplay'] = 'bibliotekdkWorkDisplay';
-    // set default value
-    //$form['ting']['ting_search_openformat']['#default_value'] = 'bibliotekdkWorkDisplay';
-  }
-}
+/*** FACETBROWSER ****/
 
 /**
  * Implements hook_ding_facetbrowser().
@@ -142,17 +95,28 @@ function ting_openformat_ding_facetbrowser() {
  * define a new entity
  **/
 
-//function ting_openformat_entity_info() {
-  /* $return = array(
+function ting_openformat_entity_info() {
+  $return = array(
     'ting_openformat_manifestation' => array(
       'label' => t('Ting openformat manifestation'),
       'fieldable' => TRUE,
       'base table' => 'ting_openformat_manifestation',
+
+      // make this a ding_entity ?
+      'ding_entity_type' => 'ding_entity',
+      'ding_entity_menu' => 'ting/manifestation/%ting_manifestation',
+      'ding_entity_index' => 2,
+
+      // uri callback
+      //'uri callback' => 'ting_openformat_maniobject_uri',
+
       'description' => t('openformat fields'),
       // leave controller class blank for now (use DrupalDefaultEntityController) @TODO implement
-      'controller class' => 'EntityAPIController',
+      'controller class' => 'ManifestionEntityAPIController',
       'entity keys' => array(
-        'id' => 'tid',),
+        //'id' => 'tid',
+        'id' => 'ding_entity_id',
+      ),
       'bundles' => array(
         'ting_openformat_manifestation' => array(
           'label' => 'Ting openformat manifestation',
@@ -166,7 +130,8 @@ function ting_openformat_ding_facetbrowser() {
     )
   );
 
-  return $return;*/
+  return $return;
+}
 
 
 /**
@@ -193,12 +158,12 @@ class OpenFormatTypeUIController extends EntityDefaultUIController {
  * Adjusts the menu so that the field subtab becomes the default local task,
  * to avoid having an useless placeholder page.
  */
-/*function ting_openformat_menu_alter(&$items) {
+function ting_openformat_menu_alter(&$items) {
   if (module_exists('field_ui')) {
     if (isset($items['admin/structure/ting_manifestation/fields'])) {
       // Make the fields task the default local task.
-      //$items['admin/structure/ting_manifestation'] = $items['admin/structure/ting_manifestation/fields'];
-      //      $items['admin/structure/ting_manifestation'] = $items['admin/structure/ting_manifestation'];
+      $items['admin/structure/ting_manifestation'] = $items['admin/structure/ting_manifestation/fields'];
+      //$items['admin/structure/ting_manifestation'] = $items['admin/structure/ting_manifestation'];
       $item = &$items['admin/structure/ting_manifestation'];
       $item['type'] = MENU_NORMAL_ITEM;
       $item['title'] = 'Ting manifestations';
@@ -211,7 +176,7 @@ class OpenFormatTypeUIController extends EntityDefaultUIController {
       );
     }
   }
-  }*/
+}
 
 
 

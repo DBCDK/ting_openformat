@@ -8,9 +8,11 @@
 class ting_client_class {
   private static $request_factory;
   private static $ting_client;
+  private $enable_cache;
 
   // @TODO ; construct parameters ? -- objectFormat etc.
   public function __construct() {
+    $this->enable_cache = variable_get('search_client_enable_cache',FALSE);
   }
 
   /**
@@ -23,7 +25,7 @@ class ting_client_class {
     // set parameters NOTICE: searchrequest MUST implement method e.g parameters['format'] => setFormat
     foreach ($params as $key => $value) {
       $setter = 'set' . ucfirst($key);
-      if( method_exists('TingClientSearchRequest',$setter) ){
+      if( method_exists( $request,$setter ) ){
         $request->$setter($value);
       }
       else {
@@ -31,7 +33,7 @@ class ting_client_class {
         watchdog('Openformat search','TingClientSearchRequest does not implement %setter called from %file in line %line',array('%setter'=>$setter,'%file'=>__FILE__ ,'%line'=>__LINE__),WATCHDOG_ERROR);
       }
     }
-    $result = self::execute($request);
+    $result = $this->execute($request);
 
     if( $result ) {
     // hand cachekey to calling method
@@ -41,15 +43,36 @@ class ting_client_class {
     return $result;
   }
 
+  private function get_from_cache($cacheKey) {
+    $result = cache_get($cacheKey,'cache');
+    if( $result ) {
+      return $result->data;
+    }
+    return FALSE;
+  }
+
 
   /**
-   * execute a search
+   * execute a request
    **/
-  private static function execute($request) {
+  private function execute($request) {
+    $cache = $this->enable_cache;
+    if( $cache && method_exists( $request, 'cacheKey') ) {
+      $cached_result = $this->get_from_cache($request->cacheKey() );
+    }
+    else {
+      $cache = FALSE;
+    }
+    if( !empty($cached_result) && $cache ) {
+      return $cached_result;
+    }
     try {
       timer_start('search_client');
       $res = self::ting_client()->execute($request);
       timer_stop('search_client');
+      if( $cache ) {
+        cache_set($request->cacheKey(), $res);
+      }
       return $res;
     }
     catch (TingClientException $e) {

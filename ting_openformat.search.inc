@@ -60,19 +60,43 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
       $result->search_key = $keys;
   }
 
+  // initialize entities
+  _ting_openformat_load_entities($result);
+
   // static cache result - used in hook_ding_facetbrowser, ting_search etc.
   drupal_static('ting_search_results', $result);
 
   foreach($result->collections as $collection) {
     $search_results[] = _ting_openformat_set_search_result($collection->formattedCollection);
-  }
+    }
 
   // set searchhistory
   if(module_exists('bibdk_searchhistory')){
     module_invoke('bibdk_searchhistory', 'set_search_results', $keys, $result);
   }
 
-  return $search_results;
+  if( !empty($search_results) ) {
+    return $search_results;
+  }
+
+  // .. default; no search results
+  return array();
+}
+
+/** \brief set entities
+ * replace TingClientObjectCollection (returned from ting-client) with bibdkEntity(work)
+ **/
+function _ting_openformat_load_entities( $result ) {
+  if( is_array($result->collections) ) {
+    $ids = array();
+    foreach ($result->collections as &$collection) {
+      if (isset($collection->objects[0])) {
+        $ids[] = $collection->objects[0]->id;
+      }
+    }
+    $result->HEST = entity_load('ting_openformat_manifestation',$ids,array(),TRUE);
+  }
+  dpm($result);
 }
 
 /** \brief Set a search result array as defined for hook_search_execute
@@ -117,7 +141,8 @@ function _ting_openformat_set_search_result($formattedCollection) {
  **/
 function _ting_openformat_facet_cache($client,$result, $params) {
   // check facets; get from cache if set - else do zero search to get facets
-  if( !$facets = cache_get($result->cacheKey) ) {
+  $local_cache_key = 'facets-'.$result->cacheKey;
+  if( !$facets = cache_get($local_cache_key) ) {
     // default facets
     if( module_exists('ding_facetbrowser') ) {
       $facets = _ting_openformat_set_default_facets();
@@ -132,12 +157,12 @@ function _ting_openformat_facet_cache($client,$result, $params) {
     $facet_result = $client->do_search($params);
     if( isset($facet_result->facets) ) {
       $result->facets = $facet_result->facets;
-      cache_set($result->cacheKey, $facet_result->facets, 'cache', CACHE_TEMPORARY);
+      cache_set($local_cache_key, $facet_result->facets, 'cache', CACHE_TEMPORARY);
     }
   }
-  // facet was found in cache
+  // facets was found in cache
   else{
-    $result->facets = cache_get($result->cacheKey)->data;
+    $result->facets = cache_get($local_cache_key)->data;
   }
 }
 
@@ -180,7 +205,7 @@ function _ting_openformat_search_get_variables($conditions) {
   }
 
   // objectformat (opensearch::objectFormat)
-  $params['objectFormat'] = variable_get('ting_search_openformat','dbabm');
+  $params['objectFormat'] = variable_get('ting_search_openformat','dkabm');
 
   return $params;
 }
