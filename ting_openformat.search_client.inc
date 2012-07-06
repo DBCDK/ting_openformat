@@ -48,6 +48,7 @@ class ting_client_class {
     $requestcache = $this->enable_cache;
 
     if( $requestcache && class_implements( $request, 'ITingClientRequestCache' ) ) {
+      //  dpm($request);
       if($request->cacheEnable()){
         // everything is okay for caching; set passed cache variable for execute method
         $cache = TRUE;
@@ -69,8 +70,8 @@ class ting_client_class {
    **/
   private function execute($request) {
     $cache = FALSE;
-    if(FALSE){
-    // if( $res = $this->get_from_cache($request,$cache) ){
+    //if(FALSE){
+    if( $res = $this->get_from_cache($request,$cache) ){
       return $res;
     }
     else{
@@ -79,8 +80,9 @@ class ting_client_class {
         $res = self::ting_client()->execute($request);
         timer_stop('search_client');
         if( $cache ) {
+          dpm($res);
           //@TODO make request cache table
-          cache_set($request->cacheKey() ,'cache', $res);
+         cache_set($request->cacheKey() , $res, 'cache');
         }
         return $res;
       }
