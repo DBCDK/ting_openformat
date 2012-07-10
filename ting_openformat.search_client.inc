@@ -148,7 +148,7 @@ class ting_client_class {
         'spell' => 'ting_spell_url',
         'recommendation' => 'ting_recommendation_url',
       );
-      
+
       // TODO: This should probably be rethought.
       if (module_exists('ting_infomedia') && variable_get('ting_infomedia_url', FALSE)) {
         $url_variables['infomedia'] = 'ting_infomedia_url';
@@ -167,7 +167,6 @@ class ting_client_class {
       }
       self::$request_factory = new TingClientRequestFactory($urls);
     }
-    
     return self::$request_factory;
   }
 
@@ -207,5 +206,3 @@ class ting_client_class {
     return $matches[1];
   }
 }
-
-
