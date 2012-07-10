@@ -1,24 +1,28 @@
 <?php
-class bibdkEntity {
+class bibdkWork {
   public $id;
   public $ding_entity_id;
 
   private $work;
-  private $manifestations = array();
+  public $manifestations = array();
 
-  public function __construct($ding_entity_id){
-    $this->id = $this->ding_entity_id = $ding_entity_id;
+  public function __construct($work){
+    $this->work = $work;
   }
 
   public function getManifestations() {
     return $this->manifestations;
   }
 
-  public function addManifestation($manifestation) {
-
+  public function setManifestations($manifestations) {
+    $this->manifestations = $manifestations;
   }
 }
 
 class manifestation {
-  public function __construct() {}
+  public $entity;
+  public $manifestation;
+  public function __construct($stdObject){
+    $this->entity = $stdObject;
+  }
 }

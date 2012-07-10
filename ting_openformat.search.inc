@@ -67,7 +67,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   drupal_static('ting_search_results', $result);
 
   foreach($result->collections as $collection) {
-    $search_results[] = _ting_openformat_set_search_result($collection->formattedCollection);
+    $search_results[] = _ting_openformat_set_search_result($collection);
     }
 
   // set searchhistory
@@ -90,14 +90,31 @@ function _ting_openformat_load_entities( $result ) {
   if( is_array($result->collections) ) {
     $ids = array();
     foreach ($result->collections as &$collection) {
-      if (isset($collection->objects[0])) {
+      /* if (isset($collection->objects[0])) {
         $ids[] = $collection->objects[0]->id;
+        }*/
+      $openformat = $collection->formattedCollection;
+      $bibdkobject = new bibdkWork($openformat->formattedCollection->work);
+      if( is_array($openformat->formattedCollection->manifestation) ) {
+        foreach($openformat->formattedCollection->manifestation as $key=>$manifestation) {
+          $entity_ids[] = $manifestation->adminData->pid->{'$'};
+        }
       }
+      elseif( isset($openformat->formattedCollection->manifestation) ) {
+        $entity_ids[] = $openformat->formattedCollection->manifestation->adminData->pid->{'$'};
+      }
+     $manifestations = entity_load('ting_openformat_manifestation',$entity_ids,array(),TRUE);
+
+     $bibdkobject->setManifestations($manifestations);
+     $bibdkobjects[] = $bibdkobject;
     }
-    $result->HEST = entity_load('ting_openformat_manifestation',$ids,array(),TRUE);
   }
-  dpm($result);
+  unset($result->collections);
+  $result->collections = $bibdkobjects;
 }
+
+
+/**** TODO this method needs to handle bibdkObject and NOT formattedCollections ******/
 
 /** \brief Set a search result array as defined for hook_search_execute
  *
@@ -112,18 +129,21 @@ function _ting_openformat_load_entities( $result ) {
 
  **/
 
-function _ting_openformat_set_search_result($formattedCollection) {
-  $variables['results'] = array($formattedCollection->all ());
+function _ting_openformat_set_search_result($bibdkobject) {
+
+  $variables['results'] = array($bibdkobject);
+
+  //************** TODO handle bibdkobject *************/
 
   $result = array(
     'link' => 'HEST',
     'type' => '',
-    'title' => $formattedCollection->formattedCollection->work->title->titleFull->{'$'},
-    //'title' => 'HEST',
+    // 'title' => $formattedCollection->formattedCollection->work->title->titleFull->{'$'},
+    'title' => 'HEST',
     'user' => '',
     'date' => '',
     //snippet' => '<div style="color:red; font-size:3em">TESTHEST</div>',
-    'snippet' => theme('ting_openformat_search_results', $variables),
+     'snippet' => theme('ting_openformat_search_results', $variables),
   );
   return $result;
 }

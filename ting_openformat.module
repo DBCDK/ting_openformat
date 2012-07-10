@@ -5,6 +5,56 @@
 // load search info and hooks
 module_load_include('inc', 'ting_openformat','ting_openformat.search');
 
+
+/************** ENTITY ****************/
+
+/** @TODO make this work
+ * Implements hook_entity_info
+ * define a new entity
+ **/
+
+function ting_openformat_entity_info() {
+  $return = array(
+    'ting_openformat_manifestation' => array(
+      'label' => t('Ting openformat manifestation'),
+      'fieldable' => TRUE,
+      'base table' => 'ting_openformat_manifestation',
+
+      // make this a ding_entity ?
+      'ding_entity_type' => 'ding_entity',
+      'ding_entity_menu' => 'ting/manifestation/%ting_manifestation',
+      'ding_entity_index' => 2,
+
+      // uri callback
+      //'uri callback' => 'ting_openformat_maniobject_uri',
+
+      'description' => t('openformat fields'),
+      // leave controller class blank for now (use DrupalDefaultEntityController) @TODO implement
+      'controller class' => 'ManifestionEntityAPIController',
+      'entity keys' => array(
+        //'id' => 'tid',
+        'id' => 'ding_entity_id',
+      ),
+      'bundles' => array(
+        'ting_openformat_manifestation' => array(
+          'label' => 'Ting openformat manifestation',
+          'admin' => array(
+            'path' => 'admin/structure/ting_manifestation',
+            'access arguments' => array('administer content types'),
+            'controller class' => 'OpenFormatTypeUIController',
+          ),
+        ),
+      ),
+    )
+  );
+
+  return $return;
+}
+
+/**************** end ENTITY ***************/
+
+/***********  panel-pages ****************/
+
 /**
  * Implements hook_ctools_plugin_directory().
  *
@@ -26,6 +76,7 @@ function ting_openformat_ctools_plugin_api($module, $api) {
   }
 }
 
+/**************** end panel-pages ***************/
 
 /** Implements hook_ding_devel_timers
  */
@@ -87,52 +138,6 @@ function ting_openformat_ding_facetbrowser() {
     return $results;
   }
 }
-
-
-
-/** @TODO make this work
- * Implements hook_entity_info
- * define a new entity
- **/
-
-function ting_openformat_entity_info() {
-  $return = array(
-    'ting_openformat_manifestation' => array(
-      'label' => t('Ting openformat manifestation'),
-      'fieldable' => TRUE,
-      'base table' => 'ting_openformat_manifestation',
-
-      // make this a ding_entity ?
-      'ding_entity_type' => 'ding_entity',
-      'ding_entity_menu' => 'ting/manifestation/%ting_manifestation',
-      'ding_entity_index' => 2,
-
-      // uri callback
-      //'uri callback' => 'ting_openformat_maniobject_uri',
-
-      'description' => t('openformat fields'),
-      // leave controller class blank for now (use DrupalDefaultEntityController) @TODO implement
-      'controller class' => 'ManifestionEntityAPIController',
-      'entity keys' => array(
-        //'id' => 'tid',
-        'id' => 'ding_entity_id',
-      ),
-      'bundles' => array(
-        'ting_openformat_manifestation' => array(
-          'label' => 'Ting openformat manifestation',
-          'admin' => array(
-            'path' => 'admin/structure/ting_manifestation',
-            'access arguments' => array('administer content types'),
-            'controller class' => 'OpenFormatTypeUIController',
-          ),
-        ),
-      ),
-    )
-  );
-
-  return $return;
-}
-
 
 /**
  * UI controller. -- @see entity module

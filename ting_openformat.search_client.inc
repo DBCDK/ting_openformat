@@ -37,7 +37,7 @@ class ting_client_class {
 
     if( $result ) {
     // hand cachekey to calling method
-      $result->cacheKey = $request->cacheKey();
+       $result->cacheKey = $request->cacheKey();
     }
 
     return $result;
@@ -62,10 +62,23 @@ class ting_client_class {
     return $result;
   }
 
-  private function get_from_cache($cacheKey) {
-    $result = cache_get($cacheKey,'cache');
-    if( $result ) {
-      return $result->data;
+  private function get_from_cache($request,&$cache) {
+    // overall caching variable (for all requests)
+    $requestcache = $this->enable_cache;
+
+    if( $requestcache && class_implements( $request, 'ITingClientRequestCache' ) ) {
+      //  dpm($request);
+      if($request->cacheEnable()){
+        // everything is okay for caching; set passed cache variable for execute method
+        $cache = TRUE;
+        $cached_result = cache_get($request->cacheKey(),'cache');
+      }
+    }
+    if( !empty($cached_result) ) {
+      $res = $cached_result->data;
+      // hand cachekey to calling method
+      $res->cacheKey = $request->cacheKey();
+      return $res;
     }
     return FALSE;
   }
@@ -75,31 +88,30 @@ class ting_client_class {
    * execute a request
    **/
   private function execute($request) {
-    $cache = $this->enable_cache;
-    if( $cache && method_exists( $request, 'cacheKey') ) {
-      $cached_result = $this->get_from_cache($request->cacheKey() );
-    }
-    else {
-      $cache = FALSE;
-    }
-    if( !empty($cached_result) && $cache ) {
-      return $cached_result;
-    }
-    try {
-      timer_start('search_client');
-      $res = self::ting_client()->execute($request);
-      timer_stop('search_client');
-      if( $cache ) {
-        cache_set($request->cacheKey(), $res);
-      }
+    $cache = FALSE;
+    //if(FALSE){
+    if( $res = $this->get_from_cache($request,$cache) ){
       return $res;
     }
-    catch (TingClientException $e) {
-      timer_stop('search_client');
-      // set message if ting-client throws an exeception
-      drupal_set_message( $e->getMessage(). '. ' . self::_set_internal_error_message(),'error');
-      watchdog('ting client', 'Error performing request: ' . $e->getMessage() , NULL, WATCHDOG_ERROR, 'http://' . $_SERVER["HTTP_HOST"] . request_uri());
-      return FALSE;
+    else{
+      try {
+        timer_start('search_client');
+        $res = self::ting_client()->execute($request);
+        timer_stop('search_client');
+        if( $cache ) {
+          dpm($res);
+          //@TODO make request cache table
+         cache_set($request->cacheKey() , $res, 'cache');
+        }
+        return $res;
+      }
+      catch (TingClientException $e) {
+        timer_stop('search_client');
+        // set message if ting-client throws an exeception
+        drupal_set_message( $e->getMessage(). '. ' . self::_set_internal_error_message(),'error');
+        watchdog('ting client', 'Error performing request: ' . $e->getMessage() , NULL, WATCHDOG_ERROR, 'http://' . $_SERVER["HTTP_HOST"] . request_uri());
+        return FALSE;
+      }
     }
   }
 
