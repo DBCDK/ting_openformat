@@ -42,6 +42,25 @@ class ting_client_class {
 
     return $result;
   }
+  
+  public function do_agency_search($params){
+    // get the agencyrequest
+    $request = self::request_factory()->getAgencyRequest();
+
+    // set parameters NOTICE: searchrequest MUST implement method e.g parameters['format'] => setFormat
+    foreach ($params as $key => $value) {
+      $setter = 'set' . ucfirst($key);
+      if( method_exists( $request,$setter ) ){
+        $request->$setter($value);
+      }
+      else {
+        drupal_set_message('TingClientAgencyRequest does not implement: '.$setter,'error');
+      }
+    }
+    $result = $this->execute($request);
+
+    return $result;
+  }
 
   private function get_from_cache($cacheKey) {
     $result = cache_get($cacheKey,'cache');
@@ -117,10 +136,14 @@ class ting_client_class {
         'spell' => 'ting_spell_url',
         'recommendation' => 'ting_recommendation_url',
       );
-
+      
       // TODO: This should probably be rethought.
       if (module_exists('ting_infomedia') && variable_get('ting_infomedia_url', FALSE)) {
         $url_variables['infomedia'] = 'ting_infomedia_url';
+      }
+      
+      if (module_exists('bibdk_vejviser')) {
+        $url_variables['agency'] = 'agency_search_url';
       }
 
       $urls = array();
@@ -132,6 +155,7 @@ class ting_client_class {
       }
       self::$request_factory = new TingClientRequestFactory($urls);
     }
+    
     return self::$request_factory;
   }
 
