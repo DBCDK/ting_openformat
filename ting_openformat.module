@@ -95,6 +95,14 @@ function ting_openformat_ding_devel_timers() {
 /******************* ADMIN *****************/
 
 /**
+ * Impelments hook_flush_caches
+ **/
+
+function ting_openformat_flush_caches() {
+  return array('cache_bibdk_webservices');
+}
+
+/**
  * Implements hook_menu
  **/
 function ting_openformat_menu() {
