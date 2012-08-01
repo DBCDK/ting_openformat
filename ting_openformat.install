@@ -63,7 +63,7 @@ function ting_openformat_schema() {
     'indexes' => array(
       'tid' => array('tid'),
     ),
-    'primary key' => array('vid'),
+     'primary key' => array('vid'),
     'foreign keys' => array(
       'versioned_ting_openformat_manifestation' => array(
         'table' => 'ting_openformat_manifestation',
@@ -89,4 +89,14 @@ function ting_openformat_update_7005() {
   catch(Exception $e){
     //do nothing; tables are probably already installed
   }
+}
+
+/**
+ * Implements hook_update_N;
+ * Install cache_bibdk_webservices table
+ **/
+function ting_openformat_update_7006() {
+  $name = 'cache_bibdk_webservices';
+  $schema = drupal_get_schema_unprocessed('system', 'cache');
+  db_create_table($name, $schema);
 }
