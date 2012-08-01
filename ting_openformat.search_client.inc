@@ -42,7 +42,7 @@ class ting_client_class {
 
     return $result;
   }
-  
+
   public function do_agency_search($params){
     // get the agencyrequest
     $request = self::request_factory()->getAgencyRequest();
@@ -65,24 +65,53 @@ class ting_client_class {
   private function get_from_cache($request,&$cache) {
     // overall caching variable (for all requests)
     $requestcache = $this->enable_cache;
-
-    if( $requestcache && class_implements( $request, 'ITingClientRequestCache' ) ) {
-      //  dpm($request);
-      if($request->cacheEnable()){
+    if( $requestcache && self::_class_implements( $request, 'ITingClientRequestCache' ) ) {
+       if($request->cacheEnable()){
         // everything is okay for caching; set passed cache variable for execute method
         $cache = TRUE;
-        $cached_result = cache_get($request->cacheKey(),'cache');
+        $cached_result = cache_get($request->cacheKey(),'cache_bibdk_webservices');
       }
     }
     if( !empty($cached_result) ) {
       $res = $cached_result->data;
-      // hand cachekey to calling method
-      $res->cacheKey = $request->cacheKey();
       return $res;
     }
     return FALSE;
   }
 
+  public static function get_all_cache_classes() {
+    static $ret;
+    if( !isset($ret) ) {
+      $ret = array();
+      $factory = self::request_factory();
+      $request_methods = get_class_methods($factory);
+      foreach( $request_methods as $method ) {
+        if( $method != '__construct' ) {
+          $class = $factory->$method();
+          if( is_object($class)) {
+            if( self::_class_implements($class,'ITingClientRequestCache') ) {
+              $arr['element_name'] = get_class($class);
+              $ret[] = $arr;
+            }
+          }
+        }
+      }
+    }
+    return $ret;
+  }
+
+  /* \brief check whether a given class implements a specific interface
+   *  @param class ; the class to check
+   *  @param interface ; the interface to check for
+   *  return bool
+   */
+  private static function _class_implements( $class, $interface ) {
+      $interfaces = class_implements($class);
+      if( in_array($interface, $interfaces) ) {
+        return true;
+      }
+    return false;
+  }
 
   /**
    * execute a request
@@ -99,9 +128,9 @@ class ting_client_class {
         $res = self::ting_client()->execute($request);
         timer_stop('search_client');
         if( $cache ) {
-          dpm($res);
           //@TODO make request cache table
-         cache_set($request->cacheKey() , $res, 'cache');
+          $expire = REQUEST_TIME + ( 60*$request->cacheTimeout() );
+          cache_set($request->cacheKey() , $res, 'cache_bibdk_webservices', $expire);
         }
         return $res;
       }
@@ -134,14 +163,14 @@ class ting_client_class {
     return self::$ting_client;
   }
 
-  /* \brief
+  /** \brief
    * initialize requestfactory
    * return TingClientRequestFactory (@see ting-client/lib/request/TingClientRequestFactory.php
-   */
+   **/
   private static function request_factory() {
     if (!isset(self::$request_factory)) {
       $url_variables = array(
-        'search' => 'ting_search_url',
+        'search' =>  'ting_search_url',
         'scan' => 'ting_scan_url',
         'object' => 'ting_search_url',
         'collection' => 'ting_search_url',
@@ -153,7 +182,7 @@ class ting_client_class {
       if (module_exists('ting_infomedia') && variable_get('ting_infomedia_url', FALSE)) {
         $url_variables['infomedia'] = 'ting_infomedia_url';
       }
-      
+
       if (module_exists('bibdk_vejviser')) {
         $url_variables['agency'] = 'agency_search_url';
       }
@@ -162,7 +191,8 @@ class ting_client_class {
       foreach ($url_variables as $name => $setting) {
         $urls[$name] = variable_get($setting, FALSE);
         if (!$urls[$name]) {
-          throw new TingClientException('No Ting webservice url defined for ' . $name);
+
+          // throw new TingClientException('No Ting webservice url defined for ' . $name);
         }
       }
       self::$request_factory = new TingClientRequestFactory($urls);
