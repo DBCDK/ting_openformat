@@ -34,7 +34,7 @@ function ting_openformat_schema() {
   );
 
   // ... also make a cache table in case we decide to cache som entities
-  $schema['cache_ting_openformat_entities'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_bibdk_webservices'] = drupal_get_schema_unprocessed('system', 'cache');
 
 
   /*$schema['ting_openformat_manifestation_revision'] = array(
@@ -78,6 +78,33 @@ function ting_openformat_schema() {
 }
 
 /**
+ * Implements hook_ding_entity_fields
+ **/
+function ting_openformat_ding_entity_fields() {
+  if( function_exists('dpm') )
+    dpm('ting_openformat_install::HOOK DING ENTITY');
+  return array(
+    'ting_openformat_work_title' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'ting_openformat_manifestation',
+        'label' => t('openformat work title'),
+        'bundle' => 'bibdk_entity',
+        'entity_type'=>'ting_openformat_manifestation',
+      ),
+    ),
+  );
+  }
+
+
+
+
+/**
  * Implements hook_update_N;
  * install ting_openformat_manifestation table;
  * install cache_ting_openformat_entities table
@@ -95,7 +122,7 @@ function ting_openformat_update_7005() {
  * Implements hook_update_N;
  * Install cache_bibdk_webservices table
  **/
-function ting_openformat_update_7006() {
+function ting_openformat_update_7008() {
   $name = 'cache_bibdk_webservices';
   $schema = drupal_get_schema_unprocessed('system', 'cache');
   db_create_table($name, $schema);
