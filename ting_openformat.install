@@ -80,7 +80,7 @@ function ting_openformat_schema() {
 /**
  * Implements hook_ding_entity_fields
  **/
-function ting_openformat_ding_entity_fields() {
+/*function ting_openformat_ding_entity_fields() {
   if( function_exists('dpm') )
     dpm('ting_openformat_install::HOOK DING ENTITY');
   return array(
@@ -99,7 +99,7 @@ function ting_openformat_ding_entity_fields() {
       ),
     ),
   );
-  }
+  }*/
 
 
 
