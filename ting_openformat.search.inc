@@ -13,7 +13,7 @@
 // load theme hooks
 module_load_include('inc','ting_openformat','ting_openformat.theme');
 // load search client
-module_load_include('inc', 'ting_openformat','ting_openformat.search_client');
+//module_load_include('inc', 'ting_openformat','ting_openformat.search_client');
 
 
 /**
@@ -90,25 +90,34 @@ function _ting_openformat_load_entities( $result ) {
   if( is_array($result->collections) ) {
     $ids = array();
     foreach ($result->collections as &$collection) {
-      /* if (isset($collection->objects[0])) {
-        $ids[] = $collection->objects[0]->id;
-        }*/
+      $original_manifestations = array();
       $openformat = $collection->formattedCollection;
-      $bibdkobject = new bibdkWork($openformat->formattedCollection->work);
+
       if( is_array($openformat->formattedCollection->manifestation) ) {
         foreach($openformat->formattedCollection->manifestation as $key=>$manifestation) {
-          $entity_ids[] = $manifestation->adminData->pid->{'$'};
+          $manifestation_id = $manifestation->adminData->pid->{'$'};
+          $entity_ids[] = $manifestation_id;
+          $original_manifestations[$manifestation_id] = $manifestation;
         }
       }
       elseif( isset($openformat->formattedCollection->manifestation) ) {
-        $entity_ids[] = $openformat->formattedCollection->manifestation->adminData->pid->{'$'};
+        $manifestation_id = $openformat->formattedCollection->manifestation->adminData->pid->{'$'};
+        $entity_ids[] = $manifestation_id;
+        $original_manifestations[$manifestation_id] =  $openformat->formattedCollection->manifestation;
       }
-     $manifestations = entity_load('ting_openformat_manifestation',$entity_ids,array(),TRUE);
 
-     $bibdkobject->setManifestations($manifestations);
-     $bibdkobjects[] = $bibdkobject;
+      // conditions array is deprecated in drupal 8.
+      $conditions['manifestations'] = $original_manifestations;
+      $conditions['work'] = $openformat->formattedCollection->work;
+      $bibdkEntities = entity_load('bibdkWorkEntity',$entity_ids,$conditions,TRUE);
+
+     $bibdkobjects[] = $bibdkEntities;
+     // reset
+     $entity_ids = array();
     }
   }
+
+  // replace TingClientObjectCollection with bibdkobjects
   unset($result->collections);
   $result->collections = $bibdkobjects;
 }
@@ -131,7 +140,7 @@ function _ting_openformat_load_entities( $result ) {
 
 function _ting_openformat_set_search_result($bibdkobject) {
 
-  $variables['results'] = array($bibdkobject);
+  $variables['result'] = $bibdkobject;
 
   //************** TODO handle bibdkobject *************/
 
@@ -142,15 +151,11 @@ function _ting_openformat_set_search_result($bibdkobject) {
     'title' => 'HEST',
     'user' => '',
     'date' => '',
-    //snippet' => '<div style="color:red; font-size:3em">TESTHEST</div>',
-     'snippet' => theme('ting_openformat_search_results', $variables),
+    'snippet' => ting_openformat_work_view(current($bibdkobject)),
   );
   return $result;
 }
 
-/** \brief theming function for ting_openformat_searchresults_view
- *
- **/
 
 /** \brief set facet for search result. Look in cache if not found do a request and set cache
  * @param $client - search_client
