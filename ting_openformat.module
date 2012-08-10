@@ -4,6 +4,41 @@
 
 // load search info and hooks
 module_load_include('inc', 'ting_openformat','ting_openformat.search');
+module_load_include('inc', 'ting_openformat' ,'ting_openformat.field');
+
+/**
+ * Implements hook_form_FORMID_alter (ting_client_admin_webservices_settings @see ting_client.admin.inc).
+ * make openformat a dropdownlist.
+ * add bibliotekdkWorkDisplay to ting_admin form
+ */
+function ting_openformat_form_ting_client_admin_webservices_settings_alter (&$form, &$form_state) {
+  if( isset ( $form['webservices']['ting_search_openformat']  ) ) {
+    $dkabm = $form['webservices']['ting_search_openformat']['#default_value'];
+    $element = &$form['webservices']['ting_search_openformat'];
+    // change type to select
+    $element['#type'] = 'select';
+    // set the original option (dkabm)
+    $element['#options']['dkabm'] = 'dkabm';
+    // add bibliotekdkWorkDisplay to options
+    $element['#options']['bibliotekdkWorkDisplay'] = 'bibliotekdkWorkDisplay';
+    // set default value
+    //$form['webservices']['ting_search_openformat']['#default_value'] = 'bibliotekdkWorkDisplay';
+  }
+}
+/*
+Implements hook_ding_entity_buttons
+ */
+function ting_openformat_ding_entity_buttons($type, $entity) {
+ return array(
+      array(
+        '#prefix' => '<p class="ding-entity-button">',
+        '#suffix' => '</p>',
+        '#type' => 'markup',
+        '#markup' => 'ZEBRA',
+      ),
+    );
+
+}
 
 
 /************** ENTITY ****************/
@@ -15,40 +50,94 @@ module_load_include('inc', 'ting_openformat','ting_openformat.search');
 
 function ting_openformat_entity_info() {
   $return = array(
-    'ting_openformat_manifestation' => array(
-      'label' => t('Ting openformat manifestation'),
+    'bibdkManifestation' => array(
+      'label' => t('openformat manifestation'),
       'fieldable' => TRUE,
       'base table' => 'ting_openformat_manifestation',
 
       // make this a ding_entity ?
-      'ding_entity_type' => 'ding_entity',
-      'ding_entity_menu' => 'ting/manifestation/%ting_manifestation',
+      'ding_entity_type' => 'bibdk_manifestation',
+      //'ding_entity_type' => 'ting_openformat_manifestation',
+      'ding_entity_menu' => '/manifestation/%ting_manifestation',
       'ding_entity_index' => 2,
+      // 'ding_entity_bundle' => 'bibdk_entity',
 
       // uri callback
       //'uri callback' => 'ting_openformat_maniobject_uri',
 
+      /* for clarity. default implementation of load hook */
+      // 'load hook' => 'manifestation_load',
       'description' => t('openformat fields'),
       // leave controller class blank for now (use DrupalDefaultEntityController) @TODO implement
       'controller class' => 'ManifestionEntityAPIController',
       'entity keys' => array(
         //'id' => 'tid',
+        //'ding_entity_id' => 'ding_entity_id',
         'id' => 'ding_entity_id',
       ),
       'bundles' => array(
-        'ting_openformat_manifestation' => array(
-          'label' => 'Ting openformat manifestation',
+        'bibdkManifestation' => array(
+          'label' => 'openformat manifestation',
           'admin' => array(
-            'path' => 'admin/structure/ting_manifestation',
+            'path' => 'admin/structure/manifestations',
             'access arguments' => array('administer content types'),
-            'controller class' => 'OpenFormatTypeUIController',
           ),
         ),
       ),
-    )
+    ),
+
+
+      'bibdkWorkEntity' => array(
+        'label' => t('Bibdk entity placeholder for manifestations'),
+        'fieldable' => TRUE,
+        // ?? do we need the base table -- it is not used for anything since controllerclass
+        // only implements DrupalEntityControllerInterface and not DrupalDefaultEntityController
+        'base table' => 'ting_openformat_manifestation',
+        // make this a ding_entity ?
+        'ding_entity_type' => 'bibdk_entity',
+        //'ding_entity_type' => 'ting_openformat_manifestation',
+        'ding_entity_menu' => '/manifestation/%ting_manifestation',
+        'ding_entity_index' => 2,
+        //... could an additional argument be used in ding_entity ?? maybe for setting bundels
+        // 'ding_entity_bundle' => 'bibdk_entity',
+        'controller class' => 'bibdkEntityAPIController',
+        'load hook' => 'manifestations_load',
+        'entity keys' => array(
+          //'id' => 'tid',
+          //'ding_entity_id' => 'ding_entity_id',
+          'id' => 'ding_entity_id',
+        ),
+        'bundles' => array(
+          'bibdkWorkEntity' => array(
+            'label' => 'bibdkWorkEntity',
+            'admin' => array(
+              'path' => 'admin/structure/bibdkWork',
+              'access arguments' => array('administer content types'),
+            ),
+          ),
+        ),
+      )
+
+
   );
 
   return $return;
+}
+
+/**
+ * Load hook as set in entity_info
+ * load hook is not currently used .. maybe later.
+ */
+function ting_openformat_manifestations_load($stdObjects) {
+  $ret = array();
+  return $ret;
+}
+
+/**
+ * uri callback as defined in hook_entity_info
+ **/
+function ting_openformat_maniobject_uri() {
+  return 'HEST';
 }
 
 /**************** end ENTITY ***************/
@@ -87,9 +176,46 @@ function ting_openformat_ding_devel_timers() {
     ),
     'search_client_net' => array(
       'title' => 'Search client net time was @time ms.',
+
       'include in total' => FALSE,
     ));
 }
+
+
+/************* VIEWS **************/
+
+// @TODO - does this method belong here ??
+
+function ting_openformat_work_view($object, $view_mode = 'full', $langcode = NULL) {
+  if (!isset($langcode)) {
+    $langcode = $GLOBALS['language_content']->language; }
+
+  $args = array();
+  $content = array();
+
+  field_attach_prepare_view('bibdkWorkEntity', array($object->ding_entity_id => $object), $view_mode, $langcode);
+  entity_prepare_view('bibdkWorkEntity', array($object->id => $object), $langcode);
+  $content += field_attach_view('bibdkWorkEntity', $object, $view_mode, $langcode);
+
+  $args['work'] = $content;
+  $content = array();
+
+  foreach($object->manifestations as $id=>$manifestation){
+    field_attach_prepare_view('bibdkManifestation', array( $id => $manifestation), $view_mode, $langcode);
+    entity_prepare_view('bibdkManifestation', array($id => $manifestation), $langcode);
+    $content = field_attach_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
+    // prepare for theme('item_list' ...
+    $items[] = array('data' => drupal_render($content));
+  }
+
+  $args['manifestations'] = $items;
+
+  return theme('ting_openformat_search_results',$args);
+}
+
+
+
+/*********** END VIEWS ***********/
 
 
 /******************* ADMIN *****************/
@@ -100,34 +226,6 @@ function ting_openformat_ding_devel_timers() {
 
 function ting_openformat_flush_caches() {
   return array('cache_bibdk_webservices');
-}
-
-/**
- * Implements hook_menu
- **/
-function ting_openformat_menu() {
-  $items['admin/config/openformat'] = array(
-    'title' => 'Openformat settings',
-    'description' => 'Manage openformat integration settings.',
-    'position' => 'left',
-    'weight' => 20,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
-    'file path' => drupal_get_path('module', 'system'),
-  );
-
-  $items['admin/config/openformat/search_client'] = array(
-    'title' => 'Search client configuration',
-    'description' => 'Configure search settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments'=> array('ting_openformat_client_admin_form'),
-    'access arguments' => array('administer openformat settings'),
-    // 'type' => MENU_LOCAL_ACTION,
-    'file' => 'ting_openformat.admin.inc',
-  );
-
-  return $items;
 }
 
 /*** FACETBROWSER ****/
@@ -147,22 +245,7 @@ function ting_openformat_ding_facetbrowser() {
   }
 }
 
-/**
- * UI controller. -- @see entity module
- */
-class OpenFormatTypeUIController extends EntityDefaultUIController {
 
-  /**
-   * Overrides hook_menu() defaults.
-   */
-  public function hook_menu() {
-    $items = parent::hook_menu();
-    $items[$this->path]['description'] = 'HEST HEST HEST.';
-    return $items;
-  }
-}
-
-// COMMENTED OUT FOR NOW - show bibdk_entity in admin/structure
 /**
  * Implements hook_menu_alter().
  *
@@ -173,16 +256,31 @@ class OpenFormatTypeUIController extends EntityDefaultUIController {
  */
 function ting_openformat_menu_alter(&$items) {
   if (module_exists('field_ui')) {
-    if (isset($items['admin/structure/ting_manifestation/fields'])) {
+    if (isset($items['admin/structure/bibdkWork/fields'])) {
       // Make the fields task the default local task.
-      $items['admin/structure/ting_manifestation'] = $items['admin/structure/ting_manifestation/fields'];
-      //$items['admin/structure/ting_manifestation'] = $items['admin/structure/ting_manifestation'];
-      $item = &$items['admin/structure/ting_manifestation'];
+      $items['admin/structure/bibdkWork'] = $items['admin/structure/bibdkWork/fields'];
+      //$items['admin/structure/bibdkWork'] = $items['admin/structure/bibdkWork'];
+      $item = &$items['admin/structure/bibdkWork'];
       $item['type'] = MENU_NORMAL_ITEM;
-      $item['title'] = 'Ting manifestations';
-      $item['description'] = 'Manage Ting manifestation display.';
+      $item['title'] = 'Work entity for bibliotek.dk';
+      $item['description'] = 'Manage work display.';
 
-      $items['admin/structure/ting_manifestation/fields'] = array(
+      $items['admin/structure/bibdkWork/fields'] = array(
+        'title' => 'Manage fields',
+        'type' => MENU_DEFAULT_LOCAL_TASK,
+        'weight' => 1,
+      );
+    }
+    if (isset($items['admin/structure/manifestations/fields'])) {
+      // Make the fields task the default local task.
+      $items['admin/structure/manifestations'] = $items['admin/structure/manifestations/fields'];
+      //$items['admin/structure/bibdkWork'] = $items['admin/structure/bibdkWork'];
+      $item = &$items['admin/structure/manifestations'];
+      $item['type'] = MENU_NORMAL_ITEM;
+      $item['title'] = 'manifestations for bibliotek.dk';
+      $item['description'] = 'Manage work display.';
+
+      $items['admin/structure/manifestations/fields'] = array(
         'title' => 'Manage fields',
         'type' => MENU_DEFAULT_LOCAL_TASK,
         'weight' => 1,
