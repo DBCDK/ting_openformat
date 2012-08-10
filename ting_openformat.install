@@ -80,10 +80,10 @@ function ting_openformat_schema() {
 /**
  * Implements hook_ding_entity_fields
  **/
-/*function ting_openformat_ding_entity_fields() {
-  if( function_exists('dpm') )
-    dpm('ting_openformat_install::HOOK DING ENTITY');
+function ting_openformat_ding_entity_fields() {
   return array(
+
+    /******* WORK **************/
     'ting_openformat_work_title' => array(
       'field' => array(
         'locked' => FALSE,
@@ -92,14 +92,58 @@ function ting_openformat_schema() {
         ),
       ),
       'instance' => array(
-        'ding_entity_type' => 'ting_openformat_manifestation',
-        'label' => t('openformat work title'),
-        'bundle' => 'bibdk_entity',
-        'entity_type'=>'ting_openformat_manifestation',
+        'ding_entity_type' => 'bibdkWorkEntity',
+        'label' => t('Work title'),
+        'bundle' => 'bibdkWorkEntity',
+        'entity_type'=>'bibdkWorkEntity',
+      ),
+    ),
+
+    'ting_openformat_work_creators' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkWorkEntity',
+        'label' => t('Work creators'),
+        'bundle' => 'bibdkWorkEntity',
+        'entity_type' => 'bibdkWorkEntity'
+      ),
+    ),
+    'ting_openformat_work_subjects' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkWorkEntity',
+        'label' => t('Work subjects'),
+        'bundle' => 'bibdkWorkEntity',
+        'entity_type' => 'bibdkWorkEntity'
+      ),
+    ),
+    /********** MANIFESTATION ************/
+    'bibdk_manifestation_type' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Manifestation type'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
       ),
     ),
   );
-  }*/
+}
 
 
 
@@ -125,5 +169,10 @@ function ting_openformat_update_7005() {
 function ting_openformat_update_7008() {
   $name = 'cache_bibdk_webservices';
   $schema = drupal_get_schema_unprocessed('system', 'cache');
-  db_create_table($name, $schema);
+  try{
+    db_create_table($name, $schema);
+  }
+  catch(Exception $e) {
+    // do nothing table already exists
+  }
 }
