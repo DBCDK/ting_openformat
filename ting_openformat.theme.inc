@@ -13,7 +13,7 @@
 function ting_openformat_theme() {
   return array(
     'ting_openformat_search_results' => array(
-      'variables' => array('results' => NULL),
+      'variables' => array('content'=>array(),'work'=>array(), 'manifestations'=>array()),
       //'file'      => 'ting_openformat.search_pages.inc',
       'template'  => 'ting_openformat_search_results',
       'render element' => 'elements',
