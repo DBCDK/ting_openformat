@@ -6,6 +6,27 @@
 module_load_include('inc', 'ting_openformat','ting_openformat.search');
 module_load_include('inc', 'ting_openformat' ,'ting_openformat.field');
 
+
+function ting_openformat_menu(){
+  $items = array();
+  
+   $items['work/%'] = array(
+    'title' => 'Single work',
+    'description' => 'View single work',
+    'page arguments' => array(1),
+    'page callback' => 'ting_openformat_single',
+    'access arguments' => array('access content'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  return $items;
+}
+
+function ting_openformat_single($id){
+  
+  return t("return work with id $id");
+}
+
+
 /**
  * Implements hook_form_FORMID_alter (ting_client_admin_webservices_settings @see ting_client.admin.inc).
  * make openformat a dropdownlist.
