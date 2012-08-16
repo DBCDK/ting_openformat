@@ -128,6 +128,8 @@ function ting_openformat_ding_entity_fields() {
       ),
     ),
     /********** MANIFESTATION ************/
+
+    // TYPE 1
     'bibdk_manifestation_type' => array(
       'field' => array(
         'locked' => FALSE,
@@ -138,6 +140,54 @@ function ting_openformat_ding_entity_fields() {
       'instance' => array(
         'ding_entity_type' => 'bibdkManifestation',
         'label' => t('Manifestation type'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+
+    // ORIGINAL TITLE 0 .. 1
+    'bibdk_manifestation_orig_title' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Original title'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+
+    // CONTRIBUTORS zero or 1 occurence
+    'bibdk_manifestation_contribs' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Contributors'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+
+    // RELATEDSERIESTITLE zero or more occurence(s)
+    'bibdk_manifestation_series' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Related series'),
         'bundle' => 'bibdkManifestation',
         'entity_type' => 'bibdkManifestation'
       ),

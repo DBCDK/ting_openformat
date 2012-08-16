@@ -1,6 +1,6 @@
 <?php
 // @TODO; implement entity
-// hook_entity_info etc..
+// hook_entity_infon etc..
 
 // load search info and hooks
 module_load_include('inc', 'ting_openformat','ting_openformat.search');
@@ -46,21 +46,34 @@ function ting_openformat_form_ting_client_admin_webservices_settings_alter (&$fo
     //$form['webservices']['ting_search_openformat']['#default_value'] = 'bibliotekdkWorkDisplay';
   }
 }
-/*
-Implements hook_ding_entity_buttons
- */
-function ting_openformat_ding_entity_buttons($type, $entity) {
- return array(
-      array(
-        '#prefix' => '<p class="ding-entity-button">',
-        '#suffix' => '</p>',
-        '#type' => 'markup',
-        '#markup' => 'ZEBRA',
-      ),
-    );
 
+/**
+ * Implements hook_menu
+ **/
+function ting_openformat_hook_menu() {
+  //dpm('TESTHEST');
+  $items['admin/config/ting_openformat'] = array(
+    'title' => 'Openformat',
+    'description' => 'Handle ting_openformat module (disable)',
+    'position' => 'left',
+    'weight' => 1,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+  $items['admin/config/ting_openformat/disable'] = array(
+    'title' => 'Disable this module',
+    'description' => 'Delete virtual fields from this module and disable it',
+    'weight' => 1,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ting_openformat_admin_module_disable'),
+    'access arguments' => array('administer webservices settings'),
+    'file' => 'ting_openformat.admin.inc'
+  );
+
+  return $items;
 }
-
 
 /************** ENTITY ****************/
 
@@ -205,33 +218,72 @@ function ting_openformat_ding_devel_timers() {
 
 /************* VIEWS **************/
 
+/*
+ * preprocess template to add stylesheet
+ * @TODO; this method is for developing only - move and adjust css to proper file when ready
+ */
+function template_preprocess_ting_openformat_subwork_tabs(&$variables){
+  $path = drupal_get_path('module', 'ting_openformat') . '/css';
+  drupal_add_css($path.'/ting_openformat_subwork.css');
+  //  dpm($variables);
+}
+
+
 // @TODO - does this method belong here ??
 
-function ting_openformat_work_view($object, $view_mode = 'full', $langcode = NULL) {
+function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
     $langcode = $GLOBALS['language_content']->language; }
 
   $args = array();
-  $content = array();
+  $work_fields = array();
+  $work_fields += _prepare_view('bibdkWorkEntity', $bibdkWork, $view_mode, $langcode);
 
-  field_attach_prepare_view('bibdkWorkEntity', array($object->ding_entity_id => $object), $view_mode, $langcode);
-  entity_prepare_view('bibdkWorkEntity', array($object->id => $object), $langcode);
-  $content += field_attach_view('bibdkWorkEntity', $object, $view_mode, $langcode);
+  $subWorks =  _ting_openformat_parse_subworks($bibdkWork->getManifestations());
+  // dpm($subWorks);
+  $sub = array();
+  foreach( $subWorks as $type => $manifestations ) {
+    //$sub['type'] = $type;
+    $field_content = array();
+    foreach( $manifestations as $id=>$manifestation ) {
+      $sub_tab[$type][] = $id;
+      $field_content = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
+      $sub[$type][$manifestation->id] = theme('ting_openformat_manifestation',array('fields'=>$field_content,));
+    }
+  }
+  $tabs = theme('ting_openformat_subwork_tabs',array('subWorks'=>$subWorks));
+  //dpm($tabs);
+  $args['work'] = theme('ting_openformat_work',array('fields'=>$work_fields,'subWorks'=>$sub,'tabs'=>$tabs,'ding_id' => $bibdkWork->id));
 
-  $args['work'] = $content;
-  $content = array();
-
-  foreach($object->manifestations as $id=>$manifestation){
-    field_attach_prepare_view('bibdkManifestation', array( $id => $manifestation), $view_mode, $langcode);
-    entity_prepare_view('bibdkManifestation', array($id => $manifestation), $langcode);
-    $content = field_attach_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
+  $args['subworks'] = $sub;
+  /* foreach($bibdkWork->getManifestations() as $manifestation){
+    $content = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
     // prepare for theme('item_list' ...
     $items[] = array('data' => drupal_render($content));
-  }
+    }*/
 
-  $args['manifestations'] = $items;
+  /*$args['manifestations'] = $items;*/
 
   return theme('ting_openformat_search_results',$args);
+}
+
+function _ting_openformat_parse_subworks($manifestations) {
+  $subWorks = array();
+  foreach( $manifestations as $id => $manifestation ) {
+    $subWorks[$manifestation->getType()][$id] = $manifestation;
+  }
+  return $subWorks;
+}
+
+/**
+ * attach entity fields to a single entity. Return a renderable array
+ **/
+function _prepare_view($entity_type, $object, $view_mode, $langcode) {
+  field_attach_prepare_view($entity_type, array($object->id => $object), $view_mode, $langcode);
+  entity_prepare_view($entity_type, array($object->id => $object), $langcode);
+  $content = field_attach_view($entity_type, $object, $view_mode, $langcode);
+
+  return $content;
 }
 
 

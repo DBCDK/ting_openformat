@@ -66,6 +66,9 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   // static cache result - used in hook_ding_facetbrowser, ting_search etc.
   drupal_static('ting_search_results', $result);
 
+
+  //dpm($result);
+
   foreach($result->collections as $collection) {
     $search_results[] = _ting_openformat_set_search_result($collection);
     }
@@ -87,6 +90,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
  * replace TingClientObjectCollection (returned from ting-client) with bibdkEntity(work)
  **/
 function _ting_openformat_load_entities( $result ) {
+  $bibdkobjects = array();
   if( is_array($result->collections) ) {
     $ids = array();
     foreach ($result->collections as &$collection) {

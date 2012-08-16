@@ -33,10 +33,35 @@ function ting_openformat_field_info() {
     ),
 
     'bibdk_manifestation_type' => array(
-      'label' => t('Subjects'),
-      'description' => t('Subjects of work'),
+      'label' => t('Manifestation type'),
+      'description' => t('type of manifestation'),
       'default_widget'=>'hidden',
       'default_formatter' => 'bibdk_manifestation_type_default',
+      'no_ui' => TRUE,
+    ),
+
+
+    'bibdk_manifestation_orig_title' => array(
+      'label' => t('Original title'),
+      'description' => t('Original title of manifestation'),
+      'default_widget'=>'hidden',
+      'default_formatter' => 'bibdk_manifestation_orig_title_default',
+      'no_ui' => TRUE,
+    ),
+
+    'bibdk_manifestation_contribs' => array(
+      'label' => t('Contributors'),
+      'description' => t('contributors to manifestation'),
+      'default_widget'=>'hidden',
+      'default_formatter' => 'bibdk_manifestation_contribs_default',
+      'no_ui' => TRUE,
+    ),
+
+    'bibdk_manifestation_series' => array(
+      'label' => t('Related title'),
+      'description' => t('related titles of manifestation'),
+      'default_widget'=>'hidden',
+      'default_formatter' => 'bibdk_manifestation_series_default',
       'no_ui' => TRUE,
     ),
   );
@@ -97,6 +122,36 @@ function ting_openformat_field_formatter_info () {
         'link_type' => 'none',
       ),
     ),
+
+     'bibdk_manifestation_orig_title_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_manifestation_orig_title',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+
+    'bibdk_manifestation_contribs_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_manifestation_contribs',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+
+    'bibdk_manifestation_series_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_manifestation_series',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
  );
 }
 
@@ -118,14 +173,19 @@ function ting_openformat_field_load ($entity_type, $entities, $field, $instances
  * add a method to bibdkWork class (@see e.g ting_openformat.entities.inc::bibdkWork::getCreator().) ... there will be changes in format
  **/
 function ting_openformat_field_formatter_view ($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
  foreach ($items as $delta => $item) {
    switch ($display['type']) {
      // entity is bibdkWork ( @see ting_openformat.entities.inc::bibdkWork )
+
+     // title
      case 'ting_openformat_work_title_default':
        $element[$delta] = array(
          '#markup' => $entity->getTitle(),
        );
        break;
+
+       // creators
      case 'ting_openformat_work_creators_default':
        // one or more creators
        $creators = $entity->getCreator();
@@ -144,6 +204,8 @@ function ting_openformat_field_formatter_view ($entity_type, $entity, $field, $i
          '#markup' => $markup,
        );
        break;
+
+       // subjects
      case 'ting_openformat_work_subjects_default':
        // one or more subjects
        $subjects = $entity->getSubjects();
@@ -163,18 +225,68 @@ function ting_openformat_field_formatter_view ($entity_type, $entity, $field, $i
        );
        break;
 
+       // type
      case 'bibdk_manifestation_type_default':
        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
-       // one or more subjects
        $markup = $entity->getType();
        if( !$markup ) {
          return;
-         }
+       }
 
        $element[$delta] = array(
          '#markup' => $markup,
        );
        break;
+
+       // original title
+     case 'bibdk_manifestation_orig_title_default':
+       // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+       $markup = $entity->getOriginalTitle();
+       if( !$markup ) {
+         return;
+       }
+
+       $element[$delta] = array(
+         '#markup' => $markup,
+       );
+       break;
+
+       //contributors
+         case 'bibdk_manifestation_contribs_default':
+       // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+       $markup = $entity->getContributors();
+       if( !$markup ) {
+         return;
+       }
+
+       $element[$delta] = array(
+         '#markup' => $markup,
+       );
+       break;
+
+       // relatedSeriesTitle
+     case 'bibdk_manifestation_series_default':
+       // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+       $series = $entity->getSeriesTitle();
+
+       if( !$series ) {
+         return;
+       }
+
+       $markup = '';
+
+       foreach($series as $serie ) {
+         $markup .= $serie['seriesHeader'];
+         foreach($serie['relatedSeries'] as  $key => $val ) {
+           $markup .= l($val['display'],'search/work/'.$val['searchCode']);
+           $markup .= ', ';
+         }
+       }
+       $element[$delta] = array(
+         '#markup' => $markup,
+       );
+       break;
+
 
    }
  }
