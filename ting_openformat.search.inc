@@ -95,22 +95,12 @@ function _ting_openformat_load_entities( $result ) {
     $ids = array();
     foreach ($result->collections as &$collection) {
       $original_manifestations = array();
+      $entity_ids = array();
       $openformat = $collection->formattedCollection;
 
-      if( is_array($openformat->formattedCollection->manifestation) ) {
-        foreach($openformat->formattedCollection->manifestation as $key=>$manifestation) {
-          $manifestation_id = $manifestation->adminData->pid->{'$'};
-          $entity_ids[] = $manifestation_id;
-          $original_manifestations[$manifestation_id] = $manifestation;
-        }
-      }
-      elseif( isset($openformat->formattedCollection->manifestation) ) {
-        $manifestation_id = $openformat->formattedCollection->manifestation->adminData->pid->{'$'};
-        $entity_ids[] = $manifestation_id;
-        $original_manifestations[$manifestation_id] =  $openformat->formattedCollection->manifestation;
-      }
+      _ting_openformat_parse_manifestations( $original_manifestations, $entity_ids, $openformat );
 
-      // conditions array is deprecated in drupal 8.
+      // conditions array is deprecated in drupal 8 .. @TODO find another solution .
       $conditions['manifestations'] = $original_manifestations;
       $conditions['work'] = $openformat->formattedCollection->work;
       $bibdkEntities = entity_load('bibdkWorkEntity',$entity_ids,$conditions,TRUE);

@@ -35,7 +35,19 @@ function ting_openformat_single($id){
   }
 
   $original_manifestations = array();
+  $entity_ids = array();
 
+  _ting_openformat_parse_manifestations( $original_manifestations, $entity_ids, $openformat );
+
+  // conditions array is deprecated in drupal 8.
+  $conditions['manifestations'] = $original_manifestations;
+  $conditions['work'] = $openformat->formattedCollection->work;
+  $bibdkEntity = entity_load('bibdkWorkEntity',$entity_ids,$conditions,TRUE);
+
+  return ting_openformat_work_view(current($bibdkEntity));
+}
+
+function _ting_openformat_parse_manifestations( &$original_manifestations, &$entity_ids, $openformat ) {
   if( is_array($openformat->formattedCollection->manifestation) ) {
     foreach($openformat->formattedCollection->manifestation as $key=>$manifestation) {
       $manifestation_id = $manifestation->adminData->pid->{'$'};
@@ -48,13 +60,6 @@ function ting_openformat_single($id){
     $entity_ids[] = $manifestation_id;
     $original_manifestations[$manifestation_id] =  $openformat->formattedCollection->manifestation;
   }
-
-  // conditions array is deprecated in drupal 8.
-  $conditions['manifestations'] = $original_manifestations;
-  $conditions['work'] = $openformat->formattedCollection->work;
-  $bibdkEntity = entity_load('bibdkWorkEntity',$entity_ids,$conditions,TRUE);
-
-  return ting_openformat_work_view(current($bibdkEntity));
 }
 
 
