@@ -21,7 +21,40 @@ function ting_openformat_menu(){
 }
 
 function ting_openformat_single($id){
-  return t("return work with id $id");
+   $params = array();
+  // search phrase (query)
+  $params['objectId'] = $id;
+  $params['objectFormat'] = variable_get('ting_search_openformat','bibliotekdkWorkDisplay');
+
+  // use getObjectRequest to retrieve a single work
+  $client = new ting_client_class();
+  $openformat = $client->do_get_object($params);
+
+  if( empty($openformat) ) {
+    return t("work with id $id could not be found");
+  }
+
+  $original_manifestations = array();
+
+  if( is_array($openformat->formattedCollection->manifestation) ) {
+    foreach($openformat->formattedCollection->manifestation as $key=>$manifestation) {
+      $manifestation_id = $manifestation->adminData->pid->{'$'};
+      $entity_ids[] = $manifestation_id;
+      $original_manifestations[$manifestation_id] = $manifestation;
+    }
+  }
+  elseif( isset($openformat->formattedCollection->manifestation) ) {
+    $manifestation_id = $openformat->formattedCollection->manifestation->adminData->pid->{'$'};
+    $entity_ids[] = $manifestation_id;
+    $original_manifestations[$manifestation_id] =  $openformat->formattedCollection->manifestation;
+  }
+
+  // conditions array is deprecated in drupal 8.
+  $conditions['manifestations'] = $original_manifestations;
+  $conditions['work'] = $openformat->formattedCollection->work;
+  $bibdkEntity = entity_load('bibdkWorkEntity',$entity_ids,$conditions,TRUE);
+
+  return ting_openformat_work_view(current($bibdkEntity));
 }
 
 

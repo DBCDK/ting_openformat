@@ -10,12 +10,12 @@ foreach( $variables['subWorks'] as $type => $manifestations ) {
 
   echo '<div id="ting_openformat_subwork_'.$css_id.'" class="ting_openformat_subwork">';
   foreach( $manifestations as $id => $manifestation ) {
+    echo '<h3>'.$id.'</h3>';
     print $manifestation;
   }
   echo '</div>';
-
 }
-  echo '</div>';
+echo '</div>';
 
 ?>
 
