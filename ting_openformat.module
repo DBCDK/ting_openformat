@@ -9,7 +9,6 @@ module_load_include('inc', 'ting_openformat' ,'ting_openformat.field');
 
 function ting_openformat_menu(){
   $items = array();
-  
    $items['work/%'] = array(
     'title' => 'Single work',
     'description' => 'View single work',
@@ -22,7 +21,6 @@ function ting_openformat_menu(){
 }
 
 function ting_openformat_single($id){
-  
   return t("return work with id $id");
 }
 
@@ -229,6 +227,16 @@ function template_preprocess_ting_openformat_subwork_tabs(&$variables){
 }
 
 
+/** \brief load a single work
+ * @params id; id of work to load
+ * return bibdkWork entity
+ **/
+function ting_openformat_view_work_by_id($id) {
+  // @TODO ; implement a'la :
+  // $work=entity_load('bibdkWorkentity', $id , ....)
+  // return ting_openformat_work_view( $work, ... );
+}
+
 // @TODO - does this method belong here ??
 
 function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = NULL) {
@@ -253,18 +261,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   }
   $tabs = theme('ting_openformat_subwork_tabs',array('subWorks'=>$subWorks));
   //dpm($tabs);
-  $args['work'] = theme('ting_openformat_work',array('fields'=>$work_fields,'subWorks'=>$sub,'tabs'=>$tabs,'ding_id' => $bibdkWork->id));
-
-  $args['subworks'] = $sub;
-  /* foreach($bibdkWork->getManifestations() as $manifestation){
-    $content = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
-    // prepare for theme('item_list' ...
-    $items[] = array('data' => drupal_render($content));
-    }*/
-
-  /*$args['manifestations'] = $items;*/
-
-  return theme('ting_openformat_search_results',$args);
+  return theme('ting_openformat_work',array('fields'=>$work_fields,'subWorks'=>$sub,'tabs'=>$tabs,'ding_id' => $bibdkWork->id));
 }
 
 function _ting_openformat_parse_subworks($manifestations) {
