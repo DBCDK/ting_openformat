@@ -9,7 +9,7 @@ module_load_include('inc', 'ting_openformat' ,'ting_openformat.field');
 
 function ting_openformat_menu(){
   $items = array();
-   $items['work/%'] = array(
+  $items['work/%'] = array(
     'title' => 'Single work',
     'description' => 'View single work',
     'page arguments' => array(1),
@@ -17,6 +17,27 @@ function ting_openformat_menu(){
     'access arguments' => array('access content'),
     'type' => MENU_LOCAL_TASK,
   );
+
+  $items['admin/config/ting_openformat'] = array(
+    'title' => 'Openformat',
+    'description' => 'Handle ting_openformat module (disable)',
+    'position' => 'left',
+    'weight' => 1,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+  $items['admin/config/ting_openformat/disable'] = array(
+    'title' => 'Disable this module',
+    'description' => 'Delete virtual fields from this module and disable it',
+    'weight' => 1,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ting_openformat_admin_module_disable'),
+    'access arguments' => array('administer webservices settings'),
+    'file' => 'ting_openformat.admin.inc'
+  );
+
   return $items;
 }
 
@@ -83,33 +104,6 @@ function ting_openformat_form_ting_client_admin_webservices_settings_alter (&$fo
   }
 }
 
-/**
- * Implements hook_menu
- **/
-function ting_openformat_hook_menu() {
-  //dpm('TESTHEST');
-  $items['admin/config/ting_openformat'] = array(
-    'title' => 'Openformat',
-    'description' => 'Handle ting_openformat module (disable)',
-    'position' => 'left',
-    'weight' => 1,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
-    'file path' => drupal_get_path('module', 'system'),
-  );
-  $items['admin/config/ting_openformat/disable'] = array(
-    'title' => 'Disable this module',
-    'description' => 'Delete virtual fields from this module and disable it',
-    'weight' => 1,
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('ting_openformat_admin_module_disable'),
-    'access arguments' => array('administer webservices settings'),
-    'file' => 'ting_openformat.admin.inc'
-  );
-
-  return $items;
-}
 
 /************** ENTITY ****************/
 

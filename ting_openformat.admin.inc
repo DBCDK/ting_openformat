@@ -3,12 +3,6 @@ function ting_openformat_admin_module_disable($form_state) {
   $form = array();
   $form['#submit'] = array('ting_openformat_admin_module_disable_form_submit');
 
-  $form['ting_openformat']['TESTHEST'] = array(
-    '#type' => 'textfield',
-    '#title' => t('KROKODULLE'),
-    '#default_value' => 'ZEBRA',
-  );
-
   $form['buttons']['save'] = array(
     '#type' => 'submit',
     '#value' => t('Disable this module'),
@@ -18,6 +12,10 @@ function ting_openformat_admin_module_disable($form_state) {
 }
 
 function ting_openformat_admin_module_disable_form_submit($form, $form_state) {
+
+  // @TODO
+  // 1. delete fields attached to ting_openformat module
+  // 2. disable modules that had any fields attached
 //  dpm(func_get_args());
 }
 ?>
