@@ -381,9 +381,7 @@ class manifestation {
       'identifier' => 'identifier',
       'ISSN' => 'ISSN',
     );
-
     $object = isset($this->manifestation->details->identifiers) ? $this->manifestation->details->identifiers : NULL;
-
     return ting_openformat_methods::parseFields($object, $fields);
   }
 
@@ -430,7 +428,7 @@ class manifestation {
       'accessUrl' => 'accessUrl',
     );
 
-    $object = isset($this->manifestation->details->language) ? $this->manifestation->details->language : NULL;
+    $object = isset($this->manifestation->details->accessInformation) ? $this->manifestation->details->accessInformation : NULL;
 
     return ting_openformat_methods::parseFields($object, $fields);
   }
@@ -444,15 +442,15 @@ class ting_openformat_methods {
    */
 
   public static function parseSearchCode(array $stdObjects, array $extrafields = NULL) {
-    foreach ($stdObjects as $key => $val) {
-      $subject['display'] = $val->display->{'$'};
-      $subject['searchCode'] = $val->searchCode->{'@phrase'}->{'$'} . '=' . $val->searchCode->{'$'};
+    foreach ($stdObjects as $object) {
+      $subject['searchCode'] = self::parseSimpleSearchCode($object->searchCode);
+      $subject['display'] = isset($object->display) ? $object->display->{'$'}: NULL;
       if (isset($extrafields)) {
         foreach ($extrafields as $extrafield) {
           $subject[$extrafield] = $val->$extrafield->{'$'};
         }
       }
-      $ret[] = $subject;
+      $ret[]=$subject;
     }
     return $ret;
   }
@@ -465,7 +463,8 @@ class ting_openformat_methods {
     else
       return;
 
-    $value = $stdObject->{'$'};
+    $value = (isset($stdObject->{'$'})) ? $stdObject->{'$'} : NULL;
+    
     return $term . "=" . $value;
   }
 
@@ -478,13 +477,13 @@ class ting_openformat_methods {
     foreach ($fields as $field => $value) {
       if (is_array($value) && isset($object->$field))
         $ret[$field] = self::parseFields($object->$field, $value);
-      elseif ($field == 'searchCode')
+      elseif ($field == 'searchCode' && isset($object->$field))
         $ret[$field] = self::parseSimpleSearchCode($object->$field);
-      elseif (isset($object->$value) && is_array($object->$value)) {
+      elseif (!is_array($value) && isset($object->$value) && is_array($object->$value)) {
         foreach ($object->$value as $val)
           $ret[$field][] = $val->{'$'};
       }
-      elseif (isset($object->$value))
+      elseif (!is_array($value) && isset($object->$value) && is_object($object->$value))
         $ret[$field] = $object->$value->{'$'};
       else
         $ret[$field] = NULL;

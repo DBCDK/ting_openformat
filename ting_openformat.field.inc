@@ -725,7 +725,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $references = $entity->getReferences();
         if (!$references)
           return;
-        $markup = (is_array($references)) ? implode(", ", $references) : $descriptionNote;
+        $markup = (is_array($references)) ? implode(", ", $references) : $references;
         
         $element[$delta] = array(
           '#markup' => $markup,
@@ -751,7 +751,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $context = $entity->getContext();
         if (!$context)
           return;
-        $markup = (is_array($context)) ? implode(", ", $context) : $context;
+        $markup = (is_array($context['contextElement'])) ? implode(", ", $context['contextElement']) : $context['contextElement'];
         
         $element[$delta] = array(
           '#markup' => $markup,
