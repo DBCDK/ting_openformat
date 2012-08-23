@@ -3,15 +3,21 @@
 <?php
 print drupal_render($variables['fields']);
 print $variables['tabs'];
+echo '<div class="ting_openformat_subworks">';
 foreach( $variables['subWorks'] as $type => $manifestations ) {
-  echo '<div class="ting_openformat_work">';
+  //$css_id = str_replace(':','-',key($manifestations));
+  $css_id = key($manifestations);
+
+  echo '<div id="ting_openformat_subwork_'.$css_id.'" class="ting_openformat_subwork">';
   foreach( $manifestations as $id => $manifestation ) {
-    echo '<div style="background-color:#CCCCCC">';
+    echo '<h3>'.$id.'</h3>';
     print $manifestation;
-    echo '</div>';
   }
   echo '</div>';
 }
+echo '</div>';
+
 ?>
+
 
 

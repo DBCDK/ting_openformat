@@ -7,3 +7,19 @@ hr{
 height:3px;
 color:blue;
 }
+
+.ting_openformat_subwork_tab{
+border:1px solid green;
+float:left;
+padding:0.5em;
+cursor:pointer;
+}
+
+.ting_openformat_subwork{
+display:none;
+}
+
+.break{
+clear:left;
+}
+
