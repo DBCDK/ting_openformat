@@ -48,7 +48,6 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   // do the actual search via ting_client_class
   $client = new ting_client_class();
   $result = $client->do_search($params);
-
   if( !$result ) {
     return array();
   }
@@ -90,6 +89,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
  * replace TingClientObjectCollection (returned from ting-client) with bibdkEntity(work)
  **/
 function _ting_openformat_load_entities( $result ) {
+  //print_r($result); die();
   $bibdkobjects = array();
   if( is_array($result->collections) ) {
     $ids = array();

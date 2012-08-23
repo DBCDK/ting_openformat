@@ -130,7 +130,7 @@ function ting_openformat_ding_entity_fields() {
     /********** MANIFESTATION ************/
 
     // TYPE 1
-    'bibdk_manifestation_type' => array(
+    'bibdk_mani_type' => array(
       'field' => array(
         'locked' => FALSE,
         'storage' => array(
@@ -146,7 +146,7 @@ function ting_openformat_ding_entity_fields() {
     ),
 
     // ORIGINAL TITLE 0 .. 1
-    'bibdk_manifestation_orig_title' => array(
+    'bibdk_mani_orig_title' => array(
       'field' => array(
         'locked' => FALSE,
         'storage' => array(
@@ -162,7 +162,7 @@ function ting_openformat_ding_entity_fields() {
     ),
 
     // CONTRIBUTORS zero or 1 occurence
-    'bibdk_manifestation_contribs' => array(
+    'bibdk_mani_contribs' => array(
       'field' => array(
         'locked' => FALSE,
         'storage' => array(
@@ -177,8 +177,24 @@ function ting_openformat_ding_entity_fields() {
       ),
     ),
 
+    // SERIESTITLE zero or more occurence(s)
+    'bibdk_mani_series' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Series'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+    
     // RELATEDSERIESTITLE zero or more occurence(s)
-    'bibdk_manifestation_series' => array(
+    'bibdk_mani_related_series' => array(
       'field' => array(
         'locked' => FALSE,
         'storage' => array(
@@ -192,6 +208,268 @@ function ting_openformat_ding_entity_fields() {
         'entity_type' => 'bibdkManifestation'
       ),
     ),
+    
+    // READABILITYINDEX zero or more occurence(s)
+    'bibdk_mani_readability_indexes' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Readability indexes'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+    
+    // SHELF zero or more occurence(s)
+    'bibdk_mani_shelf' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Shelf'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+    // SHELF zero or more occurence(s)
+    'bibdk_mani_genre' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Genre'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+    
+    // AUDIENCE SUBJECTS zero or more occurence(s)
+    'bibdk_mani_audience_subjects' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Audience Subjects'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+    
+    // MARKED AUDIENCE zero or more occurence(s)
+    'bibdk_mani_marked_audience' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Marked Audience'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+    
+    // RECOMMENDED AUDIENCE zero or more occurence(s)
+    'bibdk_mani_recommended_audience' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Recommended Audience'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+    
+    // USED LANGUAGE zero or more occurence(s)
+    'bibdk_mani_used_language' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Used Language'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+    
+    
+    // ACTOR NOTE zero or more occurence(s)
+    'bibdk_mani_actor_note' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Actor Note'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+    
+    // DESCRIPTION NOTE zero or more occurence(s)
+    'bibdk_mani_description_note' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Description Note'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+    
+    // REFERENCES zero or more occurence(s)
+    'bibdk_mani_references' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('References'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+    
+    
+    // ORIGINALS zero or more occurence(s)
+    'bibdk_mani_originals' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Originals'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+    
+    // CONTEXT zero or more occurence(s)
+    'bibdk_mani_context' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Context'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+    
+    // Identifiers zero or more occurence(s)
+    'bibdk_mani_identifiers' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Identifiers'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+    
+    // PRICE INFORMATION zero or more occurence(s)
+    'bibdk_mani_price_information' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Price Information'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+    
+    
+    // LANGUAGE zero or more occurence(s)
+    'bibdk_mani_language' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Language'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+    
+    // ACCESS INFORMATION zero or more occurence(s)
+    'bibdk_mani_access_information' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Access Information'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
+    
+    
+    
+    
   );
 }
 

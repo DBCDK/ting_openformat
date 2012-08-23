@@ -6,6 +6,8 @@
 module_load_include('inc', 'ting_openformat','ting_openformat.search');
 module_load_include('inc', 'ting_openformat' ,'ting_openformat.field');
 
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 
 function ting_openformat_menu(){
   $items = array();
