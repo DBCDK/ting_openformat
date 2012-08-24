@@ -609,7 +609,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
           $markup .= $shelf['shelfMusic'];
 
         
-        if (isset($shelf['shelfClassification']))
+        if (isset($shelf['shelfClassification']) && isset($shelf['shelfClassification']['display']) && isset($shelf['shelfClassification']['searchCode']))
             $markup .= l($shelf['shelfClassification']['display'], 'search/work/' . $shelf['shelfClassification']['searchCode']);
         
         $element[$delta] = array(
@@ -643,9 +643,16 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
 
         $markup .= $audienceSubjects['audienceHeader']. ' ';
         
-        if (isset($audienceSubjects['audienceSubject']))
-            $markup .= l($audienceSubjects['audienceSubject']['display'], 'search/work/' . $audienceSubjects['audienceSubject']['searchCode']);
-        
+        if (isset($audienceSubjects['audienceSubject'])){
+          foreach ($audienceSubjects['audienceSubject'] as $audienceSubject) {
+            if (isset($audienceSubject['searchCode']))
+              $links[] = l($audienceSubject['display'], 'search/work/' . $audienceSubject['searchCode']);
+            else 
+              $links[] = $audienceSubject['display'];
+          }
+          if (isset($links))
+            $markup .= implode(",", $links);
+        }    
         $element[$delta] = array(
           '#markup' => $markup,
         );
@@ -698,7 +705,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $actorNote = $entity->getActorNote();
         if (!$actorNote)
           return;
-        $markup = implode(", ", $actorNote);
+        $markup = (is_array($actorNote)) ? implode(", ", $actorNote) : $actorNote;
         
         $element[$delta] = array(
           '#markup' => $markup,
@@ -762,11 +769,9 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
       case 'bibdk_mani_identifiers_default':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $identifiers = $entity->getIdentifiers();
-        if (!$identifiers)
+        if (!count($identifiers))
           return;
-        if (!is_array($identifiers)){
-          $identifiers[] = $identifiers;
-        }
+        
         foreach ($identifiers as $identifier) {
           $markup = $identifier['identifierHeader'];
           $markup .= (is_array($identifier['identifier'])) ? implode(", ", $identifier['identifier']) : $identifier['identifier'];
