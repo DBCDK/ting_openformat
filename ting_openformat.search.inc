@@ -135,17 +135,17 @@ function _ting_openformat_load_entities( $result ) {
 function _ting_openformat_set_search_result($bibdkobject) {
 
   $variables['result'] = $bibdkobject;
-
+  $current = current($bibdkobject);
   //************** TODO handle bibdkobject *************/
-
+  
   $result = array(
-    'link' => 'HEST',
+    'link' => url("work/".$current->id),
     'type' => '',
     // 'title' => $formattedCollection->formattedCollection->work->title->titleFull->{'$'},
-    'title' => 'HEST',
+    'title' => $current->getTitle(),
     'user' => '',
     'date' => '',
-    'snippet' => ting_openformat_work_view(current($bibdkobject)),
+    'snippet' => ting_openformat_work_view($current),
   );
   return $result;
 }

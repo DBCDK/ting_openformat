@@ -764,12 +764,18 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $identifiers = $entity->getIdentifiers();
         if (!$identifiers)
           return;
-        $markup = $identifiers['identifierHeader'];
-        $markup .= (is_array($identifiers['identifier'])) ? implode(", ", $identifiers['identifier']) : $identifiers['identifier'];
-        $markup .= (is_array($identifiers['ISSN'])) ? implode(", ", $identifiers['ISSN']) : $identifiers['ISSN'];
-        
+        if (!is_array($identifiers)){
+          $identifiers[] = $identifiers;
+        }
+        foreach ($identifiers as $identifier) {
+          $markup = $identifier['identifierHeader'];
+          $markup .= (is_array($identifier['identifier'])) ? implode(", ", $identifier['identifier']) : $identifier['identifier'];
+          $markup .= (is_array($identifier['ISSN'])) ? implode(", ", $identifier['ISSN']) : $identifier['ISSN'];
+          $markups[] = $markup;
+          
+        }
         $element[$delta] = array(
-          '#markup' => $markup,
+          '#markup' => implode(", ", $markups),
         );
        break;
       

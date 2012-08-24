@@ -203,7 +203,7 @@ function ting_openformat_manifestations_load($stdObjects) {
  * uri callback as defined in hook_entity_info
  **/
 function ting_openformat_maniobject_uri() {
-  return 'HEST';
+  return 'Brønd';
 }
 
 /**************** end ENTITY ***************/

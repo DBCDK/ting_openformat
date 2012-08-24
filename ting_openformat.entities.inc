@@ -382,6 +382,7 @@ class manifestation {
       'ISSN' => 'ISSN',
     );
     $object = isset($this->manifestation->details->identifiers) ? $this->manifestation->details->identifiers : NULL;
+
     return ting_openformat_methods::parseFields($object, $fields);
   }
 
@@ -472,6 +473,13 @@ class ting_openformat_methods {
 
     if (!isset($object)) {
       return FALSE;
+    }
+    if (is_array($object)){
+      foreach ($object as $o){
+        if (isset($o))
+          $ret[] = self::parseFields($o, $fields);
+      }
+      return $ret;
     }
 
     foreach ($fields as $field => $value) {
