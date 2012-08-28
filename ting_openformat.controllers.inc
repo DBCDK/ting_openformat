@@ -1,8 +1,13 @@
 <?php
 /**
- * there is no need to store work or manifestations on the database - they come from out'a space.
- * make a lightweight entity by implementing DrupalEntityControllerInterface only.
+ * Entity controllers.
+ *
+ * there is no need to store work, subworks or manifestations on the database - they come from out'a space.
+ * make lightweight entities by implementing DrupalEntityControllerInterface only.
  * we do need to attach fields though, so attachLoad() is copied from DrupalDefaultEntityController
+ * furthermore the attachLoad defines a load hook (defined in hook_entity_info) that is called after attachLoad
+ *
+ * @ see ting_openformat.entities.inc for class implementations
  **/
 class bibdkEntityApiController implements DrupalEntityControllerInterface{
   protected $entityInfo;
@@ -29,7 +34,8 @@ class bibdkEntityApiController implements DrupalEntityControllerInterface{
   /**
    * implements DrupalEntityControllerInterface::resetCache
    **/
-  public function resetCache(array $ids = NULL){}
+  public function resetCache(array $ids = NULL){ // do nothing for now
+  }
 
   /**
    * copied from DrupalDefaultEntityController::attachLoad() with minor modifications.
@@ -52,6 +58,21 @@ class bibdkEntityApiController implements DrupalEntityControllerInterface{
   }
 }
 
+
+/**
+ * subwork implementation; Load a group of manifestations into bibdkSubWork given by id,manifestation - NOTICE!! conditions array is deprecated in drupal 8
+ **/
+class subWorkEntityApiController extends bibdkEntityApiController{
+  public function load( $type = '', $manifestations = array() ) {
+    $entity = new bibdkSubwork($type, $manifestations);
+    $entity->id = $entity->ding_entity_id = current($manifestations)->id;
+    $entities[$entity->id] = $entity;
+    // attach fields
+    $this->attachLoad($entities);
+
+    return $entities[$entity->id];
+  }
+}
 
 /**
  * load a single manifestation given as id(ids),manifestion(conditions) - NOTICE!! conditions array is deprecated in drupal 8

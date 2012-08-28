@@ -44,8 +44,8 @@ function ting_openformat_menu(){
 }
 
 function ting_openformat_single($id){
-   $params = array();
-  // search phrase (query)
+  $params = array();
+
   $params['objectId'] = $id;
   $params['objectFormat'] = variable_get('ting_search_openformat','bibliotekdkWorkDisplay');
 
@@ -109,9 +109,9 @@ function ting_openformat_form_ting_client_admin_webservices_settings_alter (&$fo
 
 /************** ENTITY ****************/
 
-/** @TODO make this work
+/**
  * Implements hook_entity_info
- * define a new entity
+ * for bibdk we need 3 entities: work, subwork and manifestation
  **/
 
 function ting_openformat_entity_info() {
@@ -134,7 +134,6 @@ function ting_openformat_entity_info() {
       /* for clarity. default implementation of load hook */
       // 'load hook' => 'manifestation_load',
       'description' => t('openformat fields'),
-      // leave controller class blank for now (use DrupalDefaultEntityController) @TODO implement
       'controller class' => 'ManifestionEntityAPIController',
       'entity keys' => array(
         //'id' => 'tid',
@@ -152,37 +151,71 @@ function ting_openformat_entity_info() {
       ),
     ),
 
+    'bibdkSubwork' => array(
+      'label' => t('Subwork'),
+      'fieldable' => TRUE,
+      'base table' => 'ting_openformat_manifestation',
 
-      'bibdkWorkEntity' => array(
-        'label' => t('Bibdk entity placeholder for manifestations'),
-        'fieldable' => TRUE,
-        // ?? do we need the base table -- it is not used for anything since controllerclass
-        // only implements DrupalEntityControllerInterface and not DrupalDefaultEntityController
-        'base table' => 'ting_openformat_manifestation',
-        // make this a ding_entity ?
-        'ding_entity_type' => 'bibdk_entity',
-        //'ding_entity_type' => 'ting_openformat_manifestation',
-        'ding_entity_menu' => '/manifestation/%ting_manifestation',
-        'ding_entity_index' => 2,
-        //... could an additional argument be used in ding_entity ?? maybe for setting bundels
-        // 'ding_entity_bundle' => 'bibdk_entity',
-        'controller class' => 'bibdkEntityAPIController',
-        'load hook' => 'manifestations_load',
-        'entity keys' => array(
-          //'id' => 'tid',
-          //'ding_entity_id' => 'ding_entity_id',
-          'id' => 'ding_entity_id',
-        ),
-        'bundles' => array(
-          'bibdkWorkEntity' => array(
-            'label' => 'bibdkWorkEntity',
-            'admin' => array(
-              'path' => 'admin/structure/bibdkWork',
-              'access arguments' => array('administer content types'),
-            ),
+      // make this a ding_entity ?
+      'ding_entity_type' => 'bibdk_subwork',
+      //'ding_entity_type' => 'ting_openformat_manifestation',
+      //'ding_entity_menu' => '/manifestation/%ting_manifestation',
+      //'ding_entity_index' => 2,
+      //'ding_entity_bundle' => 'bibdk_entity',
+
+      // uri callback
+      //'uri callback' => 'ting_openformat_maniobject_uri',
+
+      /* for clarity. default implementation of load hook */
+      // 'load hook' => 'manifestation_load',
+      'description' => t('Manifestations grouped by type'),
+      'controller class' => 'subWorkEntityAPIController',
+      'entity keys' => array(
+        //'id' => 'tid',
+        //'ding_entity_id' => 'ding_entity_id',
+        'id' => 'ding_entity_id',
+      ),
+      'bundles' => array(
+        'bibdkSubWork' => array(
+          'label' => t('Subwork'),
+          'admin' => array(
+            'path' => 'admin/structure/subworks',
+            'access arguments' => array('administer content types'),
           ),
         ),
-      )
+      ),
+    ),
+
+    'bibdkWorkEntity' => array(
+      'label' => t('Bibdk entity placeholder for manifestations'),
+      'fieldable' => TRUE,
+      // ?? do we need the base table -- it is not used for anything since controllerclass
+      // only implements DrupalEntityControllerInterface and not DrupalDefaultEntityController
+      'base table' => 'ting_openformat_manifestation',
+      // make this a ding_entity ?
+      'ding_entity_type' => 'bibdk_entity',
+      //'ding_entity_type' => 'ting_openformat_manifestation',
+      'ding_entity_menu' => '/manifestation/%ting_manifestation',
+      'ding_entity_index' => 2,
+      //... could an additional argument be used in ding_entity ?? maybe for setting bundels
+      // 'ding_entity_bundle' => 'bibdk_entity',
+      'controller class' => 'bibdkEntityAPIController',
+      'load hook' => 'manifestations_load',
+      'entity keys' => array(
+        //'id' => 'tid',
+        //'ding_entity_id' => 'ding_entity_id',
+        'id' => 'ding_entity_id',
+      ),
+      'bundles' => array(
+        'bibdkWorkEntity' => array(
+          'label' => 'bibdkWorkEntity',
+          'admin' => array(
+            'path' => 'admin/structure/bibdkWork',
+            'access arguments' => array('administer content types'),
+          ),
+        ),
+      ),
+    )
 
 
   );
@@ -260,17 +293,6 @@ function template_preprocess_ting_openformat_subwork_tabs(&$variables){
   //  dpm($variables);
 }
 
-
-/** \brief load a single work
- * @params id; id of work to load
- * return bibdkWork entity
- **/
-function ting_openformat_view_work_by_id($id) {
-  // @TODO ; implement a'la :
-  // $work=entity_load('bibdkWorkentity', $id , ....)
-  // return ting_openformat_work_view( $work, ... );
-}
-
 // @TODO - does this method belong here ??
 
 function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = NULL) {
@@ -281,29 +303,19 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   $work_fields = array();
   $work_fields += _prepare_view('bibdkWorkEntity', $bibdkWork, $view_mode, $langcode);
 
-  $subWorks =  _ting_openformat_parse_subworks($bibdkWork->getManifestations());
-  // dpm($subWorks);
   $sub = array();
-  foreach( $subWorks as $type => $manifestations ) {
+  $subWorks = $bibdkWork->getSubWorks();
+  foreach( $subWorks as $id => $subWork ) {
     //$sub['type'] = $type;
     $field_content = array();
-    foreach( $manifestations as $id=>$manifestation ) {
-      $sub_tab[$type][] = $id;
+    foreach( $subWork->getManifestations() as $manifestation ) {
+      $sub_tab[$subWork->getType()][] = $id;
       $field_content = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
-      $sub[$type][$manifestation->id] = theme('ting_openformat_manifestation',array('fields'=>$field_content,));
+      $sub[$subWork->getType()][$manifestation->id] = theme('ting_openformat_manifestation',array('fields'=>$field_content,));
     }
   }
   $tabs = theme('ting_openformat_subwork_tabs',array('subWorks'=>$subWorks));
-  //dpm($tabs);
   return theme('ting_openformat_work',array('fields'=>$work_fields,'subWorks'=>$sub,'tabs'=>$tabs,'ding_id' => $bibdkWork->id));
-}
-
-function _ting_openformat_parse_subworks($manifestations) {
-  $subWorks = array();
-  foreach( $manifestations as $id => $manifestation ) {
-    $subWorks[$manifestation->getType()][$id] = $manifestation;
-  }
-  return $subWorks;
 }
 
 /**

@@ -66,7 +66,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   drupal_static('ting_search_results', $result);
 
 
-  //dpm($result);
+  // dpm($result);
 
   foreach($result->collections as $collection) {
     $search_results[] = _ting_openformat_set_search_result($collection);
@@ -76,6 +76,8 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   if(module_exists('bibdk_searchhistory')){
     module_invoke('bibdk_searchhistory', 'set_search_results', $keys, $result);
   }
+
+  //dpm($search_results);
 
   if( !empty($search_results) ) {
     return $search_results;
@@ -137,7 +139,7 @@ function _ting_openformat_set_search_result($bibdkobject) {
   $variables['result'] = $bibdkobject;
   $current = current($bibdkobject);
   //************** TODO handle bibdkobject *************/
-  
+
   $result = array(
     'link' => url("work/".$current->id),
     'type' => '',

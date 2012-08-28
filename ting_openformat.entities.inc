@@ -6,6 +6,7 @@ class bibdkWork {
   public $ding_entity_id;
   public $work;
   public $manifestations = array();
+  public $subWorks = array();
 
   public function __construct($work = NULL) {
     $this->work = $work;
@@ -19,6 +20,18 @@ class bibdkWork {
     foreach ($manifestations as $id => $manifestation) {
       $this->manifestations[$id] = entity_load('bibdkManifestation', $id, $manifestation);
     }
+
+    // pjo testing -- also set subworks
+    foreach( $this->manifestations as $id => $manifestation ) {
+      $subWorks[$manifestation->getType()][$id] = $manifestation;
+    }
+    foreach( $subWorks as $type => $manifestations ) {
+      $this->subWorks[current($manifestations)->id] = entity_load('bibdkSubwork', $type, $manifestations);
+    }
+  }
+
+  public function getSubWorks (){
+    return $this->subWorks;
   }
 
   public function getTitle() {
@@ -54,6 +67,27 @@ class bibdkWork {
     }
 
     return ting_openformat_methods::parseSearchCode($subjects);
+  }
+
+}
+
+class bibdkSubwork{
+  public $id;
+  public $ding_entity_id;
+  public $manifestations = array();
+  public $type;
+
+  public function __construct($type, $manifestations) {
+    $this->type = $type;
+    $this->manifestations = $manifestations;
+  }
+
+  public function getManifestations() {
+    return $this->manifestations;
+  }
+
+  public function getType (){
+    return $this->type;
   }
 
 }
@@ -296,7 +330,7 @@ class manifestation {
     );
 
     $object = isset($this->manifestation->details->audienceSubjects) ? $this->manifestation->details->audienceSubjects : NULL;
-    
+
     return ting_openformat_methods::parseFields($object, $fields);
   }
 
@@ -306,19 +340,19 @@ class manifestation {
 
   public function getMarkedAudience() {
     $objects = isset($this->manifestation->details->markedAudience) ? $this->manifestation->details->markedAudience : NULL;
-    
+
     if (!isset($objects))
       return array();
-    
+
     if (!is_array($objects))
       $objects = array($objects);
-    
+
     $ret = array();
-    
+
     foreach ($objects as $object){
       $ret[] = $object->{'$'};
     }
-    
+
     return $ret;
   }
 
@@ -328,19 +362,19 @@ class manifestation {
 
   public function getRecommendedAudience() {
     $objects = isset($this->manifestation->details->recommendedAudience) ? $this->manifestation->details->recommendedAudience : NULL;
-    
+
     if (!isset($objects))
       return array();
-    
+
     if (!is_array($objects))
       $objects = array($objects);
-    
+
     $ret = array();
-    
+
     foreach ($objects as $object){
       $ret[] = $object->{'$'};
     }
-    
+
     return $ret;
   }
 
@@ -350,19 +384,19 @@ class manifestation {
 
   public function getUsedLanguage() {
     $objects = isset($this->manifestation->details->usedLanguage) ? $this->manifestation->details->usedLanguage : NULL;
-    
+
     if (!isset($objects))
       return array();
-    
+
     if (!is_array($objects))
       $objects = array($objects);
-    
+
     $ret = array();
-    
+
     foreach ($objects as $object){
       $ret[] = $object->{'$'};
     }
-    
+
     return $ret;
   }
 
@@ -372,19 +406,19 @@ class manifestation {
 
   public function getActorNote() {
     $objects = isset($this->manifestation->details->actorNote) ? $this->manifestation->details->actorNote : NULL;
-    
+
     if (!isset($objects))
       return array();
-    
+
     if (!is_array($objects))
       $objects = array($objects);
-    
+
     $ret = array();
-    
+
     foreach ($objects as $object){
       $ret[] = $object->{'$'};
     }
-    
+
     return $ret;
   }
 
@@ -394,19 +428,19 @@ class manifestation {
 
   public function getDescriptionNote() {
     $objects = isset($this->manifestation->details->descriptionNote) ? $this->manifestation->details->descriptionNote : NULL;
-    
+
      if (!isset($objects))
       return array();
-    
+
     if (!is_array($objects))
       $objects = array($objects);
-    
+
     $ret = array();
-    
+
     foreach ($objects as $object){
       $ret[] = $object->{'$'};
     }
-    
+
     return $ret;
   }
 
@@ -416,19 +450,19 @@ class manifestation {
 
   public function getReferences() {
     $objects = isset($this->manifestation->details->references) ? $this->manifestation->details->references : NULL;
-    
+
      if (!isset($objects))
       return array();
-    
+
     if (!is_array($objects))
       $objects = array($objects);
-    
+
     $ret = array();
-    
+
     foreach ($objects as $object){
       $ret[] = $object->{'$'};
     }
-    
+
     return $ret;
   }
 
@@ -438,19 +472,19 @@ class manifestation {
 
   public function getOriginals() {
     $objects = isset($this->manifestation->details->originals) ? $this->manifestation->details->originals : NULL;
-    
+
      if (!isset($objects))
       return array();
-    
+
     if (!is_array($objects))
       $objects = array($objects);
-    
+
     $ret = array();
-    
+
     foreach ($objects as $object){
       $ret[] = $object->{'$'};
     }
-    
+
     return $ret;
   }
 
@@ -485,10 +519,10 @@ class manifestation {
     $objects = isset($this->manifestation->details->identifiers) ? $this->manifestation->details->identifiers : NULL;
     if (!isset($objects))
       return array();
-    
+
     if (!is_array($objects))
       $objects = array($objects);
-    
+
     return ting_openformat_methods::parseFields($objects, $fields);
   }
 
@@ -566,7 +600,7 @@ class ting_openformat_methods {
       return;
 
     $value = (isset($stdObject->{'$'})) ? $stdObject->{'$'} : NULL;
-    
+
     return $term . "=" . $value;
   }
 
@@ -584,25 +618,25 @@ class ting_openformat_methods {
     }
 
     foreach ($fields as $field => $value) {
-      
+
       if (is_array($value) && isset($object->$field))
         $ret[$field] = self::parseFields($object->$field, $value);
-      
+
       elseif ($field == 'searchCode' && isset($object->$field))
         $ret[$field] = self::parseSimpleSearchCode($object->$field);
-      
+
       elseif (!is_array($value) && isset($object->$value) && is_array($object->$value)) {
-      
+
         foreach ($object->$value as $val)
           $ret[$field][] = $val->{'$'};
       }
-      
+
       elseif (!is_array($value) && isset($object->$value) && is_object($object->$value))
         $ret[$field] = $object->$value->{'$'};
-      
+
       else
         $ret[$field] = NULL;
-      
+
     }
     return $ret;
   }
