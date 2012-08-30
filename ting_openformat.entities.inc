@@ -76,12 +76,21 @@ class bibdkSubwork{
   public $ding_entity_id;
   public $manifestations = array();
   public $type;
-
+  private$isReservable;
+  
   public function __construct($type, $manifestations) {
     $this->type = $type;
     $this->manifestations = $manifestations;
   }
-
+  
+  public function getIDs(){
+    $ids = array();
+    foreach($this->getManifestations() as $manifistation){
+      $ids[] = $manifistation->id;
+  }
+  return $ids;
+  } 
+  
   public function getManifestations() {
     return $this->manifestations;
   }
@@ -90,6 +99,20 @@ class bibdkSubwork{
     return $this->type;
   }
 
+  public function isReservable (){
+    if (!isset($this->isReservable)){
+      $this->isReservable = false;
+      foreach($this->getManifestations() as $manifistation){
+        if ($manifistation->isReservable()){
+          $this->isReservable = true;
+          break;
+        }
+      }
+    }
+    
+    return $this->isReservable;
+  }
+  
 }
 
 class manifestation {
@@ -97,15 +120,45 @@ class manifestation {
   public $id;
   public $ding_entity_id;
   public $manifestation;
+  private $isReservable;
 
   public function __construct($manifestation) {
     $this->manifestation = $manifestation;
   }
-
+  
+  /*
+   * Return ID as array
+   */
+  public function getIDs (){
+    return array($this->id); 
+  }
+  
+  /*
+   * Retuns orderability manifistation
+   */
+  public function isReservable(){
+    return ($this->getRequestMethod() == "none")? false : true;
+  } 
+    
+  /* \brief requestMethod
+   * zero or one occurence
+   */
+  public function getRequestMethod(){
+    return isset($this->manifestation->adminData->requestMethod->{'$'}) ? $this->manifestation->adminData->requestMethod->{'$'} : FALSE;
+    
+  }
+  
+  /* \brief restrictedUse
+   * zero or one occurence
+   */
+  public function getRestrictedUse() {
+    return isset($this->manifestation->adminData->restrictedUse->{'$'}) ? $this->manifestation->adminData->restrictedUse->{'$'} : FALSE;
+  }
+  
+  
   /* \brief type of manifestation
    * 1 occurence
    */
-
   public function getType() {
     return $this->manifestation->type->{'$'};
   }
@@ -573,6 +626,7 @@ class manifestation {
 
     return ting_openformat_methods::parseFields($object, $fields);
   }
+ 
 
 }
 

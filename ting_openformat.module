@@ -159,8 +159,8 @@ function ting_openformat_entity_info() {
       // make this a ding_entity ?
       'ding_entity_type' => 'bibdk_subwork',
       //'ding_entity_type' => 'ting_openformat_manifestation',
-      //'ding_entity_menu' => '/manifestation/%ting_manifestation',
-      //'ding_entity_index' => 2,
+      'ding_entity_menu' => '/manifestation/%ting_manifestation',
+      'ding_entity_index' => 2,
       //'ding_entity_bundle' => 'bibdk_entity',
 
       // uri callback
@@ -176,7 +176,7 @@ function ting_openformat_entity_info() {
         'id' => 'ding_entity_id',
       ),
       'bundles' => array(
-        'bibdkSubWork' => array(
+        'bibdkSubwork' => array(
           'label' => t('Subwork'),
           'admin' => array(
             'path' => 'admin/structure/subworks',
@@ -305,13 +305,15 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
 
   $sub = array();
   $subWorks = $bibdkWork->getSubWorks();
+  
   foreach( $subWorks as $id => $subWork ) {
+    $sub[$subWork->getType()]['fields'] =  _prepare_view('bibdkSubwork', $subWork, $view_mode, $langcode);
     //$sub['type'] = $type;
     $field_content = array();
     foreach( $subWork->getManifestations() as $manifestation ) {
       $sub_tab[$subWork->getType()][] = $id;
       $field_content = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
-      $sub[$subWork->getType()][$manifestation->id] = theme('ting_openformat_manifestation',array('fields'=>$field_content,));
+      $sub[$subWork->getType()]['manifistations'][$manifestation->id] = theme('ting_openformat_manifestation',array('fields'=>$field_content,));
     }
   }
   $tabs = theme('ting_openformat_subwork_tabs',array('subWorks'=>$subWorks));
@@ -397,6 +399,21 @@ function ting_openformat_menu_alter(&$items) {
       $item['description'] = 'Manage work display.';
 
       $items['admin/structure/manifestations/fields'] = array(
+        'title' => 'Manage fields',
+        'type' => MENU_DEFAULT_LOCAL_TASK,
+        'weight' => 1,
+      );
+    }
+    if (isset($items['admin/structure/subworks/fields'])) {
+      // Make the fields task the default local task.
+      $items['admin/structure/subworks'] = $items['admin/structure/subworks/fields'];
+      //$items['admin/structure/bibdkWork'] = $items['admin/structure/bibdkWork'];
+      $item = &$items['admin/structure/subworks'];
+      $item['type'] = MENU_NORMAL_ITEM;
+      $item['title'] = 'Subworks for bibliotek.dk';
+      $item['description'] = 'Manage subwork display.';
+
+      $items['admin/structure/subworks/fields'] = array(
         'title' => 'Manage fields',
         'type' => MENU_DEFAULT_LOCAL_TASK,
         'weight' => 1,
