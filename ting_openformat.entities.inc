@@ -137,14 +137,28 @@ class manifestation {
    * Retuns orderability manifistation
    */
   public function isReservable(){
-    return ($this->getRequestMethod() == "none")? false : true;
+    $requestMethod = $this->getRequestMethod();
+    return (isset($requestMethod)) ? null : true;
   } 
+  
+  public function getInfotext () {
+    $restrictedUse = $this->getRestrictedUse();
+    $requestMethod = $this->getRequestMethod();
+    
+    if (isset($restrictedUse))
+      return $restrictedUse;
+    
+    elseif(isset($requestMethod))
+      return $requestMethod;
+    
+    return NULL;
+  }
     
   /* \brief requestMethod
    * zero or one occurence
    */
   public function getRequestMethod(){
-    return isset($this->manifestation->adminData->requestMethod->{'$'}) ? $this->manifestation->adminData->requestMethod->{'$'} : FALSE;
+    return isset($this->manifestation->adminData->requestMethod->{'$'}) ? $this->manifestation->adminData->requestMethod->{'$'} : NULL;
     
   }
   
@@ -152,7 +166,7 @@ class manifestation {
    * zero or one occurence
    */
   public function getRestrictedUse() {
-    return isset($this->manifestation->adminData->restrictedUse->{'$'}) ? $this->manifestation->adminData->restrictedUse->{'$'} : FALSE;
+    return isset($this->manifestation->adminData->restrictedUse->{'$'}) ? $this->manifestation->adminData->restrictedUse->{'$'} : NULL;
   }
   
   
@@ -168,7 +182,7 @@ class manifestation {
    */
 
   public function getOriginalTitle() {
-    return isset($this->manifestation->details->originalTitle->{'$'}) ? $this->manifestation->details->originalTitle->{'$'} : FALSE;
+    return isset($this->manifestation->details->originalTitle->{'$'}) ? $this->manifestation->details->originalTitle->{'$'} : NULL;
   }
 
   /* \brief alternative title

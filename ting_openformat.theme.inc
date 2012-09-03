@@ -54,17 +54,14 @@ function ting_openformat_theme() {
     'ting_openformat_search_pager' => array(
       'variables' => array('tags' => array(), 'element' => 0, 'parameters' => array(), 'quantity' => 9),
     ),
-    /*    'ting_openformat_searchresults_view' => array(
-      'variables' => array('results' => NULL, 'module'=>NULL),
-      'template' => 'ting_openformat_searchresults_view',
-      ),*/
-    /*    'ting_search_display_extended_query' => array(
-          'variables' => array('query_label'=>NULL,'query_string' => NULL),
-          'template' => 'ting-search-display-extended-query',
-          ),
-          'ting_search_extended_search' => array(
-          'template' => 'ting-search-extended-search',
-          ),*/
+      'ting_openformat_type_order_form' => array(
+      'render element' => 'form',
+      'file' => 'ting_openformat.admin.inc',
+    ),
+    'ting_openformat_type_order_element' => array(
+      'render element' => 'element',
+      'file' => 'ting_openformat.admin.inc',
+    ),
   );
 }
 

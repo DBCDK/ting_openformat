@@ -39,10 +39,21 @@ function ting_openformat_menu(){
     'access arguments' => array('administer webservices settings'),
     'file' => 'ting_openformat.admin.inc'
   );
+  $items['admin/config/ting_openformat/order'] = array(
+    'title' => 'Set Type Order',
+    'description' => 'Set the order of the different types in a subwork',
+    'weight' => 1,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ting_openformat_type_order_form'),
+    'access arguments' => array('administer webservices settings'),
+    'file' => 'ting_openformat.admin.inc'
+  );
 
   return $items;
 }
-
+/**
+ * View single work
+ */
 function ting_openformat_single($id){
   $params = array();
 
@@ -126,18 +137,12 @@ function ting_openformat_entity_info() {
       //'ding_entity_type' => 'ting_openformat_manifestation',
       'ding_entity_menu' => '/manifestation/%ting_manifestation',
       'ding_entity_index' => 2,
-      // 'ding_entity_bundle' => 'bibdk_entity',
-
-      // uri callback
-      //'uri callback' => 'ting_openformat_maniobject_uri',
 
       /* for clarity. default implementation of load hook */
       // 'load hook' => 'manifestation_load',
       'description' => t('openformat fields'),
       'controller class' => 'ManifestionEntityAPIController',
       'entity keys' => array(
-        //'id' => 'tid',
-        //'ding_entity_id' => 'ding_entity_id',
         'id' => 'ding_entity_id',
       ),
       'bundles' => array(
@@ -161,18 +166,12 @@ function ting_openformat_entity_info() {
       //'ding_entity_type' => 'ting_openformat_manifestation',
       'ding_entity_menu' => '/manifestation/%ting_manifestation',
       'ding_entity_index' => 2,
-      //'ding_entity_bundle' => 'bibdk_entity',
-
-      // uri callback
-      //'uri callback' => 'ting_openformat_maniobject_uri',
-
+   
       /* for clarity. default implementation of load hook */
       // 'load hook' => 'manifestation_load',
       'description' => t('Manifestations grouped by type'),
       'controller class' => 'subWorkEntityAPIController',
       'entity keys' => array(
-        //'id' => 'tid',
-        //'ding_entity_id' => 'ding_entity_id',
         'id' => 'ding_entity_id',
       ),
       'bundles' => array(
@@ -307,17 +306,27 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   $subWorks = $bibdkWork->getSubWorks();
   
   foreach( $subWorks as $id => $subWork ) {
-    $sub[$subWork->getType()]['fields'] =  _prepare_view('bibdkSubwork', $subWork, $view_mode, $langcode);
-    //$sub['type'] = $type;
+    $type = drupal_strtolower($subWork->getType());
+    $sub[$type]['type'] = $subWork->getType();
+    $sub[$type]['fields'] =  _prepare_view('bibdkSubwork', $subWork, $view_mode, $langcode);
+    $sub[$type]['id'] =  $id;
     $field_content = array();
     foreach( $subWork->getManifestations() as $manifestation ) {
-      $sub_tab[$subWork->getType()][] = $id;
       $field_content = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
-      $sub[$subWork->getType()]['manifistations'][$manifestation->id] = theme('ting_openformat_manifestation',array('fields'=>$field_content,));
+      $sub[$type]['manifistations'][$manifestation->id] = theme('ting_openformat_manifestation',array('fields'=>$field_content,));
     }
   }
-  $tabs = theme('ting_openformat_subwork_tabs',array('subWorks'=>$subWorks));
-  return theme('ting_openformat_work',array('fields'=>$work_fields,'subWorks'=>$sub,'tabs'=>$tabs,'ding_id' => $bibdkWork->id));
+  
+  $ordered_types = variable_get("ting_openformat_types");
+  
+  foreach ($ordered_types as $type => $value) {
+    if (isset($sub[$type]))
+        $ordered_subworks[$type] = $sub[$type];
+      
+  }  
+  
+  $tabs = theme('ting_openformat_subwork_tabs',array('subWorks'=>$ordered_subworks));
+  return theme('ting_openformat_work',array('fields'=>$work_fields,'subWorks'=>$ordered_subworks,'tabs'=>$tabs,'ding_id' => $bibdkWork->id));
 }
 
 /**
@@ -424,3 +433,29 @@ function ting_openformat_menu_alter(&$items) {
 
 
 
+/**
+ * Fetch known types from the datawell.
+ */
+function _ting_openformat_fetch_types() {
+   $types = variable_get('ting_openformat_types', array());
+  
+  // Get a list of types by executing a null query and look at the facets
+  // result.
+   $options = array(
+    'facets' => array('facet.type'),
+    'numFacets' => 99,
+    'reply_only' => TRUE,
+    'sort' => 'random',
+  );
+  module_load_include('client.inc', 'ting');
+  $result = ting_do_search("*=*", 0, 0, $options);
+  foreach ($result->facets['facet.type']->terms as $term => $count) {
+    if (!isset($types[$term]))
+      $types[$term] = array("type" => $term, "count" => $count, "weight" => 1000);
+  }
+
+  // Only save if we actually got any types.
+  if (!empty($types)) {
+    variable_set('ting_openformat_types', $types);
+  }
+}

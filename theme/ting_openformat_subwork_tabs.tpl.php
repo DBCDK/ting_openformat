@@ -1,8 +1,9 @@
 <div class="ting_openformat_subwork_tabs">
-<?php
-foreach( $variables['subWorks'] as $id => $subWork ) {
-  echo '<div id="'.$id.'" class="ting_openformat_subwork_tab">';
-  echo $subWork->getType();
+<?php 
+$count = 0;
+foreach( $variables['subWorks'] as $type => $subWork ) {
+  echo '<div id="'.$subWork['id'].'" class="ting_openformat_subwork_tab">';
+  echo $subWork['type'];
   echo '</div>';
 }
 ?>
