@@ -135,8 +135,8 @@ function ting_openformat_entity_info() {
       // make this a ding_entity ?
       'ding_entity_type' => 'bibdk_manifestation',
       //'ding_entity_type' => 'ting_openformat_manifestation',
-      'ding_entity_menu' => '/manifestation/%ting_manifestation',
-      'ding_entity_index' => 2,
+      //'ding_entity_menu' => '/manifestation/%ting_manifestation',
+      //'ding_entity_index' => 2,
 
       /* for clarity. default implementation of load hook */
       // 'load hook' => 'manifestation_load',
@@ -164,8 +164,8 @@ function ting_openformat_entity_info() {
       // make this a ding_entity ?
       'ding_entity_type' => 'bibdk_subwork',
       //'ding_entity_type' => 'ting_openformat_manifestation',
-      'ding_entity_menu' => '/manifestation/%ting_manifestation',
-      'ding_entity_index' => 2,
+      //'ding_entity_menu' => '/manifestation/%ting_manifestation',
+      //'ding_entity_index' => 2,
    
       /* for clarity. default implementation of load hook */
       // 'load hook' => 'manifestation_load',
@@ -194,8 +194,8 @@ function ting_openformat_entity_info() {
       // make this a ding_entity ?
       'ding_entity_type' => 'bibdk_entity',
       //'ding_entity_type' => 'ting_openformat_manifestation',
-      'ding_entity_menu' => '/manifestation/%ting_manifestation',
-      'ding_entity_index' => 2,
+      //'ding_entity_menu' => '/manifestation/%ting_manifestation',
+      //'ding_entity_index' => 2,
       //... could an additional argument be used in ding_entity ?? maybe for setting bundels
       // 'ding_entity_bundle' => 'bibdk_entity',
       'controller class' => 'bibdkEntityAPIController',
@@ -318,12 +318,17 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   }
   
   $ordered_types = variable_get("ting_openformat_types");
-  
+ 
+if( !empty($ordered_types) ) { 
   foreach ($ordered_types as $type => $value) {
     if (isset($sub[$type]))
         $ordered_subworks[$type] = $sub[$type];
       
   }  
+}
+else {
+$ordered_subworks = $sub;	
+}
   
   $tabs = theme('ting_openformat_subwork_tabs',array('subWorks'=>$ordered_subworks));
   return theme('ting_openformat_work',array('fields'=>$work_fields,'subWorks'=>$ordered_subworks,'tabs'=>$tabs,'ding_id' => $bibdkWork->id));
