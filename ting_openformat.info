@@ -13,6 +13,7 @@ scripts[] = js/ting_openformat.js
 files[] = ting_openformat.controllers.inc
 files[] = ting_openformat.entities.inc
 ;files[] = ting_openformat.search.inc
+files[] = test/ting_openformat.test
 dependencies[] = search
 dependencies[] = ting_client
 

@@ -45,6 +45,13 @@ function ting_openformat_field_info() {
       'default_formatter' => 'bibdk_mani_orig_title_default',
       'no_ui' => TRUE,
     ),
+    'bibdk_mani_alt_title' => array(
+      'label' => t('Original title'),
+      'description' => t('Alternative title of manifestation'),
+      'default_widget' => 'hidden',
+      'default_formatter' => 'bibdk_mani_alternative_title_default',
+      'no_ui' => TRUE,
+    ),
     'bibdk_mani_contribs' => array(
       'label' => t('Contributors'),
       'description' => t('contributors to manifestation'),
@@ -240,6 +247,16 @@ function ting_openformat_field_formatter_info () {
   'label' => t('Default'),
   'field types' => array(
   'bibdk_mani_orig_title',
+  ),
+  'settings' => array(
+  'link_type' => 'none',
+  ),
+  ),
+
+  'bibdk_mani_alternative_title_default' => array(
+  'label' => t('Default'),
+  'field types' => array(
+  'bibdk_mani_alt_title',
   ),
   'settings' => array(
   'link_type' => 'none',
@@ -496,7 +513,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
           return;
         }
         $markup = '';
-        foreach ($subjects as $key => $val) {
+        foreach ($subjects['subject'] as $key => $val) {
           if (strlen($markup) > 1) {
             $markup .= ',  ';
           }
@@ -533,6 +550,18 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
           '#markup' => $markup,
         );
         break;
+      // alternative title
+      case 'bibdk_mani_alternative_title_default':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $markup = $entity->getAlternativeTitle();
+        if (!$markup) {
+          return;
+        }
+
+        $element[$delta] = array(
+          '#markup' => $markup,
+        );
+        break;
 
       //contributors
       case 'bibdk_mani_contribs_default':
@@ -550,22 +579,21 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
       // seriesTitle
       case 'bibdk_mani_series_default':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
-        $series = $entity->getSeriesTitle();
-        if (!$series) {
+        $seriesTitle = $entity->getSeriesTitle();
+        if (!$seriesTitle) {
           return;
         }
 
-        $markup = '';
+        $markup = array();
 
-        foreach ($series as $serie) {
-          $markup .= $serie['seriesHeader'];
+        foreach ($seriesTitle as $serie) {
           foreach ($serie['series'] as $key => $val) {
-            $markup .= l($val['display'], 'search/work/' . $val['searchCode']);
-            $markup .= ', ';
+            $markup[] = l($val['display'], 'search/work/' . $val['searchCode']);
+            
           }
         }
         $element[$delta] = array(
-          '#markup' => $markup,
+          '#markup' => implode(", ", $markup),
         );
         break;
 
@@ -579,7 +607,6 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         }
 
         $markup = '';
-
         foreach ($series as $serie) {
           $markup .= $serie['relatedSeriesHeader'];
           foreach ($serie['relatedSeries'] as $key => $val) {
@@ -640,15 +667,10 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         }
 
         $markup = '';
-
-        $markup .= $audienceSubjects['audienceHeader']. ' ';
-        
         if (isset($audienceSubjects['audienceSubject'])){
           foreach ($audienceSubjects['audienceSubject'] as $audienceSubject) {
             if (isset($audienceSubject['searchCode']))
               $links[] = l($audienceSubject['display'], 'search/work/' . $audienceSubject['searchCode']);
-            else 
-              $links[] = $audienceSubject['display'];
           }
           if (isset($links))
             $markup .= implode(",", $links);
@@ -773,9 +795,10 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
           return;
         
         foreach ($identifiers as $identifier) {
-          $markup = $identifier['identifierHeader'];
-          $markup .= (is_array($identifier['identifier'])) ? implode(", ", $identifier['identifier']) : $identifier['identifier'];
-          $markup .= (is_array($identifier['ISSN'])) ? implode(", ", $identifier['ISSN']) : $identifier['ISSN'];
+          
+          $markup = isset($identifier['identifierHeader']) ? $identifier['identifierHeader'] : "";
+          $markup .= isset($identifier['identifier']) ? $identifier['identifier'] : "";
+          $markup .= isset($identifier['ISSN']) ? $identifier['ISSN'] : "";
           $markups[] = $markup;
           
         }

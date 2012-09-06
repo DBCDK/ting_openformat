@@ -1,0 +1,306 @@
+{
+    "searchResponse":{
+        "result":{
+            "hitCount":{
+                "$":"1"
+            },
+            "collectionCount":{
+                "$":"1"
+            },
+            "more":{
+                "$":"false"
+            },
+            "searchResult":[{
+                "collection":{
+                    "resultPosition":{
+                        "$":"1"
+                    },
+                    "numberOfObjects":{
+                        "$":"1"
+                    },
+                    "object":[{
+                        "identifier":{
+                            "$":"870970-basis:28540167"
+                        },
+                        "formatsAvailable":{
+                            "format":[{
+                                "$":"dkabm"
+                            },{
+                                "$":"marcxchange"
+                            }]
+                            }
+                        }]
+                },
+            "formattedCollection":{
+                "workDisplay":{
+                    "work":{
+                        "title":{
+                            "titleFull":{
+                                "$":"Danmark"
+                            },
+                            "titleSpecific":{
+                                "$":"Danmark (ill. Eva Wulff)"
+                            }
+                        },
+                    "creators":{
+                        "creator":{
+                            "searchCode":{
+                                "$":"Troels Gollander",
+                                "@phrase":{
+                                    "$":"dc.creator"
+                                }
+                            },
+                        "display":{
+                            "$":"Troels Gollander"
+                        },
+                        "@className":{
+                            "$":"link"
+                        }
+                    }
+                },
+        "description":{
+            "subjects":{
+                "subjectHeader":{
+                    "$":"Emne:"
+                },
+                "subject":{
+                    "searchCode":{
+                        "$":"geografi",
+                        "@phrase":{
+                            "$":"dc.subject"
+                        }
+                    },
+                "display":{
+                    "$":"geografi"
+                },
+                "@className":{
+                    "$":"link"
+                },
+                "@punctuation":{
+                    "$":" ; "
+                }
+            }
+        },
+"abstract":{
+    "$":"Indhold: Set fra oven ; Historie ; I dag ; Rundt i Danmark ; Fakta om Danmark"
+}
+}
+},
+"manifestation":{
+    "adminData":{
+        "pid":{
+            "$":"870970-basis:28540167"
+        },
+        "sortKey":{
+            "$":"_01  A  999  1990  ill. Eva Wulff"
+        }
+    },
+"type":{
+    "$":"Bog"
+},
+"details":{
+      "alternativeTitle":{
+        "alternativeTitleHeader":{
+            "$":"Cd:"
+        },
+        "alternativeTitleElement":{
+            "$":"Harry Potter instrumental solos alto saxophone - level 2-3"
+        }
+    },
+    "contributors":{
+        "$":"tekst: Troels Gollander, tegner: Eva Wulff, kort: Eva Wulff"
+    },
+    "format":{
+        "$":"32 sider, illustreret i farver"
+    },
+    "seriesTitle":{
+        "seriesHeader":{
+            "$":"Serie:"
+        },
+        "series":{
+            "searchCode":{
+                "$":"Faktisk! (Kbh.)",
+                "@phrase":{
+                    "$":"dc.series"
+                }
+            },
+        "display":{
+            "$":"Faktisk! (Kbh.)"
+        },
+        "@className":{
+            "$":"link"
+        },
+        "@punctuation":{
+            "$":" ; "
+        }
+    }
+},
+"readabilityIndexes":{
+    "readabilityIndex":{
+        "$":"Lix: 15"
+    }
+},
+"shelf":{
+    "shelfHeader":{
+        "$":"Opstilling i folkebiblioteker:"
+    },
+    "shelfClassification":{
+        "searchCode":{
+            "$":"46",
+            "@word":{
+                "$":"dc.dk5"
+            }
+        },
+    "display":{
+        "$":"46"
+    },
+    "@className":{
+        "$":"link"
+    }
+}
+},
+"audienceSubjects":{
+    "audienceSubjectHeader":{
+        "$":"M\u00e5lgruppe:"
+    },
+    "audienceSubject":[{
+        "searchCode":{
+            "$":"for 7 \u00e5r"
+        },
+        "display":{
+            "$":"for 7 \u00e5r"
+        },
+        "@className":{
+            "$":"link"
+        },
+        "@punctuation":{
+            "$":" ; "
+        }
+    },{
+    "searchCode":{
+        "$":"for 8 \u00e5r"
+    },
+    "display":{
+        "$":"for 8 \u00e5r"
+    },
+    "@className":{
+        "$":"link"
+    },
+    "@punctuation":{
+        "$":" ; "
+    }
+},{
+    "searchCode":{
+        "$":"for 9 \u00e5r"
+    },
+    "display":{
+        "$":"for 9 \u00e5r"
+    },
+    "@className":{
+        "$":"link"
+    },
+    "@punctuation":{
+        "$":" ; "
+    }
+},{
+    "searchCode":{
+        "$":"let at l\u00e6se"
+    },
+    "display":{
+        "$":"let at l\u00e6se"
+    },
+    "@className":{
+        "$":"link"
+    },
+    "@punctuation":{
+        "$":" ; "
+    }
+},{
+    "searchCode":{
+        "$":"02"
+    },
+    "display":{
+        "$":"Folkeskoleniveau"
+    },
+    "@className":{
+        "$":"link"
+    },
+    "@punctuation":{
+        "$":" ; "
+    }
+}]
+},
+"descriptionNote":{
+    "$":"Indhold: Set fra oven ; Historie ; I dag ; Rundt i Danmark ; Fakta om Danmark"
+},
+"references":{
+    "$":"Med litteraturhenvisninger og links"
+},
+"context":{
+    "contextElement":{
+        "$":"Hertil findes opgaver p\u00e5 internettet"
+    }
+},
+"identifiers":{
+    "identifierHeader":{
+        "$":"ISBN:"
+    },
+    "identifier":{
+        "$":"978-87-02-09679-8"
+    }
+},
+"priceInformation":{
+    "priceHeader":{
+        "$":"Pris ved udgivelsen:"
+    },
+    "price":{
+        "$":"kr. 137,50"
+    }
+}
+},
+"publicationDetails":{
+    "publisher":{
+        "$":"Gyldendal",
+        "@punctuation":{
+            "$":", "
+        }
+    },
+"publicationYear":{
+    "$":"2010"
+}
+}
+}
+}
+},
+"@":"of"
+}],
+"facetResult":{
+    "$":""
+},
+"time":{
+    "$":"0.41937"
+}
+}
+},
+"@namespaces":{
+    "$":"http:\/\/oss.dbc.dk\/ns\/opensearch",
+    "ac":"http:\/\/biblstandard.dk\/ac\/namespace\/",
+    "dbcaddi":"http:\/\/oss.dbc.dk\/rdf\/dbcaddi#",
+    "dbcbib":"http:\/\/oss.dbc.dk\/rdf\/dbcbib#",
+    "dbcbibaddi":"http:\/\/oss.dbc.dk\/rdf\/dbcbibaddi#",
+    "dc":"http:\/\/purl.org\/dc\/elements\/1.1\/",
+    "dcmitype":"http:\/\/purl.org\/dc\/dcmitype\/",
+    "dcterms":"http:\/\/purl.org\/dc\/terms\/",
+    "dkabm":"http:\/\/biblstandard.dk\/abm\/namespace\/dkabm\/",
+    "dkdcplus":"http:\/\/biblstandard.dk\/abm\/namespace\/dkdcplus\/",
+    "docbook":"http:\/\/docbook.org\/ns\/docbook",
+    "marcx":"info:lc\/xmlns\/marcxchange-v1",
+    "of":"http:\/\/oss.dbc.dk\/ns\/openformat",
+    "ofo":"http:\/\/oss.dbc.dk\/ns\/openformatoutput",
+    "oso":"http:\/\/oss.dbc.dk\/ns\/opensearchobjects",
+    "oss":"http:\/\/oss.dbc.dk\/ns\/osstypes",
+    "xs":"http:\/\/www.w3.org\/2001\/XMLSchema",
+    "xsi":"http:\/\/www.w3.org\/2001\/XMLSchema-instance"
+}
+}
+

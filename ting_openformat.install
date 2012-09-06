@@ -160,6 +160,22 @@ function ting_openformat_ding_entity_fields() {
         'entity_type' => 'bibdkManifestation'
       ),
     ),
+    
+    // ALTERNATIVE TITLE 0 .. MANY
+    'bibdk_mani_alt_title' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Alternative title'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation'
+      ),
+    ),
 
     // CONTRIBUTORS zero or 1 occurence
     'bibdk_mani_contribs' => array(
