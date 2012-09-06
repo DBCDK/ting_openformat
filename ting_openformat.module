@@ -135,8 +135,8 @@ function ting_openformat_entity_info() {
       // make this a ding_entity ?
       'ding_entity_type' => 'bibdk_manifestation',
       //'ding_entity_type' => 'ting_openformat_manifestation',
-      'ding_entity_menu' => '/manifestation/%ting_manifestation',
-      'ding_entity_index' => 2,
+      //'ding_entity_menu' => '/manifestation/%ting_manifestation',
+      //'ding_entity_index' => 2,
 
       /* for clarity. default implementation of load hook */
       // 'load hook' => 'manifestation_load',
@@ -164,8 +164,8 @@ function ting_openformat_entity_info() {
       // make this a ding_entity ?
       'ding_entity_type' => 'bibdk_subwork',
       //'ding_entity_type' => 'ting_openformat_manifestation',
-      'ding_entity_menu' => '/manifestation/%ting_manifestation',
-      'ding_entity_index' => 2,
+      //'ding_entity_menu' => '/manifestation/%ting_manifestation',
+      //'ding_entity_index' => 2,
    
       /* for clarity. default implementation of load hook */
       // 'load hook' => 'manifestation_load',
@@ -194,8 +194,8 @@ function ting_openformat_entity_info() {
       // make this a ding_entity ?
       'ding_entity_type' => 'bibdk_entity',
       //'ding_entity_type' => 'ting_openformat_manifestation',
-      'ding_entity_menu' => '/manifestation/%ting_manifestation',
-      'ding_entity_index' => 2,
+      //'ding_entity_menu' => '/manifestation/%ting_manifestation',
+      //'ding_entity_index' => 2,
       //... could an additional argument be used in ding_entity ?? maybe for setting bundels
       // 'ding_entity_bundle' => 'bibdk_entity',
       'controller class' => 'bibdkEntityAPIController',
