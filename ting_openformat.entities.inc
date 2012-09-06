@@ -43,8 +43,8 @@ class bibdkWork {
   }
 
   public function getCreator() {
-    $fields = array('creator' => "searchCode");
-    $elements = $this->work->creators;
+    $fields = array('creators' => array('creator' => "searchCode"));
+    $elements = $this->work;
     $result = ting_openformat_methods::parseFields($elements, $fields);
     return (is_array($result)) ? reset($result) : $result;
   }
@@ -149,13 +149,12 @@ class manifestation {
   public function getInfotext() {
     $restrictedUse = $this->getRestrictedUse();
     $requestMethod = $this->getRequestMethod();
-
     if (isset($restrictedUse))
       return $restrictedUse;
 
-    elseif (isset($requestMethod))
+    elseif (isset($requestMethod) && $requestMethod != "link" && $requestMethod != "none");
       return $requestMethod;
-
+    echo test;  
     return NULL;
   }
 

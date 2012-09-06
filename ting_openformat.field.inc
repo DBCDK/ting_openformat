@@ -203,258 +203,235 @@ function ting_openformat_field_formatter_settings_form($field, $instance, $view_
 /**
  * Implements hook_field_formatter_info
  * */
-function ting_openformat_field_formatter_info () {
+function ting_openformat_field_formatter_info() {
   return array(
-  'ting_openformat_work_title_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'ting_openformat_work_title',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),
-  'ting_openformat_work_creators_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'ting_openformat_work_creators',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),
-  'ting_openformat_work_subjects_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'ting_openformat_work_subjects',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),
-
-  'bibdk_mani_type_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_type',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),
-
-  'bibdk_mani_orig_title_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_orig_title',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),
-
-  'bibdk_mani_alternative_title_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_alt_title',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),
-
-  'bibdk_mani_contribs_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_contribs',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),
-
-  'bibdk_mani_series_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_series',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),
-  
-  'bibdk_mani_related_series_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_related_series',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),
-
-  'bibdk_mani_readability_indexes_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_related_series',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),
-
-  'bibdk_mani_shelf_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_shelf',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),
-
-  'bibdk_mani_genre_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_genre',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),  
-    
-  'bibdk_mani_audience_subjects_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_audience_subjects',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),  
-    
-  'bibdk_mani_marked_audience_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_marked_audience',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),  
-    
-  'bibdk_mani_recommended_audience_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_recommended_audience',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),  
-    
-  'bibdk_mani_used_language_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_used_language',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),  
-    
-  'bibdk_mani_actor_note_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_actor_note',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),  
-    
-  'bibdk_mani_description_note_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_description_note',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),  
-    
-  'bibdk_mani_references_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_references',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),  
-    
-  'bibdk_mani_originals_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_originals',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),  
-    
-  'bibdk_mani_context_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_context',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),  
-    
-  'bibdk_mani_identifiers_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_identifiers',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),  
-    
-  'bibdk_mani_price_information_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_price_information',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),  
-    
-  'bibdk_mani_language_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_language',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),  
-    
-  'bibdk_mani_access_information_default' => array(
-  'label' => t('Default'),
-  'field types' => array(
-  'bibdk_mani_access_information',
-  ),
-  'settings' => array(
-  'link_type' => 'none',
-  ),
-  ),  
-    
+    'ting_openformat_work_title_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'ting_openformat_work_title',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'ting_openformat_work_creators_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'ting_openformat_work_creators',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'ting_openformat_work_subjects_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'ting_openformat_work_subjects',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_type_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_type',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_orig_title_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_orig_title',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_alternative_title_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_alt_title',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_contribs_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_contribs',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_series_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_series',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_related_series_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_related_series',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_readability_indexes_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_related_series',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_shelf_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_shelf',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_genre_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_genre',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_audience_subjects_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_audience_subjects',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_marked_audience_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_marked_audience',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_recommended_audience_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_recommended_audience',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_used_language_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_used_language',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_actor_note_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_actor_note',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_description_note_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_description_note',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_references_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_references',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_originals_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_originals',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_context_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_context',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_identifiers_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_identifiers',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_price_information_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_price_information',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_language_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_language',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'bibdk_mani_access_information_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'bibdk_mani_access_information',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
   );
-  } 
+}
 
 /**
  * Implements hook_field_load()
@@ -489,11 +466,11 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
       case 'ting_openformat_work_creators_default':
         // one or more creators
         $creators = $entity->getCreator();
-        if (empty($creators)) {
+        if (empty($creators) || !isset($creators['creator'])) {
           return;
         }
         $markup = '';
-        foreach ($creators as $key => $val) {
+        foreach ($creators['creator'] as $key => $val) {
           if (strlen($markup) > 1) {
             $markup .= ',  ';
           }
@@ -541,13 +518,12 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
       // original title
       case 'bibdk_mani_orig_title_default':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
-        $markup = $entity->getOriginalTitle();
-        if (!$markup) {
+        $orginalTitle = $entity->getOriginalTitle();
+        if (!$orginalTitle) {
           return;
         }
-
         $element[$delta] = array(
-          '#markup' => $markup,
+          '#markup' => isset($orginalTitle['originalTitleElement']) ? $orginalTitle['originalTitleElement'] : null,
         );
         break;
       // alternative title
@@ -589,7 +565,6 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         foreach ($seriesTitle as $serie) {
           foreach ($serie['series'] as $key => $val) {
             $markup[] = l($val['display'], 'search/work/' . $val['searchCode']);
-            
           }
         }
         $element[$delta] = array(
@@ -608,10 +583,12 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
 
         $markup = '';
         foreach ($series as $serie) {
-          $markup .= $serie['relatedSeriesHeader'];
-          foreach ($serie['relatedSeries'] as $key => $val) {
-            $markup .= l($val['display'], 'search/work/' . $val['searchCode']);
-            $markup .= ', ';
+          $markup .= isset($serie['relatedSeriesHeader']) ? $serie['relatedSeriesHeader'] : "";
+          if (isset($serie['relatedSeries'])) {
+            foreach ($serie['relatedSeries'] as $key => $val) {
+              $markup .= l($val['display'], 'search/work/' . $val['searchCode']);
+              $markup .= ', ';
+            }
           }
         }
         $element[$delta] = array(
@@ -630,20 +607,20 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
 
         $markup = '';
 
-        $markup .= $shelf['shelfHeader']. ' ';
+        $markup .= $shelf['shelfHeader'] . ' ';
 
         if (isset($shelf['shelfMusic']))
           $markup .= $shelf['shelfMusic'];
 
-        
+
         if (isset($shelf['shelfClassification']) && isset($shelf['shelfClassification']['display']) && isset($shelf['shelfClassification']['searchCode']))
-            $markup .= l($shelf['shelfClassification']['display'], 'search/work/' . $shelf['shelfClassification']['searchCode']);
-        
+          $markup .= l($shelf['shelfClassification']['display'], 'search/work/' . $shelf['shelfClassification']['searchCode']);
+
         $element[$delta] = array(
           '#markup' => $markup,
         );
         break;
-        
+
       // genre
       case 'bibdk_mani_genre_default':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
@@ -651,13 +628,13 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         if (!$genre)
           return;
         $markup = (is_array($genre)) ? implode(", ", $genre) : $genre;
-        
+
         $element[$delta] = array(
           '#markup' => $markup,
         );
-       break;
-       
-       // audienceSubjects
+        break;
+
+      // audienceSubjects
       case 'bibdk_mani_audience_subjects_default':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $audienceSubjects = $entity->getAudienceSubjects();
@@ -666,33 +643,31 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
           return;
         }
 
-        $markup = '';
-        if (isset($audienceSubjects['audienceSubject'])){
+        if (isset($audienceSubjects['audienceSubject'])) {
           foreach ($audienceSubjects['audienceSubject'] as $audienceSubject) {
             if (isset($audienceSubject['searchCode']))
               $links[] = l($audienceSubject['display'], 'search/work/' . $audienceSubject['searchCode']);
           }
-          if (isset($links))
-            $markup .= implode(",", $links);
-        }    
+          $markup = isset($links) ? implode(",", $links) : null;
+        }
         $element[$delta] = array(
           '#markup' => $markup,
         );
         break;
-        
-         // markedAudience
+
+      // markedAudience
       case 'bibdk_mani_marked_audience_default':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $markedAudience = $entity->getMarkedAudience();
         if (!$markedAudience)
           return;
         $markup = (is_array($markedAudience)) ? implode(", ", $markedAudience) : $markedAudience;
-        
+
         $element[$delta] = array(
           '#markup' => $markup,
         );
-       break;
-    
+        break;
+
       // recommendedAudience
       case 'bibdk_mani_recommended_audience_default':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
@@ -700,13 +675,13 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         if (!$recommendedAudience)
           return;
         $markup = (is_array($recommendedAudience)) ? implode(", ", $recommendedAudience) : $recommendedAudience;
-        
+
         $element[$delta] = array(
           '#markup' => $markup,
         );
-       break;
-       
-    
+        break;
+
+
       // usedLanguage
       case 'bibdk_mani_used_language_default':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
@@ -714,13 +689,13 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         if (!$usedLanguage)
           return;
         $markup = (is_array($usedLanguage)) ? implode(", ", $usedLanguage) : $usedLanguage;
-        
+
         $element[$delta] = array(
           '#markup' => $markup,
         );
-       break;
-       
-    
+        break;
+
+
       // actorNote
       case 'bibdk_mani_actor_note_default':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
@@ -728,26 +703,26 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         if (!$actorNote)
           return;
         $markup = (is_array($actorNote)) ? implode(", ", $actorNote) : $actorNote;
-        
+
         $element[$delta] = array(
           '#markup' => $markup,
         );
-       break;
-       
+        break;
+
       // descriptionNote
       case 'bibdk_mani_description_note_default':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $descriptionNote = $entity->getDescriptionNote();
         if (!$descriptionNote)
           return;
-        
+
         $markup = (is_array($descriptionNote)) ? implode(", ", $descriptionNote) : $descriptionNote;
-        
+
         $element[$delta] = array(
           '#markup' => $markup,
         );
-       break;
-       
+        break;
+
       // references
       case 'bibdk_mani_references_default':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
@@ -755,12 +730,12 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         if (!$references)
           return;
         $markup = (is_array($references)) ? implode(", ", $references) : $references;
-        
+
         $element[$delta] = array(
           '#markup' => $markup,
         );
-       break;
-       
+        break;
+
       // originals
       case 'bibdk_mani_originals_default':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
@@ -768,12 +743,12 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         if (!$originals)
           return;
         $markup = (is_array($originals)) ? implode(", ", $originals) : $originals;
-        
+
         $element[$delta] = array(
           '#markup' => $markup,
         );
-       break;
-       
+        break;
+
       // context
       case 'bibdk_mani_context_default':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
@@ -781,76 +756,74 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         if (!$context)
           return;
         $markup = (is_array($context['contextElement'])) ? implode(", ", $context['contextElement']) : $context['contextElement'];
-        
+
         $element[$delta] = array(
           '#markup' => $markup,
         );
-       break;
-       
+        break;
+
       // identifiers
       case 'bibdk_mani_identifiers_default':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $identifiers = $entity->getIdentifiers();
         if (!count($identifiers))
           return;
-        
+
         foreach ($identifiers as $identifier) {
-          
+
           $markup = isset($identifier['identifierHeader']) ? $identifier['identifierHeader'] : "";
           $markup .= isset($identifier['identifier']) ? $identifier['identifier'] : "";
           $markup .= isset($identifier['ISSN']) ? $identifier['ISSN'] : "";
           $markups[] = $markup;
-          
         }
         $element[$delta] = array(
           '#markup' => implode(", ", $markups),
         );
-       break;
-      
-       // priceInformation
+        break;
+
+      // priceInformation
       case 'bibdk_mani_priceInformation_default':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $priceInformation = $entity->getPriceInformation();
         if (!$priceInformation)
           return;
-        
+
         $markup = $priceInformation['PriceHeader'];
         $markup .= $priceInformation['price'];
-        
+
         $element[$delta] = array(
           '#markup' => $markup,
         );
-       break;
-       
-       // language
+        break;
+
+      // language
       case 'bibdk_mani_language_default':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $language = $entity->getLanguage();
         if (!$language)
           return;
-        
+
         $markup = $language['languageHeader'];
         $markup .= $language['languageElement'];
-        
+
         $element[$delta] = array(
           '#markup' => $markup,
         );
-       break;
-       
-       // accessInformation
+        break;
+
+      // accessInformation
       case 'bibdk_mani_access_information_default':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $accessInformation = $entity->getAccessInformation();
         if (!$accessInformation)
           return;
-        
+
         $markup = (is_array($accessInformation['accessUrl'])) ? implode(", ", $accessInformation['accessUrl']) : $accessInformation['accessUrl'];
-        
+
         $element[$delta] = array(
           '#markup' => $markup,
         );
-       break;
-       
+        break;
     }
   }
   return $element;
