@@ -22,7 +22,8 @@ class bibdkEntityApiController implements DrupalEntityControllerInterface{
    * implements DrupalEntityControllerInterface::load
    **/
   public function load ($ids = array(), $conditions = array()) {
-    $entity = new bibdkWork($conditions['work']);
+    //$entity = new bibdkWork($conditions['work']);
+    $entity = new bibdkWork();
     $entity->setManifestations($conditions['manifestations']);
     $entity->id = $entity->ding_entity_id = key($entity->getManifestations());
     $entities[$entity->id] = $entity;

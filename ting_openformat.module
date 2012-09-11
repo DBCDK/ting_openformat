@@ -75,7 +75,6 @@ function ting_openformat_single($id){
 
   // conditions array is deprecated in drupal 8.
   $conditions['manifestations'] = $original_manifestations;
-  $conditions['work'] = $openformat->formattedCollection->work;
   $bibdkEntity = entity_load('bibdkWorkEntity',$entity_ids,$conditions,TRUE);
 
   return ting_openformat_work_view(current($bibdkEntity));
@@ -141,7 +140,7 @@ function ting_openformat_entity_info() {
       /* for clarity. default implementation of load hook */
       // 'load hook' => 'manifestation_load',
       'description' => t('openformat fields'),
-      'controller class' => 'ManifestionEntityAPIController',
+      'controller class' => 'ManifestionEntityApiController',
       'entity keys' => array(
         'id' => 'ding_entity_id',
       ),
@@ -166,7 +165,7 @@ function ting_openformat_entity_info() {
       //'ding_entity_type' => 'ting_openformat_manifestation',
       //'ding_entity_menu' => '/manifestation/%ting_manifestation',
       //'ding_entity_index' => 2,
-   
+
       /* for clarity. default implementation of load hook */
       // 'load hook' => 'manifestation_load',
       'description' => t('Manifestations grouped by type'),
@@ -198,7 +197,7 @@ function ting_openformat_entity_info() {
       //'ding_entity_index' => 2,
       //... could an additional argument be used in ding_entity ?? maybe for setting bundels
       // 'ding_entity_bundle' => 'bibdk_entity',
-      'controller class' => 'bibdkEntityAPIController',
+      'controller class' => 'bibdkEntityApiController',
       'load hook' => 'manifestations_load',
       'entity keys' => array(
         //'id' => 'tid',
@@ -289,7 +288,6 @@ function ting_openformat_ding_devel_timers() {
 function template_preprocess_ting_openformat_subwork_tabs(&$variables){
   $path = drupal_get_path('module', 'ting_openformat') . '/css';
   drupal_add_css($path.'/ting_openformat_subwork.css');
-  //  dpm($variables);
 }
 
 // @TODO - does this method belong here ??
@@ -304,7 +302,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
 
   $sub = array();
   $subWorks = $bibdkWork->getSubWorks();
-  
+
   foreach( $subWorks as $id => $subWork ) {
     $type = drupal_strtolower($subWork->getType());
     $sub[$type]['type'] = $subWork->getType();
@@ -316,20 +314,20 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
       $sub[$type]['manifistations'][$manifestation->id] = theme('ting_openformat_manifestation',array('fields'=>$field_content,));
     }
   }
-  
+
   $ordered_types = variable_get("ting_openformat_types");
- 
-if( !empty($ordered_types) ) { 
+
+if( !empty($ordered_types) ) {
   foreach ($ordered_types as $type => $value) {
     if (isset($sub[$type]))
         $ordered_subworks[$type] = $sub[$type];
-      
-  }  
+
+  }
 }
 else {
-$ordered_subworks = $sub;	
+$ordered_subworks = $sub;
 }
-  
+
   $tabs = theme('ting_openformat_subwork_tabs',array('subWorks'=>$ordered_subworks));
   return theme('ting_openformat_work',array('fields'=>$work_fields,'subWorks'=>$ordered_subworks,'tabs'=>$tabs,'ding_id' => $bibdkWork->id));
 }
@@ -443,7 +441,7 @@ function ting_openformat_menu_alter(&$items) {
  */
 function _ting_openformat_fetch_types() {
    $types = variable_get('ting_openformat_types', array());
-  
+
   // Get a list of types by executing a null query and look at the facets
   // result.
    $options = array(

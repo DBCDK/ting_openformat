@@ -17,7 +17,6 @@ function ting_openformat_admin_module_disable_form_submit($form, $form_state) {
   // @TODO
   // 1. delete fields attached to ting_openformat module
   // 2. disable modules that had any fields attached
-//  dpm(func_get_args());
 }
 
 

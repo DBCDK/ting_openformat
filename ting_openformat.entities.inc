@@ -21,13 +21,21 @@ class bibdkWork {
       $this->manifestations[$id] = entity_load('bibdkManifestation', $id, $manifestation);
     }
 
-    // pjo testing -- also set subworks
+    // set subworks
     foreach ($this->manifestations as $id => $manifestation) {
       $subWorks[$manifestation->getType()][$id] = $manifestation;
     }
     foreach ($subWorks as $type => $manifestations) {
       $this->subWorks[current($manifestations)->id] = entity_load('bibdkSubwork', $type, $manifestations);
     }
+
+    // @TODO; should manifestations be sorted by sortkey ??
+
+    // rewind manifestations array
+    reset($this->manifestations);
+    $top_manifestation = current($this->manifestations);
+    // set work part
+    $this->work = current($this->manifestations)->getWork();
   }
 
   public function getSubWorks() {
@@ -67,7 +75,7 @@ class bibdkSubwork {
   public $ding_entity_id;
   public $manifestations = array();
   public $type;
-  private$isReservable;
+  private $isReservable;
 
   public function __construct($type, $manifestations) {
     $this->type = $type;
@@ -120,6 +128,10 @@ class manifestation {
     $this->manifestation = $manifestation;
   }
 
+  public function getWork() {
+    return $this->manifestation->work;
+  }
+
   /*
    * Return ID as array
    */
@@ -154,7 +166,7 @@ class manifestation {
 
     elseif (isset($requestMethod) && $requestMethod != "link" && $requestMethod != "none");
       return $requestMethod;
-    echo test;  
+    echo test;
     return NULL;
   }
 
@@ -505,9 +517,6 @@ class ting_openformat_methods {
       elseif (!is_array($value) && isset($object->$value) && is_object($object->$value)) {
         $ret[$value] = $object->$value->{'$'};
       }
-
-      /*else
-        $ret[$value] = NULL;*/
     }
     return $ret;
   }

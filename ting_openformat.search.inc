@@ -65,9 +65,6 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   // static cache result - used in hook_ding_facetbrowser, ting_search etc.
   drupal_static('ting_search_results', $result);
 
-
-  // dpm($result);
-
   foreach($result->collections as $collection) {
     $search_results[] = _ting_openformat_set_search_result($collection);
     }
@@ -76,8 +73,6 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   if(module_exists('bibdk_searchhistory')){
     module_invoke('bibdk_searchhistory', 'set_search_results', $keys, $result);
   }
-
-  //dpm($search_results);
 
   if( !empty($search_results) ) {
     return $search_results;
@@ -91,7 +86,6 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
  * replace TingClientObjectCollection (returned from ting-client) with bibdkEntity(work)
  **/
 function _ting_openformat_load_entities( $result ) {
-  //print_r($result); die();
   $bibdkobjects = array();
   if( is_array($result->collections) ) {
     $ids = array();
@@ -99,17 +93,16 @@ function _ting_openformat_load_entities( $result ) {
       $original_manifestations = array();
       $entity_ids = array();
       $openformat = $collection->formattedCollection;
-
+      // parse for manifestations
       _ting_openformat_parse_manifestations( $original_manifestations, $entity_ids, $openformat );
 
       // conditions array is deprecated in drupal 8 .. @TODO find another solution .
       $conditions['manifestations'] = $original_manifestations;
-      $conditions['work'] = $openformat->formattedCollection->work;
       $bibdkEntities = entity_load('bibdkWorkEntity',$entity_ids,$conditions,TRUE);
 
-     $bibdkobjects[] = $bibdkEntities;
-     // reset
-     $entity_ids = array();
+      $bibdkobjects[] = $bibdkEntities;
+      // reset
+      $entity_ids = array();
     }
   }
 
