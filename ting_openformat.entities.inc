@@ -505,7 +505,7 @@ class ting_openformat_methods {
       if (is_array($value) && isset($object->$field)) {
         $ret[$field] = self::parseFields($object->$field, $value);
       }
-      elseif ($value == 'searchCode') {
+      elseif ($value == 'searchCode' && isset($object->$field)) {
         $ret[$field] = self::_parseSearchCode($object->$field);
       }
       elseif (!is_array($value) && isset($object->$value) && is_array($object->$value)) {
