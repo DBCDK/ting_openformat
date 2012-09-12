@@ -28,13 +28,7 @@ class TingOpenFormatUnitTestCast extends DrupalUnitTestCase {
     $this->_testSimplefunction("getAlternativeTitle", array("alternativeTitle" => array(
         "alternativeTitleHeader" => "Cd:",
         "alternativeTitleElement"=> "Harry Potter instrumental solos alto saxophone - level 2-3",
-    )));
-    
-    
-    
-    // TODO : AudienceSubjects Skal lige tale med Openformat først
-    //$result = $manifestation->getAudienceSubjects();
-        
+    )));    
   }
   
   private function _testSimplefunction($method, $expected_result){
@@ -45,11 +39,38 @@ class TingOpenFormatUnitTestCast extends DrupalUnitTestCase {
       $expected_result = serialize ($expected_result);
       $result = serialize($result);
     }
-    
-    //$message = "$method method returned : ".$result." Should be $expected_result";
+
     $this->assertEqual($expected_result, $result, $message);
     
   } 
+  
+  private function testReservationFunctions () {
+     /*
+      * Følgende skal nok skrottes
+      * $file = file_get_contents(drupal_get_path("module", "bibdk_reservation")."/tests/manifestation-link.json");
+     $result = json_decode($file);
+
+     $this->none = entity_load('bibdkManifestation', 'test1', $result->manifestation);
+    $result = $this->none->isReservable();
+    $message = "No Button is created";
+    $this->assertEqual(NULL, $result, $message);
+    
+    $result = $this->link->isReservable();
+    $message = "No Button is created";
+    $this->assertEqual(NULL, $result, $message);
+    
+    $result = $this->button->isReservable();
+    $message = "No Button is created";
+    $this->assertEqual(TRUE, $result, $message);
+   
+    $result = $this->link->isLink();
+    $message = "Button is a link";
+    $this->assertEqual(TRUE, $result, $message);
+   
+    $result = $this->text->getInfotext();
+    $message = "Button is a link";
+    $this->assertEqual("linkE17", $result, $message);*/
+  }
   
   private function _createObjects(){
      $file = file_get_contents(drupal_get_path("module", "ting_openformat")."/test/manifestation.working.json");
