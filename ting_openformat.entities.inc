@@ -146,7 +146,7 @@ class manifestation {
    */
   public function isReservable() {
     $requestMethod = $this->getRequestMethod();
-    return (isset($requestMethod)) ? null : true;
+    return (isset($requestMethod) && $requestMethod == 'none') ? null : true;
   }
 
   /**
@@ -164,9 +164,8 @@ class manifestation {
     if (isset($restrictedUse))
       return $restrictedUse;
 
-    elseif (isset($requestMethod) && $requestMethod != "link" && $requestMethod != "none");
+    elseif (isset($requestMethod) && $requestMethod != "link" && $requestMethod != "none" && $requestMethod != "Old")
       return $requestMethod;
-    echo test;
     return NULL;
   }
 
