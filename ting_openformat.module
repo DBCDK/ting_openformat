@@ -55,6 +55,13 @@ function ting_openformat_menu(){
  * View single work
  */
 function ting_openformat_single($id){
+  
+  $bibdkEntity = ting_openformat_get_single($id);
+  return ting_openformat_work_view(current($bibdkEntity));
+
+}
+
+function ting_openformat_get_single($id){
   $params = array();
 
   $params['objectId'] = $id;
@@ -75,9 +82,7 @@ function ting_openformat_single($id){
 
   // conditions array is deprecated in drupal 8.
   $conditions['manifestations'] = $original_manifestations;
-  $bibdkEntity = entity_load('bibdkWorkEntity',$entity_ids,$conditions,TRUE);
-
-  return ting_openformat_work_view(current($bibdkEntity));
+  return entity_load('bibdkWorkEntity',$entity_ids,$conditions,TRUE);
 }
 
 function _ting_openformat_parse_manifestations( &$original_manifestations, &$entity_ids, $openformat ) {
@@ -152,6 +157,16 @@ function ting_openformat_entity_info() {
             'access arguments' => array('administer content types'),
           ),
         ),
+      ),
+      'view modes' => array(
+        'full' => array(
+          'label' => t('Full content'), 
+          'custom settings' => FALSE,
+        ), 
+        'reservation' => array(
+          'label' => t('Reservation'), 
+          'custom settings' => FALSE,
+        ), 
       ),
     ),
 
@@ -310,8 +325,8 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
     $sub[$type]['id'] =  $id;
     $field_content = array();
     foreach( $subWork->getManifestations() as $manifestation ) {
-      $field_content = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
-      $sub[$type]['manifistations'][$manifestation->id] = theme('ting_openformat_manifestation',array('fields'=>$field_content,));
+      
+      $sub[$type]['manifistations'][$manifestation->id] = ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL);
     }
   }
 
@@ -330,6 +345,16 @@ $ordered_subworks = $sub;
 
   $tabs = theme('ting_openformat_subwork_tabs',array('subWorks'=>$ordered_subworks));
   return theme('ting_openformat_work',array('fields'=>$work_fields,'subWorks'=>$ordered_subworks,'tabs'=>$tabs,'ding_id' => $bibdkWork->id));
+}
+
+
+function ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL){
+  if (!isset($langcode)) {
+    $langcode = $GLOBALS['language_content']->language; }
+  
+  $field_content = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
+  
+  return theme('ting_openformat_manifestation',array('fields'=>$field_content,));
 }
 
 /**

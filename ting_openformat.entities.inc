@@ -132,10 +132,34 @@ class manifestation {
     return $this->manifestation->work;
   }
 
+  public function getTitle() {
+    $fields = array('titleFull');
+    $elements = $this->getWork()->title;
+    $result = ting_openformat_methods::parseFields($elements, $fields);
+
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
+  public function getCreator() {
+    $fields = array('creators' => array('creator' => "searchCode"));
+    $elements = $this->getWork();
+    $result = ting_openformat_methods::parseFields($elements, $fields);
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
+  /** \brief subject(s) of work
+   * zero or more occurences
+   */
+  public function getSubjects() {
+    $fields = array('subjects' => array('subjectHeader', 'subject' => 'searchCode'));
+    $elements = $this->getWork()->description;
+    $result = ting_openformat_methods::parseFields($elements, $fields);
+    return (is_array($result)) ? reset($result) : $result;
+  }
+  
   /*
    * Return ID as array
    */
-
   public function getIDs() {
     return array($this->id);
   }

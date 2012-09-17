@@ -8,6 +8,7 @@
 /**
  * Implements hook_field_info().
  */
+
 function ting_openformat_field_info() {
   return array(
     'ting_openformat_work_title' => array(
@@ -29,6 +30,20 @@ function ting_openformat_field_info() {
       'description' => t('Subjects of work'),
       'default_widget' => 'hidden',
       'default_formatter' => 'ting_openformat_work_subjects_default',
+      'no_ui' => TRUE,
+    ),
+    'bibdk_mani_title' => array(
+      'label' => t('Title'),
+      'description' => t('Title of manifestation'),
+      'default_widget' => 'hidden',
+      'default_formatter' => 'ting_openformat_work_title_default',
+      'no_ui' => TRUE,
+    ),
+    'bibdk_mani_creators' => array(
+      'label' => t('Creators'),
+      'description' => t('creators of manifestation'),
+      'default_widget' => 'hidden',
+      'default_formatter' => 'ting_openformat_work_creators_default',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_type' => array(
@@ -227,6 +242,24 @@ function ting_openformat_field_formatter_info() {
       'label' => t('Default'),
       'field types' => array(
         'ting_openformat_work_subjects',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'ting_openformat_mani_title_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'ting_openformat_work_title',
+      ),
+      'settings' => array(
+        'link_type' => 'none',
+      ),
+    ),
+    'ting_openformat_mani_creators_default' => array(
+      'label' => t('Default'),
+      'field types' => array(
+        'ting_openformat_work_creators',
       ),
       'settings' => array(
         'link_type' => 'none',
