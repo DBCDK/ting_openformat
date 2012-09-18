@@ -161,11 +161,11 @@ function ting_openformat_entity_info() {
       'view modes' => array(
         'full' => array(
           'label' => t('Full content'), 
-          'custom settings' => FALSE,
+          'custom settings' => TRUE,
         ), 
         'reservation' => array(
           'label' => t('Reservation'), 
-          'custom settings' => FALSE,
+          'custom settings' => TRUE,
         ), 
       ),
     ),
@@ -459,24 +459,28 @@ function ting_openformat_menu_alter(&$items) {
   }
 }
 
-
-
 /**
  * Fetch known types from the datawell.
  */
 function _ting_openformat_fetch_types() {
    $types = variable_get('ting_openformat_types', array());
 
-  // Get a list of types by executing a null query and look at the facets
-  // result.
-   $options = array(
+  $options = array(
     'facets' => array('facet.type'),
     'numFacets' => 99,
     'reply_only' => TRUE,
     'sort' => 'random',
+    'query' => "*=*",
+    'start' => 0,
+    'numResults' => 0,
+    'agency' => variable_get('ting_agency'),
+    'objectFormat' => variable_get('ting_search_openformat', 'dkabm'),
+    'profile' => variable_get('ting_search_profile', FALSE)
   );
-  module_load_include('client.inc', 'ting');
-  $result = ting_do_search("*=*", 0, 0, $options);
+
+  $client = new ting_client_class();
+  $result = $client->do_search($options);
+  
   foreach ($result->facets['facet.type']->terms as $term => $count) {
     if (!isset($types[$term]))
       $types[$term] = array("type" => $term, "count" => $count, "weight" => 1000);
