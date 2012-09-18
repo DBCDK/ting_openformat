@@ -80,7 +80,16 @@ function ting_openformat_schema() {
  * Implements hook_ding_entity_fields
  * */
 function ting_openformat_ding_entity_fields() {
-  $display_all = array();
+  
+  $display_all = array(
+          'reservation' => array(
+            'type' => 'default',
+          ),
+          'full' => array(
+            'type' => 'default',
+          ),
+        );
+  
   $display_full = array(
           'reservation' => array(
             'type' => 'hidden',
@@ -89,6 +98,16 @@ function ting_openformat_ding_entity_fields() {
             'type' => 'default',
           ),
         );
+  
+  $display_reservation = array(
+          'reservation' => array(
+            'type' => 'default',
+          ),
+          'full' => array(
+            'type' => 'hidden',
+          ),
+        );
+  
   return array(
     /*     * ***** WORK ************* */
     'ting_openformat_work_title' => array(
@@ -147,6 +166,7 @@ function ting_openformat_ding_entity_fields() {
         'label' => t('Title'),
         'bundle' => 'bibdkManifestation',
         'entity_type' => 'bibdkManifestation',
+        'display' => $display_reservation,
       ),
     ),
     'bibdk_mani_creators' => array(
@@ -160,7 +180,8 @@ function ting_openformat_ding_entity_fields() {
         'ding_entity_type' => 'bibdkManifestation',
         'label' => t('Creators'),
         'bundle' => 'bibdkManifestation',
-        'entity_type' => 'bibdkManifestation'
+        'entity_type' => 'bibdkManifestation',
+        'display' => $display_reservation,
       ),
     ),
     // TYPE 1
@@ -176,6 +197,7 @@ function ting_openformat_ding_entity_fields() {
         'label' => t('Manifestation type'),
         'bundle' => 'bibdkManifestation',
         'entity_type' => 'bibdkManifestation',
+        'display' => $display_all,
       ),
     ),
     // ORIGINAL TITLE 0 .. 1
@@ -190,7 +212,8 @@ function ting_openformat_ding_entity_fields() {
         'ding_entity_type' => 'bibdkManifestation',
         'label' => t('Original title'),
         'bundle' => 'bibdkManifestation',
-        'entity_type' => 'bibdkManifestation'
+        'entity_type' => 'bibdkManifestation',
+        'display' => $display_full,
       ),
     ),
     // ALTERNATIVE TITLE 0 .. MANY
@@ -206,11 +229,7 @@ function ting_openformat_ding_entity_fields() {
         'label' => t('Alternative title'),
         'bundle' => 'bibdkManifestation',
         'entity_type' => 'bibdkManifestation',
-        'display' => array(
-          'reservation' => array(
-            'type' => 'hidden',
-          ),
-        ),
+        'display' => $display_full,
       ),
     ),
     // CONTRIBUTORS zero or 1 occurence
@@ -566,3 +585,16 @@ function ting_openformat_update_7008() {
     // do nothing table already exists
   }
 }
+
+/**
+ * Implements hook_update_N;
+ * Update all field information
+ * */
+function ting_openformat_update_7011() {
+  $fields = ting_openformat_ding_entity_fields();
+  foreach ($fields as $field_name => $field) {
+        field_delete_field($field_name);
+      }
+  ding_entity_modules_enabled(array('ting_openformat'));
+}
+
