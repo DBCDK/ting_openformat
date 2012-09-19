@@ -61,7 +61,7 @@ class bibdkWork {
    * zero or more occurences
    */
   public function getSubjects() {
-    $fields = array('subjects' => array('subjectHeader', 'subject' => 'searchCode'));
+    $fields = array('subjects' => array('subjectHeader'=> 'header', 'subject' => 'searchCode'));
     $elements = $this->work->description;
     $result = ting_openformat_methods::parseFields($elements, $fields);
     return (is_array($result)) ? reset($result) : $result;
@@ -137,24 +137,24 @@ class manifestation {
     $elements = $this->getWork()->title;
     $result = ting_openformat_methods::parseFields($elements, $fields);
 
-    return (is_array($result)) ? reset($result) : $result;
+    return $result;
   }
 
   public function getCreator() {
     $fields = array('creators' => array('creator' => "searchCode"));
     $elements = $this->getWork();
     $result = ting_openformat_methods::parseFields($elements, $fields);
-    return (is_array($result)) ? reset($result) : $result;
+    return $result;
   }
 
   /** \brief subject(s) of work
    * zero or more occurences
    */
   public function getSubjects() {
-    $fields = array('subjects' => array('subjectHeader', 'subject' => 'searchCode'));
+    $fields = array('subjects' => array('subjectHeader' => 'header', 'subject' => 'searchCode'));
     $elements = $this->getWork()->description;
     $result = ting_openformat_methods::parseFields($elements, $fields);
-    return (is_array($result)) ? reset($result) : $result;
+    return $result;
   }
   
   /*
@@ -165,7 +165,7 @@ class manifestation {
   }
 
   /**
-   * Can a manifestation be reserved
+   * Can a manifestation be booked
    * @return Boolean
    */
   public function isReservable() {
@@ -225,7 +225,7 @@ class manifestation {
    */
 
   public function getOriginalTitle() {
-    $result = ting_openformat_methods::parseFields($this->manifestation->details, array('originalTitle' => array('originalTitleHeader', "originalTitleElement")));
+    $result = ting_openformat_methods::parseFields($this->manifestation->details, array('originalTitle' => array('originalTitleHeader' => 'header', "originalTitleElement")));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -234,7 +234,7 @@ class manifestation {
    */
 
   public function getAlternativeTitle() {
-    $result = ting_openformat_methods::parseFields($this->manifestation->details, array('alternativeTitle' => array('alternativeTitleHeader', "alternativeTitleElement")));
+    $result = ting_openformat_methods::parseFields($this->manifestation->details, array('alternativeTitle' => array('alternativeTitleHeader' => 'header', "alternativeTitleElement")));
     return $result;
   }
 
@@ -244,7 +244,7 @@ class manifestation {
 
   public function getContributors() {
     $result = ting_openformat_methods::parseFields($this->manifestation->details, array('contributors'));
-    return (is_array($result)) ? reset($result) : $result;
+    return $result;
   }
 
   /* \brief format
@@ -253,7 +253,7 @@ class manifestation {
 
   public function getFormat() {
     $result = ting_openformat_methods::parseFields($this->manifestation->details, array('format'));
-    return (is_array($result)) ? reset($result) : $result;
+    return $result;
   }
 
   /* \brief forms
@@ -263,7 +263,7 @@ class manifestation {
    */
 
   public function getForms() {
-    $result = ting_openformat_methods::parseFields($this->manifestation->details, array('forms' => array('formHeader', "formSubjects")));
+    $result = ting_openformat_methods::parseFields($this->manifestation->details, array('forms' => array('formHeader' => 'header', "formSubjects")));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -276,7 +276,7 @@ class manifestation {
 
   public function getSeriesTitle() {
     $elements = $this->manifestation->details;
-    $result = ting_openformat_methods::parseFields($elements, array('seriesTitle' => array('seriesHeader', "series" => 'searchCode', "seriesNumber")));
+    $result = ting_openformat_methods::parseFields($elements, array('seriesTitle' => array('seriesHeader' => 'header', "series" => 'searchCode', "seriesNumber")));
     return $result;
   }
 
@@ -287,7 +287,7 @@ class manifestation {
    */
 
   public function getRelatedSeriesTitle() {
-    $result = ting_openformat_methods::parseFields($this->manifestation->details, array('relatedSeriesTitle' => array('relatedSeriesHeader', "relatedSeries" => 'searchCode')));
+    $result = ting_openformat_methods::parseFields($this->manifestation->details, array('relatedSeriesTitle' => array('relatedSeriesHeader' => 'header', "relatedSeries" => 'searchCode')));
     return $result;
   }
 
@@ -297,7 +297,7 @@ class manifestation {
 
   public function getReadabilityIndexes() {
     $result = ting_openformat_methods::parseFields($this->manifestation->details, array('readabilityIndexes'));
-    return $result;
+    return (is_array($result)) ? reset($result) : $result;
   }
 
   /* \brief shelf
@@ -309,7 +309,7 @@ class manifestation {
 
   public function getShelf() {
     $fields = array("shelf" => array(
-        'shelfHeader',
+        'shelfHeader' => 'header',
         'shelfMusic',
         'shelfClassification' => "searchCode",
       )
@@ -337,9 +337,9 @@ class manifestation {
    */
 
   public function getAudienceSubjects() {
-    $fields = array('audienceSubjects' => array('audienceHeader', 'audienceSubject' => 'searchCode'));
+    $fields = array('audienceSubjects' => array('audienceHeader' => 'header', 'audienceSubject' => 'searchCode'));
     $result = ting_openformat_methods::parseFields($this->manifestation->details, $fields);
-    return (is_array($result)) ? reset($result) : $result;
+    return $result;
   }
 
   /* \brief markedAudience
@@ -348,7 +348,7 @@ class manifestation {
 
   public function getMarkedAudience() {
     $result = ting_openformat_methods::parseFields($this->manifestation->details, array('markedAudience'));
-    return $result;
+    return (is_array($result)) ? reset($result) : $result;
   }
 
   /* \brief recommendedAudience
@@ -357,7 +357,7 @@ class manifestation {
 
   public function getRecommendedAudience() {
     $result = ting_openformat_methods::parseFields($this->manifestation->details, array('recommendedAudience'));
-    return $result;
+    return (is_array($result)) ? reset($result) : $result;
   }
 
   /* \brief usedLanguage
@@ -366,7 +366,7 @@ class manifestation {
 
   public function getUsedLanguage() {
     $result = ting_openformat_methods::parseFields($this->manifestation->details, array('usedLanguage'));
-    return $result;
+    return (is_array($result)) ? reset($result) : $result;
   }
 
   /* \brief actorNote
@@ -375,7 +375,7 @@ class manifestation {
 
   public function getActorNote() {
     $result = ting_openformat_methods::parseFields($this->manifestation->details, array('actorNote'));
-    return $result;
+    return (is_array($result)) ? reset($result) : $result;
   }
 
   /* \brief descriptionNote
@@ -393,7 +393,7 @@ class manifestation {
 
   public function getReferences() {
     $result = ting_openformat_methods::parseFields($this->manifestation->details, array('references'));
-    return $result;
+    return (is_array($result)) ? reset($result) : $result;
   }
 
   /* \brief originals
@@ -425,7 +425,7 @@ class manifestation {
 
   public function getIdentifiers() {
     $fields = array('identifiers' => array(
-        'identifierHeader',
+        'identifierHeader' => 'header',
         'identifier',
         'ISSN',
         ));
@@ -440,11 +440,11 @@ class manifestation {
 
   public function getPriceInformation() {
     $fields = array('priceInformation' => array(
-        'priceHeader',
+        'priceHeader' => 'header',
         'price',
         ));
     $result = ting_openformat_methods::parseFields($this->manifestation->details, $fields);
-    return (is_array($result)) ? reset($result) : $result;
+    return $result;
   }
 
   /* \brief language
@@ -455,11 +455,11 @@ class manifestation {
 
   public function getLanguage() {
     $fields = array('language' => array(
-        'languageHeader',
+        'languageHeader' => 'header',
         'languageElement',
         ));
     $result = ting_openformat_methods::parseFields($this->manifestation->details, $fields);
-    return (is_array($result)) ? reset($result) : $result;
+    return $result;
   }
 
   /* \brief accessInformation
@@ -526,10 +526,13 @@ class ting_openformat_methods {
 
     foreach ($fields as $field => $value) {
       if (is_array($value) && isset($object->$field)) {
-        $ret[$field] = self::parseFields($object->$field, $value);
+        $ret[$field][] = self::parseFields($object->$field, $value);
       }
       elseif ($value == 'searchCode' && isset($object->$field)) {
-        $ret[$field] = self::_parseSearchCode($object->$field);
+        $ret[$field][] = self::_parseSearchCode($object->$field);
+      }
+      elseif ($value == 'header' && isset($object->$field)) {
+        $ret[$value] = $object->$field->{'$'};
       }
       elseif (!is_array($value) && isset($object->$value) && is_array($object->$value)) {
 
