@@ -120,4 +120,3 @@ function theme_ting_openformat_type_order_form($variables) {
   return $output;
   
 }
-?>

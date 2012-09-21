@@ -14,12 +14,14 @@ files[] = ting_openformat.controllers.inc
 files[] = ting_openformat.entities.inc
 ;files[] = ting_openformat.search.inc
 files[] = test/ting_openformat.test
+
 dependencies[] = search
 dependencies[] = ting_client
-
+dependencies[] = ctools
+dependencies[] = ding_entity
+dependencies[] = ting
 
 ;package = Features
-dependencies[] = ctools
 dependencies[] = page_manager
 features[ctools][] = page_manager:pages_default:1
 features[features_api][] = api:1

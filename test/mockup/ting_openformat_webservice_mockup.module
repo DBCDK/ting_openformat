@@ -7,7 +7,7 @@
 function ting_openformat_webservice_mockup_menu() {
   $items['ting_openformat_webservice'] = array(
     'page callback' => 'ting_openformat_webservice_mockup_request',
-    'access callback' => 'ting_openformat_webservice_mockup_access',
+    'access callback' => TRUE
   );
   $items['ting_openformat_webservice/test'] = array(
     'page callback' => 'ting_openformat_webservice_test',

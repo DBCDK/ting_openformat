@@ -97,30 +97,46 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
  public function setUp() {
     //$this->profile = 'bibdk';
     //array('ting_openformat', 'ting_openformat_webservice_mockup','ting', 'devel', 'search', 'ting_client')
-    parent::setup(array('ting_openformat','ting', 'search', 'ting_client'));
+    parent::setup(array('ting_openformat'));
     global $base_url;
-    $this->privileged_user = $this->drupalCreateUser(array_keys(module_invoke_all('permission')));
+    $this->privileged_user = $this->drupalCreateUser(array('access content', 'search content'));
     $this->drupalLogin($this->privileged_user);
-    variable_set('agency_search_url', 'http://guesstimate.dbc.dk/~fvs/OpenLibrary/OpenAgency/trunk/'); 
-    variable_set('bibdk_borchk_url', $base_url.'/bibdk_borchk_webservice/'); 
-    variable_set('bibdk_borchk_servicerequester', 'bibliotek.dk');
-    variable_set('bibdk_openorder_url', 'http://guesstimate.dbc.dk/~fvs/OpenLibrary/OpenOrder/trunk/server.php/');
     variable_set('ting_agency', '100200');
-    variable_set('ting_search_url', 'http://lakiseks.dbc.dk/hive/'); 
-    variable_set('ting_search_url', 'http://lakiseks.dbc.dk/hive/'); 
-    variable_set('search_default_module', 'ting_openformat'); 
+    variable_set('ting_search_url', $this->getAbsoluteUrl("ting_openformat_webservice")); //The mockup needs to be enabled in live installation 
     variable_set('search_active_modules', array('node', 'ting_openformat')); 
+    variable_set('search_default_module', 'ting_openformat'); 
     variable_set('ting_agency', '100200'); 
     variable_set('ting_search_profile', 'test'); 
-    variable_set('ting_search_openformat', 'bibliotekdkWorkDisplay'); 
+    variable_set('ting_search_openformat', 'bibliotekdkWorkDisplay');     
+    menu_rebuild();
+    
   }
   
   
   public function testDisplayOfSearchResult() {
-   $this->drupalPost("", array('search_block_form' => 'harry potter'), "Search"); 
-   //$this->drupalPost(NULL, array('search_block_form' => 'harry potter'), "Search"); 
+    //1: Test that ting search is enabled
+    $this->drupalGet('search');
+    $this->assertUrl("search/work");
+    //2: Test that no search result
+    $this->drupalPost(NULL, array('search_block_form' => 'thereAreNoResults'), "Search"); 
+    $this->assertText("Your search yielded no results");
+    //3: Test that search result is present
+    $this->drupalPost(NULL, array('search_block_form' => 'harry potter'), "Search");
+    $this->assertText("Harry Potter");
+    $this->assertText("Harry Potter og De Vises Sten");
+    $this->assertText("Joanne K. Rowling");
+    $this->assertText("Bog");
+    $this->assertText("Originaltitel:Harry Potter and the philosopher's stone");
+    $this->assertText("pÃ¥ dansk ved Hanna LÃ¼tzen");
+    
+    
+    //4: Test presence of fields
+    
+    
    $this->drupalPost("search/work/", array('search_block_form' => 'harry potter'), "Search");
-   $this->drupalGet("dsfkgjhdfgkjdh");
+   $this->assert(TRUE, print_r(variable_get('ting_search_url'), TRUE));
+   
+   
   }
   
 /*  public function testDisplayOfSingleWork() {
