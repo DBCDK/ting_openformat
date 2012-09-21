@@ -55,6 +55,9 @@ function ting_openformat_ding_entity_fields() {
 function ting_openformat_display_types($types) {
 
   $display = array(
+    'default' => array(
+      'type' => 'default',
+    ),
     'reservation' => array(
       'type' => 'hidden',
     ),
@@ -80,26 +83,29 @@ function ting_openformat_bibdk_fields() {
     'ting_openformat_work_title' => array(
       'entity_type' => 'bibdkWorkEntity',
       'label' => t('Work title'),
+      'display' => array('full'),
     ),
     'ting_openformat_work_creators' => array(
       'label' => t('Work creators'),
-      'entity_type' => 'bibdkWorkEntity'
+      'entity_type' => 'bibdkWorkEntity',
+      'display' => array('full'),
     ),
     'ting_openformat_work_subjects' => array(
       'label' => t('Work subjects'),
-      'entity_type' => 'bibdkWorkEntity'
+      'entity_type' => 'bibdkWorkEntity',
+      'display' => array('full'),
     ),
     /********* MANIFESTATION ************/
 
     'bibdk_mani_title' => array(
       'entity_type' => 'bibdkManifestation',
       'label' => t('Title'),
-      'display' => array('reservation'),
+      'display' => array('reservation', 'full'),
     ),
     'bibdk_mani_creators' => array(
       'label' => t('Creators'),
       'entity_type' => 'bibdkManifestation',
-      'display' => array('reservation'),
+      'display' => array('reservation', 'full'),
     ),
     'bibdk_mani_type' => array(
       'label' => t('Manifestation type'),

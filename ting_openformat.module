@@ -1,13 +1,7 @@
 <?php
-// @TODO; implement entity
-// hook_entity_infon etc..
-
 // load search info and hooks
 module_load_include('inc', 'ting_openformat','ting_openformat.search');
 module_load_include('inc', 'ting_openformat' ,'ting_openformat.field');
-
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
 
 function ting_openformat_menu(){
   $items = array();
@@ -55,7 +49,6 @@ function ting_openformat_menu(){
  * View single work
  */
 function ting_openformat_single($id){
-  
   $bibdkEntity = ting_openformat_get_single($id);
   return ting_openformat_work_view(current($bibdkEntity));
 
@@ -353,7 +346,6 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
     $langcode = $GLOBALS['language_content']->language; }
   
   $field_content = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
-  
   return theme('ting_openformat_manifestation',array('fields'=>$field_content,));
 }
 

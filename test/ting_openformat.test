@@ -1,7 +1,7 @@
 <?php
 
 
-class TingOpenFormatUnitTestCast extends DrupalUnitTestCase {
+class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
   
   public static function getInfo() {
     return array (
@@ -26,7 +26,7 @@ class TingOpenFormatUnitTestCast extends DrupalUnitTestCase {
     $this->_testSimplefunction("getType", "Bog");
     $this->_testSimplefunction("getOriginalTitle", NULL);
     $this->_testSimplefunction("getAlternativeTitle", array("alternativeTitle" => array(
-        "alternativeTitleHeader" => "Cd:",
+        "header" => "Cd:",
         "alternativeTitleElement"=> "Harry Potter instrumental solos alto saxophone - level 2-3",
     )));    
   }
@@ -83,4 +83,48 @@ class TingOpenFormatUnitTestCast extends DrupalUnitTestCase {
   
   private $manifestation;
   private $work, $subwork;
+}
+
+class TingOpenFormatWebTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array (
+      'name' => t('Webtest'),
+      'description' => t('Test the search and display of bibdk objects'),
+      'group' => t('Ting Openformat'),
+    );
+     }
+  
+ public function setUp() {
+    //$this->profile = 'bibdk';
+    //array('ting_openformat', 'ting_openformat_webservice_mockup','ting', 'devel', 'search', 'ting_client')
+    parent::setup(array('ting_openformat','ting', 'search', 'ting_client'));
+    global $base_url;
+    $this->privileged_user = $this->drupalCreateUser(array_keys(module_invoke_all('permission')));
+    $this->drupalLogin($this->privileged_user);
+    variable_set('agency_search_url', 'http://guesstimate.dbc.dk/~fvs/OpenLibrary/OpenAgency/trunk/'); 
+    variable_set('bibdk_borchk_url', $base_url.'/bibdk_borchk_webservice/'); 
+    variable_set('bibdk_borchk_servicerequester', 'bibliotek.dk');
+    variable_set('bibdk_openorder_url', 'http://guesstimate.dbc.dk/~fvs/OpenLibrary/OpenOrder/trunk/server.php/');
+    variable_set('ting_agency', '100200');
+    variable_set('ting_search_url', 'http://lakiseks.dbc.dk/hive/'); 
+    variable_set('ting_search_url', 'http://lakiseks.dbc.dk/hive/'); 
+    variable_set('search_default_module', 'ting_openformat'); 
+    variable_set('search_active_modules', array('node', 'ting_openformat')); 
+    variable_set('ting_agency', '100200'); 
+    variable_set('ting_search_profile', 'test'); 
+    variable_set('ting_search_openformat', 'bibliotekdkWorkDisplay'); 
+  }
+  
+  
+  public function testDisplayOfSearchResult() {
+   $this->drupalPost("", array('search_block_form' => 'harry potter'), "Search"); 
+   //$this->drupalPost(NULL, array('search_block_form' => 'harry potter'), "Search"); 
+   $this->drupalPost("search/work/", array('search_block_form' => 'harry potter'), "Search");
+   $this->drupalGet("dsfkgjhdfgkjdh");
+  }
+  
+/*  public function testDisplayOfSingleWork() {
+    
+  }
+ */ 
 }

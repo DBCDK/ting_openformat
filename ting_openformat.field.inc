@@ -257,11 +257,23 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $subjects = $entity->getSubjects();
         $value = _ting_openformat_get_markup_for_field($subjects);
         break;
-
+      
       // type
       case 'bibdk_mani_type':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $type = $entity->getType();
+        $value = _ting_openformat_get_markup_for_field($type);
+        break;
+      // Title
+      case 'bibdk_mani_title':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $type = $entity->getTitle();
+        $value = _ting_openformat_get_markup_for_field($type);
+        break;
+      // Creators
+      case 'bibdk_mani_creators':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $type = $entity->getCreator();
         $value = _ting_openformat_get_markup_for_field($type);
         break;
 

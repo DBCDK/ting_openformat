@@ -137,14 +137,14 @@ class manifestation {
     $elements = $this->getWork()->title;
     $result = ting_openformat_methods::parseFields($elements, $fields);
 
-    return $result;
+    return (is_array($result)) ? reset($result) : $result;
   }
 
   public function getCreator() {
     $fields = array('creators' => array('creator' => "searchCode"));
     $elements = $this->getWork();
     $result = ting_openformat_methods::parseFields($elements, $fields);
-    return $result;
+    return (is_array($result)) ? reset($result) : $result;
   }
 
   /** \brief subject(s) of work
