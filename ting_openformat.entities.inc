@@ -23,7 +23,9 @@ class bibdkWork {
 
     // set subworks
     foreach ($this->manifestations as $id => $manifestation) {
-      $subWorks[$manifestation->getType()][$id] = $manifestation;
+      $type = ( is_array($manifestation->getType()) ) ? implode(' + ',$manifestation->getType()) : $manifestation->getType();
+      // note: "surplus" types, and "undefined" types are to be handled in iScrum. Also, we're waiting for the new "group types".
+      $subWorks[$type][$id] = $manifestation;
     }
     foreach ($subWorks as $type => $manifestations) {
       $this->subWorks[current($manifestations)->id] = entity_load('bibdkSubwork', $type, $manifestations);
@@ -156,7 +158,7 @@ class manifestation {
     $result = ting_openformat_methods::parseFields($elements, $fields);
     return $result;
   }
-  
+
   /*
    * Return ID as array
    */
