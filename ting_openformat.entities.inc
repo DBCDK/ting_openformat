@@ -219,6 +219,9 @@ class manifestation {
 
   public function getType() {
     $result = ting_openformat_methods::parseFields($this->manifestation, array('type'));
+    if ( is_array($result['type']) ) {
+      $result['type'] = implode(' + ',$result['type']);
+    }
     return (is_array($result)) ? reset($result) : $result;
   }
 
