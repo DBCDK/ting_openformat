@@ -94,15 +94,18 @@ function _ting_openformat_load_entities( $result ) {
       $entity_ids = array();
       $openformat = $collection->formattedCollection;
       // parse for manifestations
+      
       _ting_openformat_parse_manifestations( $original_manifestations, $entity_ids, $openformat );
+      if(count($entity_ids) > 0){
+        // conditions array is deprecated in drupal 8 .. @TODO find another solution .
+        $conditions['manifestations'] = $original_manifestations;
+      
+        $bibdkEntities = entity_load('bibdkWorkEntity',$entity_ids,$conditions,TRUE);
 
-      // conditions array is deprecated in drupal 8 .. @TODO find another solution .
-      $conditions['manifestations'] = $original_manifestations;
-      $bibdkEntities = entity_load('bibdkWorkEntity',$entity_ids,$conditions,TRUE);
-
-      $bibdkobjects[] = $bibdkEntities;
-      // reset
-      $entity_ids = array();
+        $bibdkobjects[] = $bibdkEntities;
+        // reset
+        $entity_ids = array();
+      }
     }
   }
 

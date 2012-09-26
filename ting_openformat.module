@@ -3,6 +3,8 @@
 module_load_include('inc', 'ting_openformat','ting_openformat.search');
 module_load_include('inc', 'ting_openformat' ,'ting_openformat.field');
 
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 function ting_openformat_menu(){
   $items = array();
   $items['work/%'] = array(
@@ -79,7 +81,7 @@ function ting_openformat_get_single($id){
 }
 
 function _ting_openformat_parse_manifestations( &$original_manifestations, &$entity_ids, $openformat ) {
-  if( is_array($openformat->formattedCollection->manifestation) ) {
+  if( isset($openformat->formattedCollection->manifestation) && is_array($openformat->formattedCollection->manifestation) ) {
     foreach($openformat->formattedCollection->manifestation as $key=>$manifestation) {
       $manifestation_id = $manifestation->adminData->pid->{'$'};
       $entity_ids[] = $manifestation_id;

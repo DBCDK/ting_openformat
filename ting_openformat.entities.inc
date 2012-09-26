@@ -20,7 +20,6 @@ class bibdkWork {
     foreach ($manifestations as $id => $manifestation) {
       $this->manifestations[$id] = entity_load('bibdkManifestation', $id, $manifestation);
     }
-
     // set subworks
     foreach ($this->manifestations as $id => $manifestation) {
       $type = ( is_array($manifestation->getType()) ) ? implode(' + ',$manifestation->getType()) : $manifestation->getType();
