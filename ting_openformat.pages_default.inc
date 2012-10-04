@@ -30,7 +30,7 @@ function ting_openformat_default_page_manager_handlers() {
     'relationships' => array(),
   );
   $display = new panels_display();
-  $display->layout = 'ding2omega_3col_4_14_6';
+  $display->layout = 'bibdk_twocolumn';
   $display->layout_settings = array();
   $display->panel_settings = array(
     'style_settings' => array(
@@ -73,7 +73,7 @@ function ting_openformat_default_page_manager_handlers() {
     $pane->shown = TRUE;
     $pane->access = array();
     $pane->configuration = array(
-      'type' => 'node',
+      'type' => 'ting_openformat',
       'log' => TRUE,
       'override_empty' => FALSE,
       'empty_title' => '',
@@ -94,26 +94,8 @@ function ting_openformat_default_page_manager_handlers() {
     $pane->locks = array();
     $display->content['new-2'] = $pane;
     $display->panels['middle'][0] = 'new-2';
-    $pane = new stdClass();
-    $pane->pid = 'new-3';
-    $pane->panel = 'right';
-    $pane->type = 'page_breadcrumb';
-    $pane->subtype = 'page_breadcrumb';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array();
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 0;
-    $pane->locks = array();
-    $display->content['new-3'] = $pane;
-    $display->panels['right'][0] = 'new-3';
   $display->hide_title = PANELS_TITLE_FIXED;
-  $display->title_pane = 'new-1';
+  $display->title_pane = '0';
   $handler->conf['display'] = $display;
   $export['search_ting_openformat_panel_context'] = $handler;
 
