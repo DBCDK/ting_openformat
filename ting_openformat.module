@@ -309,7 +309,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   $args = array();
   $work_fields = array();
   $work_fields += _prepare_view('bibdkWorkEntity', $bibdkWork, $view_mode, $langcode);
-
+  /*
   $sub = array();
   $subWorks = $bibdkWork->getSubWorks();
 
@@ -337,9 +337,9 @@ if( !empty($ordered_types) ) {
 else {
 $ordered_subworks = $sub;
 }
-
-  $tabs = theme('ting_openformat_subwork_tabs',array('subWorks'=>$ordered_subworks));
-  return theme('ting_openformat_work',array('fields'=>$work_fields,'subWorks'=>$ordered_subworks,'tabs'=>$tabs,'ding_id' => $bibdkWork->id));
+*/
+  //$tabs = theme('ting_openformat_subwork_tabs',array('subWorks'=>$ordered_subworks));
+  return drupal_render($work_fields); // drupal_render//theme('ting_openformat_work',array('fields'=>$work_fields,'subWorks'=>$ordered_subworks,'tabs'=>$tabs,'ding_id' => $bibdkWork->id));
 }
 
 
