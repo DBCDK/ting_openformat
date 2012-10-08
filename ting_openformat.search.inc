@@ -32,7 +32,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   $params = array();
   // search phrase (query)
   $params['query'] = $keys;
-  $params['collectionType'] = get_variable('collectionType', 'work-1');
+  $params['collectionType'] = variable_get('collectionType', 'work-1');
 
   // get parameters set as variables
   $variables = _ting_openformat_search_get_variables($conditions);
