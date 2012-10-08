@@ -1,6 +1,7 @@
-<h2><?php echo $variables['ding_id']; ?></h2>
+<h2><?php print $variables['ding_id']; ?></h2>
 
 <?php
+dpm($variables);
 print drupal_render($variables['fields']);
 print $variables['tabs'];
 echo '<div class="ting_openformat_subworks">';
