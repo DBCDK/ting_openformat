@@ -22,7 +22,7 @@ module_load_include('inc','ting_openformat','ting_openformat.theme');
 function ting_openformat_search_info() {
   return array(
     //'title' => t('Bibliotek.dk'),
-    'title' => variable_get('search_client_name', 'TESTHEST'),
+    'title' => variable_get('search_client_name', 'well'),
     'path' => 'work',
     'conditions_callback' => 'ting_openformat_conditions_callback',);
 }
@@ -32,6 +32,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   $params = array();
   // search phrase (query)
   $params['query'] = $keys;
+  $params['collectionType'] = variable_get('collectionType', 'work-1');
 
   // get parameters set as variables
   $variables = _ting_openformat_search_get_variables($conditions);

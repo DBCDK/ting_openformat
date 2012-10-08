@@ -1,4 +1,4 @@
-<h2><?php echo $variables['ding_id']; ?></h2>
+<h2><?php print $variables['ding_id']; ?></h2>
 
 <?php
 print drupal_render($variables['fields']);
