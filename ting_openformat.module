@@ -354,7 +354,19 @@ function ting_openformat_collection_view($collections, $view_mode = 'full', $lan
     'title' => $collection->record['dc:title'][''][0],
     'author' => isset($collection->record['dc:creator']) ? implode(', ', reset($collection->record['dc:creator'])) : "",
     'ids' => implode(",", $ids),
+    'showinfo' => theme('ting_openformat_more_info', array('showinfoform' => drupal_get_form('ting_openformat_show_info_get_form'))),
   ));
+}
+
+function ting_openformat_show_info_get_form($form_id){
+  $form['info'] = array(
+    '#markup' => '<h1>HEP</h1>',
+    '#ajax' => array(
+      
+    ),
+  );
+  return $form;
+  
 }
 
 

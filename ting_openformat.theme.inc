@@ -69,6 +69,13 @@ function ting_openformat_theme() {
       'render element' => 'element',
       'file' => 'ting_openformat.admin.inc',
     ),
+    
+    'ting_openformat_more_info' => array(
+      'path' => $path,
+      'variables' => array('showinfoform' => ''),
+      'template' => 'ting_openformat_more_info',
+      'render elements' => 'elements',
+    ),
   );
 }
 
