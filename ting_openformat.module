@@ -343,6 +343,21 @@ $ordered_subworks = $sub;
 }
 
 
+function ting_openformat_collection_view($collections, $view_mode = 'full', $langcode = NULL) {
+  // Get all the ID's
+  foreach($collections as $col)
+    $ids[] = $col->id;
+  // Get the first collection
+  $collection = $collections[0];
+  // theme collection
+  return theme('ting_openformat_collection', array(
+    'title' => $collection->record['dc:title'][''][0],
+    'author' => isset($collection->record['dc:creator']) ? implode(', ', reset($collection->record['dc:creator'])) : "",
+    'ids' => implode(",", $ids),
+  ));
+}
+
+
 function ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL){
   if (!isset($langcode)) {
     $langcode = $GLOBALS['language_content']->language; }
