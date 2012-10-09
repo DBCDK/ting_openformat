@@ -32,7 +32,6 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   $params = array();
   // search phrase (query)
   $params['query'] = $keys;
-  $params['collectionType'] = variable_get('collectionType', 'work-1');
 
   // get parameters set as variables
   $variables = _ting_openformat_search_get_variables($conditions);
@@ -52,6 +51,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   if( !$result ) {
     return array();
   }
+  dpm($result);
 
   // set facets for result
   _ting_openformat_facet_cache($client, $result, $params);
@@ -61,7 +61,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   }
 
   // initialize entities
-  _ting_openformat_load_entities($result);
+  //_ting_openformat_load_entities($result);
 
   // static cache result - used in hook_ding_facetbrowser, ting_search etc.
   drupal_static('ting_search_results', $result);
@@ -93,7 +93,7 @@ function _ting_openformat_load_entities( $result ) {
     foreach ($result->collections as &$collection) {
       $original_manifestations = array();
       $entity_ids = array();
-      $openformat = $collection->formattedCollection;
+      //$openformat = $collection->formattedCollection;
       // parse for manifestations
       
       _ting_openformat_parse_manifestations( $original_manifestations, $entity_ids, $openformat );
@@ -132,23 +132,23 @@ function _ting_openformat_load_entities( $result ) {
  **/
 
 function _ting_openformat_set_search_result($bibdkobject) {
-
+  //dpm($bibdkobject);
   $variables['result'] = $bibdkobject;
   $current = current($bibdkobject);
   //************** TODO handle bibdkobject *************/
 
   $result = array(
-    'link' => url("work/".$current->id),
+    'link' => url("work/".$current[0]->id),
     'type' => '',
+    'title' => $current[0]->record['dc:title'][''][0],
     // 'title' => $formattedCollection->formattedCollection->work->title->titleFull->{'$'},
-    'title' => $current->getTitle(),
+    //'title' => $current->getTitle(),
     'user' => '',
     'date' => '',
-    'snippet' => ting_openformat_work_view($current),
+    'snippet' => ting_openformat_collection_view($current),
   );
   return $result;
 }
-
 
 /** \brief set facet for search result. Look in cache if not found do a request and set cache
  * @param $client - search_client
@@ -223,7 +223,9 @@ function _ting_openformat_search_get_variables($conditions) {
   }
 
   // objectformat (opensearch::objectFormat)
-  $params['objectFormat'] = variable_get('ting_search_openformat','dkabm');
+  //$params['objectFormat'] = variable_get('ting_search_openformat','dkabm');
+  //Method for ajax_call
+  $params['collectionType'] = variable_get('collectionType', 'work-1');
 
   return $params;
 }
