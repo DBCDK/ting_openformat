@@ -354,19 +354,25 @@ function ting_openformat_collection_view($collections, $view_mode = 'full', $lan
     'title' => $collection->record['dc:title'][''][0],
     'author' => isset($collection->record['dc:creator']) ? implode(', ', reset($collection->record['dc:creator'])) : "",
     'ids' => implode(",", $ids),
-    'showinfo' => theme('ting_openformat_more_info', array('showinfoform' => drupal_get_form('ting_openformat_show_info_get_form'))),
+    'showinfo' => theme('ting_openformat_more_info', array('showinfoform' => drupal_render(drupal_get_form('ting_openformat_show_info_get_form', $ids)))),
   ));
 }
 
-function ting_openformat_show_info_get_form($form_id){
+function ting_openformat_show_info_get_form($form_id, $form_state){
   $form['info'] = array(
-    '#markup' => '<h1>HEP</h1>',
+    '#type' => 'button',
+    '#value' => t('More info'),
+    '#ids' => $form_state['build_info']['args'],
     '#ajax' => array(
-      
+      'callback' => 'ting_openformat_show_info_ajax_callback',
+      'event' => 'click',
     ),
   );
   return $form;
-  
+}
+
+function ting_openformat_show_info_ajax_callback(&$form, $form_state){ 
+  dpm($form_state);
 }
 
 
