@@ -55,6 +55,20 @@ function ting_openformat_single($id){
   return ting_openformat_work_view(current($bibdkEntity));
 
 }
+function ting_openformat_get_manifestations($ids){
+  $client = new ting_client_class();
+  $params['objectFormat'] = variable_get('ting_search_openformat','bibliotekdkWorkDisplay');
+    $params['objectId'] = $ids;
+    $result = $client->do_get_object($params);
+    foreach($result->collections as $collection)
+      $openformat[] = $collection->formattedCollection->formattedCollection->manifestation; 
+   $original_manifestations = array();
+  $entity_ids = array();
+  _ting_openformat_parse_manifestations( $original_manifestations, $entity_ids, $openformat );
+  
+   $conditions['manifestations'] = $original_manifestations;
+  return entity_load('bibdkWorkEntity',$entity_ids,$conditions,TRUE);
+}
 
 function ting_openformat_get_single($id){
   $params = array();
@@ -64,7 +78,8 @@ function ting_openformat_get_single($id){
 
   // use getObjectRequest to retrieve a single work
   $client = new ting_client_class();
-  $openformat = $client->do_get_object($params);
+  $result = $client->do_get_object($params);
+  $openformat[] = $result->formattedCollection->manifestation; 
 
   if( empty($openformat) ) {
     return t("work with id $id could not be found");
@@ -81,18 +96,14 @@ function ting_openformat_get_single($id){
 }
 
 function _ting_openformat_parse_manifestations( &$original_manifestations, &$entity_ids, $openformat ) {
-  if( isset($openformat->formattedCollection->manifestation) && is_array($openformat->formattedCollection->manifestation) ) {
-    foreach($openformat->formattedCollection->manifestation as $key=>$manifestation) {
+  if( isset($openformat) && is_array($openformat) ) {
+    foreach($openformat as $manifestation) {
       $manifestation_id = $manifestation->adminData->pid->{'$'};
       $entity_ids[] = $manifestation_id;
       $original_manifestations[$manifestation_id] = $manifestation;
     }
   }
-  elseif( isset($openformat->formattedCollection->manifestation) ) {
-    $manifestation_id = $openformat->formattedCollection->manifestation->adminData->pid->{'$'};
-    $entity_ids[] = $manifestation_id;
-    $original_manifestations[$manifestation_id] =  $openformat->formattedCollection->manifestation;
-  }
+  
 }
 
 
@@ -309,7 +320,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   $args = array();
   $work_fields = array();
   $work_fields += _prepare_view('bibdkWorkEntity', $bibdkWork, $view_mode, $langcode);
-  /*
+  
   $sub = array();
   $subWorks = $bibdkWork->getSubWorks();
 
@@ -337,9 +348,10 @@ if( !empty($ordered_types) ) {
 else {
 $ordered_subworks = $sub;
 }
-*/
-  //$tabs = theme('ting_openformat_subwork_tabs',array('subWorks'=>$ordered_subworks));
-  return theme('ting_openformat_work',array('fields'=>$work_fields));
+
+  $tabs = theme('ting_openformat_subwork_tabs',array('subWorks'=>$ordered_subworks));
+  return theme('ting_openformat_work',array('fields'=>$work_fields,'subWorks'=>$ordered_subworks,'tabs'=>$tabs,'ding_id' => $bibdkWork->id));
+
 }
 
 
@@ -350,11 +362,14 @@ function ting_openformat_collection_view($collections, $view_mode = 'full', $lan
   // Get the first collection
   $collection = $collections[0];
   // theme collection
+  $bibdkWork = ting_openformat_get_manifestations($ids);
+  $view = ting_openformat_work_view(current($bibdkWork));
   return theme('ting_openformat_collection', array(
     'title' => $collection->record['dc:title'][''][0],
     'author' => isset($collection->record['dc:creator']) ? implode(', ', reset($collection->record['dc:creator'])) : "",
     'ids' => implode(",", $ids),
     'showinfo' => theme('ting_openformat_more_info', array('showinfoform' => drupal_render(drupal_get_form('ting_openformat_show_info_get_form', $ids)))),
+    'view' => $view,
   ));
 }
 

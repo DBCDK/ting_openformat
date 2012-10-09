@@ -118,6 +118,58 @@ class bibdkSubwork {
 
 }
 
+class bibdkCollection {
+  public $id;
+  private $collection;
+  private $title;
+  private $author;
+  private $ids;
+  
+  function __construct() {
+    
+  }
+  
+  public function getId() {
+    return $this->id;
+  }
+
+  public function setId($id) {
+    $this->id = $id;
+  }
+
+  public function getCollection() {
+    return $this->collection;
+  }
+
+  public function setCollection($collection) {
+    $this->collection = $collection;
+  }
+
+  public function getTitle() {
+    return $this->title;
+  }
+
+  public function setTitle($title) {
+    $this->title = $title;
+  }
+
+  public function getAuthor() {
+    return $this->author;
+  }
+
+  public function setAuthor($author) {
+    $this->author = $author;
+  }
+
+  public function getIds() {
+    return $this->ids;
+  }
+
+  public function setIds($ids) {
+    $this->ids = $ids;
+  }
+}
+
 class manifestation {
 
   public $id;

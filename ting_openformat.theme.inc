@@ -36,7 +36,7 @@ function ting_openformat_theme() {
 
     'ting_openformat_collection' => array(
       'path' => $path,
-      'variables' => array('title' => '','author'=> '','ids' => '',),
+      'variables' => array('title' => '','author'=> '','ids' => '', 'show_info' => '', 'view' => ''),
       'template' => 'ting_openformat_collection',
       'render elements' => 'elements',
     ),
