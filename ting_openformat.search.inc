@@ -51,8 +51,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   if( !$result ) {
     return array();
   }
-  dpm($result);
-
+  
   // set facets for result
   _ting_openformat_facet_cache($client, $result, $params);
 
@@ -134,18 +133,18 @@ function _ting_openformat_load_entities( $result ) {
 function _ting_openformat_set_search_result($bibdkobject) {
   //dpm($bibdkobject);
   $variables['result'] = $bibdkobject;
-  $current = current($bibdkobject);
+  $current = current($bibdkobject->objects);
   //************** TODO handle bibdkobject *************/
 
   $result = array(
-    'link' => url("work/".$current[0]->id),
+    'link' => url("work/".$current->id),
     'type' => '',
-    'title' => $current[0]->record['dc:title'][''][0],
+    'title' => $current->record['dc:title'][''][0],
     // 'title' => $formattedCollection->formattedCollection->work->title->titleFull->{'$'},
     //'title' => $current->getTitle(),
     'user' => '',
     'date' => '',
-    'snippet' => ting_openformat_collection_view($current),
+    'snippet' => ting_openformat_collection_view($bibdkobject->objects),
   );
   return $result;
 }

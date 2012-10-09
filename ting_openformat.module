@@ -344,11 +344,16 @@ $ordered_subworks = $sub;
 
 
 function ting_openformat_collection_view($collections, $view_mode = 'full', $langcode = NULL) {
+  // Get all the ID's
+  foreach($collections as $col)
+    $ids[] = $col->id;
+  // Get the first collection
   $collection = $collections[0];
+  // theme collection
   return theme('ting_openformat_collection', array(
     'title' => $collection->record['dc:title'][''][0],
-    'author' => isset($collection->record['dc:creator']) ? $collection->record['dc:creator']['oss:sort'][0] : "",
-    'ids' => '1,2,3,4,5,6,7,8,9,10',
+    'author' => isset($collection->record['dc:creator']) ? implode(', ', reset($collection->record['dc:creator'])) : "",
+    'ids' => implode(",", $ids),
   ));
 }
 
