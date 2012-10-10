@@ -372,6 +372,12 @@ function ting_openformat_collection_view($collections, $view_mode = 'full', $lan
   ));
 }
 
+/**
+ * Generates form for 'View more info' on search results page
+ * @param type $form_id
+ * @param type $form_state
+ * @return array
+ */
 function ting_openformat_show_info_get_form($form_id, $form_state){
   $uid = $form_state['build_info']['args'][1];
   $form['info'] = array(
@@ -388,6 +394,12 @@ function ting_openformat_show_info_get_form($form_id, $form_state){
   return $form;
 }
 
+/**
+ * Ajax callback. Called when user clicks 'view more information' on a work on search results page
+ * @param type $form
+ * @param type $form_state
+ * @return type
+ */
 function ting_openformat_show_info_ajax_callback(&$form, $form_state){
   $ids = $form_state['clicked_button']['#ids'][0];
   $bibdkWork = ting_openformat_get_manifestations($ids);
