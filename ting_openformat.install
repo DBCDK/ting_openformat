@@ -95,6 +95,11 @@ function ting_openformat_bibdk_fields() {
       'entity_type' => 'bibdkWorkEntity',
       'display' => array('full'),
     ),
+    'ting_openformat_work_abstract' => array(
+      'label' => t('Work abstract'),
+      'entity_type' => 'bibdkWorkEntity',
+      'display' => array('full'),
+    ),
     /********* MANIFESTATION ************/
 
     'bibdk_mani_title' => array(

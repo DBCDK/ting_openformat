@@ -1,11 +1,13 @@
 <?php
+
 // load search info and hooks
-module_load_include('inc', 'ting_openformat','ting_openformat.search');
-module_load_include('inc', 'ting_openformat' ,'ting_openformat.field');
+module_load_include('inc', 'ting_openformat', 'ting_openformat.search');
+module_load_include('inc', 'ting_openformat', 'ting_openformat.field');
 
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
-function ting_openformat_menu(){
+
+function ting_openformat_menu() {
   $items = array();
   $items['work/%'] = array(
     'title' => 'Single work',
@@ -47,73 +49,72 @@ function ting_openformat_menu(){
 
   return $items;
 }
+
 /**
  * View single work
  */
-function ting_openformat_single($id){
+function ting_openformat_single($id) {
   $bibdkEntity = ting_openformat_get_single($id);
   return ting_openformat_work_view(current($bibdkEntity));
-
 }
-function ting_openformat_get_manifestations($ids){
+
+function ting_openformat_get_manifestations($ids) {
   $client = new ting_client_class();
-  $params['objectFormat'] = variable_get('ting_search_openformat','bibliotekdkWorkDisplay');
-    $params['objectId'] = $ids;
-    $result = $client->do_get_object($params);
-    foreach($result->collections as $collection)
-      $openformat[] = $collection->formattedCollection->formattedCollection->manifestation; 
-   $original_manifestations = array();
+  $params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
+  $params['objectId'] = $ids;
+  $result = $client->do_get_object($params);
+  foreach ($result->collections as $collection)
+    $openformat[] = $collection->formattedCollection->formattedCollection->manifestation;
+  $original_manifestations = array();
   $entity_ids = array();
-  _ting_openformat_parse_manifestations( $original_manifestations, $entity_ids, $openformat );
-  
-   $conditions['manifestations'] = $original_manifestations;
-  return entity_load('bibdkWorkEntity',$entity_ids,$conditions,TRUE);
+  _ting_openformat_parse_manifestations($original_manifestations, $entity_ids, $openformat);
+
+  $conditions['manifestations'] = $original_manifestations;
+  return entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
 }
 
-function ting_openformat_get_single($id){
+function ting_openformat_get_single($id) {
   $params = array();
 
   $params['objectId'] = $id;
-  $params['objectFormat'] = variable_get('ting_search_openformat','bibliotekdkWorkDisplay');
+  $params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
 
   // use getObjectRequest to retrieve a single work
   $client = new ting_client_class();
   $result = $client->do_get_object($params);
-  $openformat[] = $result->formattedCollection->manifestation; 
+  $openformat[] = $result->formattedCollection->manifestation;
 
-  if( empty($openformat) ) {
+  if (empty($openformat)) {
     return t("work with id $id could not be found");
   }
 
   $original_manifestations = array();
   $entity_ids = array();
 
-  _ting_openformat_parse_manifestations( $original_manifestations, $entity_ids, $openformat );
+  _ting_openformat_parse_manifestations($original_manifestations, $entity_ids, $openformat);
 
   // conditions array is deprecated in drupal 8.
   $conditions['manifestations'] = $original_manifestations;
-  return entity_load('bibdkWorkEntity',$entity_ids,$conditions,TRUE);
+  return entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
 }
 
-function _ting_openformat_parse_manifestations( &$original_manifestations, &$entity_ids, $openformat ) {
-  if( isset($openformat) && is_array($openformat) ) {
-    foreach($openformat as $manifestation) {
+function _ting_openformat_parse_manifestations(&$original_manifestations, &$entity_ids, $openformat) {
+  if (isset($openformat) && is_array($openformat)) {
+    foreach ($openformat as $manifestation) {
       $manifestation_id = $manifestation->adminData->pid->{'$'};
       $entity_ids[] = $manifestation_id;
       $original_manifestations[$manifestation_id] = $manifestation;
     }
   }
-  
 }
-
 
 /**
  * Implements hook_form_FORMID_alter (ting_client_admin_webservices_settings @see ting_client.admin.inc).
  * make openformat a dropdownlist.
  * add bibliotekdkWorkDisplay to ting_admin form
  */
-function ting_openformat_form_ting_client_admin_webservices_settings_alter (&$form, &$form_state) {
-  if( isset ( $form['webservices']['ting_search_openformat']  ) ) {
+function ting_openformat_form_ting_client_admin_webservices_settings_alter(&$form, &$form_state) {
+  if (isset($form['webservices']['ting_search_openformat'])) {
     $dkabm = $form['webservices']['ting_search_openformat']['#default_value'];
     $element = &$form['webservices']['ting_search_openformat'];
     // change type to select
@@ -127,21 +128,18 @@ function ting_openformat_form_ting_client_admin_webservices_settings_alter (&$fo
   }
 }
 
-
-/************** ENTITY ****************/
+/* * ************ ENTITY *************** */
 
 /**
  * Implements hook_entity_info
  * for bibdk we need 3 entities: work, subwork and manifestation
- **/
-
+ * */
 function ting_openformat_entity_info() {
   $return = array(
     'bibdkManifestation' => array(
       'label' => t('openformat manifestation'),
       'fieldable' => TRUE,
       'base table' => 'ting_openformat_manifestation',
-
       // make this a ding_entity ?
       'ding_entity_type' => 'bibdk_manifestation',
       //'ding_entity_type' => 'ting_openformat_manifestation',
@@ -166,21 +164,19 @@ function ting_openformat_entity_info() {
       ),
       'view modes' => array(
         'full' => array(
-          'label' => t('Full content'), 
+          'label' => t('Full content'),
           'custom settings' => TRUE,
-        ), 
+        ),
         'reservation' => array(
-          'label' => t('Reservation'), 
+          'label' => t('Reservation'),
           'custom settings' => TRUE,
-        ), 
+        ),
       ),
     ),
-
     'bibdkSubwork' => array(
       'label' => t('Subwork'),
       'fieldable' => TRUE,
       'base table' => 'ting_openformat_manifestation',
-
       // make this a ding_entity ?
       'ding_entity_type' => 'bibdk_subwork',
       //'ding_entity_type' => 'ting_openformat_manifestation',
@@ -204,7 +200,6 @@ function ting_openformat_entity_info() {
         ),
       ),
     ),
-
     'bibdkWorkEntity' => array(
       'label' => t('Bibdk entity placeholder for manifestations'),
       'fieldable' => TRUE,
@@ -235,8 +230,6 @@ function ting_openformat_entity_info() {
         ),
       ),
     )
-
-
   );
 
   return $return;
@@ -253,14 +246,14 @@ function ting_openformat_manifestations_load($stdObjects) {
 
 /**
  * uri callback as defined in hook_entity_info
- **/
+ * */
 function ting_openformat_maniobject_uri() {
   return 'Brønd';
 }
 
-/**************** end ENTITY ***************/
+/* * ************** end ENTITY ************** */
 
-/***********  panel-pages ****************/
+/* * *********  panel-pages *************** */
 
 /**
  * Implements hook_ctools_plugin_directory().
@@ -283,7 +276,7 @@ function ting_openformat_ctools_plugin_api($module, $api) {
   }
 }
 
-/**************** end panel-pages ***************/
+/* * ************** end panel-pages ************** */
 
 /** Implements hook_ding_devel_timers
  */
@@ -294,82 +287,92 @@ function ting_openformat_ding_devel_timers() {
     ),
     'search_client_net' => array(
       'title' => 'Search client net time was @time ms.',
-
       'include in total' => FALSE,
-    ));
+      ));
 }
 
-
-/************* VIEWS **************/
+/* * *********** VIEWS ************* */
 
 /*
  * preprocess template to add stylesheet
  * @TODO; this method is for developing only - move and adjust css to proper file when ready
  */
-function template_preprocess_ting_openformat_subwork_tabs(&$variables){
+
+function template_preprocess_ting_openformat_subwork_tabs(&$variables) {
   $path = drupal_get_path('module', 'ting_openformat') . '/css';
-  drupal_add_css($path.'/ting_openformat_subwork.css');
+  drupal_add_css($path . '/ting_openformat_subwork.css');
 }
 
 // @TODO - does this method belong here ??
 
 function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->language; }
+    $langcode = $GLOBALS['language_content']->language;
+  }
 
   $args = array();
   $work_fields = array();
   $work_fields += _prepare_view('bibdkWorkEntity', $bibdkWork, $view_mode, $langcode);
-  
+
   $sub = array();
   $subWorks = $bibdkWork->getSubWorks();
 
-  foreach( $subWorks as $id => $subWork ) {
+  foreach ($subWorks as $id => $subWork) {
     $type = drupal_strtolower($subWork->getType());
     $sub[$type]['type'] = $subWork->getType();
-    $sub[$type]['fields'] =  _prepare_view('bibdkSubwork', $subWork, $view_mode, $langcode);
-    $sub[$type]['id'] =  $id;
+    $sub[$type]['fields'] = _prepare_view('bibdkSubwork', $subWork, $view_mode, $langcode);
+    $sub[$type]['id'] = $id;
     $field_content = array();
-    foreach( $subWork->getManifestations() as $manifestation ) {
-      
+    foreach ($subWork->getManifestations() as $manifestation) {
       $sub[$type]['manifestations'][$manifestation->id] = ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL);
     }
   }
 
   $ordered_types = variable_get("ting_openformat_types");
 
-if( !empty($ordered_types) ) {
-  foreach ($ordered_types as $type => $value) {
-    if (isset($sub[$type]))
+  if (!empty($ordered_types)) {
+    foreach ($ordered_types as $type => $value) {
+      if (isset($sub[$type]))
         $ordered_subworks[$type] = $sub[$type];
-
+    }
   }
-}
-else {
-$ordered_subworks = $sub;
+  else {
+    $ordered_subworks = $sub;
+  }
+  
+  $info = _ting_openformat_create_work_info($bibdkWork); //_ting_openformat_create_work_info($bibdkWork->work);
+  $work_info = theme('ting_openformat_work_info', array('info' => $info));
+  $tabs = theme('ting_openformat_subwork_tabs', array('subWorks' => $ordered_subworks));
+  return theme('ting_openformat_work', array(
+    'fields' => $work_fields,
+    'subWorks' => $ordered_subworks,
+    'tabs' => $tabs,
+    'work_info' => $work_info,
+    'ding_id' => $bibdkWork->id));
 }
 
-  $tabs = theme('ting_openformat_subwork_tabs',array('subWorks'=>$ordered_subworks));
-  return theme('ting_openformat_work',array('fields'=>$work_fields,'subWorks'=>$ordered_subworks,'tabs'=>$tabs,'ding_id' => $bibdkWork->id));
-
+function _ting_openformat_create_work_info($work){
+  $info = array (
+    'abstract' => $work->getAbstract(),
+  );
+  return $info;
 }
-
 
 function ting_openformat_collection_view($collections, $view_mode = 'full', $langcode = NULL) {
   // Get all the ID's
-  foreach($collections as $col)
+  foreach ($collections as $col)
     $ids[] = $col->id;
   // Get the first collection
   $collection = $collections[0];
   // theme collection
-  $uid = strtr($ids[0], array(':' =>'', '-' => ''));
+  $uid = strtr($ids[0], array(':' => '', '-' => ''));
   return theme('ting_openformat_collection', array(
-    'title' => $collection->record['dc:title'][''][0],
-    'author' => isset($collection->record['dc:creator']) ? implode(', ', reset($collection->record['dc:creator'])) : "",
-    'ids' => implode(",", $ids),
-    'showinfo' => theme('ting_openformat_more_info', array('showinfoform' => drupal_render(drupal_get_form('ting_openformat_show_info_get_form', $ids, $uid)))),
-    'uid' => $uid,
-  ));
+        'title' => $collection->record['dc:title'][''][0],
+        'author' => isset($collection->record['dc:creator']) ? implode(', ', reset($collection->record['dc:creator'])) : "",
+        'ids' => implode(",", $ids),
+        'showinfo' => theme('ting_openformat_more_info', array('showinfoform' => drupal_render(drupal_get_form('ting_openformat_show_info_get_form', $ids, $uid)))),
+        'uid' => $uid,
+      ));
 }
 
 /**
@@ -378,7 +381,7 @@ function ting_openformat_collection_view($collections, $view_mode = 'full', $lan
  * @param type $form_state
  * @return array
  */
-function ting_openformat_show_info_get_form($form_id, $form_state){
+function ting_openformat_show_info_get_form($form_id, $form_state) {
   $uid = $form_state['build_info']['args'][1];
   $form['info'] = array(
     '#type' => 'button',
@@ -400,25 +403,25 @@ function ting_openformat_show_info_get_form($form_id, $form_state){
  * @param type $form_state
  * @return type
  */
-function ting_openformat_show_info_ajax_callback(&$form, $form_state){
+function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
   $ids = $form_state['clicked_button']['#ids'];
   $bibdkWork = ting_openformat_get_manifestations($ids);
   $view = ting_openformat_work_view(current($bibdkWork));
   return $view;
 }
 
-
-function ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL){
+function ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->language; }
-  
+    $langcode = $GLOBALS['language_content']->language;
+  }
+
   $field_content = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
-  return theme('ting_openformat_manifestation',array('fields'=>$field_content,));
+  return theme('ting_openformat_manifestation', array('fields' => $field_content,));
 }
 
 /**
  * attach entity fields to a single entity. Return a renderable array
- **/
+ * */
 function _prepare_view($entity_type, $object, $view_mode, $langcode) {
   field_attach_prepare_view($entity_type, array($object->id => $object), $view_mode, $langcode);
   entity_prepare_view($entity_type, array($object->id => $object), $langcode);
@@ -429,38 +432,34 @@ function _prepare_view($entity_type, $object, $view_mode, $langcode) {
   return $field_groups;
 }
 
+/* * ********* END VIEWS ********** */
 
 
-/*********** END VIEWS ***********/
-
-
-/******************* ADMIN *****************/
+/* * ***************** ADMIN **************** */
 
 /**
  * Impelments hook_flush_caches
- **/
-
+ * */
 function ting_openformat_flush_caches() {
   return array('cache_bibdk_webservices');
 }
 
-/*** FACETBROWSER ****/
+/* * * FACETBROWSER *** */
 
 /**
  * Implements hook_ding_facetbrowser().
  * initialize facetbrowser
  */
 function ting_openformat_ding_facetbrowser() {
-  $results             = new stdClass();
+  $results = new stdClass();
   $results->show_empty = FALSE;
-  $search_result       = drupal_static('ting_search_results');
+  $search_result = drupal_static('ting_search_results');
   if ($search_result) {
-    $results->facets     = ($search_result instanceof TingClientSearchResult) ? $search_result->facets : array();
-    $results->searchkey  = $search_result->search_key;
+    $results->facets = ($search_result instanceof TingClientSearchResult) ? $search_result->facets : array();
+    $results->searchkey = $search_result->search_key;
     return $results;
   }
 }
-
 
 /**
  * Implements hook_menu_alter().
@@ -524,7 +523,7 @@ function ting_openformat_menu_alter(&$items) {
  * Fetch known types from the datawell.
  */
 function _ting_openformat_fetch_types() {
-   $types = variable_get('ting_openformat_types', array());
+  $types = variable_get('ting_openformat_types', array());
 
   $options = array(
     'facets' => array('facet.type'),
@@ -541,7 +540,7 @@ function _ting_openformat_fetch_types() {
 
   $client = new ting_client_class();
   $result = $client->do_search($options);
-  
+
   foreach ($result->facets['facet.type']->terms as $term => $count) {
     if (!isset($types[$term]))
       $types[$term] = array("type" => $term, "count" => $count, "weight" => 1000);

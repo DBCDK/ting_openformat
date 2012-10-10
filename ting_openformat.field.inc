@@ -32,6 +32,13 @@ function ting_openformat_field_info() {
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
+    'ting_openformat_work_abstract' => array(
+      'label' => t('Description'),
+      'description' => t('Description of work'),
+      'default_widget' => 'hidden',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
     'bibdk_mani_title' => array(
       'label' => t('Title'),
       'description' => t('Title of manifestation'),
@@ -269,6 +276,13 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         // one or more subjects
         $subjects = $entity->getSubjects();
         $value = _ting_openformat_get_markup_for_field($subjects);
+        break;
+      
+      // abstract
+      case 'ting_openformat_work_abstract':
+        // one or more abstracts
+        $abstract = $entity->getAbstract();
+        $value = _ting_openformat_get_markup_for_field($abstract);
         break;
       
       // type

@@ -4,9 +4,6 @@
  * @file theme.inc load theme hooks
  **/
 
-
-
-
 /**
  * Implements hook_theme().
  */
@@ -31,6 +28,13 @@ function ting_openformat_theme() {
       'path' => $path,
       'variables' => array('fields' => array(),'subWorks'=>array(),'ding_id' => 0,),
       'template' => 'ting_openformat_work',
+      'render elements' => 'elements',
+    ),
+    
+    'ting_openformat_work_info' => array(
+      'path' => $path,
+      'variables' => array('info' => array()),
+      'template' => 'ting_openformat_work_info',
       'render elements' => 'elements',
     ),
 

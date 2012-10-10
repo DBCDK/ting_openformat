@@ -4,6 +4,7 @@ class bibdkWork {
 
   public $id;
   public $ding_entity_id;
+  public $description;
   public $work;
   public $manifestations = array();
   public $subWorks = array();
@@ -22,7 +23,7 @@ class bibdkWork {
     }
     // set subworks
     foreach ($this->manifestations as $id => $manifestation) {
-      $type = ( is_array($manifestation->getType()) ) ? implode(' + ',$manifestation->getType()) : $manifestation->getType();
+      $type = ( is_array($manifestation->getType()) ) ? implode(' + ', $manifestation->getType()) : $manifestation->getType();
       // note: "surplus" types, and "undefined" types are to be handled in iScrum. Also, we're waiting for the new "group types".
       $subWorks[$type][$id] = $manifestation;
     }
@@ -31,7 +32,6 @@ class bibdkWork {
     }
 
     // @TODO; should manifestations be sorted by sortkey ??
-
     // rewind manifestations array
     reset($this->manifestations);
     $top_manifestation = current($this->manifestations);
@@ -51,6 +51,18 @@ class bibdkWork {
     return (is_array($result)) ? reset($result) : $result;
   }
 
+  public function getAbstract() {
+    $fields = array('abstract');
+    if (!isset($this->work->description)) {
+      return NULL;
+    }
+
+    $elements = $this->work->description;
+    $result = ting_openformat_methods::parseFields($elements, $fields);
+
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
   public function getCreator() {
     $fields = array('creators' => array('creator' => "searchCode"));
     $elements = $this->work;
@@ -62,7 +74,7 @@ class bibdkWork {
    * zero or more occurences
    */
   public function getSubjects() {
-    $fields = array('subjects' => array('subjectHeader'=> 'header', 'subject' => 'searchCode'));
+    $fields = array('subjects' => array('subjectHeader' => 'header', 'subject' => 'searchCode'));
     $elements = $this->work->description;
     $result = ting_openformat_methods::parseFields($elements, $fields);
     return (is_array($result)) ? reset($result) : $result;
@@ -119,16 +131,17 @@ class bibdkSubwork {
 }
 
 class bibdkCollection {
+
   public $id;
   private $collection;
   private $title;
   private $author;
   private $ids;
-  
+
   function __construct() {
     
   }
-  
+
   public function getId() {
     return $this->id;
   }
@@ -168,6 +181,7 @@ class bibdkCollection {
   public function setIds($ids) {
     $this->ids = $ids;
   }
+
 }
 
 class manifestation {
@@ -213,6 +227,7 @@ class manifestation {
   /*
    * Return ID as array
    */
+
   public function getIDs() {
     return array($this->id);
   }
@@ -252,7 +267,7 @@ class manifestation {
 
   public function getRequestMethod() {
     $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('requestMethod'));
-        return (is_array($result)) ? reset($result) : $result;
+    return (is_array($result)) ? reset($result) : $result;
   }
 
   /* \brief restrictedUse
@@ -270,8 +285,8 @@ class manifestation {
 
   public function getType() {
     $result = ting_openformat_methods::parseFields($this->manifestation, array('type'));
-    if ( is_array($result['type']) ) {
-      $result['type'] = implode(' + ',$result['type']);
+    if (is_array($result['type'])) {
+      $result['type'] = implode(' + ', $result['type']);
     }
     return (is_array($result)) ? reset($result) : $result;
   }
@@ -592,7 +607,7 @@ class ting_openformat_methods {
       }
       elseif (!is_array($value) && isset($object->$value) && is_array($object->$value)) {
 
-        foreach ($object->$value as $val){
+        foreach ($object->$value as $val) {
           $ret[$value][] = $val->{'$'};
         }
       }
