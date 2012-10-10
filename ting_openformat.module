@@ -380,14 +380,19 @@ function ting_openformat_show_info_get_form($form_id, $form_state){
     '#ids' => $form_state['build_info']['args'],
     '#ajax' => array(
       'callback' => 'ting_openformat_show_info_ajax_callback',
+      'wrapper' => 'pidcontainer',
+      'method' => 'replace',
       'event' => 'click',
     ),
   );
   return $form;
 }
 
-function ting_openformat_show_info_ajax_callback(&$form, $form_state){ 
-  dpm($form_state);
+function ting_openformat_show_info_ajax_callback(&$form, $form_state){
+  #dpm($form_state['clicked_button']['#ids'][0][0]);
+  #$ids = implode(",", $form_state['clicked_button']['#ids'][0]);
+  #dpm($ids);
+  return $form_state['clicked_button']['#ids'][0][0];
 }
 
 
