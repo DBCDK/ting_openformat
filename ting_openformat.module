@@ -422,9 +422,11 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
 function _prepare_view($entity_type, $object, $view_mode, $langcode) {
   field_attach_prepare_view($entity_type, array($object->id => $object), $view_mode, $langcode);
   entity_prepare_view($entity_type, array($object->id => $object), $langcode);
-  $content = field_attach_view($entity_type, $object, $view_mode, $langcode);
-
-  return $content;
+  $fields = field_attach_view($entity_type, $object, $view_mode, $langcode);
+  foreach($fields as $name => $field){
+    $field_groups[$field['#formatter']][$name] = $field;
+  }
+  return $field_groups;
 }
 
 
