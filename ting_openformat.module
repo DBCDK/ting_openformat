@@ -332,7 +332,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
     $field_content = array();
     foreach( $subWork->getManifestations() as $manifestation ) {
       
-      $sub[$type]['manifistations'][$manifestation->id] = ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL);
+      $sub[$type]['manifestations'][$manifestation->id] = ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL);
     }
   }
 
