@@ -377,7 +377,7 @@ function ting_openformat_show_info_get_form($form_id, $form_state){
     '#ids' => $form_state['build_info']['args'],
     '#ajax' => array(
       'callback' => 'ting_openformat_show_info_ajax_callback',
-      'wrapper' => 'pidcontainer',
+      'wrapper' => 'ajax-placeholder',
       'method' => 'replace',
       'event' => 'click',
     ),
