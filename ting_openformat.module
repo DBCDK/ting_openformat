@@ -362,22 +362,25 @@ function ting_openformat_collection_view($collections, $view_mode = 'full', $lan
   // Get the first collection
   $collection = $collections[0];
   // theme collection
+  $uid = strtr($ids[0], array(':' =>'', '-' => ''));
   return theme('ting_openformat_collection', array(
     'title' => $collection->record['dc:title'][''][0],
     'author' => isset($collection->record['dc:creator']) ? implode(', ', reset($collection->record['dc:creator'])) : "",
     'ids' => implode(",", $ids),
-    'showinfo' => theme('ting_openformat_more_info', array('showinfoform' => drupal_render(drupal_get_form('ting_openformat_show_info_get_form', $ids)))),
+    'showinfo' => theme('ting_openformat_more_info', array('showinfoform' => drupal_render(drupal_get_form('ting_openformat_show_info_get_form', $ids, $uid)))),
+    'uid' => $uid,
   ));
 }
 
 function ting_openformat_show_info_get_form($form_id, $form_state){
+  $uid = $form_state['build_info']['args'][1];
   $form['info'] = array(
     '#type' => 'button',
     '#value' => t('More info'),
-    '#ids' => $form_state['build_info']['args'],
+    '#ids' => $form_state['build_info']['args'][0],
     '#ajax' => array(
       'callback' => 'ting_openformat_show_info_ajax_callback',
-      'wrapper' => 'ajax-placeholder',
+      'wrapper' => 'ajax_placeholder_' . $uid,
       'method' => 'replace',
       'event' => 'click',
     ),
