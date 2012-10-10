@@ -401,7 +401,7 @@ function ting_openformat_show_info_get_form($form_id, $form_state){
  * @return type
  */
 function ting_openformat_show_info_ajax_callback(&$form, $form_state){
-  $ids = $form_state['clicked_button']['#ids'][0];
+  $ids = $form_state['clicked_button']['#ids'];
   $bibdkWork = ting_openformat_get_manifestations($ids);
   $view = ting_openformat_work_view(current($bibdkWork));
   return $view;
