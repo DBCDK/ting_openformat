@@ -362,14 +362,11 @@ function ting_openformat_collection_view($collections, $view_mode = 'full', $lan
   // Get the first collection
   $collection = $collections[0];
   // theme collection
-  $bibdkWork = ting_openformat_get_manifestations($ids);
-  $view = ting_openformat_work_view(current($bibdkWork));
   return theme('ting_openformat_collection', array(
     'title' => $collection->record['dc:title'][''][0],
     'author' => isset($collection->record['dc:creator']) ? implode(', ', reset($collection->record['dc:creator'])) : "",
     'ids' => implode(",", $ids),
     'showinfo' => theme('ting_openformat_more_info', array('showinfoform' => drupal_render(drupal_get_form('ting_openformat_show_info_get_form', $ids)))),
-    'view' => $view,
   ));
 }
 
@@ -389,10 +386,10 @@ function ting_openformat_show_info_get_form($form_id, $form_state){
 }
 
 function ting_openformat_show_info_ajax_callback(&$form, $form_state){
-  #dpm($form_state['clicked_button']['#ids'][0][0]);
-  #$ids = implode(",", $form_state['clicked_button']['#ids'][0]);
-  #dpm($ids);
-  return $form_state['clicked_button']['#ids'][0][0];
+  $ids = $form_state['clicked_button']['#ids'][0];
+  $bibdkWork = ting_openformat_get_manifestations($ids);
+  $view = ting_openformat_work_view(current($bibdkWork));
+  return $view;
 }
 
 
