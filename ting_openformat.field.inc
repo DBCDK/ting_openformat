@@ -275,7 +275,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
       case 'ting_openformat_work_subjects':
         // one or more subjects
         $subjects = $entity->getSubjects();
-        $value = _ting_openformat_get_markup_for_field($subjects, ' / ', TRUE);
+        $value = _ting_openformat_get_markup_for_field($subjects, ' / ', FALSE);
         break;
       
       // abstract
@@ -456,9 +456,9 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
 /**
  * Creates a #markup array if content exists
  */
-function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $is_subjects = FALSE){
+function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_header = TRUE){
   $return = NULL; 
-  $markup = _ting_openformat_parse_element($elements, $divider, $is_subjects);
+  $markup = _ting_openformat_parse_element($elements, $divider, $use_header);
    if (isset($markup))
       $return  = array(
           '#markup' => $markup,
@@ -472,17 +472,18 @@ function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $is_s
  * @param array $elements
  * @return string
  */
-function _ting_openformat_parse_element ($elements, $divider, $is_subjects){
+function _ting_openformat_parse_element ($elements, $divider = ", ", $use_header = TRUE){
   if (!isset($elements))
     return null;
   if (!is_array($elements))
     $elements =  array($elements);
   foreach($elements as $key => $value){
     if (is_array($value)){
-      $array[] = _ting_openformat_parse_element($value, $divider);
+      $array[] = _ting_openformat_parse_element($value, $divider, $use_header);
     }
     elseif ($key == "header"){
-      $header = $value;
+      if($use_header)
+        $header = $value;
     }
     elseif ($key == 'searchCode')
       $array[] = l($elements['display'], 'search/work/' . $elements['searchCode']);
@@ -494,9 +495,6 @@ function _ting_openformat_parse_element ($elements, $divider, $is_subjects){
   $string = (isset($header)) ? $header : " ";
   if (isset($array))
     $string .= implode($divider, $array);
-  
-  if($is_subjects)
-    $string = str_replace(array('Emne: '), '', $string);
   
   return $string;
 }
