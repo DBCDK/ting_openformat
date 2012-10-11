@@ -339,23 +339,13 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   else {
     $ordered_subworks = $sub;
   }
-  
-  $info = _ting_openformat_create_work_info($bibdkWork); //_ting_openformat_create_work_info($bibdkWork->work);
-  $work_info = theme('ting_openformat_work_info', array('info' => $info));
+
   $tabs = theme('ting_openformat_subwork_tabs', array('subWorks' => $ordered_subworks));
   return theme('ting_openformat_work', array(
     'fields' => $work_fields,
     'subWorks' => $ordered_subworks,
     'tabs' => $tabs,
-    'work_info' => $work_info,
     'ding_id' => $bibdkWork->id));
-}
-
-function _ting_openformat_create_work_info($work){
-  $info = array (
-    'abstract' => $work->getAbstract(),
-  );
-  return $info;
 }
 
 function ting_openformat_collection_view($collections, $view_mode = 'full', $langcode = NULL) {
