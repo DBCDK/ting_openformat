@@ -80,23 +80,24 @@ function ting_openformat_display_types($types) {
 function ting_openformat_bibdk_fields() {
   return array(
     /********* WORK ************/
+    /*
     'ting_openformat_work_title' => array(
       'entity_type' => 'bibdkWorkEntity',
       'label' => t('Work title'),
       'display' => array('full'),
-    ),
-    'ting_openformat_work_creators' => array(
+    ),*/
+    /*'ting_openformat_work_creators' => array(
       'label' => t('Work creators'),
+      'entity_type' => 'bibdkWorkEntity',
+      'display' => array('full'),
+    ),*/
+    'ting_openformat_work_abstract' => array(
+      'label' => t('Work abstract'),
       'entity_type' => 'bibdkWorkEntity',
       'display' => array('full'),
     ),
     'ting_openformat_work_subjects' => array(
       'label' => t('Work subjects'),
-      'entity_type' => 'bibdkWorkEntity',
-      'display' => array('full'),
-    ),
-    'ting_openformat_work_abstract' => array(
-      'label' => t('Work abstract'),
       'entity_type' => 'bibdkWorkEntity',
       'display' => array('full'),
     ),

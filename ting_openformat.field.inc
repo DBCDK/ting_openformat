@@ -11,20 +11,20 @@
 
 function ting_openformat_field_info() {
   return array(
-    'ting_openformat_work_title' => array(
+    /*'ting_openformat_work_title' => array(
       'label' => t('Title'),
       'description' => t('title of work'),
       'default_widget' => 'default',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
-    ),
-    'ting_openformat_work_creators' => array(
+    ),*/
+    /*'ting_openformat_work_creators' => array(
       'label' => t('Creators'),
       'description' => t('Creators of work'),
       'default_widget' => 'default',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
-    ),
+    ),*/
     'ting_openformat_work_subjects' => array(
       'label' => t('Subjects'),
       'description' => t('Subjects of work'),
@@ -275,7 +275,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
       case 'ting_openformat_work_subjects':
         // one or more subjects
         $subjects = $entity->getSubjects();
-        $value = _ting_openformat_get_markup_for_field($subjects);
+        $value = _ting_openformat_get_markup_for_field($subjects, ' / ', TRUE);
         break;
       
       // abstract
@@ -456,15 +456,14 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
 /**
  * Creates a #markup array if content exists
  */
-function _ting_openformat_get_markup_for_field($elements){
+function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $is_subjects = FALSE){
   $return = NULL; 
-  $markup = _ting_openformat_parse_element($elements);
+  $markup = _ting_openformat_parse_element($elements, $divider, $is_subjects);
    if (isset($markup))
       $return  = array(
           '#markup' => $markup,
         );
   return $return;      
-   
 }
 
 /**
@@ -473,14 +472,14 @@ function _ting_openformat_get_markup_for_field($elements){
  * @param array $elements
  * @return string
  */
-function _ting_openformat_parse_element ($elements){
+function _ting_openformat_parse_element ($elements, $divider, $is_subjects){
   if (!isset($elements))
     return null;
   if (!is_array($elements))
     $elements =  array($elements);
   foreach($elements as $key => $value){
     if (is_array($value)){
-      $array[] = _ting_openformat_parse_element($value);
+      $array[] = _ting_openformat_parse_element($value, $divider);
     }
     elseif ($key == "header"){
       $header = $value;
@@ -494,7 +493,10 @@ function _ting_openformat_parse_element ($elements){
   }
   $string = (isset($header)) ? $header : " ";
   if (isset($array))
-    $string .= implode(", ", $array);
+    $string .= implode($divider, $array);
+  
+  if($is_subjects)
+    $string = str_replace(array('Emne: '), '', $string);
   
   return $string;
 }
