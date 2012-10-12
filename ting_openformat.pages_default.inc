@@ -71,6 +71,27 @@ function ting_openformat_default_page_manager_handlers() {
     $pane = new stdClass();
     $pane->pid = 'new-2';
     $pane->panel = 'middle';
+    $pane->type = 'ting_openformat_pager_mini';
+    $pane->subtype = 'ting_openformat_pager_mini';
+    $pane->shown = TRUE;
+    $pane->access = array();
+    $pane->configuration = array(
+      'override_title' => 1,
+      'override_title_text' => '',
+    );
+    $pane->cache = array();
+    $pane->style = array(
+      'settings' => NULL,
+    );
+    $pane->css = array();
+    $pane->extras = array();
+    $pane->position = 0;
+    $pane->locks = array();
+    $display->content['new-2'] = $pane;
+    $display->panels['middle'][0] = 'new-2';
+    $pane = new stdClass();
+    $pane->pid = 'new-3';
+    $pane->panel = 'middle';
     $pane->type = 'ting_openformat_search_result';
     $pane->subtype = 'ting_openformat_search_result';
     $pane->shown = TRUE;
@@ -86,6 +107,9 @@ function ting_openformat_default_page_manager_handlers() {
       'no_key_title' => '',
       'no_key' => '',
       'no_key_format' => 'plain_text',
+      'context' => 'argument_string_1',
+      'override_title' => 1,
+      'override_title_text' => '',
     );
     $pane->cache = array();
     $pane->style = array(
@@ -93,10 +117,10 @@ function ting_openformat_default_page_manager_handlers() {
     );
     $pane->css = array();
     $pane->extras = array();
-    $pane->position = 0;
+    $pane->position = 1;
     $pane->locks = array();
-    $display->content['new-2'] = $pane;
-    $display->panels['middle'][0] = 'new-2';
+    $display->content['new-3'] = $pane;
+    $display->panels['middle'][1] = 'new-3';
   $display->hide_title = PANELS_TITLE_FIXED;
   $display->title_pane = '0';
   $handler->conf['display'] = $display;
