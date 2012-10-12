@@ -66,7 +66,5 @@ function ting_openformat_ting_openformat_search_result_content_type_render($subt
   $block->title = t('Search results');
   $block->content = $output;
 
-  $block->content .= theme('ting_openformat_search_mini_pager', array('tags' => NULL,));
-
   return $block;
 }

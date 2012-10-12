@@ -275,6 +275,6 @@ function theme_ting_openformat_search_mini_pager($variables) {
       'class' => array('pager-next'),
       'data' => $li_next,
     );
-    return theme('item_list', array('items' => $items, 'type' => 'ul', 'attributes' => array('class' => array('pager'))));
+    return theme('item_list', array('items' => $items, 'type' => 'ul', 'attributes' => array('class' => array('pager mini'))));
   }
 }
