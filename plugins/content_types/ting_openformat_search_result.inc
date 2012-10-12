@@ -68,3 +68,11 @@ function ting_openformat_ting_openformat_search_result_content_type_render($subt
 
   return $block;
 }
+
+/**
+ * Enable admin settings page
+ */
+function ting_openformat_ting_openformat_search_result_content_type_edit_form($form, &$form_state) {
+  return $form;
+}
+

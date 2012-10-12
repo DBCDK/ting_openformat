@@ -59,16 +59,18 @@ function ting_openformat_theme() {
       'render elements' => 'elements',
     ),
 
-    'ting_openformat_search_mini_pager' => array(
+    'ting_openformat_mini_pager' => array(
       'variables' => array('tags' => array(), 'element' => 0, 'parameters' => array(), 'quantity' => 9),
     ),
-    'ting_openformat_search_pager' => array(
+    'ting_openformat_pager' => array(
       'variables' => array('tags' => array(), 'element' => 0, 'parameters' => array(), 'quantity' => 9),
     ),
-      'ting_openformat_type_order_form' => array(
+
+    'ting_openformat_type_order_form' => array(
       'render element' => 'form',
       'file' => 'ting_openformat.admin.inc',
     ),
+
     'ting_openformat_type_order_element' => array(
       'render element' => 'element',
       'file' => 'ting_openformat.admin.inc',
@@ -87,17 +89,13 @@ function ting_openformat_theme() {
 /**
  * Theme a pager
  */
-function theme_ting_openformat_search_pager($variables) {
+function theme_ting_openformat_pager($variables) {
   $tags = $variables['tags'];
   $element = $variables['element'];
   $parameters = $variables['parameters'];
   $quantity = $variables['quantity'];
   $hide_list = isset($variables['hide_list']) ? $variables['hide_list'] : FALSE;
   global $pager_page_array, $pager_total;
-
-  // dpm($variables);
-  // dpm($pager_page_array);
-  // dpm($pager_total);
 
   // Calculate various markers within this pager piece:
   // Middle is used to "center" pages around the current page.
@@ -223,7 +221,7 @@ function theme_ting_openformat_search_pager($variables) {
 /**
  * Theme a mini pager with only first, previous and next links.
  */
-function theme_ting_openformat_search_mini_pager($variables) {
+function theme_ting_openformat_mini_pager($variables) {
   $tags = $variables['tags'];
   $element = $variables['element'];
   $parameters = $variables['parameters'];

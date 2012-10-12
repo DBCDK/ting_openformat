@@ -52,42 +52,6 @@ function ting_openformat_menu() {
 
 
 /**
- * Implements hook_block_info();
- */
-function ting_openformat_block_info() {
-  $blocks['ting_openformat_pager'] = array(
-    'info' => t('Ting Openformat pager'),
-    'description' => t('Pager for Ting Openformat search results'),
-    'cache' => DRUPAL_NO_CACHE,
-  );
-  $blocks['ting_openformat_mini_pager'] = array(
-    'info' => t('Ting Openformat mini pager'),
-    'description' => t('Mini pager for Ting Openformat search results'),
-    'cache' => DRUPAL_NO_CACHE,
-  );
-  return $blocks;
-}
-
-/**
- * Implements hook_block_view();
- */
-function ting_openformat_block_view($delta = '') {
-  switch ($delta) {
-    case 'ting_openformat_pager':
-      $block['title'] = t('Ting Openformat pager');
-      $block['content'] = theme('ting_openformat_search_pager', array('tags' => NULL,));
-      return $block;
-      break;
-    case 'ting_openformat_mini_pager':
-      $block['title'] = t('Ting Openformat mini pager');
-      $block['content'] = theme('ting_openformat_search_mini_pager', array('tags' => NULL,));
-      return $block;
-      break;
-  }
-}
-
-
-/**
  * View single work
  */
 function ting_openformat_single($id) {
