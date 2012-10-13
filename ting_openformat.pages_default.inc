@@ -115,7 +115,10 @@ $display->panels = array();
   $pane->style = array(
     'settings' => NULL,
   );
-  $pane->css = array();
+  $pane->css = array(
+    'css_id' => 'search-result-wrapper',
+    'css_class' => '',
+  );
   $pane->extras = array();
   $pane->position = 1;
   $pane->locks = array();
