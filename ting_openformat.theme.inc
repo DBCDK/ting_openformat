@@ -237,42 +237,65 @@ function theme_ting_openformat_mini_pager($variables) {
   $pager_max = $pager_total[$element];
   // End of marker calculations.
 
-
-  $li_previous = theme('pager_previous', array('text' => (isset($tags[1]) ? $tags[1] : t('< previous')), 'element' => $element, 'interval' => 1, 'parameters' => $parameters));
-  if (empty($li_previous)) {
-    $li_previous = "&nbsp;";
-  }
-
-  $li_first = theme('pager_first', array('text' => (isset($tags[0]) ? $tags[0] : t('first')), 'element' => $element, 'parameters' => $parameters));
-  if (empty($li_first)) {
-    $li_first = "&nbsp;";
-  }
-
-  $li_next = theme('pager_next', array('text' => (isset($tags[3]) ? $tags[3] : t('next >')), 'element' => $element, 'interval' => 1, 'parameters' => $parameters));
-  if (empty($li_next)) {
-    $li_next = "&nbsp;";
-  }
-
   if ($pager_total[$element] > 1) {
-    $items[] = array(
-      'class' => array('pager-first'),
-      'data' => $li_first,
+
+    // Now generate the actual pager piece.
+    for ($i = 1; $i <= $pager_current && $i <= $pager_max; $i++) {
+      if ($i < $pager_current) {
+        $items[] = array(
+          'class' => array('pager-item'),
+          'data' => theme('pager_previous', array('text' => t('page ') . $i, 'element' => $element, 'interval' => ($pager_current - $i), 'parameters' => $parameters)),
+        );
+      }
+      if ($i == $pager_current) {
+        $items[] = array(
+          'class' => array('pager-current current'),
+          'data' => theme('pager_previous', array('text' => t('page ') . $i, 'element' => $element, 'interval' => ($pager_current - $i), 'parameters' => $parameters)),
+        );
+      }
+      if ($i > $pager_current) {
+        $items[] = array(
+          'class' => array('pager-item'),
+          'data' => theme('pager_next', array('text' => $i, 'element' => $element, 'interval' => ($i - $pager_current), 'parameters' => $parameters)),
+        );
+      }
+    }
+
+    $output =  array(
+      '#prefix' => '<div class="works-control-wrapper-right">',
+      '#suffix' => '</div>',
+      'previous' => array(
+        '#text' => '',
+        '#element' => $element,
+        '#interval' => 1,
+        '#parameters' => $parameters,
+        '#theme' => 'pager_previous',
+      ),
+      'dropdown_wrapper' => array(
+        '#prefix' => '<div class="dropdown-wrapper">',
+        '#suffix' => '</div>',
+        'current' => array(
+          '#text' => t('page') . ' ' . $pager_current,
+          '#element' => $element,
+          '#parameters' => $parameters,
+          '#theme' => 'pager_first',
+        ),
+        'items' => array(
+          '#items' => $items,
+          '#theme' => 'item_list',
+          '#attributes' => array('class' => array('dropdown-menu','dropdown-leftalign','visuallyhidden')),
+        ),
+      ),
+        'next' => array(
+          '#text' => '',
+          '#element' => $element,
+          '#interval' => 1,
+          '#parameters' => $parameters,
+          '#theme' => 'pager_next',
+        ),
     );
 
-    $items[] = array(
-      'class' => array('pager-previous'),
-      'data' => $li_previous,
-    );
+    return $output;
 
-    $items[] = array(
-      'class' => array('pager-current'),
-      'data' => $pager_current,
-    );
-
-    $items[] = array(
-      'class' => array('pager-next'),
-      'data' => $li_next,
-    );
-    return theme('item_list', array('items' => $items, 'type' => 'ul', 'attributes' => array('class' => array('pager mini'))));
   }
 }
