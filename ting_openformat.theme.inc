@@ -130,7 +130,7 @@ function theme_ting_openformat_pager($variables) {
     $li_previous = "&nbsp;";
   }
 
-  $li_first = theme('pager_first', array('text' => (isset($tags[0]) ? $tags[0] : t('« first')), 'element' => $element, 'parameters' => $parameters));
+  $li_first = theme('pager_first', array('text' => (isset($tags[0]) ? $tags[0] : t('<< first')), 'element' => $element, 'parameters' => $parameters));
 
   if (empty($li_first)) {
     $li_first = "&nbsp;";
@@ -141,7 +141,7 @@ function theme_ting_openformat_pager($variables) {
     $li_next = "&nbsp;";
   }
 
-  $li_last = theme('pager_last', array('text' => (isset($tags[4]) ? $tags[4] : t('last »')), 'element' => $element, 'parameters' => $parameters));
+  $li_last = theme('pager_last', array('text' => (isset($tags[4]) ? $tags[4] : t('last >>')), 'element' => $element, 'parameters' => $parameters));
 
   if (empty($li_last)) {
     $li_last = "&nbsp;";
@@ -165,7 +165,7 @@ function theme_ting_openformat_pager($variables) {
       if ($i > 1) {
         $items[] = array(
           'class' => array('pager-ellipsis'),
-          'data' => '�',
+          'data' => '>>',
         );
       }
       // Now generate the actual pager piece.
@@ -192,7 +192,7 @@ function theme_ting_openformat_pager($variables) {
       if ($i < $pager_max) {
         $items[] = array(
           'class' => array('pager-ellipsis'),
-          'data' => '�',
+          'data' => '<<',
         );
       }
     }
