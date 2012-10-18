@@ -41,12 +41,14 @@ function ting_openformat_webservice_mockup_request() {
     echo 'welcome to ting_openformat_webservice mockup';
     return;
   }  
-  $request = $envelope->Body->searchRequest;
+  $request = $envelope->Body;
   // good user
-  $results = ( $request->query == 'harry potter');
   drupal_add_http_header('Content-Type', 'application/json');
-  if( $results ) {
+  if( $request->searchRequest->query == 'harry potter' ) {
     $resp = file_get_contents($path.'/results.json');
+  }
+  else if(current($request->getObjectRequest->identifier) == '870970-basis:26863287'){
+    $resp = file_get_contents($path.'/single-manifestation.json');
   }
   else{
     $resp = file_get_contents($path.'/no-results.json');

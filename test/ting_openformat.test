@@ -25,10 +25,10 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     
     $this->_testSimplefunction("getType", "Bog");
     $this->_testSimplefunction("getOriginalTitle", NULL);
-    $this->_testSimplefunction("getAlternativeTitle", array("alternativeTitle" => array(
+    $this->_testSimplefunction("getAlternativeTitle", array("alternativeTitle" => array(array(
         "header" => "Cd:",
         "alternativeTitleElement"=> "Harry Potter instrumental solos alto saxophone - level 2-3",
-    )));    
+    ))));    
   }
   
   private function _testSimplefunction($method, $expected_result){
@@ -43,35 +43,7 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     $this->assertEqual($expected_result, $result, $message);
     
   } 
-  
-  private function testReservationFunctions () {
-     /*
-      * Følgende skal nok skrottes
-      * $file = file_get_contents(drupal_get_path("module", "bibdk_reservation")."/tests/manifestation-link.json");
-     $result = json_decode($file);
-
-     $this->none = entity_load('bibdkManifestation', 'test1', $result->manifestation);
-    $result = $this->none->isReservable();
-    $message = "No Button is created";
-    $this->assertEqual(NULL, $result, $message);
-    
-    $result = $this->link->isReservable();
-    $message = "No Button is created";
-    $this->assertEqual(NULL, $result, $message);
-    
-    $result = $this->button->isReservable();
-    $message = "No Button is created";
-    $this->assertEqual(TRUE, $result, $message);
-   
-    $result = $this->link->isLink();
-    $message = "Button is a link";
-    $this->assertEqual(TRUE, $result, $message);
-   
-    $result = $this->text->getInfotext();
-    $message = "Button is a link";
-    $this->assertEqual("linkE17", $result, $message);*/
-  }
-  
+ 
   private function _createObjects(){
      $file = file_get_contents(drupal_get_path("module", "ting_openformat")."/test/manifestation.working.json");
      $result = json_decode($file);
@@ -97,7 +69,7 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
  public function setUp() {
     //$this->profile = 'bibdk';
     //array('ting_openformat', 'ting_openformat_webservice_mockup','ting', 'devel', 'search', 'ting_client')
-    parent::setup(array('ting_openformat'));
+    parent::setup(array('ting_openformat', 'devel'));
     global $base_url;
     $this->privileged_user = $this->drupalCreateUser(array('access content', 'search content'));
     $this->drupalLogin($this->privileged_user);
@@ -125,18 +97,15 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     $this->assertText("Harry Potter");
     $this->assertText("Harry Potter og De Vises Sten");
     $this->assertText("Joanne K. Rowling");
-    $this->assertText("Bog");
-    $this->assertText("Originaltitel:Harry Potter and the philosopher's stone");
-    $this->assertText("pÃ¥ dansk ved Hanna LÃ¼tzen");
-    
-    
+    // Test Ajax with no result
+    $this->drupalPostAJAX(NULL, NULL, array('op' => ''), NULL, array(), array(), 'ting-openformat-show-info-get-form--2');
+    $this->assertNoText("ISBN");
+    // Test Ajax with with result
+    $this->drupalPostAJAX(NULL, NULL, array('op' => ''), NULL, array(), array(), 'ting-openformat-show-info-get-form');
     //4: Test presence of fields
-    
-    
-   $this->drupalPost("search/work/", array('search_block_form' => 'harry potter'), "Search");
-   $this->assert(TRUE, print_r(variable_get('ting_search_url'), TRUE));
-   
-   
+    $this->assertText("Harry Potter and the Deathly Hallows");
+    $this->assertText("ISBN");
+    $this->assertText("Cd");
   }
   
 /*  public function testDisplayOfSingleWork() {

@@ -58,10 +58,6 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   if (isset($result->collections)) {
       $result->search_key = $keys;
   }
-
-  // initialize entities
-  //_ting_openformat_load_entities($result);
-
   // static cache result - used in hook_ding_facetbrowser, ting_search etc.
   drupal_static('ting_search_results', $result);
 
@@ -94,7 +90,6 @@ function _ting_openformat_load_entities( $result ) {
     foreach ($result->collections as &$collection) {
       $original_manifestations = array();
       $entity_ids = array();
-      //$openformat = $collection->formattedCollection;
       // parse for manifestations
 
       _ting_openformat_parse_manifestations( $original_manifestations, $entity_ids, $openformat );

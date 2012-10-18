@@ -5,7 +5,7 @@ print drupal_render($variables['fields']);
 print $variables['tabs'];
 echo '<div class="ting_openformat_subworks">';
 foreach( $variables['subWorks'] as $type => $subworks ) {
-  $manifestations = $subworks['manifistations'];  
+  $manifestations = $subworks['manifestations'];  
   //$css_id = str_replace(':','-',key($manifestations));
   $css_id = key($manifestations);
 
