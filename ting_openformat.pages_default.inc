@@ -30,7 +30,7 @@ $handler->conf = array(
   'relationships' => array(),
 );
 $display = new panels_display();
-$display->layout = 'bibdk_twocolumn';
+$display->layout = 'bibdk_33_66';
 $display->layout_settings = array();
 $display->panel_settings = array(
   'style_settings' => array(
