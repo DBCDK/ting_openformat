@@ -275,7 +275,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
       case 'ting_openformat_work_subjects':
         // one or more subjects
         $subjects = $entity->getSubjects();
-        $value = _ting_openformat_get_markup_for_field($subjects, ' / ', FALSE);
+        $value = _ting_openformat_get_markup_for_field($subjects, '; ', FALSE);
         break;
       
       // abstract
