@@ -18,6 +18,18 @@ function ting_openformat_menu() {
     'type' => MENU_LOCAL_TASK,
   );
 
+$items['admin/config/ting'] = array(
+    'title' => 'Openformat',
+    'description' => 'Handle ting_openformat module (disable)',
+    'position' => 'left',
+    'weight' => 1,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+	
+
   $items['admin/config/ting_openformat'] = array(
     'title' => 'Openformat',
     'description' => 'Handle ting_openformat module (disable)',
