@@ -19,7 +19,6 @@ dependencies[] = search
 dependencies[] = ting_client
 dependencies[] = ctools
 dependencies[] = ding_entity
-dependencies[] = ting
 
 ;package = Features
 dependencies[] = page_manager
