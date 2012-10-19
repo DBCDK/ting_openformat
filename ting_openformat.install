@@ -1,0 +1,287 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the ting module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function ting_openformat_schema() {
+  $schema['ting_openformat_manifestation'] = array(
+    'description' => 'Local proxy table for ting_openformat manifestations.',
+    'fields' => array(
+      'tid' => array(
+        'description' => 'The primary local identifier for a ting_openformat manifestation.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'ding_entity_id' => array(
+        'description' => 'The ting_openformat manifestation id.',
+        'type' => 'varchar',
+        'length' => 256,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'indexes' => array(
+      'ding_entity_id' => array('ding_entity_id'),
+    ),
+    'primary key' => array('tid'),
+  );
+
+  // ... also make a cache table in case we decide to cache som entities
+  $schema['cache_bibdk_webservices'] = drupal_get_schema_unprocessed('system', 'cache');
+
+  return $schema;
+}
+
+/**
+ * Implements hook_ding_entity_fields
+ * */
+function ting_openformat_ding_entity_fields() {
+  $fields = ting_openformat_bibdk_fields();
+  foreach ($fields as $name => $field) {
+    $array[$name] = ting_openformat_field_settings($field['label'], $field['entity_type'], $field['display']);
+  }
+  return $array;
+}
+
+/**
+ * Set display settings 
+ */
+function ting_openformat_display_types($types) {
+
+  $display = array(
+    'default' => array(
+      'type' => 'default',
+    ),
+    'reservation' => array(
+      'type' => 'hidden',
+    ),
+    'full' => array(
+      'type' => 'hidden',
+    ),
+  );
+  if (isset($types)) {
+    foreach ($types as $type) {
+      $display[$type]['type'] = 'default';
+    }
+  }
+
+  return $display;
+}
+
+/**
+ * List of fields and their settings
+ */
+function ting_openformat_bibdk_fields() {
+  return array(
+    /********* WORK ************/
+    /*
+    'ting_openformat_work_title' => array(
+      'entity_type' => 'bibdkWorkEntity',
+      'label' => t('Work title'),
+      'display' => array('full'),
+    ),*/
+    /*'ting_openformat_work_creators' => array(
+      'label' => t('Work creators'),
+      'entity_type' => 'bibdkWorkEntity',
+      'display' => array('full'),
+    ),*/
+    'ting_openformat_work_abstract' => array(
+      'label' => t('Work abstract'),
+      'entity_type' => 'bibdkWorkEntity',
+      'display' => array('full'),
+    ),
+    'ting_openformat_work_subjects' => array(
+      'label' => t('Work subjects'),
+      'entity_type' => 'bibdkWorkEntity',
+      'display' => array('full'),
+    ),
+    /********* MANIFESTATION ************/
+
+    'bibdk_mani_title' => array(
+      'entity_type' => 'bibdkManifestation',
+      'label' => t('Title'),
+      'display' => array('reservation', 'full'),
+    ),
+    'bibdk_mani_creators' => array(
+      'label' => t('Creators'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('reservation', 'full'),
+    ),
+    'bibdk_mani_type' => array(
+      'label' => t('Manifestation type'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full', 'reservation'),
+    ),
+    'bibdk_mani_orig_title' => array(
+      'label' => t('Original title'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full'),
+    ),
+    'bibdk_mani_alt_title' => array(
+      'label' => t('Alternative title'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full'),
+    ),
+    'bibdk_mani_contribs' => array(
+      'label' => t('Contributors'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_series' => array(
+      'label' => t('Series'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_related_series' => array(
+      'label' => t('Related series'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_readability_indexes' => array(
+      'label' => t('Readability indexes'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_shelf' => array(
+      'label' => t('Shelf'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_genre' => array(
+      'label' => t('Genre'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_audience_subjects' => array(
+      'label' => t('Audience Subjects'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_marked_audience' => array(
+      'label' => t('Marked Audience'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_recommended_audience' => array(
+      'label' => t('Recommended Audience'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_used_language' => array(
+      'label' => t('Used Language'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_actor_note' => array(
+      'label' => t('Actor Note'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_description_note' => array(
+      'label' => t('Description Note'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_references' => array(
+      'label' => t('References'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_originals' => array(
+      'label' => t('Originals'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_context' => array(
+      'label' => t('Context'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_identifiers' => array(
+      'label' => t('Identifiers'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_price_information' => array(
+      'label' => t('Price Information'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_language' => array(
+      'label' => t('Language'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_access_information' => array(
+      'label' => t('Access Information'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full'),
+    ),
+  );
+}
+/**
+ * Generate field settings for hook_ding_entity_fields
+ */
+function ting_openformat_field_settings($title, $entity_type, $display_settings = NULL) {
+  $field = array(
+    'field' => array(
+      'locked' => FALSE,
+      'storage' => array(
+        'type' => 'virtual_field',
+      ),
+    ),
+    'instance' => array(
+      'ding_entity_type' => $entity_type,
+      'label' => $title,
+      'bundle' => $entity_type,
+      'entity_type' => $entity_type,
+      'display' => ting_openformat_display_types($display_settings),
+    ),
+  );
+  return $field;
+}
+
+/**
+ * Implements hook_update_N;
+ * install ting_openformat_manifestation table;
+ * install cache_ting_openformat_entities table
+ */
+function ting_openformat_update_7005() {
+  try {
+    drupal_install_schema('ting_openformat');
+  } catch (Exception $e) {
+    //do nothing; tables are probably already installed
+  }
+}
+
+/**
+ * Implements hook_update_N;
+ * Install cache_bibdk_webservices table
+ * */
+function ting_openformat_update_7008() {
+  $name = 'cache_bibdk_webservices';
+  $schema = drupal_get_schema_unprocessed('system', 'cache');
+  try {
+    db_create_table($name, $schema);
+  } catch (Exception $e) {
+    // do nothing table already exists
+  }
+}
+
+/**
+ * Implements hook_update_N;
+ * Update all field information
+ * */
+function ting_openformat_update_7011() {
+  $fields = ting_openformat_ding_entity_fields();
+  foreach ($fields as $field_name => $field) {
+    field_delete_field($field_name);
+  }
+  ding_entity_modules_enabled(array('ting_openformat'));
+}

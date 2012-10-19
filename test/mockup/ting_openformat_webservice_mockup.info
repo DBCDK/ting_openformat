@@ -1,0 +1,6 @@
+name = "ting_openformat mockup"
+description = "Support module for ting_openformat test."
+package = bibliotek.dk
+version = VERSION
+core = 7.x
+hidden = TRUE;
