@@ -30,7 +30,7 @@ $handler->conf = array(
   'relationships' => array(),
 );
 $display = new panels_display();
-$display->layout = 'bibdk_33_66';
+$display->layout = 'bibdk_33_66_search_result';
 $display->layout_settings = array();
 $display->panel_settings = array(
   'style_settings' => array(
@@ -38,6 +38,16 @@ $display->panel_settings = array(
     'left' => NULL,
     'middle' => NULL,
     'right' => NULL,
+    'top' => NULL,
+    'middle-top' => NULL,
+    'bottom' => NULL,
+    'middle_top' => NULL,
+    'works_controls' => NULL,
+    'works' => NULL,
+    'facets' => NULL,
+  ),
+  'middle_top' => array(
+    'style' => '-1',
   ),
 );
 $display->cache = array();
@@ -46,7 +56,31 @@ $display->content = array();
 $display->panels = array();
   $pane = new stdClass();
   $pane->pid = 'new-1';
-  $pane->panel = 'left';
+  $pane->panel = 'facets';
+  $pane->type = 'ting_openformat_search_text';
+  $pane->subtype = 'ting_openformat_search_text';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'override_title' => 1,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array(
+    'css_id' => '',
+    'css_class' => 'sidebar-header',
+  );
+  $pane->extras = array();
+  $pane->position = 0;
+  $pane->locks = array();
+  $display->content['new-1'] = $pane;
+  $display->panels['facets'][0] = 'new-1';
+  $pane = new stdClass();
+  $pane->pid = 'new-2';
+  $pane->panel = 'facets';
   $pane->type = 'ding_facetbrowser';
   $pane->subtype = 'ding_facetbrowser';
   $pane->shown = TRUE;
@@ -64,34 +98,13 @@ $display->panels = array();
     'css_class' => 'sidebar-nav',
   );
   $pane->extras = array();
-  $pane->position = 0;
-  $pane->locks = array();
-  $display->content['new-1'] = $pane;
-  $display->panels['left'][0] = 'new-1';
-  $pane = new stdClass();
-  $pane->pid = 'new-2';
-  $pane->panel = 'middle';
-  $pane->type = 'ting_openformat_pager_mini';
-  $pane->subtype = 'ting_openformat_pager_mini';
-  $pane->shown = TRUE;
-  $pane->access = array();
-  $pane->configuration = array(
-    'override_title' => 1,
-    'override_title_text' => '',
-  );
-  $pane->cache = array();
-  $pane->style = array(
-    'settings' => NULL,
-  );
-  $pane->css = array();
-  $pane->extras = array();
-  $pane->position = 0;
+  $pane->position = 1;
   $pane->locks = array();
   $display->content['new-2'] = $pane;
-  $display->panels['middle'][0] = 'new-2';
+  $display->panels['facets'][1] = 'new-2';
   $pane = new stdClass();
   $pane->pid = 'new-3';
-  $pane->panel = 'middle';
+  $pane->panel = 'works';
   $pane->type = 'ting_openformat_search_result';
   $pane->subtype = 'ting_openformat_search_result';
   $pane->shown = TRUE;
@@ -120,10 +133,31 @@ $display->panels = array();
     'css_class' => '',
   );
   $pane->extras = array();
-  $pane->position = 1;
+  $pane->position = 0;
   $pane->locks = array();
   $display->content['new-3'] = $pane;
-  $display->panels['middle'][1] = 'new-3';
+  $display->panels['works'][0] = 'new-3';
+  $pane = new stdClass();
+  $pane->pid = 'new-4';
+  $pane->panel = 'works_controls';
+  $pane->type = 'ting_openformat_pager_mini';
+  $pane->subtype = 'ting_openformat_pager_mini';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'override_title' => 1,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 0;
+  $pane->locks = array();
+  $display->content['new-4'] = $pane;
+  $display->panels['works_controls'][0] = 'new-4';
 $display->hide_title = PANELS_TITLE_FIXED;
 $display->title_pane = '0';
 $handler->conf['display'] = $display;
