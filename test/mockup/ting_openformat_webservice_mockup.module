@@ -42,9 +42,11 @@ function ting_openformat_webservice_mockup_request() {
     return;
   }  
   $request = $envelope->Body;
-  // good user
   drupal_add_http_header('Content-Type', 'application/json');
-  if( $request->searchRequest->query == 'harry potter' ) {
+  if( $request->searchRequest->query == 'harry potter' && $request->searchRequest->start == '2') {
+    $resp = file_get_contents($path.'/results-page2.json');
+  }
+  else if( $request->searchRequest->query == 'harry potter' ) {
     $resp = file_get_contents($path.'/results.json');
   }
   else if(current($request->getObjectRequest->identifier) == '870970-basis:26863287'){
