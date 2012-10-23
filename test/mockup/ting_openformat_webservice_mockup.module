@@ -40,10 +40,10 @@ function ting_openformat_webservice_mockup_request() {
   else {
     echo 'welcome to ting_openformat_webservice mockup';
     return;
-  }  
+  }
   $request = $envelope->Body;
   drupal_add_http_header('Content-Type', 'application/json');
-  if( $request->searchRequest->query == 'harry potter' && $request->searchRequest->start == '2') {
+  if( $request->searchRequest->query == 'harry potter' && $request->searchRequest->start == '1') {
     $resp = file_get_contents($path.'/results-page2.json');
   }
   else if( $request->searchRequest->query == 'harry potter' ) {
