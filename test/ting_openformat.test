@@ -67,9 +67,9 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
      }
   
  public function setUp() {
-    //$this->profile = 'bibdk';
+    $this->profile = 'bibdk';
     //array('ting_openformat', 'ting_openformat_webservice_mockup','ting', 'devel', 'search', 'ting_client')
-    parent::setup(array('ting_openformat', 'devel'));
+    parent::setup(array('ting_openformat'));
     global $base_url;
     $this->privileged_user = $this->drupalCreateUser(array('access content', 'search content'));
     $this->drupalLogin($this->privileged_user);
