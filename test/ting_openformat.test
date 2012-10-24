@@ -71,8 +71,8 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     //array('ting_openformat', 'ting_openformat_webservice_mockup','ting', 'devel', 'search', 'ting_client')
     parent::setup(array('ting_openformat'));
     global $base_url;
-    $this->privileged_user = $this->drupalCreateUser(array('access content', 'search content'));
-    $this->drupalLogin($this->privileged_user);
+    // $this->privileged_user = $this->drupalCreateUser(array('access content', 'search content'));
+    // $this->drupalLogin($this->privileged_user);
     variable_set('ting_agency', '100200');
     variable_set('ting_search_url', $this->getAbsoluteUrl("ting_openformat_webservice")); //The mockup needs to be enabled in live installation
     variable_set('search_active_modules', array('node', 'ting_openformat'));
@@ -90,9 +90,13 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
 
   public function testDisplayOfSearchResult() {
 
+    //Create user
+    $create_user = $this->drupalCreateUser(array());
+    $this->drupalLogin($create_user);
+
     //1: Test that ting search is enabled
-    $this->drupalGet('search');
-    $this->assertUrl("search/work");
+    // $this->drupalGet('search');
+    // $this->assertUrl("search/work");
 
     //2: Test that no search result
     $this->drupalPost(NULL, array('search_block_form' => 'thereAreNoResults'), "Search");
@@ -106,6 +110,18 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
 
     // is there a mini pager?
     $this->assertLinkByHref("/search/work/harry%20potter?page=1",0,'Pager for page 2 was found.');
+      // $label = 'forward';
+      // $this->assertLink($label,0,'Pager for page 2 was labeled "' . $label . '".');
+
+    // click pager pager
+      // $this->clickLink($label);
+
+    // check next page
+    $this->drupalGet("search/work/harry potter", array('query'=>array('page'=>'1')));
+    $this->assertText("page 2");
+    $this->assertText("Lego Harry Potter");
+    $this->assertLinkByHref("/search/work/harry%20potter",0,'Pager for page 1 was found.');
+    $this->assertLinkByHref("/search/work/harry%20potter?page=2",0,'Pager for page 3 was found.');
 
     // Test Ajax with no result
     $this->drupalPostAJAX(NULL, NULL, array('op' => ''), NULL, array(), array(), 'ting-openformat-show-info-get-form--2');
@@ -116,7 +132,7 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
 
     //4: Test presence of fields
     $this->assertText("Harry Potter and the Deathly Hallows");
-    $this->assertText("ISBN");
+    // $this->assertText("ISBN");
     // $this->assertText("Cd");
   }
 

@@ -184,6 +184,7 @@ function _ting_openformat_facet_cache($client,$result, $params) {
  * return array (facets)
  **/
 function _ting_openformat_set_default_facets() {
+  $facets = array();
   foreach (variable_get('ding_facetbrowser_facets', array()) as $facet) {
     $facets[] = $facet['name'];
   }
