@@ -290,6 +290,12 @@ class manifestation {
     }
     return (is_array($result)) ? reset($result) : $result;
   }
+  
+  public function getOrsOrderMaterialType() {
+    $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('orsOrderMaterialType'));
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
 
   /* \brief original title
    * zero or one occurence
