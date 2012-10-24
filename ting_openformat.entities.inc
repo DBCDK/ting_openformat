@@ -23,12 +23,16 @@ class bibdkWork {
     }
     // set subworks
     foreach ($this->manifestations as $id => $manifestation) {
-      $type = ( is_array($manifestation->getType()) ) ? implode(' + ', $manifestation->getType()) : $manifestation->getType();
-      // note: "surplus" types, and "undefined" types are to be handled in iScrum. Also, we're waiting for the new "group types".
-      $subWorks[$type][$id] = $manifestation;
+      $type = $manifestation->getType();
+      $subType = ( is_array($manifestation->getSubType()) ) ? implode(' + ', $manifestation->getSubType()) : $manifestation->getSubType();
+      // note: "surplus" types, and "undefined" types are to be handled in iScrum.
+      $subWorks[$type][$subType][$id] = $manifestation;
     }
-    foreach ($subWorks as $type => $manifestations) {
-      $this->subWorks[current($manifestations)->id] = entity_load('bibdkSubwork', $type, $manifestations);
+    foreach ($subWorks as $type => $sub) {
+      foreach ($sub as $subtype => $manifestations) {
+        $this->subWorks[current($manifestations)->id] = entity_load('bibdkSubwork', $type, $manifestations);
+        $this->subWorks[current($manifestations)->id]->setSubType($subtype);
+      }
     }
 
     // @TODO; should manifestations be sorted by sortkey ??
@@ -88,6 +92,7 @@ class bibdkSubwork {
   public $ding_entity_id;
   public $manifestations = array();
   public $type;
+  private $subType;
   private $isReservable;
 
   public function __construct($type, $manifestations) {
@@ -109,6 +114,14 @@ class bibdkSubwork {
 
   public function getType() {
     return $this->type;
+  }
+  
+  public function setSubType($subType) {
+    $this->subType = $subType;
+  }
+  
+  public function getSubType() {
+    return $this->subType;
   }
 
   public function isReservable() {
@@ -283,7 +296,7 @@ class manifestation {
    * 1 occurence
    */
 
-  public function getType() {
+  public function getSubType() {
     $result = ting_openformat_methods::parseFields($this->manifestation->main, array('type'));
     if (is_array($result['type'])) {
       $result['type'] = implode(' + ', $result['type']);
@@ -296,6 +309,10 @@ class manifestation {
     return (is_array($result)) ? reset($result) : $result;
   }
 
+  public function getType() {
+    $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('typeGroup'));
+    return (is_array($result)) ? reset($result) : $result;
+  }
 
   /* \brief original title
    * zero or one occurence
