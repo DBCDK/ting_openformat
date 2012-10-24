@@ -328,21 +328,18 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
     $langcode = $GLOBALS['language_content']->language;
   }
 
-  $args = array();
   $work_fields = array();
   $work_fields += _prepare_view('bibdkWorkEntity', $bibdkWork, $view_mode, $langcode);
 
   $sub = array();
   $subWorks = $bibdkWork->getSubWorks();
-
   foreach ($subWorks as $id => $subWork) {
     $type = drupal_strtolower($subWork->getType());
-    $sub[$type]['type'] = $subWork->getType();
-    $sub[$type]['fields'] = _prepare_view('bibdkSubwork', $subWork, $view_mode, $langcode);
-    $sub[$type]['id'] = $id;
-    $field_content = array();
+    $subtype = $subWork->getSubType();
+    $sub[$type][$subtype]['fields'] = _prepare_view('bibdkSubwork', $subWork, $view_mode, $langcode);
+    $sub[$type][$subtype]['id'] = $id;
     foreach ($subWork->getManifestations() as $manifestation) {
-      $sub[$type]['manifestations'][$manifestation->id] = ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL);
+      $sub[$type][$subtype]['manifestations'][$manifestation->id] = ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL);
     }
   }
 
@@ -357,10 +354,17 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   }
   else {
     foreach ($sub as $type => $value) {
-      $type_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $type));  
-      $ordered_subworks[$type_id] = $value;
+      $type_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $type));
+      
+      foreach ($value as $subtype => $val) {
+          $subtype_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $subtype));
+          $trans = _ting_openformat_type_translation($type, $subtype);
+          $type_id = $trans['type'];
+          
+          $ordered_subworks[$type_id][$subtype_id]['manifest'] = $val;
+          $ordered_subworks[$type_id][$subtype_id]['translation'] = $trans;
+      }
     }
-    
   }
 
   $tabs = theme('ting_openformat_subwork_tabs', array('subWorks' => $ordered_subworks));
@@ -369,6 +373,61 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
     'subWorks' => $ordered_subworks,
     'tabs' => $tabs,
     'ding_id' => $bibdkWork->id));
+}
+
+function _ting_openformat_type_translation($type, $subtype) {
+  
+  switch ($type) {
+    case 'literature':
+      $type = t('literature');
+      break;
+    case 'movie':
+      $type = t('movie');
+      break;
+    case 'music':
+      $type = t('music');
+      break;
+    case 'game':
+      $type = t('game');
+      break;
+    case 'article':
+      $type = t('article');
+      break;
+    case 'audiobook':
+      $type = t('audiobook');
+      break;
+    case 'sheetmusikc':
+      $type = t('sheetmusikc');
+      break;
+    case 'none':
+      $type = t('none');
+      break;
+    case 'online':
+      $type = t('online');
+      break;
+  }
+  
+  switch ($subtype) {
+    case 'Bog':
+      $subtype = t('Bog');
+      break;
+    case 'Punktskrift':
+      $subtype = t('Punktskrift');
+      break;
+    case 'Diskette':
+      $subtype = t('Diskette');
+      break;
+    case 'Lydbog (bånd)':
+      $subtype = t('Lydbog (bånd)');
+      break;
+    case 'Lydbog (cd)':
+      $subtype = t('Lydbog (cd)');
+      break;
+    case 'Lydbog (cd-mp3)':
+      $subtype = t('Lydbog (cd-mp3)');
+      break;
+  }
+  return array('type' => $type, 'subtype' => $subtype);
 }
 
 function ting_openformat_collection_view($collections, $view_mode = 'full', $langcode = NULL) {

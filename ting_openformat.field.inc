@@ -291,6 +291,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $type = $entity->getType();
         $value = _ting_openformat_get_markup_for_field($type);
         break;
+      
       // Title
       case 'bibdk_mani_title':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
