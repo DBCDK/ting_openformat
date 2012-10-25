@@ -69,12 +69,13 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
  public function setUp() {
     $this->profile = 'bibdk';
     //array('ting_openformat', 'ting_openformat_webservice_mockup','ting', 'devel', 'search', 'ting_client')
-    parent::setup(array('ting_openformat'));
+    parent::setup(array('ting_openformat', 'ting_openformat_webservice_mockup'));
     global $base_url;
     // $this->privileged_user = $this->drupalCreateUser(array('access content', 'search content'));
     // $this->drupalLogin($this->privileged_user);
     variable_set('ting_agency', '100200');
-    variable_set('ting_search_url', $this->getAbsoluteUrl("ting_openformat_webservice")); //The mockup needs to be enabled in live installation
+    #variable_set('ting_search_url', $this->getAbsoluteUrl('ting_openformat_webservice')); //The mockup needs to be enabled in live installation
+    variable_set('ting_search_url', 'http://lakiseks.dbc.dk/hive/'); //The mockup needs to be enabled in live installation
     variable_set('search_active_modules', array('node', 'ting_openformat'));
     variable_set('search_default_module', 'ting_openformat');
     variable_set('ting_agency', '100200');
@@ -119,7 +120,7 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     // check next page
     $this->drupalGet("search/work/harry potter", array('query'=>array('page'=>'1')));
     $this->assertText("page 2");
-    $this->assertText("Lego Harry Potter");
+    $this->assertText("Harry Potter i komnata tajemnic");
     $this->assertLinkByHref("/search/work/harry%20potter",0,'Pager for page 1 was found.');
     $this->assertLinkByHref("/search/work/harry%20potter?page=2",0,'Pager for page 3 was found.');
 
