@@ -464,6 +464,7 @@ function ting_openformat_show_info_get_form($form_id, $form_state) {
     '#id' => 'work_'.$uid,
     '#prefix' => "<span id='ajax-$uid'>",
     '#suffix' => "</span>",
+    '#attributes' => array('class' => array('visuallyhidden')),
     '#ajax' => array(
       'callback' => 'ting_openformat_show_info_ajax_callback',
       'wrapper' => 'ajax_placeholder_' . $uid,
