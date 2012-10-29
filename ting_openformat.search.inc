@@ -206,7 +206,7 @@ function _ting_openformat_search_get_variables($conditions) {
 
   // page number (opensearch::start)
   $page = pager_find_page();
-  $params['start'] = $page * $resultsPerPage);
+  $params['start'] = $page * $resultsPerPage;
 
   // search profile (opensearch::profile)
   $params['profile'] =  variable_get('ting_search_profile', FALSE);
