@@ -195,17 +195,18 @@ function _ting_openformat_set_default_facets() {
  * @param $conditions array with parameters set in _REQUEST
  **/
 function _ting_openformat_search_get_variables($conditions) {
-  // page number (opensearch::start)
-  $page = pager_find_page();
-  $params['start'] = $page;
-
   // results pr. page (opensearch::stepValue) ... in ting-client/lib/request/TingClientSearchRequest.php this is called numResults
   $resultsPerPage = variable_get('ting_search_results_per_page', 10);
+
   // if size is set; - override
   if (!empty($conditions['size'])) {
     $resultsPerPage = $conditions['size'];
   }
   $params['numResults'] = $resultsPerPage;
+
+  // page number (opensearch::start)
+  $page = pager_find_page();
+  $params['start'] = $page * $resultsPerPage);
 
   // search profile (opensearch::profile)
   $params['profile'] =  variable_get('ting_search_profile', FALSE);
