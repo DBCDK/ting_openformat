@@ -383,11 +383,12 @@ function ting_openformat_collection_view($collections, $view_mode = 'full', $lan
   $collection = $collections[0];
   // theme collection
   $uid = strtr($ids[0], array(':' => '', '-' => ''));
+  $form = drupal_get_form('ting_openformat_show_info_get_form', $ids, $uid);
   return theme('ting_openformat_collection', array(
         'title' => $collection->record['dc:title'][''][0],
         'author' => isset($collection->record['dc:creator']) ? implode(', ', reset($collection->record['dc:creator'])) : "",
         'ids' => implode(",", $ids),
-        'showinfo' => drupal_render(drupal_get_form('ting_openformat_show_info_get_form', $ids, $uid)),
+        'showinfo' => drupal_render($form),
         'uid' => $uid,
       ));
 }
