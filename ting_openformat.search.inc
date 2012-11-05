@@ -70,7 +70,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
     module_invoke('bibdk_searchhistory', 'set_search_results', $keys, $result);
   }
 
-  pager_default_initialize($result->numTotalObjects , $params['numResults']);
+  pager_default_initialize(($result->numTotalCollections < $params['numResults']) ? $result->numTotalCollections : $result->numTotalObjects, $params['numResults']);
 
   if( !empty($search_results) ) {
     return $search_results;
@@ -128,11 +128,11 @@ function _ting_openformat_load_entities( $result ) {
  **/
 
 function _ting_openformat_set_search_result($bibdkobject) {
-  //dpm($bibdkobject);
+
   $variables['result'] = $bibdkobject;
   $current = current($bibdkobject->objects);
-  //************** TODO handle bibdkobject *************/
 
+  //************** TODO handle bibdkobject *************/
   $result = array(
     'link' => url("work/".$current->id),
     'type' => '',

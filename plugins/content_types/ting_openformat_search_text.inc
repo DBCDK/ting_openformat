@@ -19,16 +19,8 @@ function ting_openformat_search_content_type_render($subtype, $conf, $panel_args
 
   if ($pager_total[0] == TRUE) {
     $results = drupal_static('ting_search_results');
-    // $from = ($pager_page_array[0] < 1 ? 1 : ($pager_page_array[0])*$results->numTotalCollections+1);
-    // $to = $from + ($results->numTotalCollections-1);
     $total = $results->numTotalObjects;
     $block->title = t('Search results text');
-    // $block->content = '<div class="ting-openformat-search-amount-block">' . format_plural($total,
-    //   'Show %from-%to of 1 result',
-    //   'Show %from-%to of <em class="placeholder">@count</em> results', array(
-    //     '%from' => $from,
-    //     '%to' => $to,
-    // )) . '</div>';
     $block->content = '<div class="ting-openformat-search-amount-block">' . format_plural(
       $total,
       '1 result',
