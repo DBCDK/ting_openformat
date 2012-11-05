@@ -264,13 +264,13 @@ function theme_ting_openformat_mini_pager($variables) {
     $output =  array(
       '#prefix' => '<div class="works-control-wrapper-right">',
       '#suffix' => '</div>',
-      'previous' => (($pager_total[$element] > 1) ? array(
+      'previous' => array(
         '#text' => '',
         '#element' => $element,
         '#interval' => 1,
         '#parameters' => $parameters,
         '#theme' => 'pager_previous',
-      ) : array()),
+      ),
       'dropdown_wrapper' => array(
         '#prefix' => '<div class="dropdown-wrapper">',
         '#suffix' => '</div>',
