@@ -69,8 +69,13 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   if(module_exists('bibdk_searchhistory')){
     module_invoke('bibdk_searchhistory', 'set_search_results', $keys, $result);
   }
-
-  pager_default_initialize(($result->numTotalCollections < $params['numResults']) ? $result->numTotalCollections : $result->numTotalObjects, $params['numResults']);
+  // Collections may contain more works than $params['numResults'], and we don't want a pager if there's only one page
+  $total = ( $result->numTotalCollections < $params['numResults'] && $params['start'] < $params['numResults'] ) ? $result->numTotalCollections : $result->numTotalObjects;
+  // Stop pager if we're at the last page of collections.
+  if ( $result->numTotalCollections < $params['numResults'] && $params['start'] > $params['numResults'] ) {
+    $total = $params['start'] + $result->numTotalCollections;
+  }
+  pager_default_initialize($total, $params['numResults']);
 
   if( !empty($search_results) ) {
     return $search_results;
