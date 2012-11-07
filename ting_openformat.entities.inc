@@ -24,6 +24,11 @@ class bibdkWork {
     // set subworks
     foreach ($this->manifestations as $id => $manifestation) {
       $type = $manifestation->getType();
+
+      if ($type === NULL) {
+        $type = t('unknown', array(), array('context' => 'ting_openformat'));
+      }
+
       $subType = ( is_array($manifestation->getSubType()) ) ? implode(' + ', $manifestation->getSubType()) : $manifestation->getSubType();
       // note: "surplus" types, and "undefined" types are to be handled in iScrum.
       $subWorks[$type][$subType][$id] = $manifestation;
