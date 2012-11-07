@@ -76,14 +76,18 @@ function ting_openformat_get_manifestations($ids) {
   $params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
   $params['objectId'] = $ids;
   $result = $client->do_get_object($params);
-  foreach ($result->collections as $collection)
-    $openformat[] = $collection->formattedCollection->formattedCollection->manifestation;
-  if(!isset($openformat))
+
+  if (empty($result->collections)) {
     return array();
+  }
+
+  foreach ($result->collections as $collection) {
+    $openformat[] = $collection->formattedCollection->formattedCollection->manifestation;
+  }
+
   $original_manifestations = array();
   $entity_ids = array();
   _ting_openformat_parse_manifestations($original_manifestations, $entity_ids, $openformat);
-
   $conditions['manifestations'] = $original_manifestations;
   return entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
 }
