@@ -72,7 +72,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   // Collections may contain more works than $params['numResults'], and we don't want a pager if there's only one page
   $total = ( $result->numTotalCollections < $params['numResults'] && $params['start'] < $params['numResults'] ) ? $result->numTotalCollections : $result->numTotalObjects;
   // Stop pager if we're at the last page of collections.
-  if ( $result->numTotalCollections < $params['numResults'] && $params['start'] > $params['numResults'] ) {
+  if ( !$result->more ) {
     $total = $params['start'] + $result->numTotalCollections;
   }
   pager_default_initialize($total, $params['numResults']);
