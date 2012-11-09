@@ -88,6 +88,20 @@ class ManifestionEntityApiController extends bibdkEntityApiController{
 
     return $entities[$entity->id];
   }
+  
 }
 
+/**
+ * load a single manifestation given as id(ids),manifestion(conditions) - NOTICE!! conditions array is deprecated in drupal 8
+ **/
+class CollectionEntityApiController extends bibdkEntityApiController {
+  public function load( $id = array(), $manifestation = array() ) {
+    $entity = new bibdkCollection($manifestation);
+    $entity->id = $entity->ding_entity_id = $id;
+    $entities[$entity->id] = $entity;
+    // attach fields
+    $this->attachLoad($entities);
 
+    return $entities[$entity->id];
+  }
+}

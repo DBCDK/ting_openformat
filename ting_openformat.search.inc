@@ -1,20 +1,19 @@
 <?php
 
-/********** NOTES ****************/
+/* * ******** NOTES *************** */
 /*
  * SEARCH HOOKS
  * hook_search_info
  * hook_search_execute
  * hook_search_page
  */
-/********** END NOTES ********** */
+/* * ******** END NOTES ********** */
 
 
 // load theme hooks
-module_load_include('inc','ting_openformat','ting_openformat.theme');
+module_load_include('inc', 'ting_openformat', 'ting_openformat.theme');
 // load search client
 //module_load_include('inc', 'ting_openformat','ting_openformat.search_client');
-
 
 /**
  * Implements hook_search_info().
@@ -28,7 +27,7 @@ function ting_openformat_search_info() {
 }
 
 /** implements hook_search_execute */
-function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
+function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   $params = array();
   // search phrase (query)
   $params['query'] = $keys;
@@ -36,19 +35,19 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   // get parameters set as variables
   $variables = _ting_openformat_search_get_variables($conditions);
 
-  if( !empty($variables) ) {
-    $params = array_merge($params,$variables);
+  if (!empty($variables)) {
+    $params = array_merge($params, $variables);
   }
 
   // selected facets from facetbrowser (in query)
-  if( isset($conditions['facets']) && $conditions['facets'] != NULL ) {
-    _ting_openformat_set_facets($params['query'],$conditions['facets']);
+  if (isset($conditions['facets']) && $conditions['facets'] != NULL) {
+    _ting_openformat_set_facets($params['query'], $conditions['facets']);
   }
 
   // do the actual search via ting_client_class
   $client = new ting_client_class();
   $result = $client->do_search($params);
-  if( !$result ) {
+  if (!$result) {
     return array();
   }
 
@@ -56,28 +55,43 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   _ting_openformat_facet_cache($client, $result, $params);
 
   if (isset($result->collections)) {
-      $result->search_key = $keys;
+    $result->search_key = $keys;
   }
+
   // static cache result - used in hook_ding_facetbrowser, ting_search etc.
   drupal_static('ting_search_results', $result);
 
-  foreach($result->collections as $collection) {
-    $search_results[] = _ting_openformat_set_search_result($collection);
-    }
+  #$collection_fields += _prepare_view('bibdkCollection', $col, $view_mode, $langcode);
 
+
+  dpm($result, 'result');
+  foreach ($result->collections as $collection) {
+    //TODO create collection entity
+    #dpm($collection, 'col');
+    _ting_openformat_load_collection_entities($collection);
+    #dpm($collection);
+    #$search_results_collection[] = _ting_openformat_set_search_result($collection);
+  }
+
+
+  foreach ($result->collections as $collection) {
+    $search_results[] = _ting_openformat_set_search_result($collection);
+  }
+  #dpm($search_results);
   // set searchhistory
-  if(module_exists('bibdk_searchhistory')){
+  if (module_exists('bibdk_searchhistory')) {
     module_invoke('bibdk_searchhistory', 'set_search_results', $keys, $result);
   }
+
   // Collections may contain more works than $params['numResults'], and we don't want a pager if there's only one page
   $total = ( $result->numTotalCollections < $params['numResults'] && $params['start'] < $params['numResults'] ) ? $result->numTotalCollections : $result->numTotalObjects;
   // Stop pager if we're at the last page of collections.
-  if ( !$result->more ) {
+  if (!$result->more) {
     $total = $params['start'] + $result->numTotalCollections;
   }
   pager_default_initialize($total, $params['numResults']);
 
-  if( !empty($search_results) ) {
+  if (!empty($search_results)) {
     return $search_results;
   }
 
@@ -85,24 +99,55 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL){
   return array();
 }
 
+/**
+ * Set collection entities
+ * */
+function _ting_openformat_load_collection_entities($result) {
+  $bibdkobjects = array();
+  $original_manifestations = array();
+  $entity_ids = array();
+
+  $openformat = $result->formattedCollection->formattedCollection->manifestation;
+  _ting_openformat_parse_collection($original_manifestations, $entity_ids, $openformat);
+  if (count($entity_ids) > 0) {
+    $conditions['manifestations'] = $original_manifestations;
+    $bibdkEntities = entity_load('bibdkCollection', $entity_ids, $conditions, TRUE);
+    $bibdkobjects[] = $bibdkEntities;
+    $entity_ids = array();
+  }
+  unset($result->collections);
+  $result->collections = $bibdkobjects;
+}
+
+function _ting_openformat_parse_collection(&$original_manifestations, &$entity_ids, $openformat) {
+  #dpm($openformat, 'openFormat');
+  if (isset($openformat) && is_array($openformat)) {
+    foreach ($openformat as $manifestation) {
+      $manifestation_id = $manifestation->id->{'$'};
+      $entity_ids[] = $manifestation_id;
+      $original_manifestations[] = $manifestation;
+    }
+  }
+}
+
 /** \brief set entities
  * replace TingClientObjectCollection (returned from ting-client) with bibdkEntity(work)
- **/
-function _ting_openformat_load_entities( $result ) {
+ * */
+function _ting_openformat_load_entities($result) {
   $bibdkobjects = array();
-  if( is_array($result->collections) ) {
+  if (is_array($result->collections)) {
     $ids = array();
     foreach ($result->collections as &$collection) {
       $original_manifestations = array();
       $entity_ids = array();
       // parse for manifestations
 
-      _ting_openformat_parse_manifestations( $original_manifestations, $entity_ids, $openformat );
-      if(count($entity_ids) > 0){
+      _ting_openformat_parse_manifestations($original_manifestations, $entity_ids, $openformat);
+      if (count($entity_ids) > 0) {
         // conditions array is deprecated in drupal 8 .. @TODO find another solution .
         $conditions['manifestations'] = $original_manifestations;
 
-        $bibdkEntities = entity_load('bibdkWorkEntity',$entity_ids,$conditions,TRUE);
+        $bibdkEntities = entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
 
         $bibdkobjects[] = $bibdkEntities;
         // reset
@@ -116,30 +161,27 @@ function _ting_openformat_load_entities( $result ) {
   $result->collections = $bibdkobjects;
 }
 
-
-/**** TODO this method needs to handle bibdkObject and NOT formattedCollections ******/
+/* * ** TODO this method needs to handle bibdkObject and NOT formattedCollections ***** */
 
 /** \brief Set a search result array as defined for hook_search_execute
  *
-    'link': Required. The URL of the found item.
-    'type': The type of item (such as the content type).
-    'title': Required. The name of the item.
-    'user': The author of the item.
-    'date': A timestamp when the item was last modified.
-    'extra': An array of optional extra information items.
-    'snippet': An excerpt or preview to show with the result (can be generated with search_excerpt()).
-    'language': Language code for the item (usually two characters).
+  'link': Required. The URL of the found item.
+  'type': The type of item (such as the content type).
+  'title': Required. The name of the item.
+  'user': The author of the item.
+  'date': A timestamp when the item was last modified.
+  'extra': An array of optional extra information items.
+  'snippet': An excerpt or preview to show with the result (can be generated with search_excerpt()).
+  'language': Language code for the item (usually two characters).
 
- **/
-
+ * */
 function _ting_openformat_set_search_result($bibdkobject) {
 
-  $variables['result'] = $bibdkobject;
   $current = current($bibdkobject->objects);
 
   //************** TODO handle bibdkobject *************/
   $result = array(
-    'link' => url("work/".$current->id),
+    'link' => url("work/" . $current->id),
     'type' => '',
     'title' => $current->record['dc:title'][''][0],
     // 'title' => $formattedCollection->formattedCollection->work->title->titleFull->{'$'},
@@ -157,37 +199,37 @@ function _ting_openformat_set_search_result($bibdkobject) {
  * @param $result - search result
  *
  * @return nothing, but sets facet for $result-object given as parameter
- **/
-function _ting_openformat_facet_cache($client,$result, $params) {
+ * */
+function _ting_openformat_facet_cache($client, $result, $params) {
   // check facets; get from cache if set - else do zero search to get facets
-  $local_cache_key = 'facets-'.$result->cacheKey;
-  if( !$facets = cache_get($local_cache_key) ) {
+  $local_cache_key = 'facets-' . $result->cacheKey;
+  if (!$facets = cache_get($local_cache_key)) {
     // default facets
-    if( module_exists('ding_facetbrowser') ) {
+    if (module_exists('ding_facetbrowser')) {
       $facets = _ting_openformat_set_default_facets();
     }
-    if( isset($facets) ) {
+    if (isset($facets)) {
       $params['facets'] = $facets;
-      $params['numFacets'] = variable_get('ding_facetbrowser_number_shown',25);
+      $params['numFacets'] = variable_get('ding_facetbrowser_number_shown', 25);
     }
 
     // do a zero search to get the facets
     $params['numResults'] = 0;
     $facet_result = $client->do_search($params);
-    if( isset($facet_result->facets) ) {
+    if (isset($facet_result->facets)) {
       $result->facets = $facet_result->facets;
       cache_set($local_cache_key, $facet_result->facets, 'cache', CACHE_TEMPORARY);
     }
   }
   // facets was found in cache
-  else{
+  else {
     $result->facets = cache_get($local_cache_key)->data;
   }
 }
 
 /** \brief get facets from variables
  * return array (facets)
- **/
+ * */
 function _ting_openformat_set_default_facets() {
   $facets = array();
   foreach (variable_get('ding_facetbrowser_facets', array()) as $facet) {
@@ -198,7 +240,7 @@ function _ting_openformat_set_default_facets() {
 
 /** \brief get variables and set corresponding search parameters
  * @param $conditions array with parameters set in _REQUEST
- **/
+ * */
 function _ting_openformat_search_get_variables($conditions) {
   // results pr. page (opensearch::stepValue) ... in ting-client/lib/request/TingClientSearchRequest.php this is called numResults
   $resultsPerPage = variable_get('ting_search_results_per_page', 10);
@@ -214,30 +256,31 @@ function _ting_openformat_search_get_variables($conditions) {
   $params['start'] = $page * $resultsPerPage;
 
   // search profile (opensearch::profile)
-  $params['profile'] =  variable_get('ting_search_profile', FALSE);
-  if( !($params['profile']) ) {
-    watchdog('openformat search','search profile is not set - yields no search results',array(),WATCHDOG_ERROR,url('admin/config/ting/settings'));
+  $params['profile'] = variable_get('ting_search_profile', FALSE);
+  if (!($params['profile'])) {
+    watchdog('openformat search', 'search profile is not set - yields no search results', array(), WATCHDOG_ERROR, url('admin/config/ting/settings'));
   }
 
   // agency (opensearch::agency)
   $params['agency'] = variable_get('ting_agency');
-  if( !($params['agency']) ) {
-    watchdog('openformat search','agency is not set - yields no search results',array(),WATCHDOG_ERROR,url('admin/config/ting/settings'));
+  if (!($params['agency'])) {
+    watchdog('openformat search', 'agency is not set - yields no search results', array(), WATCHDOG_ERROR, url('admin/config/ting/settings'));
   }
 
   // objectformat (opensearch::objectFormat)
   //$params['objectFormat'] = variable_get('ting_search_openformat','dkabm');
   //Method for ajax_call
-  $params['collectionType'] = variable_get('collectionType', 'work-1');
+  #$params['collectionType'] = variable_get('collectionType', 'work-1');
+  $params['objectFormat'] = variable_get('objectFormat', 'briefDisplay');
 
   return $params;
 }
 
 /** \brief Set facets for request
  *
- **/
-function _ting_openformat_set_facets(&$query,$facets) {
-  if (isset($facets) ) {
+ * */
+function _ting_openformat_set_facets(&$query, $facets) {
+  if (isset($facets)) {
     foreach ($facets as $facet) {
       $facet = explode(':', $facet, 2);
       if ($facet[0]) {
@@ -259,7 +302,7 @@ function ting_openformat_conditions_callback($keys) {
   }
 
   if (!empty($_REQUEST['size'])) {
-    $conditions['size'] = (int)$_REQUEST['size'];
+    $conditions['size'] = (int) $_REQUEST['size'];
   }
 
 
@@ -292,7 +335,7 @@ function ting_openformat_conditions_callback($keys) {
     if ($redirect === TRUE) {
       $facets = array();
       foreach ($conditions['facets'] as $facet) {
-        $facets['facets'][] =  $facet;
+        $facets['facets'][] = $facet;
       }
       drupal_goto(rawurldecode($_GET['q']), array('query' => $facets));
     }

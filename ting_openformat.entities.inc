@@ -150,46 +150,30 @@ class bibdkSubwork {
 
 class bibdkCollection {
 
+  public $manifestations;
   public $id;
-  private $collection;
-  private $title;
-  private $author;
-  private $ids;
+  public $title;
+  public $author;
+  public $ids;
 
-  function __construct() {
-    
+  function __construct($manifestation) {
+    $this->manifestations = $manifestation['manifestations'];
+    dpm($this->getId(), 'id');
   }
 
   public function getId() {
-    return $this->id;
-  }
-
-  public function setId($id) {
-    $this->id = $id;
-  }
-
-  public function getCollection() {
-    return $this->collection;
-  }
-
-  public function setCollection($collection) {
-    $this->collection = $collection;
+    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('id'));
+    return (is_array($result)) ? reset($result) : $result;
   }
 
   public function getTitle() {
-    return $this->title;
-  }
-
-  public function setTitle($title) {
-    $this->title = $title;
+    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('title'));
+    return (is_array($result)) ? reset($result) : $result;
   }
 
   public function getAuthor() {
-    return $this->author;
-  }
-
-  public function setAuthor($author) {
-    $this->author = $author;
+    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('creator'));
+    return (is_array($result)) ? reset($result) : $result;
   }
 
   public function getIds() {

@@ -193,6 +193,36 @@ function ting_openformat_entity_info() {
         ),
       ),
     ),
+    'bibdkCollection' => array(
+      'label' => t('Bibdk collection'),
+      'fieldable' => TRUE,
+      'base table' => 'ting_openformat_manifestation',
+      'ding_entity_type' => 'bibdk_collection',
+      'description' => t('Bibdk collection'),
+      'controller class' => 'CollectionEntityApiController',
+      'entity keys' => array(
+        'id' => 'ding_entity_id',
+      ),
+      'bundles' => array(
+        'bibdkCollection' => array(
+          'label' => 'openformat collection',
+          'admin' => array(
+            'path' => 'admin/structure/collection',
+            'access arguments' => array('administer content types'),
+          ),
+        ),
+      ),
+      'view modes' => array(
+        'full' => array(
+          'label' => t('Full content'),
+          'custom settings' => TRUE,
+        ),
+        'reservation' => array(
+          'label' => t('Reservation'),
+          'custom settings' => TRUE,
+        ),
+      ),
+    ),
     'bibdkSubwork' => array(
       'label' => t('Subwork'),
       'fieldable' => TRUE,
@@ -381,8 +411,11 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
 
 function ting_openformat_collection_view($collections, $view_mode = 'full', $langcode = NULL) {
   // Get all the ID's
-  foreach ($collections as $col)
+  
+  foreach ($collections as $col) {
     $ids[] = $col->id;
+  }
+  
   // Get the first collection
   $collection = $collections[0];
   // theme collection
