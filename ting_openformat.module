@@ -217,10 +217,6 @@ function ting_openformat_entity_info() {
           'label' => t('Full content'),
           'custom settings' => TRUE,
         ),
-        'reservation' => array(
-          'label' => t('Reservation'),
-          'custom settings' => TRUE,
-        ),
       ),
     ),
     'bibdkSubwork' => array(
@@ -409,21 +405,17 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
     'ding_id' => $bibdkWork->id));
 }
 
-function ting_openformat_collection_view($collections, $view_mode = 'full', $langcode = NULL) {
-  // Get all the ID's
-  
-  foreach ($collections as $col) {
-    $ids[] = $col->id;
-  }
-  
-  // Get the first collection
-  $collection = $collections[0];
-  // theme collection
+//TODO Not correctly implemented as the following should be handled as Entities and not as a objects
+function ting_openformat_collection_view($bibdkobject) {
+  #dpm($bibdkobject);
+  $ids = $bibdkobject->getCollectionIds();
+// theme collection
   $uid = strtr($ids[0], array(':' => '', '-' => ''));
   $form = drupal_get_form('ting_openformat_show_info_get_form', $ids, $uid);
+  //TODO make button form
   return theme('ting_openformat_collection', array(
-        'title' => $collection->record['dc:title'][''][0],
-        'author' => isset($collection->record['dc:creator']) ? implode(', ', reset($collection->record['dc:creator'])) : "",
+        'title' => $bibdkobject->getTitle(),
+        'author' => $bibdkobject->getAuthor(),
         'ids' => implode(",", $ids),
         'showinfo' => drupal_render($form),
         'uid' => $uid,
@@ -579,6 +571,19 @@ function ting_openformat_menu_alter(&$items) {
         'weight' => 1,
       );
     }
+    if (isset($items['admin/structure/collection/fields'])) {
+      $items['admin/structure/collection'] = $items['admin/structure/collection/fields'];
+      $item = &$items['admin/structure/collection'];
+      $item['type'] = MENU_NORMAL_ITEM;
+      $item['title'] = 'Collections for bibliotek.dk';
+      $item['description'] = 'Manage collection display.';
+
+      $items['admin/structure/collection/fields'] = array(
+        'title' => 'Manage fields',
+        'type' => MENU_DEFAULT_LOCAL_TASK,
+        'weight' => 1,
+      );
+    }
   }
 }
 
@@ -636,8 +641,8 @@ function _ting_openformat_type_translation($type, $subtype) {
     case 'audiobook':
       $type = t('audiobook');
       break;
-    case 'sheetmusikc':
-      $type = t('sheetmusikc');
+    case 'sheetmusic':
+      $type = t('sheetmusic');
       break;
     case 'none':
       $type = t('none');

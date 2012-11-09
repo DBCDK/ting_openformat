@@ -120,11 +120,11 @@ class bibdkSubwork {
   public function getType() {
     return $this->type;
   }
-  
+
   public function setSubType($subType) {
     $this->subType = $subType;
   }
-  
+
   public function getSubType() {
     return $this->subType;
   }
@@ -150,19 +150,29 @@ class bibdkSubwork {
 
 class bibdkCollection {
 
-  public $manifestations;
+  //TODO fields should be private - currently being public for debug purpose
+  private $manifestations;
   public $id;
-  public $title;
-  public $author;
-  public $ids;
+  public $ding_entity_id;
+  private $collectionTypes;
+  private $collectionIds;
 
   function __construct($manifestation) {
     $this->manifestations = $manifestation['manifestations'];
-    dpm($this->getId(), 'id');
+    $this->parseManifestations();
+  }
+
+  private function parseManifestations() {
+    foreach ($this->manifestations as $manifestation) {
+      $id = $manifestation->identifier->{'$'};
+      $type = $manifestation->type->{'$'};
+      $this->collectionTypes[$type][] = $id;
+      $this->collectionIds[] = $id;
+    }
   }
 
   public function getId() {
-    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('id'));
+    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('identifier'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -176,12 +186,8 @@ class bibdkCollection {
     return (is_array($result)) ? reset($result) : $result;
   }
 
-  public function getIds() {
-    return $this->ids;
-  }
-
-  public function setIds($ids) {
-    $this->ids = $ids;
+  public function getCollectionIds() {
+    return $this->collectionIds;
   }
 
 }
@@ -292,7 +298,7 @@ class manifestation {
     }
     return (is_array($result)) ? reset($result) : $result;
   }
-  
+
   public function getOrsOrderMaterialType() {
     $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('orsOrderMaterialType'));
     return (is_array($result)) ? reset($result) : $result;

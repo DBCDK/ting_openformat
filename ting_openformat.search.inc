@@ -61,23 +61,11 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   // static cache result - used in hook_ding_facetbrowser, ting_search etc.
   drupal_static('ting_search_results', $result);
 
-  #$collection_fields += _prepare_view('bibdkCollection', $col, $view_mode, $langcode);
-
-
-  dpm($result, 'result');
-  foreach ($result->collections as $collection) {
-    //TODO create collection entity
-    #dpm($collection, 'col');
-    _ting_openformat_load_collection_entities($collection);
-    #dpm($collection);
-    #$search_results_collection[] = _ting_openformat_set_search_result($collection);
+  _ting_openformat_create_collection_entities($result);
+  foreach ($result->entities as $key => $entity) {
+    $search_results[] = _ting_openformat_set_search_result($entity);
   }
-
-
-  foreach ($result->collections as $collection) {
-    $search_results[] = _ting_openformat_set_search_result($collection);
-  }
-  #dpm($search_results);
+  
   // set searchhistory
   if (module_exists('bibdk_searchhistory')) {
     module_invoke('bibdk_searchhistory', 'set_search_results', $keys, $result);
@@ -102,29 +90,30 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
 /**
  * Set collection entities
  * */
-function _ting_openformat_load_collection_entities($result) {
-  $bibdkobjects = array();
-  $original_manifestations = array();
-  $entity_ids = array();
+function _ting_openformat_create_collection_entities(&$result) {
+  foreach ($result->collections as $collection) {
 
-  $openformat = $result->formattedCollection->formattedCollection->manifestation;
-  _ting_openformat_parse_collection($original_manifestations, $entity_ids, $openformat);
-  if (count($entity_ids) > 0) {
-    $conditions['manifestations'] = $original_manifestations;
-    $bibdkEntities = entity_load('bibdkCollection', $entity_ids, $conditions, TRUE);
-    $bibdkobjects[] = $bibdkEntities;
-    $entity_ids = array();
+    $bibdkobjects = array();
+    $original_manifestations = array();
+    $entity_id = array();
+
+    $openformat = $collection->formattedCollection->formattedCollection->manifestation;
+    _ting_openformat_parse_collection($original_manifestations, $entity_id, $openformat);
+    if (isset($entity_id)) {
+      $conditions['manifestations'] = $original_manifestations;
+      $bibdkEntities = entity_load('bibdkCollection', $entity_id, $conditions, FALSE);
+      $bibdkobjects = $bibdkEntities;
+      unset($entity_id);
+    }
+    unset($result->collections);
+    $result->entities[] = $bibdkobjects;
   }
-  unset($result->collections);
-  $result->collections = $bibdkobjects;
 }
 
-function _ting_openformat_parse_collection(&$original_manifestations, &$entity_ids, $openformat) {
-  #dpm($openformat, 'openFormat');
+function _ting_openformat_parse_collection(&$original_manifestations, &$entity_id, $openformat) {
   if (isset($openformat) && is_array($openformat)) {
+    $entity_id = $openformat[0]->identifier->{'$'};
     foreach ($openformat as $manifestation) {
-      $manifestation_id = $manifestation->id->{'$'};
-      $entity_ids[] = $manifestation_id;
       $original_manifestations[] = $manifestation;
     }
   }
@@ -155,40 +144,35 @@ function _ting_openformat_load_entities($result) {
       }
     }
   }
-
   // replace TingClientObjectCollection with bibdkobjects
   unset($result->collections);
   $result->collections = $bibdkobjects;
 }
 
-/* * ** TODO this method needs to handle bibdkObject and NOT formattedCollections ***** */
-
 /** \brief Set a search result array as defined for hook_search_execute
- *
-  'link': Required. The URL of the found item.
-  'type': The type of item (such as the content type).
-  'title': Required. The name of the item.
-  'user': The author of the item.
-  'date': A timestamp when the item was last modified.
-  'extra': An array of optional extra information items.
-  'snippet': An excerpt or preview to show with the result (can be generated with search_excerpt()).
-  'language': Language code for the item (usually two characters).
+ * 
+ * 'link': Required. The URL of the found item.
+ * 'type': The type of item (such as the content type).
+ * 'title': Required. The name of the item.
+ * 'user': The author of the item.
+ * 'date': A timestamp when the item was last modified.
+ * 'extra': An array of optional extra information items.
+ * 'snippet': An excerpt or preview to show with the result (can be generated with search_excerpt()).
+ * 'language': Language code for the item (usually two characters).
+ * 
+ * @param type $bibdkobject
+ * @return Array result
+ */
 
- * */
 function _ting_openformat_set_search_result($bibdkobject) {
-
-  $current = current($bibdkobject->objects);
-
   //************** TODO handle bibdkobject *************/
   $result = array(
-    'link' => url("work/" . $current->id),
+    'link' => url("work/" . $bibdkobject->getId()),
     'type' => '',
-    'title' => $current->record['dc:title'][''][0],
-    // 'title' => $formattedCollection->formattedCollection->work->title->titleFull->{'$'},
-    //'title' => $current->getTitle(),
+    'title' => $bibdkobject->getTitle(),
     'user' => '',
     'date' => '',
-    'snippet' => ting_openformat_collection_view($bibdkobject->objects),
+    'snippet' => ting_openformat_collection_view($bibdkobject),
   );
   return $result;
 }
