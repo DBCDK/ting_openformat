@@ -119,7 +119,7 @@ function _ting_openformat_parse_collection(&$original_manifestations, &$entity_i
   }
 }
 
-/** \brief set entities
+/** THIS FUNCTION SEEMS TO BE UNUSED - INVESTIGATE!
  * replace TingClientObjectCollection (returned from ting-client) with bibdkEntity(work)
  * */
 function _ting_openformat_load_entities($result) {
