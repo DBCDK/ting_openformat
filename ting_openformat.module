@@ -385,12 +385,10 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   else {
     foreach ($sub as $type => $value) {
       $type_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $type));
-      
       foreach ($value as $subtype => $val) {
           $subtype_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $subtype));
           $trans = _ting_openformat_type_translation($type, $subtype);
           $type_id = $trans['type'];
-          
           $ordered_subworks[$type_id][$subtype_id]['manifest'] = $val;
           $ordered_subworks[$type_id][$subtype_id]['translation'] = $trans;
       }
@@ -405,20 +403,32 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
     'ding_id' => $bibdkWork->id));
 }
 
-//TODO Not correctly implemented as the following should be handled as Entities and not as a objects
+/**
+ * Generates the collection view. Before the view is genrated every material 
+ * will be checked against chceckOrderPolicyRequest to verify that it is borrowable
+ * @param type $bibdkobject
+ */
+
 function ting_openformat_collection_view($bibdkobject) {
-  #dpm($bibdkobject);
   $ids = $bibdkobject->getCollectionIds();
-// theme collection
   $uid = strtr($ids[0], array(':' => '', '-' => ''));
-  $form = drupal_get_form('ting_openformat_show_info_get_form', $ids, $uid);
-  //TODO make button form
+  $form = drupal_get_form('ting_openformat_show_info_get_form', $ids, $uid);  
+  $types = array();
+  foreach ($bibdkobject->getCollectionTypes() as $type => $ids) {
+    $t = _ting_openformat_type_translation('', $type);
+    if(module_exists('bibdk_reservation')){
+      module_load_include('inc', 'bibdk_reservation', 'bibdk_reservation_button');
+      $types[$t['subtype']] = bibdk_reservation_link($ids, $t['subtype'], 'bibdkSubwork');
+    }
+  }
+
   return theme('ting_openformat_collection', array(
         'title' => $bibdkobject->getTitle(),
         'author' => $bibdkobject->getAuthor(),
         'ids' => implode(",", $ids),
         'showinfo' => drupal_render($form),
         'uid' => $uid,
+        'actions' => theme('ting_openformat_collection_actions', array('types' => $types)),
       ));
 }
 
@@ -433,7 +443,6 @@ function ting_openformat_show_info_get_form($form_id, $form_state) {
   $form['info'] = array(
     '#type' => 'button',
     '#value' => '',
-    //'#attributes' => array('class' => array('work-toggle-element')),
     '#ids' => $form_state['build_info']['args'][0],
     '#uid' => $uid,
     '#id' => 'work_'.$uid,

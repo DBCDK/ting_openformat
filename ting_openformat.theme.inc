@@ -44,6 +44,13 @@ function ting_openformat_theme() {
       'template' => 'ting_openformat_collection',
       'render elements' => 'elements',
     ),
+    
+    'ting_openformat_collection_actions' => array(
+      'path' => $path,
+      'variables' => array('types' => array()),
+      'template' => 'ting_openformat_collection_actions',
+      'render elements' => 'elements',
+    ),
 
     'ting_openformat_subwork' => array(
       'path' => $path,

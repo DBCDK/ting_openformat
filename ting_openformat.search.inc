@@ -144,12 +144,11 @@ function _ting_openformat_load_entities($result) {
       }
     }
   }
-  // replace TingClientObjectCollection with bibdkobjects
   unset($result->collections);
   $result->collections = $bibdkobjects;
 }
 
-/** \brief Set a search result array as defined for hook_search_execute
+/** Set a search result array as defined for hook_search_execute
  * 
  * 'link': Required. The URL of the found item.
  * 'type': The type of item (such as the content type).
@@ -160,12 +159,12 @@ function _ting_openformat_load_entities($result) {
  * 'snippet': An excerpt or preview to show with the result (can be generated with search_excerpt()).
  * 'language': Language code for the item (usually two characters).
  * 
+ * @see hook_search_execute - http://api.drupal.org/api/drupal/modules%21search%21search.api.php/function/hook_search_execute/7
  * @param type $bibdkobject
  * @return Array result
  */
 
 function _ting_openformat_set_search_result($bibdkobject) {
-  //************** TODO handle bibdkobject *************/
   $result = array(
     'link' => url("work/" . $bibdkobject->getId()),
     'type' => '',

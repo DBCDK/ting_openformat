@@ -189,6 +189,10 @@ class bibdkCollection {
   public function getCollectionIds() {
     return $this->collectionIds;
   }
+  
+  public function getCollectionTypes() {
+    return $this->collectionTypes;
+  }
 
 }
 
