@@ -486,8 +486,12 @@ function _ting_openformat_parse_element ($elements, $divider = ", ", $use_header
       if($use_header)
         $header = $value;
     }
-    elseif ($key == 'searchCode')
+    elseif ($key == 'searchCode') {
       $array[] = l($elements['display'], 'search/work/' . $elements['searchCode']);
+    }
+    elseif( $key == 'accessUrl' ) {
+      $array[] = l($value,$value);
+    }
     elseif ($key == 'display'){/*do nothing*/}
     else{
       $array[] = $value;
