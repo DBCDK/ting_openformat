@@ -91,12 +91,11 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
  * Set collection entities
  * */
 function _ting_openformat_create_collection_entities(&$result) {
+  $result->entities = array();
   foreach ($result->collections as $collection) {
-
     $bibdkobjects = array();
     $original_manifestations = array();
     $entity_id = array();
-
     $openformat = $collection->formattedCollection->formattedCollection->manifestation;
     _ting_openformat_parse_collection($original_manifestations, $entity_id, $openformat);
     if (isset($entity_id)) {

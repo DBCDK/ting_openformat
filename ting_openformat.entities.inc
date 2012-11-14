@@ -220,7 +220,7 @@ class manifestation {
   }
 
   public function getCreator() {
-    $fields = array('creators' => array('creator' => "searchCode"));
+    $fields = array('creators' => array('creator' => 'searchCode'));
     $elements = $this->getWork();
     $result = ting_openformat_methods::parseFields($elements, $fields);
     return (is_array($result)) ? reset($result) : $result;
@@ -239,7 +239,6 @@ class manifestation {
   /*
    * Return ID as array
    */
-
   public function getIDs() {
     return array($this->id);
   }
@@ -250,7 +249,7 @@ class manifestation {
    */
   public function isReservable() {
     $requestMethod = $this->getRequestMethod();
-    return (isset($requestMethod) && $requestMethod == 'none') ? null : true;
+    return (!isset($requestMethod)) ? TRUE : FALSE;
   }
 
   /**
@@ -259,7 +258,7 @@ class manifestation {
    */
   public function isLink() {
     $requestMethod = $this->getRequestMethod();
-    return ($requestMethod == "link") ? true : false;
+    return ($requestMethod == 'link') ? TRUE : FALSE;
   }
 
   public function getInfotext() {
@@ -268,7 +267,7 @@ class manifestation {
     if (isset($restrictedUse))
       return $restrictedUse;
 
-    elseif (isset($requestMethod) && $requestMethod != "link" && $requestMethod != "none" && $requestMethod != "Old")
+    elseif (isset($requestMethod) && $requestMethod != 'link' && $requestMethod != 'none' && $requestMethod != 'Old')
       return $requestMethod;
     return NULL;
   }

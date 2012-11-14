@@ -1,15 +1,14 @@
 <?php
 
-
 class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
 
   public static function getInfo() {
-    return array (
+    return array(
       'name' => t('Unittest'),
       'description' => t('Tests the methods of the different entities'),
       'group' => t('Ting Openformat'),
     );
-     }
+  }
 
   public function setUp() {
     $this->_createObjects();
@@ -17,65 +16,61 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     parent::setUp();
   }
 
+  public function testManifistationMethods() {
 
-  public function testManifistationMethods (){
-
-  /* @var $manifestation manifestation */
+    /* @var $manifestation manifestation */
     //$manifestation = $this->manifestation;
 
     $this->_testSimplefunction("getType", "Bog");
     $this->_testSimplefunction("getOriginalTitle", NULL);
     $this->_testSimplefunction("getAlternativeTitle", array("alternativeTitle" => array(array(
-        "header" => "Cd:",
-        "alternativeTitleElement"=> "Harry Potter instrumental solos alto saxophone - level 2-3",
-    ))));
+          "header" => "Cd:",
+          "alternativeTitleElement" => "Harry Potter instrumental solos alto saxophone - level 2-3",
+      ))));
   }
 
-  private function _testSimplefunction($method, $expected_result){
+  private function _testSimplefunction($method, $expected_result) {
     $manifestation = $this->manifestation;
     $result = $manifestation->$method();
-    $message = "$method method returned : ".print_r($result, true)." Should be ".print_r($expected_result, TRUE);
-    if (is_array($expected_result)){
-      $expected_result = serialize ($expected_result);
+    $message = "$method method returned : " . print_r($result, true) . " Should be " . print_r($expected_result, TRUE);
+    if (is_array($expected_result)) {
+      $expected_result = serialize($expected_result);
       $result = serialize($result);
     }
 
     $this->assertEqual($expected_result, $result, $message);
-
   }
 
-  private function _createObjects(){
-     $file = file_get_contents(drupal_get_path("module", "ting_openformat")."/test/manifestation.working.json");
-     $result = json_decode($file);
+  private function _createObjects() {
+    $file = file_get_contents(drupal_get_path("module", "ting_openformat") . "/test/manifestation.working.json");
+    $result = json_decode($file);
     $manifestation_object = $result->searchResponse->result->searchResult[0]->formattedCollection->workDisplay->manifestation;
 
     $this->manifestation = entity_load('bibdkManifestation', $manifestation_object->adminData->pid->{'$'}, $manifestation_object);
-
   }
 
   private $manifestation;
   private $work, $subwork;
+
 }
 
 class TingOpenFormatWebTestCase extends DrupalWebTestCase {
+
   public static function getInfo() {
-    return array (
+    return array(
       'name' => t('Webtest'),
       'description' => t('Test the search and display of bibdk objects'),
       'group' => t('Ting Openformat'),
     );
-     }
+  }
 
- public function setUp() {
-    $this->profile = 'bibdk';
-    //array('ting_openformat', 'ting_openformat_webservice_mockup','ting', 'devel', 'search', 'ting_client')
-    parent::setup(array('ting_openformat', 'ting_openformat_webservice_mockup'));
+  public function setUp() {
+    parent::setUp(array('ting_openformat', 'ting_openformat_webservice_mockup', 'panels', 'devel'));
+
     global $base_url;
-    // $this->privileged_user = $this->drupalCreateUser(array('access content', 'search content'));
-    // $this->drupalLogin($this->privileged_user);
     variable_set('ting_agency', '100200');
-    variable_set('ting_search_url', $this->getAbsoluteUrl('ting_openformat_webservice')); //The mockup needs to be enabled in live installation
-    #variable_set('ting_search_url', 'http://lakiseks.dbc.dk/hive/'); //Testing against liveservice
+    //variable_set('ting_search_url', $this->getAbsoluteUrl('ting_openformat_webservice')); //The mockup needs to be enabled in live installation
+    variable_set('ting_search_url', 'http://lakiseks.dbc.dk/hive/'); //Testing against liveservice
     variable_set('search_active_modules', array('node', 'ting_openformat'));
     variable_set('search_default_module', 'ting_openformat');
     variable_set('ting_agency', '100200');
@@ -84,25 +79,23 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     variable_set('bibdk_provider_webservice_url', 'http://guesstimate.dbc.dk/~pjo/webservices/OpenUserInfo/trunk/server.php');
     variable_set('bibdk_provider_security_code', 'testhest');
     variable_set('page_manager_search_disabled_ting_openformat', 0); // enable search result panel page
-    menu_rebuild();
-
   }
-
 
   public function testDisplayOfSearchResult() {
 
     //Create user
-    $create_user = $this->drupalCreateUser(array());
-    $this->drupalLogin($create_user);
+    $user = $this->drupalCreateUser(array('access content', 'search content', 'access devel information'));
+    $this->drupalLogin($user);
 
     //1: Test that ting search is enabled
-    // $this->drupalGet('search');
-    // $this->assertUrl("search/work");
-
+    $this->drupalGet('search/work/potter');
+    #$this->assertUrl('search/work/');
+    
     //2: Test that no search result
-    $this->drupalPost(NULL, array('search_block_form' => 'thereAreNoResults'), "Search");
-    $this->assertText("Your search yielded no results");
-
+    
+    #$this->drupalPost(NULL, array('search_block_form' => 'thereAreNoResults'), "Search");
+    #$this->assertText("Your search yielded no results");
+    /*
     //3: Test that search result is present
     $this->drupalPost(NULL, array('search_block_form' => 'harry potter'), "Search");
     $this->assertText("Harry Potter");
@@ -110,19 +103,17 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     $this->assertText("Joanne K. Rowling");
 
     // is there a mini pager?
-    $this->assertLinkByHref("/search/work/harry%20potter?page=1",0,'Pager for page 2 was found.');
-      // $label = 'forward';
-      // $this->assertLink($label,0,'Pager for page 2 was labeled "' . $label . '".');
-
+    $this->assertLinkByHref("/search/work/harry%20potter?page=1", 0, 'Pager for page 2 was found.');
+    // $label = 'forward';
+    // $this->assertLink($label,0,'Pager for page 2 was labeled "' . $label . '".');
     // click pager pager
-      // $this->clickLink($label);
-
+    // $this->clickLink($label);
     // check next page
-    $this->drupalGet("search/work/harry potter", array('query'=>array('page'=>'1')));
+    $this->drupalGet("search/work/harry potter", array('query' => array('page' => '1')));
     $this->assertText("page 2");
     $this->assertText("Ved du alt om Harry Potter");
-    $this->assertLinkByHref("/search/work/harry%20potter",0,'Pager for page 1 was found.');
-    $this->assertLinkByHref("/search/work/harry%20potter?page=2",0,'Pager for page 3 was found.');
+    $this->assertLinkByHref("/search/work/harry%20potter", 0, 'Pager for page 1 was found.');
+    $this->assertLinkByHref("/search/work/harry%20potter?page=2", 0, 'Pager for page 3 was found.');
 
     // Test Ajax with no result
     $this->drupalPostAJAX(NULL, NULL, array('op' => ''), NULL, array(), array(), 'ting-openformat-show-info-get-form--2');
@@ -133,12 +124,8 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
 
     //4: Test presence of fields
     $this->assertText("Harry Potter and the Deathly Hallows");
-    // $this->assertText("ISBN");
-    // $this->assertText("Cd");
+     * 
+     */
   }
 
-/*  public function testDisplayOfSingleWork() {
-
-  }
- */
 }

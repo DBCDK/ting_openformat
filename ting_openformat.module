@@ -4,9 +4,6 @@
 module_load_include('inc', 'ting_openformat', 'ting_openformat.search');
 module_load_include('inc', 'ting_openformat', 'ting_openformat.field');
 
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-
 function ting_openformat_menu() {
   $items = array();
   $items['work/%'] = array(
@@ -17,7 +14,6 @@ function ting_openformat_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_LOCAL_TASK,
   );
-
 $items['admin/config/ting'] = array(
     'title' => 'Openformat',
     'description' => 'Handle ting_openformat module (disable)',
@@ -28,9 +24,7 @@ $items['admin/config/ting'] = array(
     'file' => 'system.admin.inc',
     'file path' => drupal_get_path('module', 'system'),
   );
-	
-
-  $items['admin/config/ting_openformat'] = array(
+$items['admin/config/ting_openformat'] = array(
     'title' => 'Openformat',
     'description' => 'Handle ting_openformat module (disable)',
     'position' => 'left',
@@ -404,31 +398,23 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
 }
 
 /**
- * Generates the collection view. Before the view is genrated every material 
- * will be checked against chceckOrderPolicyRequest to verify that it is borrowable
+ * Generates the collection view with an 'Order any edition' button if view is 
+ * implemented (requires bibdk_reservation module)
  * @param type $bibdkobject
  */
-
 function ting_openformat_collection_view($bibdkobject) {
   $ids = $bibdkobject->getCollectionIds();
   $uid = strtr($ids[0], array(':' => '', '-' => ''));
   $form = drupal_get_form('ting_openformat_show_info_get_form', $ids, $uid);  
-  $types = array();
-  foreach ($bibdkobject->getCollectionTypes() as $type => $ids) {
-    $t = _ting_openformat_type_translation('', $type);
-    if(module_exists('bibdk_reservation')){
-      module_load_include('inc', 'bibdk_reservation', 'bibdk_reservation_button');
-      $types[$t['subtype']] = bibdk_reservation_link($ids, $t['subtype'], 'bibdkSubwork');
-    }
-  }
+  $actions = _prepare_view('bibdkCollection', $bibdkobject, 'full', NULL);
 
   return theme('ting_openformat_collection', array(
         'title' => $bibdkobject->getTitle(),
         'author' => $bibdkobject->getAuthor(),
-        'ids' => implode(",", $ids),
+        'ids' => implode(',', $ids),
         'showinfo' => drupal_render($form),
         'uid' => $uid,
-        'actions' => theme('ting_openformat_collection_actions', array('types' => $types)),
+        'actions' => (!empty($actions)) ? $actions : array(),
       ));
 }
 
