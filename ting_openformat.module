@@ -122,6 +122,10 @@ function _ting_openformat_parse_manifestations(&$original_manifestations, &$enti
   }
 }
 
+function ting_openformat_form_search_block_form_alter(&$form, &$form_state, $form_id) { // rebuild 
+  $form['search_block_form']['#default_value'] = drupal_static('ting_search_query');
+}
+
 /**
  * Implements hook_form_FORMID_alter (ting_client_admin_webservices_settings @see ting_client.admin.inc).
  * make openformat a dropdownlist.

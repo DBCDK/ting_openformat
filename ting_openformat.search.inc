@@ -38,7 +38,8 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   $params = array();
   // search phrase (query)
   $params['query'] = $keys;
-
+  // save query to show in search_block  
+  drupal_static('ting_search_query', $keys);
   // get parameters set as variables
   $variables = _ting_openformat_search_get_variables();
 
