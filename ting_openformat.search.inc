@@ -26,6 +26,13 @@ function ting_openformat_search_info() {
     'conditions_callback' => 'ting_openformat_conditions_callback',);
 }
 
+function _ting_openformat_handle_conditions(&$conditions){
+  // if size is set in url - override numResults set in variable
+  if (!empty($conditions['size'])) {
+    $conditions['numResults'] = $conditions['size'];
+  }   
+}
+
 /** implements hook_search_execute */
 function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   $params = array();
@@ -33,10 +40,15 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   $params['query'] = $keys;
 
   // get parameters set as variables
-  $variables = _ting_openformat_search_get_variables($conditions);
+  $variables = _ting_openformat_search_get_variables();
 
+  _ting_openformat_handle_conditions($conditions);
+    
   if (!empty($variables)) {
     $params = array_merge($params, $variables);
+  }
+  if( !empty($conditions) ) {
+    $params = array_merge($params, $conditions);
   }
 
   // selected facets from facetbrowser (in query)
@@ -65,7 +77,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   foreach ($result->entities as $key => $entity) {
     $search_results[] = _ting_openformat_set_search_result($entity);
   }
-  
+
   // set searchhistory
   if (module_exists('bibdk_searchhistory')) {
     module_invoke('bibdk_searchhistory', 'set_search_results', $keys, $result);
@@ -162,7 +174,6 @@ function _ting_openformat_load_entities($result) {
  * @param type $bibdkobject
  * @return Array result
  */
-
 function _ting_openformat_set_search_result($bibdkobject) {
   $result = array(
     'link' => url("work/" . $bibdkobject->getId()),
@@ -221,16 +232,10 @@ function _ting_openformat_set_default_facets() {
 }
 
 /** \brief get variables and set corresponding search parameters
- * @param $conditions array with parameters set in _REQUEST
  * */
-function _ting_openformat_search_get_variables($conditions) {
+function _ting_openformat_search_get_variables() {
   // results pr. page (opensearch::stepValue) ... in ting-client/lib/request/TingClientSearchRequest.php this is called numResults
-  $resultsPerPage = variable_get('ting_search_results_per_page', 10);
-
-  // if size is set; - override
-  if (!empty($conditions['size'])) {
-    $resultsPerPage = $conditions['size'];
-  }
+  $resultsPerPage = variable_get('ting_search_results_per_page', 10);  
   $params['numResults'] = $resultsPerPage;
 
   // page number (opensearch::start)
@@ -287,9 +292,14 @@ function ting_openformat_conditions_callback($keys) {
     $conditions['size'] = (int) $_REQUEST['size'];
   }
 
-
+  
+// set the sort parameter here - thus it will work when sort parameter is added to url
   if (!empty($_REQUEST['sort'])) {
     $conditions['sort'] = check_plain($_REQUEST['sort']);
+  }
+  // default sort parameter
+  else {
+    $conditions['sort'] = 'date_descending';
   }
 
   // If facets is set, check if we have to remove any, if so,
