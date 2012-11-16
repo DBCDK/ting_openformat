@@ -152,22 +152,25 @@ class bibdkCollection {
 
   //TODO fields should be private - currently being public for debug purpose
   private $manifestations;
-  public $id;
   public $ding_entity_id;
   private $collectionTypes;
   private $collectionIds;
 
   function __construct($manifestation) {
     $this->manifestations = $manifestation['manifestations'];
-    $this->parseManifestations();
   }
 
-  private function parseManifestations() {
-    foreach ($this->manifestations as $manifestation) {
-      $id = $manifestation->identifier->{'$'};
-      $type = $manifestation->type->{'$'};
-      $this->collectionTypes[$type][] = $id;
-      $this->collectionIds[] = $id;
+  //TODO the below method should be reviewed as valid XML is expected from webservices in production
+  public function parseManifestations() {
+    if (isset($this->manifestations)) {
+      foreach ($this->manifestations as $manifestation) {
+        if (isset($manifestation) && isset($manifestation->identifier->{'$'}) && $manifestation->type->{'$'}) {
+          $id = $manifestation->identifier->{'$'};
+          $type = $manifestation->type->{'$'};
+          $this->collectionTypes[$type][] = $id;
+          $this->collectionIds[] = $id;
+        }
+      }
     }
   }
 
@@ -189,11 +192,10 @@ class bibdkCollection {
   public function getCollectionIds() {
     return $this->collectionIds;
   }
-  
+
   public function getCollectionTypes() {
     return $this->collectionTypes;
   }
-
 }
 
 class manifestation {
@@ -239,6 +241,7 @@ class manifestation {
   /*
    * Return ID as array
    */
+
   public function getIDs() {
     return array($this->id);
   }

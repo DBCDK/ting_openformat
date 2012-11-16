@@ -73,8 +73,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
 
   // static cache result - used in hook_ding_facetbrowser, ting_search etc.
   drupal_static('ting_search_results', $result);
-
-  _ting_openformat_create_collection_entities($result);
+  _ting_openformat_create_collection_entities($result);  
   foreach ($result->entities as $key => $entity) {
     $search_results[] = _ting_openformat_set_search_result($entity);
   }
@@ -114,6 +113,7 @@ function _ting_openformat_create_collection_entities(&$result) {
     if (isset($entity_id)) {
       $conditions['manifestations'] = $original_manifestations;
       $bibdkEntities = entity_load('bibdkCollection', $entity_id, $conditions, FALSE);
+      $bibdkEntities->parseManifestations(); //Temporary as malformed XML is returned from OpenSearch
       $bibdkobjects = $bibdkEntities;
       unset($entity_id);
     }
