@@ -341,7 +341,6 @@ class manifestation {
    */
 
   public function getContributors() {
-      dpm($this->manifestation->main->details);
     $result = ting_openformat_methods::parseFields($this->manifestation->main->details, array('contributors'));
     return $result;
   }
