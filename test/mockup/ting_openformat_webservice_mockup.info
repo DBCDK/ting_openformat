@@ -1,4 +1,4 @@
-name = "ting_openformat mockup"
+name = "Ting OpenFormat Webservice Mockup"
 description = "Support module for ting_openformat test."
 package = bibliotek.dk
 version = VERSION

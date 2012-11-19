@@ -1,4 +1,4 @@
 <?php
-print drupal_render($variables['fields']);
+  print drupal_render($variables['fields']);
 ?>
 <hr/>

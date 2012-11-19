@@ -44,6 +44,13 @@ function ting_openformat_theme() {
       'template' => 'ting_openformat_collection',
       'render elements' => 'elements',
     ),
+    
+    'ting_openformat_collection_actions' => array(
+      'path' => $path,
+      'variables' => array('types' => array()),
+      'template' => 'ting_openformat_collection_actions',
+      'render elements' => 'elements',
+    ),
 
     'ting_openformat_subwork' => array(
       'path' => $path,
@@ -286,13 +293,13 @@ function theme_ting_openformat_mini_pager($variables) {
           '#attributes' => array('class' => array('dropdown-menu','dropdown-leftalign','visuallyhidden')),
         ),
       ),
-        'next' => array(
-          '#text' => '',
-          '#element' => $element,
-          '#interval' => 1,
-          '#parameters' => $parameters,
-          '#theme' => 'pager_next',
-        ),
+      'next' => array(
+        '#text' => '',
+        '#element' => $element,
+        '#interval' => 1,
+        '#parameters' => $parameters,
+        '#theme' => 'pager_next',
+      ),
     );
 
     return $output;

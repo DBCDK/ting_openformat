@@ -55,10 +55,14 @@ function ting_openformat_ting_openformat_search_result_content_type_render($subt
   $search_result=search_data($keys, $info['module'], $conditions);
 
   $output = "<ol class=\"search-results $conf[type]-results\">\n";
-  if( isset($search_result['#results']) ) {
+  if( count($search_result['#results']) > 0 ) {
     foreach ($search_result['#results'] as $result) {    // $build = ting_collection_view($collection, 'teaser');
       $output .= theme('search_result', array('result' => $result, 'module' => $conf['type']));
     }
+  }
+  else {
+    $output .= t('Your search yielded no results');
+    $output .= search_help('search#noresults', drupal_help_arg());
   }
   $output .= "</ol>\n";
   // $output .= theme('ting_search_pager', array('tags' => NULL,));

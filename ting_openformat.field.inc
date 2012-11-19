@@ -291,6 +291,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $type = $entity->getType();
         $value = _ting_openformat_get_markup_for_field($type);
         break;
+      
       // Title
       case 'bibdk_mani_title':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
@@ -485,8 +486,12 @@ function _ting_openformat_parse_element ($elements, $divider = ", ", $use_header
       if($use_header)
         $header = $value;
     }
-    elseif ($key == 'searchCode')
+    elseif ($key == 'searchCode') {
       $array[] = l($elements['display'], 'search/work/' . $elements['searchCode']);
+    }
+    elseif( $key == 'accessUrl' ) {
+      $array[] = l($value,$value,array('attributes'=>array('target'=>'_blank')));
+    }
     elseif ($key == 'display'){/*do nothing*/}
     else{
       $array[] = $value;
