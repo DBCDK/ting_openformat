@@ -91,7 +91,7 @@ class bibdkWork {
 
 }
 
-class bibdkSubwork {
+class   bibdkSubwork {
 
   public $id;
   public $ding_entity_id;
@@ -341,6 +341,7 @@ class manifestation {
    */
 
   public function getContributors() {
+      dpm($this->manifestation->main->details);
     $result = ting_openformat_methods::parseFields($this->manifestation->main->details, array('contributors'));
     return $result;
   }
@@ -523,7 +524,7 @@ class manifestation {
 
   public function getIdentifiers() {
     $fields = array('identifiers' => array(
-        'identifierHeader' => 'header',
+        'identifierDescriptor' => 'header',
         'identifier',
         'ISSN',
         ));

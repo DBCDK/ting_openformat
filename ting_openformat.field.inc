@@ -323,7 +323,6 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $contributors = $entity->getContributors();
         $value = _ting_openformat_get_markup_for_field($contributors);
-        
         break;
 
       // seriesTitle
@@ -380,7 +379,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
       case 'bibdk_mani_used_language':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $usedLanguage = $entity->getUsedLanguage();
-        $value = _ting_openformat_get_markup_for_field($usedLanguage);
+        $value = _ting_openformat_get_markup_for_field($usedLanguage,". ");
         break;
 
 
@@ -473,7 +472,7 @@ function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_
  * @param array $elements
  * @return string
  */
-function _ting_openformat_parse_element ($elements, $divider = ", ", $use_header = TRUE){
+function _ting_openformat_parse_element ($elements, $divider = ". ", $use_header = TRUE){
   if (!isset($elements))
     return null;
   if (!is_array($elements))
@@ -482,25 +481,28 @@ function _ting_openformat_parse_element ($elements, $divider = ", ", $use_header
     if (is_array($value)){
       $array[] = _ting_openformat_parse_element($value, $divider, $use_header);
     }
-    elseif ($key == "header"){
+    elseif ($key === "header"){
       if($use_header)
         $header = $value;
     }
-    elseif ($key == 'searchCode') {
+    elseif ($key === 'searchCode') {
       $array[] = l($elements['display'], 'search/work/' . $elements['searchCode']);
     }
-    elseif( $key == 'accessUrl' ) {
+    elseif( $key === 'accessUrl' ) {
       $array[] = l($value,$value,array('attributes'=>array('target'=>'_blank')));
     }
-    elseif ($key == 'display'){/*do nothing*/}
+    elseif ($key === 'display'){/*do nothing*/}
     else{
       $array[] = $value;
     }
   }
-  $string = (isset($header)) ? $header : " ";
-  if (isset($array))
-    $string .= implode($divider, $array);
-  
+  $string = (isset($header)) ? $header." " : " ";
+  if (isset($array)){
+      $string .= implode($divider, $array);
+      if ($print_array){
+          dpm($array);
+      }
+  }
   return $string;
 }
 
