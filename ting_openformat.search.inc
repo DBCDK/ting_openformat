@@ -42,16 +42,11 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   drupal_static('ting_search_query', $keys);
   // get parameters set as variables
   $variables = _ting_openformat_search_get_variables();
-
-  _ting_openformat_handle_conditions($conditions);
-    
+  
   if (!empty($variables)) {
     $params = array_merge($params, $variables);
   }
-  if( !empty($conditions) ) {
-    $params = array_merge($params, $conditions);
-  }
-
+    
   // selected facets from facetbrowser (in query)
   if (isset($conditions['facets']) && $conditions['facets'] != NULL) {
     _ting_openformat_set_facets($params['query'], $conditions['facets']);
@@ -103,7 +98,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
  * Set collection entities
  * */
 function _ting_openformat_create_collection_entities(&$result) {
-  $result->entities = array();
+  $result->entities = array();  
   foreach ($result->collections as $collection) {
     $bibdkobjects = array();
     $original_manifestations = array();
@@ -308,6 +303,7 @@ function ting_openformat_conditions_callback($keys) {
   if (!empty($_REQUEST['facets'])) {
     $remove = array();
     $redirect = FALSE;
+    
     foreach ($_REQUEST['facets'] as $key => $facet) {
       if (preg_match('/^-facet/', $facet)) {
         $remove[] = preg_replace('/^-/', '', $facet);
