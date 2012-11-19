@@ -165,11 +165,14 @@ class bibdkCollection {
     if (isset($this->manifestations)) {
       foreach ($this->manifestations as $manifestation) {
         if (isset($manifestation) && isset($manifestation->identifier->{'$'}) && $manifestation->type->{'$'}) {
+        //if (isset($manifestation) && isset($manifestation->identifier->{'$'}) ) {
           $id = $manifestation->identifier->{'$'};
-          $type = $manifestation->type->{'$'};
+          $type = isset($manifestation->type->{'$'}) ? $manifestation->type->{'$'} : NULL;
           $this->collectionTypes[$type][] = $id;
           $this->collectionIds[] = $id;
         }
+        else
+          dpm($manifestation);
       }
     }
   }
