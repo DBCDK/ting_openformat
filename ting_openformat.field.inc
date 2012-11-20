@@ -63,20 +63,34 @@ function ting_openformat_field_info() {
     'bibdk_mani_orig_title' => array(
       'label' => t('Original title'),
       'description' => t('Original title of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'hidden',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_alt_title' => array(
       'label' => t('Original title'),
       'description' => t('Alternative title of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_contribs' => array(
       'label' => t('Contributors'),
       'description' => t('contributors to manifestation'),
+      'default_widget' => 'hidden',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
+    'bibdk_mani_forms' => array(
+      'label' => t('Forms'),
+      'description' => t('forms to manifestation'),
+      'default_widget' => 'default',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
+    'bibdk_mani_formats' => array(
+      'label' => t('Formats'),
+      'description' => t('Formats of manifestation'),
       'default_widget' => 'default',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
@@ -214,24 +228,22 @@ function ting_openformat_field_info() {
  * Implements hook_field_formatter_info
  * */
 function ting_openformat_field_formatter_info() {
+  $fields = ting_openformat_field_info();
+  foreach($fields as $field => $data){
+    $fieldtypes[$data['default_formatter']][]= $field;
+  }
   return array(
     'ting_openformat_default_formatter' => array(
       'label' => t('Default'),
-      'field types' => array(
-        'manifestation_field'
-      ),
+      'field types' => $fieldtypes['ting_openformat_default_formatter']
     ),
     'ting_openformat_button_formatter' => array(
       'label' => t('Default'),
-      'field types' => array(
-        'manifestation_button'
-      ),
+      'field types' => $fieldtypes['ting_openformat_button_formatter']
     ),
     'ting_openformat_action_formatter' => array(
       'label' => t('Default'),
-      'field types' => array(
-        'manifestation_action'
-      ),
+      'field types' => $fieldtypes['ting_openformat_action_formatter']
     ),
 );
 }
@@ -323,6 +335,20 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $contributors = $entity->getContributors();
         $value = _ting_openformat_get_markup_for_field($contributors);
+        break;
+
+      //forms
+      case 'bibdk_mani_forms':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $forms = $entity->getForms();
+        $value = _ting_openformat_get_markup_for_field($forms);
+        break;
+
+      //format
+      case 'bibdk_mani_format':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $format = $entity->getFormat();
+        $value = _ting_openformat_get_markup_for_field($format);
         break;
 
       // seriesTitle
@@ -499,9 +525,6 @@ function _ting_openformat_parse_element ($elements, $divider = ". ", $use_header
   $string = (isset($header)) ? $header." " : " ";
   if (isset($array)){
       $string .= implode($divider, $array);
-      if ($print_array){
-          dpm($array);
-      }
   }
   return $string;
 }
