@@ -235,15 +235,15 @@ function ting_openformat_field_formatter_info() {
   return array(
     'ting_openformat_default_formatter' => array(
       'label' => t('Default'),
-      'field types' => $fieldtypes['ting_openformat_default_formatter']
+      'field types' => isset($fieldtypes['ting_openformat_default_formatter']) ? $fieldtypes['ting_openformat_default_formatter'] : NULL,
     ),
     'ting_openformat_button_formatter' => array(
       'label' => t('Default'),
-      'field types' => $fieldtypes['ting_openformat_button_formatter']
+      'field types' => isset($fieldtypes['ting_openformat_button_formatter']) ? $fieldtypes['ting_openformat_button_formatter'] : NULL,
     ),
     'ting_openformat_action_formatter' => array(
       'label' => t('Default'),
-      'field types' => $fieldtypes['ting_openformat_action_formatter']
+      'field types' => isset($fieldtypes['ting_openformat_action_formatter']) ? $fieldtypes['ting_openformat_action_formatter'] : NULL,
     ),
 );
 }
