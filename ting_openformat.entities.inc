@@ -171,8 +171,6 @@ class bibdkCollection {
           $this->collectionTypes[$type][] = $id;
           $this->collectionIds[] = $id;
         }
-        else
-          dpm($manifestation);
       }
     }
   }
