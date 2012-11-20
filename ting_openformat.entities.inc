@@ -29,7 +29,7 @@ class bibdkWork {
         $type = t('unknown', array(), array('context' => 'ting_openformat'));
       }
 
-      $subType = ( is_array($manifestation->getSubType()) ) ? implode(' + ', $manifestation->getSubType()) : $manifestation->getSubType();
+      $subType = (is_array($manifestation->getSubType())) ? implode(' + ', $manifestation->getSubType()) : $manifestation->getSubType();
       // note: "surplus" types, and "undefined" types are to be handled in iScrum.
       $subWorks[$type][$subType][$id] = $manifestation;
     }
@@ -165,7 +165,7 @@ class bibdkCollection {
     if (isset($this->manifestations)) {
       foreach ($this->manifestations as $manifestation) {
         if (isset($manifestation) && isset($manifestation->identifier->{'$'}) && $manifestation->type->{'$'}) {
-        //if (isset($manifestation) && isset($manifestation->identifier->{'$'}) ) {
+          //if (isset($manifestation) && isset($manifestation->identifier->{'$'}) ) {
           $id = $manifestation->identifier->{'$'};
           $type = isset($manifestation->type->{'$'}) ? $manifestation->type->{'$'} : NULL;
           $this->collectionTypes[$type][] = $id;
@@ -249,6 +249,7 @@ class manifestation {
 
   /**
    * Can a manifestation be booked
+   *
    * @return Boolean
    */
   public function isReservable() {
@@ -258,6 +259,7 @@ class manifestation {
 
   /**
    * Shall Reservation button be a link
+   *
    * @return boolean
    */
   public function isLink() {
@@ -268,11 +270,13 @@ class manifestation {
   public function getInfotext() {
     $restrictedUse = $this->getRestrictedUse();
     $requestMethod = $this->getRequestMethod();
-    if (isset($restrictedUse))
+    if (isset($restrictedUse)) {
       return $restrictedUse;
+    }
 
-    elseif (isset($requestMethod) && $requestMethod != 'link' && $requestMethod != 'none' && $requestMethod != 'Old')
+    elseif (isset($requestMethod) && $requestMethod != 'link' && $requestMethod != 'none' && $requestMethod != 'Old') {
       return $requestMethod;
+    }
     return NULL;
   }
 
@@ -405,10 +409,10 @@ class manifestation {
 
   public function getShelf() {
     $fields = array("shelf" => array(
-        'shelfHeader' => 'header',
-        'shelfMusic',
-        'shelfClassification' => "searchCode",
-      )
+      'shelfHeader' => 'header',
+      'shelfMusic',
+      'shelfClassification' => "searchCode",
+    )
     );
     $result = ting_openformat_methods::parseFields($this->manifestation->main->details, $fields);
 
@@ -521,10 +525,10 @@ class manifestation {
 
   public function getIdentifiers() {
     $fields = array('identifiers' => array(
-        'identifierDescriptor' => 'header',
-        'identifier',
-        'ISSN',
-        ));
+      'identifierDescriptor' => 'header',
+      'identifier',
+      'ISSN',
+    ));
     $result = ting_openformat_methods::parseFields($this->manifestation->main->details, $fields);
     return (is_array($result)) ? reset($result) : $result;
   }
@@ -536,9 +540,9 @@ class manifestation {
 
   public function getPriceInformation() {
     $fields = array('priceInformation' => array(
-        'priceHeader' => 'header',
-        'price',
-        ));
+      'priceHeader' => 'header',
+      'price',
+    ));
     $result = ting_openformat_methods::parseFields($this->manifestation->main->details, $fields);
     return $result;
   }
@@ -551,9 +555,9 @@ class manifestation {
 
   public function getLanguage() {
     $fields = array('language' => array(
-        'languageHeader' => 'header',
-        'languageElement',
-        ));
+      'languageHeader' => 'header',
+      'languageElement',
+    ));
     $result = ting_openformat_methods::parseFields($this->manifestation->main->details, $fields);
     return $result;
   }
@@ -565,8 +569,8 @@ class manifestation {
 
   public function getAccessInformation() {
     $fields = array('accessInformation' => array(
-        'accessUrl',
-        ));
+      'accessUrl',
+    ));
 
     $result = ting_openformat_methods::parseFields($this->manifestation->main->details, $fields);
     return (is_array($result)) ? reset($result) : $result;
@@ -575,14 +579,16 @@ class manifestation {
 }
 
 class ting_openformat_methods {
+
   /* \brief parse searchCode,display elements
    * @param array of stdObjects
    * return array of form []['display','searchCode']
    */
 
   private static function _parseSearchCode($stdObjects) {
-    if (!is_array($stdObjects))
+    if (!is_array($stdObjects)) {
       $stdObjects = array($stdObjects);
+    }
 
     foreach ($stdObjects as $object) {
       $subject['searchCode'] = self::_getSearchCodeElement($object->searchCode);
@@ -596,15 +602,19 @@ class ting_openformat_methods {
   private static function _getSearchCodeElement($stdObject) {
     $value = (isset($stdObject->{'$'})) ? $stdObject->{'$'} : NULL;
 
-    if (isset($stdObject->{'@phrase'}))
+    if (isset($stdObject->{'@phrase'})) {
       $term = $stdObject->{'@phrase'}->{'$'};
-    elseif (isset($stdObject->{'@word'}))
+    }
+    elseif (isset($stdObject->{'@word'})) {
       $term = $stdObject->{'@word'}->{'$'};
+    }
 
-    if (isset($value) && isset($term))
+    if (isset($value) && isset($term)) {
       return $term . "=" . $value;
-    else
+    }
+    else {
       return;
+    }
   }
 
   public static function parseFields($object, array $fields) {
@@ -614,8 +624,9 @@ class ting_openformat_methods {
     }
     if (is_array($object)) {
       foreach ($object as $o) {
-        if (isset($o))
+        if (isset($o)) {
           $ret[] = self::parseFields($o, $fields);
+        }
       }
       return $ret;
     }
