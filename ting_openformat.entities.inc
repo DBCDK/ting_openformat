@@ -418,6 +418,20 @@ class manifestation {
 
     return (is_array($result)) ? reset($result) : $result;
   }
+/* \brief textlevels
+   * zero or 1 occurence
+   * textLevel 1  or occurence(s)
+   */
+
+  public function getTextLevels() {
+    $fields = array("textLevels" => array(
+      'textLevel' => 'searchCode',
+    )
+    );
+    $result = ting_openformat_methods::parseFields($this->manifestation->main->details, $fields);
+
+    return (is_array($result)) ? reset($result) : $result;
+  }
 
   /* \brief genre
    * zero or more occurence(s)
@@ -566,13 +580,57 @@ class manifestation {
    * zero or 1 occurence
    * accessUrl 1 or more occurence(s)
    */
-
   public function getAccessInformation() {
     $fields = array('accessInformation' => array(
       'accessUrl',
     ));
 
     $result = ting_openformat_methods::parseFields($this->manifestation->main->details, $fields);
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
+  /* \brief publisher
+   * zero or more occurences
+   */
+  public function getPublisher() {
+    $fields = array('publisher');
+    $result = ting_openformat_methods::parseFields($this->manifestation->main->publicationDetails, $fields);
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
+  /* \brief publicationYear
+   * zero or more occurences
+   */
+  public function getPublicationYear() {
+    $fields = array('publicationYear');
+    $result = ting_openformat_methods::parseFields($this->manifestation->main->publicationDetails, $fields);
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
+  /* \brief edition
+     * zero or more occurences
+     */
+  public function getEdition() {
+    $fields = array('edition');
+    $result = ting_openformat_methods::parseFields($this->manifestation->main->publicationDetails, $fields);
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
+/* \brief (publication)format
+     * zero or more occurences
+     */
+  public function getPublicationFormat() {
+    $fields = array('format');
+    $result = ting_openformat_methods::parseFields($this->manifestation->main->publicationDetails, $fields);
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
+/* \brief hostPublication
+     * zero or more occurences
+     */
+  public function getHostPublication() {
+    $fields = array('hostPublication');
+    $result = ting_openformat_methods::parseFields($this->manifestation->main->publicationDetails, $fields);
     return (is_array($result)) ? reset($result) : $result;
   }
 

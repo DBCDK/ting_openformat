@@ -133,6 +133,16 @@ function ting_openformat_bibdk_fields() {
       'entity_type' => 'bibdkManifestation',
       'display' => array('full')
     ),
+    'bibdk_mani_forms' => array(
+      'label' => t('Forms'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_format' => array(
+      'label' => t('Format'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
     'bibdk_mani_series' => array(
       'label' => t('Series'),
       'entity_type' => 'bibdkManifestation',
@@ -150,6 +160,11 @@ function ting_openformat_bibdk_fields() {
     ),
     'bibdk_mani_shelf' => array(
       'label' => t('Shelf'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
+    'bibdk_mani_text_levels' => array(
+      'label' => t('Text Levels'),
       'entity_type' => 'bibdkManifestation',
       'display' => array('full')
     ),
@@ -220,6 +235,31 @@ function ting_openformat_bibdk_fields() {
     ),
     'bibdk_mani_access_information' => array(
       'label' => t('Access Information'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full'),
+    ),
+    'bibdk_mani_publisher' => array(
+      'label' => t('Publisher'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full'),
+    ),
+  'bibdk_mani_pub_year' => array(
+      'label' => t('Publication Year'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full'),
+    ),
+  'bibdk_mani_edition' => array(
+      'label' => t('Edition'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full'),
+    ),
+  'bibdk_mani_pub_format' => array(
+      'label' => t('Publication Format'),
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full'),
+    ),
+  'bibdk_mani_host_pub' => array(
+      'label' => t('Host Publication'),
       'entity_type' => 'bibdkManifestation',
       'display' => array('full'),
     ),
