@@ -501,7 +501,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         break;
 
       // priceInformation
-      case 'bibdk_mani_priceInformation':
+      case 'bibdk_mani_price_information':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $priceInformation = $entity->getPriceInformation();
         $value = _ting_openformat_get_markup_for_field($priceInformation);
@@ -512,6 +512,13 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $language = $entity->getLanguage();
         $value = _ting_openformat_get_markup_for_field($language);
+        break;
+
+ // readabilityIndexes
+      case 'bibdk_mani_readability_indexes':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $readabilityIndexes = $entity->getReadabilityIndexes();
+        $value = _ting_openformat_get_markup_for_field($readabilityIndexes);
         break;
 
       // accessInformation

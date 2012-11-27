@@ -363,7 +363,7 @@ class manifestation {
    */
 
   public function getForms() {
-    $result = ting_openformat_methods::parseFields($this->manifestation->main->details, array('forms' => array('formHeader' => 'header', "formSubjects")));
+    $result = ting_openformat_methods::parseFields($this->manifestation->main->details, array('forms' => array("formSubject"=>'searchCode')));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -396,7 +396,7 @@ class manifestation {
    */
 
   public function getReadabilityIndexes() {
-    $result = ting_openformat_methods::parseFields($this->manifestation->main->details, array('readabilityIndexes'));
+    $result = ting_openformat_methods::parseFields($this->manifestation->main->details, array('readabilityIndexes' => array('readabilityIndex')));
     return (is_array($result)) ? reset($result) : $result;
   }
 
