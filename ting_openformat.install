@@ -158,6 +158,11 @@ function ting_openformat_bibdk_fields() {
       'entity_type' => 'bibdkManifestation',
       'display' => array('full')
     ),
+    'bibdk_mani_readability_numbers' => array(
+      'label' => 'Readability numbers',
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full')
+    ),
     'bibdk_mani_shelf' => array(
       'label' => 'Shelf',
       'entity_type' => 'bibdkManifestation',

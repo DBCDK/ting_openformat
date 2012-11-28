@@ -387,7 +387,7 @@ class manifestation {
    */
 
   public function getRelatedSeriesTitle() {
-    $result = ting_openformat_methods::parseFields($this->manifestation->main->details, array('relatedSeriesTitle' => array('relatedSeriesHeader' => 'header', "relatedSeries" => 'searchCode')));
+    $result = ting_openformat_methods::parseFields($this->manifestation->main->details, array('relatedSeriesTitles' => array('relatedSeriesTitle' => array('relatedSeriesDescription' => 'header', "relatedSeries" => 'searchCode'))));
     return $result;
   }
 
@@ -397,6 +397,14 @@ class manifestation {
 
   public function getReadabilityIndexes() {
     $result = ting_openformat_methods::parseFields($this->manifestation->main->details, array('readabilityIndexes' => array('readabilityIndex')));
+    return (is_array($result)) ? reset($result) : $result;
+  }
+ /* \brief readabilityNumbers
+   * zero or more occurence(s)
+   */
+
+  public function getReadabilityNumbers() {
+    $result = ting_openformat_methods::parseFields($this->manifestation->main->details, array('readabilityNumbers' => array('readabilityNumber')));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -556,6 +564,7 @@ class manifestation {
     $fields = array('priceInformation' => array(
       'priceHeader' => 'header',
       'price',
+      'acquisitionTerms',
     ));
     $result = ting_openformat_methods::parseFields($this->manifestation->main->details, $fields);
     return $result;

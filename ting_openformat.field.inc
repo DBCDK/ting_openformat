@@ -116,6 +116,13 @@ function ting_openformat_field_info() {
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
+     'bibdk_mani_readability_numbers' => array(
+      'label' => t('Readability numbers'),
+      'description' => t('Readability numbers of manifestation'),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
     'bibdk_mani_shelf' => array(
       'label' => t('Shelf'),
       'description' => t('Shelf of manifestation'),
@@ -519,6 +526,13 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $readabilityIndexes = $entity->getReadabilityIndexes();
         $value = _ting_openformat_get_markup_for_field($readabilityIndexes);
+        break;
+
+// readabilityNumbers
+      case 'bibdk_mani_readability_numbers':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $readabilityNumbers = $entity->getReadabilityNumbers();
+        $value = _ting_openformat_get_markup_for_field($readabilityNumbers);
         break;
 
       // accessInformation
