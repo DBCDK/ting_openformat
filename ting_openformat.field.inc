@@ -14,21 +14,21 @@ function ting_openformat_field_info() {
     /*'ting_openformat_work_title' => array(
       'label' => t('Title'),
       'description' => t('title of work'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),*/
     /*'ting_openformat_work_creators' => array(
       'label' => t('Creators'),
       'description' => t('Creators of work'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),*/
     'ting_openformat_work_subjects' => array(
       'label' => t('Subjects'),
       'description' => t('Subjects of work'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
@@ -42,14 +42,14 @@ function ting_openformat_field_info() {
     'bibdk_mani_title' => array(
       'label' => t('Title'),
       'description' => t('Title of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_creators' => array(
       'label' => t('Creators'),
       'description' => t('creators of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
@@ -63,147 +63,210 @@ function ting_openformat_field_info() {
     'bibdk_mani_orig_title' => array(
       'label' => t('Original title'),
       'description' => t('Original title of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_alt_title' => array(
       'label' => t('Original title'),
       'description' => t('Alternative title of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_contribs' => array(
       'label' => t('Contributors'),
       'description' => t('contributors to manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
+    'bibdk_mani_forms' => array(
+      'label' => t('Forms'),
+      'description' => t('forms of manifestation'),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
+    'bibdk_mani_format' => array(
+      'label' => t('Format'),
+      'description' => t('Formats of manifestation'),
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_series' => array(
       'label' => t('Series title'),
       'description' => t('Series titles of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_related_series' => array(
       'label' => t('Related title'),
       'description' => t('related titles of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_readability_indexes' => array(
       'label' => t('Readability indexes'),
       'description' => t('Readability indexes of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
+     'bibdk_mani_readability_numbers' => array(
+      'label' => t('Readability numbers'),
+      'description' => t('Readability numbers of manifestation'),
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_shelf' => array(
       'label' => t('Shelf'),
       'description' => t('Shelf of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
+    'bibdk_mani_text_levels' => array(
+      'label' => t('Text Levels'),
+      'description' => t('Text levels of manifestation'),
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_genre' => array(
       'label' => t('Genre'),
       'description' => t('Genre of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_audience_subjects' => array(
       'label' => t('Audience Subjects'),
       'description' => t('Audience Subjects of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_marked_audience' => array(
       'label' => t('Marked audience'),
       'description' => t('Marked audience of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_recommended_audience' => array(
       'label' => t('Recommended audience'),
       'description' => t('Recommended audience of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_used_language' => array(
       'label' => t('Used Language'),
       'description' => t('Used Language of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_actor_note' => array(
       'label' => t('Actor Note'),
       'description' => t('Actor Note of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_description_note' => array(
       'label' => t('Description Note'),
       'description' => t('Description Note of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_references' => array(
       'label' => t('References'),
       'description' => t('References of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_originals' => array(
       'label' => t('Originals'),
       'description' => t('Originals of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_context' => array(
       'label' => t('Context'),
       'description' => t('Context of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_identifiers' => array(
       'label' => t('Identifiers'),
       'description' => t('Identifiers of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_price_information' => array(
       'label' => t('Price Information'),
       'description' => t('Price Information of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_language' => array(
       'label' => t('Language'),
       'description' => t('Language of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_access_information' => array(
       'label' => t('Access Information'),
       'description' => t('Access Information of manifestation'),
-      'default_widget' => 'default',
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
+  'bibdk_mani_publisher' => array(
+      'label' => t('Publisher'),
+      'description' => t('Publisher of manifestation'),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
+  'bibdk_mani_pub_year' => array(
+      'label' => t('Publication Year'),
+      'description' => t('Publication Year of manifestation'),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
+  'bibdk_mani_edition' => array(
+      'label' => t('Edition'),
+      'description' => t('Edition of manifestation'),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
+  'bibdk_mani_pub_format' => array(
+      'label' => t('Publication Format'),
+      'description' => t('Publication Format of manifestation'),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
+  'bibdk_mani_host_pub' => array(
+      'label' => t('Host Publication'),
+      'description' => t('Host Publication of manifestation'),
+      'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
@@ -214,24 +277,22 @@ function ting_openformat_field_info() {
  * Implements hook_field_formatter_info
  * */
 function ting_openformat_field_formatter_info() {
+  $fields = ting_openformat_field_info();
+  foreach($fields as $field => $data){
+    $fieldtypes[$data['default_formatter']][]= $field;
+  }
   return array(
     'ting_openformat_default_formatter' => array(
       'label' => t('Default'),
-      'field types' => array(
-        'manifestation_field'
-      ),
+      'field types' => isset($fieldtypes['ting_openformat_default_formatter']) ? $fieldtypes['ting_openformat_default_formatter'] : NULL,
     ),
     'ting_openformat_button_formatter' => array(
       'label' => t('Default'),
-      'field types' => array(
-        'manifestation_button'
-      ),
+      'field types' => isset($fieldtypes['ting_openformat_button_formatter']) ? $fieldtypes['ting_openformat_button_formatter'] : NULL,
     ),
     'ting_openformat_action_formatter' => array(
       'label' => t('Default'),
-      'field types' => array(
-        'manifestation_action'
-      ),
+      'field types' => isset($fieldtypes['ting_openformat_action_formatter']) ? $fieldtypes['ting_openformat_action_formatter'] : NULL,
     ),
 );
 }
@@ -323,7 +384,20 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $contributors = $entity->getContributors();
         $value = _ting_openformat_get_markup_for_field($contributors);
-        
+        break;
+
+      //forms
+      case 'bibdk_mani_forms':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $forms = $entity->getForms();
+        $value = _ting_openformat_get_markup_for_field($forms);
+        break;
+
+      //format
+      case 'bibdk_mani_format':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $format = $entity->getFormat();
+        $value = _ting_openformat_get_markup_for_field($format);
         break;
 
       // seriesTitle
@@ -345,6 +419,13 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $shelf = $entity->getShelf();
         $value = _ting_openformat_get_markup_for_field($shelf);
+        break;
+
+     // textLevels
+      case 'bibdk_mani_text_levels':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $textLevels = $entity->getTextLevels();
+        $value = _ting_openformat_get_markup_for_field($textLevels);
         break;
 
       // genre
@@ -380,9 +461,8 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
       case 'bibdk_mani_used_language':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $usedLanguage = $entity->getUsedLanguage();
-        $value = _ting_openformat_get_markup_for_field($usedLanguage);
+        $value = _ting_openformat_get_markup_for_field($usedLanguage,". ");
         break;
-
 
       // actorNote
       case 'bibdk_mani_actor_note':
@@ -428,7 +508,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         break;
 
       // priceInformation
-      case 'bibdk_mani_priceInformation':
+      case 'bibdk_mani_price_information':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $priceInformation = $entity->getPriceInformation();
         $value = _ting_openformat_get_markup_for_field($priceInformation);
@@ -441,15 +521,64 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $value = _ting_openformat_get_markup_for_field($language);
         break;
 
+ // readabilityIndexes
+      case 'bibdk_mani_readability_indexes':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $readabilityIndexes = $entity->getReadabilityIndexes();
+        $value = _ting_openformat_get_markup_for_field($readabilityIndexes);
+        break;
+
+// readabilityNumbers
+      case 'bibdk_mani_readability_numbers':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $readabilityNumbers = $entity->getReadabilityNumbers();
+        $value = _ting_openformat_get_markup_for_field($readabilityNumbers);
+        break;
+
       // accessInformation
       case 'bibdk_mani_access_information':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $accessInformation = $entity->getAccessInformation();
         $value = _ting_openformat_get_markup_for_field($accessInformation);
         break;
+
+     // publisher
+      case 'bibdk_mani_publisher':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $publisher = $entity->getPublisher();
+        $value = _ting_openformat_get_markup_for_field($publisher);
+        break;
+
+     // publicationYear
+      case 'bibdk_mani_pub_year':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $publicationYear = $entity->getPublicationYear();
+        $value = _ting_openformat_get_markup_for_field($publicationYear);
+        break;
+
+     // edition
+      case 'bibdk_mani_edition':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $edition = $entity->getEdition();
+        $value = _ting_openformat_get_markup_for_field($edition);
+        break;
+
+     // publicationFormat
+      case 'bibdk_mani_pub_format':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $publicationFormat = $entity->getPublicationFormat();
+        $value = _ting_openformat_get_markup_for_field($publicationFormat);
+        break;
+
+     // hostPublication
+      case 'bibdk_mani_host_pub':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $hostPublication = $entity->getHostPublication();
+        $value = _ting_openformat_get_markup_for_field($hostPublication);
+        break;
     }
     if(isset($value))
-      $element[$delta] = $value;
+    $element[$delta] = $value;
   }
   return $element;
 }
@@ -473,7 +602,7 @@ function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_
  * @param array $elements
  * @return string
  */
-function _ting_openformat_parse_element ($elements, $divider = ", ", $use_header = TRUE){
+function _ting_openformat_parse_element ($elements, $divider = ". ", $use_header = TRUE){
   if (!isset($elements))
     return null;
   if (!is_array($elements))
@@ -482,25 +611,25 @@ function _ting_openformat_parse_element ($elements, $divider = ", ", $use_header
     if (is_array($value)){
       $array[] = _ting_openformat_parse_element($value, $divider, $use_header);
     }
-    elseif ($key == "header"){
+    elseif ($key === "header"){
       if($use_header)
         $header = $value;
     }
-    elseif ($key == 'searchCode') {
+    elseif ($key === 'searchCode') {
       $array[] = l($elements['display'], 'search/work/' . $elements['searchCode']);
     }
-    elseif( $key == 'accessUrl' ) {
+    elseif( $key === 'accessUrl' ) {
       $array[] = l($value,$value,array('attributes'=>array('target'=>'_blank')));
     }
-    elseif ($key == 'display'){/*do nothing*/}
+    elseif ($key === 'display'){/*do nothing*/}
     else{
       $array[] = $value;
     }
   }
-  $string = (isset($header)) ? $header : " ";
-  if (isset($array))
-    $string .= implode($divider, $array);
-  
+  $string = (isset($header)) ? $header." " : " ";
+  if (isset($array)){
+      $string .= implode($divider, $array);
+  }
   return $string;
 }
 

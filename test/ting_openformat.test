@@ -1,15 +1,14 @@
 <?php
 
-
 class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
 
   public static function getInfo() {
-    return array (
+    return array(
       'name' => t('Unittest'),
       'description' => t('Tests the methods of the different entities'),
       'group' => t('Ting Openformat'),
     );
-     }
+  }
 
   public function setUp() {
     $this->_createObjects();
@@ -18,25 +17,17 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
   }
 
 
-  public function testManifistationMethods (){
-
-  /* @var $manifestation manifestation */
-    //$manifestation = $this->manifestation;
-
-    $this->_testSimplefunction("getType", "Bog");
+  public function testManifistationMethods() {
+    $this->_testSimplefunction("getSubType", "Bog");
     $this->_testSimplefunction("getOriginalTitle", NULL);
-    $this->_testSimplefunction("getAlternativeTitle", array("alternativeTitle" => array(array(
-        "header" => "Cd:",
-        "alternativeTitleElement"=> "Harry Potter instrumental solos alto saxophone - level 2-3",
-    ))));
   }
 
-  private function _testSimplefunction($method, $expected_result){
+  private function _testSimplefunction($method, $expected_result) {
     $manifestation = $this->manifestation;
     $result = $manifestation->$method();
-    $message = "$method method returned : ".print_r($result, true)." Should be ".print_r($expected_result, TRUE);
-    if (is_array($expected_result)){
-      $expected_result = serialize ($expected_result);
+    $message = "$method method returned : " . print_r($result, true) . " Should be " . print_r($expected_result, TRUE);
+    if (is_array($expected_result)) {
+      $expected_result = serialize($expected_result);
       $result = serialize($result);
     }
 
@@ -44,13 +35,12 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
 
   }
 
-  private function _createObjects(){
-     $file = file_get_contents(drupal_get_path("module", "ting_openformat")."/test/manifestation.working.json");
-     $result = json_decode($file);
+  private function _createObjects() {
+    $file = file_get_contents(drupal_get_path("module", "ting_openformat") . "/test/mockup/manifestation.working.json");
+    $result = json_decode($file);
+
     $manifestation_object = $result->searchResponse->result->searchResult[0]->formattedCollection->workDisplay->manifestation;
-
     $this->manifestation = entity_load('bibdkManifestation', $manifestation_object->adminData->pid->{'$'}, $manifestation_object);
-
   }
 
   private $manifestation;
