@@ -38,7 +38,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   $params = array();
   // search phrase (query)
   $params['query'] = $keys;
-  // save query to show in search_block  
+  // save query to show in search_block
   drupal_static('ting_search_query', $keys);
   // get parameters set as variables
   $variables = _ting_openformat_search_get_variables();
@@ -46,12 +46,15 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   if (!empty($variables)) {
     $params = array_merge($params, $variables);
   }
-    
   // selected facets from facetbrowser (in query)
   if (isset($conditions['facets']) && $conditions['facets'] != NULL) {
     _ting_openformat_set_facets($params['query'], $conditions['facets']);
+    unset($conditions['facets']);
   }
 
+  if (!empty($conditions)) {
+    $params = array_merge($params, $conditions);
+  }
   // do the actual search via ting_client_class
   $client = new ting_client_class();
   $result = $client->do_search($params);
@@ -277,12 +280,8 @@ function _ting_openformat_set_facets(&$query, $facets) {
 /**
  * Search conditions callback.
  */
-function ting_openformat_conditions_callback($keys) {
+function ting_openformat_conditions_callback($query) {
   $conditions = array();
-
-  if (!empty($_REQUEST['keys'])) {
-    $conditions['keys'] = check_plain($_REQUEST['keys']);
-  }
 
   if (!empty($_REQUEST['size'])) {
     $conditions['size'] = (int) $_REQUEST['size'];
