@@ -469,7 +469,7 @@ class manifestation {
    */
 
   public function getMarkedAudience() {
-    $result = ting_openformat_methods::parseFields($this->manifestation->main->details, array('markedAudience'));
+    $result = ting_openformat_methods::parseFields($this->manifestation->main->details, array('audienceMarked'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -478,7 +478,7 @@ class manifestation {
    */
 
   public function getRecommendedAudience() {
-    $result = ting_openformat_methods::parseFields($this->manifestation->main->details, array('recommendedAudience'));
+    $result = ting_openformat_methods::parseFields($this->manifestation->main->details, array('audienceAge'=> array('audienceAgeElement')));
     return (is_array($result)) ? reset($result) : $result;
   }
 
