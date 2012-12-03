@@ -316,6 +316,7 @@ class manifestation {
   }
 
   public function getType() {
+    // NB: gets 'typeGroup'. If you need 'type' see: getSubType()
     $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('typeGroup'));
     return (is_array($result)) ? reset($result) : $result;
   }
