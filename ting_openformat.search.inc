@@ -26,11 +26,11 @@ function ting_openformat_search_info() {
     'conditions_callback' => 'ting_openformat_conditions_callback',);
 }
 
-function _ting_openformat_handle_conditions(&$conditions){
+function _ting_openformat_handle_conditions(&$conditions) {
   // if size is set in url - override numResults set in variable
   if (!empty($conditions['size'])) {
     $conditions['numResults'] = $conditions['size'];
-  }   
+  }
 }
 
 /** implements hook_search_execute */
@@ -42,7 +42,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   drupal_static('ting_search_query', $keys);
   // get parameters set as variables
   $variables = _ting_openformat_search_get_variables();
-  
+
   if (!empty($variables)) {
     $params = array_merge($params, $variables);
   }
@@ -71,7 +71,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
 
   // static cache result - used in hook_ding_facetbrowser, ting_search etc.
   drupal_static('ting_search_results', $result);
-  _ting_openformat_create_collection_entities($result);  
+  _ting_openformat_create_collection_entities($result);
   foreach ($result->entities as $key => $entity) {
     $search_results[] = _ting_openformat_set_search_result($entity);
   }
@@ -82,7 +82,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   }
 
   // Collections may contain more works than $params['numResults'], and we don't want a pager if there's only one page
-  $total = ( $result->numTotalCollections < $params['numResults'] && $params['start'] < $params['numResults'] ) ? $result->numTotalCollections : $result->numTotalObjects;
+  $total = ($result->numTotalCollections < $params['numResults'] && $params['start'] < $params['numResults']) ? $result->numTotalCollections : $result->numTotalObjects;
   // Stop pager if we're at the last page of collections.
   if (!$result->more) {
     $total = $params['start'] + $result->numTotalCollections;
@@ -101,7 +101,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
  * Set collection entities
  * */
 function _ting_openformat_create_collection_entities(&$result) {
-  $result->entities = array();  
+  $result->entities = array();
   foreach ($result->collections as $collection) {
     $bibdkobjects = array();
     $original_manifestations = array();
@@ -159,7 +159,7 @@ function _ting_openformat_load_entities($result) {
 }
 
 /** Set a search result array as defined for hook_search_execute
- * 
+ *
  * 'link': Required. The URL of the found item.
  * 'type': The type of item (such as the content type).
  * 'title': Required. The name of the item.
@@ -168,9 +168,9 @@ function _ting_openformat_load_entities($result) {
  * 'extra': An array of optional extra information items.
  * 'snippet': An excerpt or preview to show with the result (can be generated with search_excerpt()).
  * 'language': Language code for the item (usually two characters).
- * 
+ *
  * @see hook_search_execute - http://api.drupal.org/api/drupal/modules%21search%21search.api.php/function/hook_search_execute/7
- * @param type $bibdkobject
+ * @param bibdkCollection $bibdkobject
  * @return Array result
  */
 function _ting_openformat_set_search_result($bibdkobject) {
@@ -186,6 +186,7 @@ function _ting_openformat_set_search_result($bibdkobject) {
 }
 
 /** \brief set facet for search result. Look in cache if not found do a request and set cache
+ *
  * @param $client - search_client
  * @param $params - parameters for searchrequest
  * @param $result - search result
@@ -234,7 +235,7 @@ function _ting_openformat_set_default_facets() {
  * */
 function _ting_openformat_search_get_variables() {
   // results pr. page (opensearch::stepValue) ... in ting-client/lib/request/TingClientSearchRequest.php this is called numResults
-  $resultsPerPage = variable_get('ting_search_results_per_page', 10);  
+  $resultsPerPage = variable_get('ting_search_results_per_page', 10);
   $params['numResults'] = $resultsPerPage;
 
   // page number (opensearch::start)
@@ -284,10 +285,10 @@ function ting_openformat_conditions_callback($query) {
   $conditions = array();
 
   if (!empty($_REQUEST['size'])) {
-    $conditions['size'] = (int) $_REQUEST['size'];
+    $conditions['size'] = (int)$_REQUEST['size'];
   }
 
-  
+
 // set the sort parameter here - thus it will work when sort parameter is added to url
   if (!empty($_REQUEST['sort'])) {
     $conditions['sort'] = check_plain($_REQUEST['sort']);
@@ -302,7 +303,7 @@ function ting_openformat_conditions_callback($query) {
   if (!empty($_REQUEST['facets'])) {
     $remove = array();
     $redirect = FALSE;
-    
+
     foreach ($_REQUEST['facets'] as $key => $facet) {
       if (preg_match('/^-facet/', $facet)) {
         $remove[] = preg_replace('/^-/', '', $facet);

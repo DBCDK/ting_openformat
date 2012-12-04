@@ -14,7 +14,7 @@ function ting_openformat_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_LOCAL_TASK,
   );
-$items['admin/config/ting'] = array(
+  $items['admin/config/ting'] = array(
     'title' => 'Openformat',
     'description' => 'Handle ting_openformat module (disable)',
     'position' => 'left',
@@ -24,7 +24,7 @@ $items['admin/config/ting'] = array(
     'file' => 'system.admin.inc',
     'file path' => drupal_get_path('module', 'system'),
   );
-$items['admin/config/ting_openformat'] = array(
+  $items['admin/config/ting_openformat'] = array(
     'title' => 'Openformat',
     'description' => 'Handle ting_openformat module (disable)',
     'position' => 'left',
@@ -95,8 +95,9 @@ function ting_openformat_get_single($id) {
   // use getObjectRequest to retrieve a single work
   $client = new ting_client_class();
   $result = $client->do_get_object($params);
-  if ( isset($result->collections) && count($result->collections) > 0 )
+  if (isset($result->collections) && count($result->collections) > 0) {
     $openformat[] = $result->collections[0]->formattedCollection->formattedCollection->manifestation;
+  }
 
   if (empty($openformat)) {
     return t("work with id $id could not be found");
@@ -122,19 +123,21 @@ function _ting_openformat_parse_manifestations(&$original_manifestations, &$enti
   }
 }
 
-function ting_openformat_form_search_block_form_alter(&$form, &$form_state, $form_id) { // rebuild 
+function ting_openformat_form_search_block_form_alter(&$form, &$form_state, $form_id) { // rebuild
   $form['search_block_form']['#default_value'] = drupal_static('ting_search_query');
 }
 
 /**
- * Implements hook_form_FORMID_alter (ting_client_admin_webservices_settings @see ting_client.admin.inc).
+ * Implements hook_form_FORMID_alter (ting_client_admin_webservices_settings
+ *
+ * @see ting_client.admin.inc).
  * make openformat a dropdownlist.
  * add bibliotekdkWorkDisplay to ting_admin form
  */
 function ting_openformat_form_ting_client_admin_webservices_settings_alter(&$form, &$form_state) {
   if (isset($form['webservices']['ting_search_openformat'])) {
     $dkabm = $form['webservices']['ting_search_openformat']['#default_value'];
-    $element = &$form['webservices']['ting_search_openformat'];
+    $element = & $form['webservices']['ting_search_openformat'];
     // change type to select
     $element['#type'] = 'select';
     // set the original option (dkabm)
@@ -367,7 +370,7 @@ function ting_openformat_ding_devel_timers() {
     'search_client_net' => array(
       'title' => 'Search client net time was @time ms.',
       'include in total' => FALSE,
-      ));
+    ));
 }
 
 /* * *********** VIEWS ************* */
@@ -385,8 +388,9 @@ function template_preprocess_ting_openformat_subwork_tabs(&$variables) {
 // @TODO - does this method belong here ??
 
 function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = NULL) {
-  if(!is_object($bibdkWork))
+  if (!is_object($bibdkWork)) {
     return;
+  }
   if (!isset($langcode)) {
     $langcode = $GLOBALS['language_content']->language;
   }
@@ -411,19 +415,20 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   if (!empty($ordered_types)) {
     foreach ($ordered_types as $type => $value) {
       $type_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $type));
-      if (isset($sub[$type]))
+      if (isset($sub[$type])) {
         $ordered_subworks[$type_id] = $sub[$type];
+      }
     }
   }
   else {
     foreach ($sub as $type => $value) {
       $type_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $type));
       foreach ($value as $subtype => $val) {
-          $subtype_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $subtype));
-          $trans = _ting_openformat_type_translation($type, $subtype);
-          $type_id = $trans['type'];
-          $ordered_subworks[$type_id][$subtype_id]['manifest'] = $val;
-          $ordered_subworks[$type_id][$subtype_id]['translation'] = $trans;
+        $subtype_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $subtype));
+        $trans = _ting_openformat_type_translation($type, $subtype);
+        $type_id = $trans['type'];
+        $ordered_subworks[$type_id][$subtype_id]['manifest'] = $val;
+        $ordered_subworks[$type_id][$subtype_id]['translation'] = $trans;
       }
     }
   }
@@ -437,28 +442,31 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
 }
 
 /**
- * Generates the collection view with an 'Order any edition' button if view is 
+ * Generates the collection view with an 'Order any edition' button if view is
  * implemented (requires bibdk_reservation module)
- * @param type $bibdkobject
+ *
+ * @param bibdkCollection $bibdkobject
+ * @return string
  */
 function ting_openformat_collection_view($bibdkobject) {
   $ids = $bibdkobject->getCollectionIds();
   $uid = strtr($ids[0], array(':' => '', '-' => ''));
-  $form = drupal_get_form('ting_openformat_show_info_get_form', $ids, $uid);  
+  $form = drupal_get_form('ting_openformat_show_info_get_form', $ids, $uid);
   $actions = _prepare_view('bibdkCollection', $bibdkobject, 'full', NULL);
 
   return theme('ting_openformat_collection', array(
-        'title' => $bibdkobject->getTitle(),
-        'author' => $bibdkobject->getAuthor(),
-        'ids' => implode(',', $ids),
-        'showinfo' => drupal_render($form),
-        'uid' => $uid,
-        'actions' => (!empty($actions)) ? $actions : array(),
-      ));
+    'title' => $bibdkobject->getTitle(),
+    'author' => $bibdkobject->getAuthor(),
+    'ids' => implode(',', $ids),
+    'showinfo' => drupal_render($form),
+    'uid' => $uid,
+    'actions' => (!empty($actions)) ? $actions : array(),
+  ));
 }
 
 /**
  * Generates form for 'View more info' on search results page
+ *
  * @param type $form_id
  * @param type $form_state
  * @return array
@@ -470,7 +478,7 @@ function ting_openformat_show_info_get_form($form_id, $form_state) {
     '#value' => '',
     '#ids' => $form_state['build_info']['args'][0],
     '#uid' => $uid,
-    '#id' => 'work_'.$uid,
+    '#id' => 'work_' . $uid,
     '#prefix' => "<span id='ajax-$uid'>",
     '#suffix' => "</span>",
     '#attributes' => array('class' => array('visuallyhidden')),
@@ -479,13 +487,14 @@ function ting_openformat_show_info_get_form($form_id, $form_state) {
       'wrapper' => 'ajax_placeholder_' . $uid,
       'method' => 'replace',
       'event' => 'click',
-      ),
+    ),
   );
   return $form;
 }
 
 /**
  * Ajax callback. Called when user clicks 'view more information' on a work on search results page
+ *
  * @param type $form
  * @param type $form_state
  * @return type
@@ -583,7 +592,9 @@ function ting_openformat_ding_facetbrowser() {
 /**
  * Implements hook_menu_alter().
  *
- * add menu item on admin/structure .. maybe this can be done via EntityDefaultUIController -- @see entity module
+ * add menu item on admin/structure .. maybe this can be done via EntityDefaultUIController --
+ *
+ * @see entity module
  *
  * Adjusts the menu so that the field subtab becomes the default local task,
  * to avoid having an useless placeholder page.
@@ -594,7 +605,7 @@ function ting_openformat_menu_alter(&$items) {
       // Make the fields task the default local task.
       $items['admin/structure/bibdkWork'] = $items['admin/structure/bibdkWork/fields'];
       //$items['admin/structure/bibdkWork'] = $items['admin/structure/bibdkWork'];
-      $item = &$items['admin/structure/bibdkWork'];
+      $item = & $items['admin/structure/bibdkWork'];
       $item['type'] = MENU_NORMAL_ITEM;
       $item['title'] = 'Work entity for bibliotek.dk';
       $item['description'] = 'Manage work display.';
@@ -609,7 +620,7 @@ function ting_openformat_menu_alter(&$items) {
       // Make the fields task the default local task.
       $items['admin/structure/manifestations'] = $items['admin/structure/manifestations/fields'];
       //$items['admin/structure/bibdkWork'] = $items['admin/structure/bibdkWork'];
-      $item = &$items['admin/structure/manifestations'];
+      $item = & $items['admin/structure/manifestations'];
       $item['type'] = MENU_NORMAL_ITEM;
       $item['title'] = 'manifestations for bibliotek.dk';
       $item['description'] = 'Manage work display.';
@@ -624,7 +635,7 @@ function ting_openformat_menu_alter(&$items) {
       // Make the fields task the default local task.
       $items['admin/structure/subworks'] = $items['admin/structure/subworks/fields'];
       //$items['admin/structure/bibdkWork'] = $items['admin/structure/bibdkWork'];
-      $item = &$items['admin/structure/subworks'];
+      $item = & $items['admin/structure/subworks'];
       $item['type'] = MENU_NORMAL_ITEM;
       $item['title'] = 'Subworks for bibliotek.dk';
       $item['description'] = 'Manage subwork display.';
@@ -637,7 +648,7 @@ function ting_openformat_menu_alter(&$items) {
     }
     if (isset($items['admin/structure/collection/fields'])) {
       $items['admin/structure/collection'] = $items['admin/structure/collection/fields'];
-      $item = &$items['admin/structure/collection'];
+      $item = & $items['admin/structure/collection'];
       $item['type'] = MENU_NORMAL_ITEM;
       $item['title'] = 'Collections for bibliotek.dk';
       $item['description'] = 'Manage collection display.';
@@ -700,8 +711,9 @@ function _ting_openformat_fetch_types() {
   $result = $client->do_search($options);
 
   foreach ($result->facets['facet.type']->terms as $term => $count) {
-    if (!isset($types[$term]))
+    if (!isset($types[$term])) {
       $types[$term] = array("type" => $term, "count" => $count, "weight" => 1000);
+    }
   }
 
   // Only save if we actually got any types.
@@ -711,7 +723,7 @@ function _ting_openformat_fetch_types() {
 }
 
 function _ting_openformat_type_translation($type, $subtype) {
-  
+
   switch ($type) {
     case 'literature':
       $type = t('literature');
@@ -741,7 +753,7 @@ function _ting_openformat_type_translation($type, $subtype) {
       $type = t('online');
       break;
   }
-  
+
   switch ($subtype) {
     case 'Akvarel':
       $subtype = t('Akvarel');
@@ -778,7 +790,7 @@ function _ting_openformat_type_translation($type, $subtype) {
       break;
     case 'Blu ray':
       $subtype = t('Blu ray');
-      break;    
+      break;
     case 'Bog':
       $subtype = t('Bog');
       break;

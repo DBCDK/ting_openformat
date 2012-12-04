@@ -164,10 +164,9 @@ class bibdkCollection {
   public function parseManifestations() {
     if (isset($this->manifestations)) {
       foreach ($this->manifestations as $manifestation) {
-        if (isset($manifestation) && isset($manifestation->identifier->{'$'}) && $manifestation->type->{'$'}) {
-          //if (isset($manifestation) && isset($manifestation->identifier->{'$'}) ) {
+        if (isset($manifestation) && isset($manifestation->identifier->{'$'})){
           $id = $manifestation->identifier->{'$'};
-          $type = isset($manifestation->type->{'$'}) ? $manifestation->type->{'$'} : NULL;
+          $type = isset($manifestation->type->{'$'}) ? $manifestation->type->{'$'} : 'Unknown';
           $this->collectionTypes[$type][] = $id;
           $this->collectionIds[] = $id;
         }
