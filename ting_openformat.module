@@ -158,12 +158,7 @@ function ting_openformat_entity_info() {
       'label' => t('openformat manifestation'),
       'fieldable' => TRUE,
       'base table' => 'ting_openformat_manifestation',
-      // make this a ding_entity ?
       'ding_entity_type' => 'bibdk_manifestation',
-      //'ding_entity_type' => 'ting_openformat_manifestation',
-      //'ding_entity_menu' => '/manifestation/%ting_manifestation',
-      //'ding_entity_index' => 2,
-
       /* for clarity. default implementation of load hook */
       // 'load hook' => 'manifestation_load',
       'description' => t('openformat fields'),
@@ -188,6 +183,46 @@ function ting_openformat_entity_info() {
         'reservation' => array(
           'label' => t('Reservation'),
           'custom settings' => TRUE,
+        ),
+      ),
+    ),
+    'bibdkManifestationVolume' => array(
+      'label' => t('Manifestation Volume'),
+      'fieldable' => TRUE,
+      'base table' => 'ting_openformat_manifestation',
+      'ding_entity_type' => 'bibdk_manifestation_volume',
+      'description' => t('Manifestation volume fields'),
+      'controller class' => 'ManifestationVolumeEntityApiController',
+      'entity keys' => array(
+        'id' => 'ding_entity_id',
+      ),
+      'bundles' => array(
+        'bibdkManifestationVolume' => array(
+          'label' => 'Manifestation volume fields',
+          'admin' => array(
+            'path' => 'admin/structure/manifestation/volume',
+            'access arguments' => array('administer content types'),
+          ),
+        ),
+      ),
+    ),
+    'bibdkManifestationSection' => array(
+      'label' => t('Manifestation Section'),
+      'fieldable' => TRUE,
+      'base table' => 'ting_openformat_manifestation',
+      'ding_entity_type' => 'bibdk_manifestation_section',
+      'description' => t('Manifestation section fields'),
+      'controller class' => 'ManifestationSectionEntityApiController',
+      'entity keys' => array(
+        'id' => 'ding_entity_id',
+      ),
+      'bundles' => array(
+        'bibdkManifestationSection' => array(
+          'label' => 'Manifestation section fields',
+          'admin' => array(
+            'path' => 'admin/structure/manifestation/section',
+            'access arguments' => array('administer content types'),
+          ),
         ),
       ),
     ),
@@ -477,6 +512,36 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
 }
 
 /**
+ * Create view for manifestation volume fields
+ * @param $volume
+ * @param string $view_mode
+ * @param null $langcode
+ * @return bool|string
+ */
+function ting_openformat_volume_view($volume, $view_mode = 'full', $langcode = NULL) {
+  if (!isset($langcode)) {
+    $langcode = $GLOBALS['language_content']->language;
+  }
+  $field_content = _prepare_view('bibdkManifestationVolume', $volume, $view_mode, $langcode);
+  return drupal_render($field_content);
+}
+
+/**
+ * Create view for manifestation section fields
+ * @param $volume
+ * @param string $view_mode
+ * @param null $langcode
+ * @return bool|string
+ */
+function ting_openformat_section_view($volume, $view_mode = 'full', $langcode = NULL) {
+  if (!isset($langcode)) {
+    $langcode = $GLOBALS['language_content']->language;
+  }
+  $field_content = _prepare_view('bibdkManifestationSection', $volume, $view_mode, $langcode);
+  return drupal_render($field_content);
+}
+
+/**
  * attach entity fields to a single entity. Return a renderable array
  * */
 function _prepare_view($entity_type, $object, $view_mode, $langcode) {
@@ -580,8 +645,34 @@ function ting_openformat_menu_alter(&$items) {
       $items['admin/structure/collection/fields'] = array(
         'title' => 'Manage fields',
         'type' => MENU_DEFAULT_LOCAL_TASK,
-        'weight' => 1,
+        'weight' => 3,
       );
+    }
+    if (isset($items['admin/structure/manifestation/volume/fields'])) {
+      $items['admin/structure/manifestation/volume'] = $items['admin/structure/manifestation/volume/fields'];
+      $item = &$items['admin/structure/manifestation/volume'];
+      $item['type'] = MENU_NORMAL_ITEM;
+      $item['title'] = 'Manifestation Volume for bibliotek.dk';
+      $item['description'] = 'Manage Volume display.';
+
+      $items['admin/structure/manifestation/volume/fields'] = array(
+        'title' => 'Manage fields',
+        'type' => MENU_DEFAULT_LOCAL_TASK,
+        'weight' => 2,
+      );
+    }
+    if (isset($items['admin/structure/manifestation/section/fields'])) {
+    $items['admin/structure/manifestation/section'] = $items['admin/structure/manifestation/section/fields'];
+    $item = &$items['admin/structure/manifestation/section'];
+    $item['type'] = MENU_NORMAL_ITEM;
+    $item['title'] = 'Manifestation Section for bibliotek.dk';
+    $item['description'] = 'Manage Section display.';
+
+    $items['admin/structure/manifestation/section/fields'] = array(
+      'title' => 'Manage fields',
+      'type' => MENU_DEFAULT_LOCAL_TASK,
+      'weight' => 1,
+    );
     }
   }
 }

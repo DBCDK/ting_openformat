@@ -103,169 +103,179 @@ function ting_openformat_bibdk_fields() {
     ),
     /********* MANIFESTATION ************/
 
+    'bibdk_mani_volume' => array(
+      'entity_type' => array('bibdkManifestation'),
+      'label' => 'Volume',
+      'display' => array('full'),
+    ),
+    'bibdk_mani_section' => array(
+      'entity_type' => array('bibdkManifestation'),
+      'label' => 'Section',
+      'display' => array('full'),
+    ),
     'bibdk_mani_title' => array(
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation'),
       'label' => 'Title',
       'display' => array('reservation', 'full'),
     ),
     'bibdk_mani_creators' => array(
       'label' => 'Creators',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation'),
       'display' => array('reservation', 'full'),
     ),
     'bibdk_mani_type' => array(
       'label' => 'Manifestation type',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation'), //, 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full', 'reservation'),
     ),
     'bibdk_mani_orig_title' => array(
       'label' => 'Original title',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full'),
     ),
     'bibdk_mani_alt_title' => array(
       'label' => 'Alternative title',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full'),
     ),
     'bibdk_mani_contribs' => array(
       'label' => 'Contributors',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_forms' => array(
       'label' => 'Forms',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_format' => array(
       'label' => 'Format',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_series' => array(
       'label' => 'Series',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_related_series' => array(
       'label' => 'Related series',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_readability_indexes' => array(
       'label' => 'Readability indexes',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_readability_numbers' => array(
       'label' => 'Readability numbers',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_shelf' => array(
       'label' => 'Shelf',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_text_levels' => array(
       'label' => 'Text Levels',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_genre' => array(
       'label' => 'Genre',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_audience_subjects' => array(
       'label' => 'Audience Subjects',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_marked_audience' => array(
       'label' => 'Marked Audience',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_recommended_audience' => array(
       'label' => 'Recommended Audience',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_used_language' => array(
       'label' => 'Used Language',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_actor_note' => array(
       'label' => 'Actor Note',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_description_note' => array(
       'label' => 'Description Note',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_references' => array(
       'label' => 'References',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_originals' => array(
       'label' => 'Originals',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_context' => array(
       'label' => 'Context',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_identifiers' => array(
       'label' => 'Identifiers',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_price_information' => array(
       'label' => 'Price Information',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_language' => array(
       'label' => 'Language',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_access_information' => array(
       'label' => 'Access Information',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full'),
     ),
     'bibdk_mani_publisher' => array(
       'label' => 'Publisher',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full'),
     ),
   'bibdk_mani_pub_year' => array(
       'label' => 'Publication Year',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full'),
     ),
   'bibdk_mani_edition' => array(
       'label' => 'Edition',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full'),
     ),
   'bibdk_mani_pub_format' => array(
       'label' => 'Publication Format',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full'),
     ),
   'bibdk_mani_host_pub' => array(
       'label' => 'Host Publication',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full'),
     ),
   );
