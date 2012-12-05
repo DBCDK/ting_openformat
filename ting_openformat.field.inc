@@ -284,6 +284,13 @@ function ting_openformat_field_info() {
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
+  'bibdk_volume_title' => array(
+      'label' => t('Volume Title'),
+      'description' => t('Title of Volume'),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
   );
 }
 
@@ -606,6 +613,12 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $hostPublication = $entity->getHostPublication();
         $value = _ting_openformat_get_markup_for_field($hostPublication);
+        break;
+      // hostPublication
+      case 'bibdk_volume_title':
+        // entity is manifestationVolume ( @see ting_openformat.entities.inc::manifestation )
+        $title = $entity->getTitle();
+        $value = _ting_openformat_get_markup_for_field($title);
         break;
     }
     if(isset($value))

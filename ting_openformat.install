@@ -76,6 +76,7 @@ function ting_openformat_display_types($types) {
 
 /**
  * List of fields and their settings
+ * @return array
  */
 function ting_openformat_bibdk_fields() {
   return array(
@@ -276,6 +277,11 @@ function ting_openformat_bibdk_fields() {
   'bibdk_mani_host_pub' => array(
       'label' => 'Host Publication',
       'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
+      'display' => array('full'),
+    ),
+  'bibdk_volume_title' => array(
+      'label' => 'Volume Title',
+      'entity_type' => array('bibdkManifestationVolume'),
       'display' => array('full'),
     ),
   );

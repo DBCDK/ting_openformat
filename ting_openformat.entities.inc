@@ -205,6 +205,16 @@ class manifestationVolume extends manifestationMaster{
   public function __construct($volume){
     $this->fields = $volume;
   }
+
+  public function getTitle(){
+    $fields = array('titleFull');
+    if (isset($this->fields->title)){
+      $element = $this->fields->title;
+      $result = ting_openformat_methods::parseFields($element, $fields);
+      return (is_array($result)) ? reset($result) : $result;
+    }
+    return null;
+  }
 }
 
 /**
