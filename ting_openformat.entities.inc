@@ -24,9 +24,11 @@ class bibdkWork {
     // set subworks
     foreach ($this->manifestations as $id => $manifestation) {
       $type = $manifestation->getType();
-
       if ($type === NULL) {
         $type = t('unknown', array(), array('context' => 'ting_openformat'));
+      }
+      else if (is_array($type)){
+        $type = current($type);
       }
 
       $subType = (is_array($manifestation->getSubType())) ? implode(' + ', $manifestation->getSubType()) : $manifestation->getSubType();
