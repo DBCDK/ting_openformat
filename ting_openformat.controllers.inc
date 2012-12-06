@@ -105,3 +105,27 @@ class CollectionEntityApiController extends bibdkEntityApiController {
     return $entities[$entity->id];
   }
 }
+
+class ManifestationVolumeEntityApiController extends bibdkEntityApiController {
+  public function load( $id = array(), $volume = array() ) {
+    $entity = new manifestationVolume($volume);
+    $entity->id = $entity->ding_entity_id = $id;
+    $entities[$entity->id] = $entity;
+    // attach fields
+    $this->attachLoad($entities);
+
+    return $entities[$entity->id];
+  }
+}
+
+class ManifestationSectionEntityApiController extends bibdkEntityApiController {
+  public function load( $id = array(), $section = array() ) {
+    $entity = new manifestationSection($section);
+    $entity->id = $entity->ding_entity_id = $id;
+    $entities[$entity->id] = $entity;
+    // attach fields
+    $this->attachLoad($entities);
+
+    return $entities[$entity->id];
+  }
+}
