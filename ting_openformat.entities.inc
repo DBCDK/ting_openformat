@@ -27,18 +27,20 @@ class bibdkWork {
       if ($type === NULL) {
         $type = t('unknown', array(), array('context' => 'ting_openformat'));
       }
-      else if (is_array($type)){
-        $type = current($type);
+      else if (!is_array($type)){
+        $type = array($type);
       }
 
       $subType = (is_array($manifestation->getSubType())) ? implode(' + ', $manifestation->getSubType()) : $manifestation->getSubType();
       // note: "surplus" types, and "undefined" types are to be handled in iScrum.
-      $subWorks[$type][$subType][$id] = $manifestation;
+      foreach($type as $typeGroup)
+        $subWorks[$typeGroup][$subType][$id] = $manifestation;
     }
     foreach ($subWorks as $type => $sub) {
       foreach ($sub as $subtype => $manifestations) {
-        $this->subWorks[current($manifestations)->id] = entity_load('bibdkSubwork', $type, $manifestations);
-        $this->subWorks[current($manifestations)->id]->setSubType($subtype);
+        $bibdkSubwork = entity_load('bibdkSubwork', $type, $manifestations);
+        $bibdkSubwork->setSubType($subtype);
+        $this->subWorks[] = $bibdkSubwork;
       }
     }
 
