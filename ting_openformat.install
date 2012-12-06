@@ -44,7 +44,8 @@ function ting_openformat_schema() {
 function ting_openformat_ding_entity_fields() {
   $fields = ting_openformat_bibdk_fields();
   foreach ($fields as $name => $field) {
-    $array[$name] = ting_openformat_field_settings($field['label'], $field['entity_type'], $field['display']);
+    $display = isset($field['custom_display']) ? $field['custom_display'] : ting_openformat_display_types($field['display']);
+    $array[$name] = ting_openformat_field_settings($field['label'], $field['entity_type'], $display);
   }
   return $array;
 }
@@ -107,12 +108,23 @@ function ting_openformat_bibdk_fields() {
     'bibdk_mani_volume' => array(
       'entity_type' => array('bibdkManifestation'),
       'label' => 'Volume',
-      'display' => array('full'),
+      'custom_display' => array(
+        'default' => array(
+          'type' => 'default',
+          'label' => 'hidden'
+        ),
+      ),
     ),
     'bibdk_mani_section' => array(
       'entity_type' => array('bibdkManifestation'),
       'label' => 'Section',
-      'display' => array('full'),
+      'custom_display' => array(
+        'default' => array(
+          'type' => 'default',
+          'label' => 'hidden'
+        ),
+      ),
+
     ),
     'bibdk_mani_title' => array(
       'entity_type' => array('bibdkManifestation'),
@@ -305,7 +317,7 @@ function ting_openformat_bibdk_fields() {
 /**
  * Generate field settings for hook_ding_entity_fields
  */
-function ting_openformat_field_settings($title, $entity_type, $display_settings = NULL) {
+function ting_openformat_field_settings($title, $entity_type, $display) {
   $field = array(
     'field' => array(
       'locked' => FALSE,
@@ -318,7 +330,7 @@ function ting_openformat_field_settings($title, $entity_type, $display_settings 
       'label' => $title,
       'bundle' => $entity_type,
       'entity_type' => $entity_type,
-      'display' => ting_openformat_display_types($display_settings),
+      'display' => $display,
     ),
   );
   return $field;
