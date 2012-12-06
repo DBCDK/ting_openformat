@@ -284,6 +284,22 @@ function ting_openformat_bibdk_fields() {
       'entity_type' => array('bibdkManifestationVolume'),
       'display' => array('full'),
     ),
+  'bibdk_section_title' => array(
+      'label' => 'Section Title',
+      'entity_type' => array('bibdkManifestationSection'),
+      'display' => array('full'),
+    ),
+  'bibdk_section_creators' => array(
+      'label' => 'Section Creators',
+      'entity_type' => array('bibdkManifestationSection'),
+      'display' => array('full'),
+    ),
+'bibdk_volume_creators' => array(
+      'label' => 'Volume Creators',
+      'entity_type' => array('bibdkManifestationVolume'),
+      'display' => array('full'),
+    ),
+
   );
 }
 /**

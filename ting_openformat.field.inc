@@ -43,7 +43,7 @@ function ting_openformat_field_info() {
       'label' => t('Section'),
       'description' => t('Section of manifestation'),
       'default_widget' => 'text_textfield',
-      'default_formatter' => 'ting_openformat_section_formatter',
+      'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
     'bibdk_mani_volume' => array(
@@ -287,6 +287,27 @@ function ting_openformat_field_info() {
   'bibdk_volume_title' => array(
       'label' => t('Volume Title'),
       'description' => t('Title of Volume'),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
+  'bibdk_section_title' => array(
+      'label' => t('Section Title'),
+      'description' => t('Title of Section'),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
+  'bibdk_section_creators' => array(
+      'label' => t('Section Creators'),
+      'description' => t('Creators of Section'),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
+  'bibdk_volume_creators' => array(
+      'label' => t('Volume Creators'),
+      'description' => t('Creators of Volume'),
       'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
@@ -618,6 +639,21 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
       case 'bibdk_volume_title':
         // entity is manifestationVolume ( @see ting_openformat.entities.inc::manifestation )
         $title = $entity->getTitle();
+        $value = _ting_openformat_get_markup_for_field($title);
+        break;
+    case 'bibdk_section_title':
+        // entity is manifestationVolume ( @see ting_openformat.entities.inc::manifestation )
+        $title = $entity->getTitle();
+        $value = _ting_openformat_get_markup_for_field($title);
+        break;
+    case 'bibdk_section_creators':
+        // entity is manifestationVolume ( @see ting_openformat.entities.inc::manifestation )
+        $title = $entity->getCreators();
+        $value = _ting_openformat_get_markup_for_field($title);
+        break;
+    case 'bibdk_volume_creators':
+        // entity is manifestationVolume ( @see ting_openformat.entities.inc::manifestation )
+        $title = $entity->getCreators();
         $value = _ting_openformat_get_markup_for_field($title);
         break;
     }
