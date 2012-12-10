@@ -249,6 +249,13 @@ function ting_openformat_field_info() {
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
+    'bibdk_mani_infotext' => array(
+      'label' => t('Info text'),
+      'description' => t('Info text for manifestation'),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
   'bibdk_mani_publisher' => array(
       'label' => t('Publisher'),
       'description' => t('Publisher of manifestation'),
@@ -384,7 +391,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $subjects = $entity->getSubjects();
         $value = _ting_openformat_get_markup_for_field($subjects, '; ', FALSE);
         break;
-      
+
       // abstract
       case 'ting_openformat_work_abstract':
         // one or more abstracts
@@ -411,7 +418,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $type = $entity->getType();
         $value = _ting_openformat_get_markup_for_field($type);
         break;
-      
+
       // Title
       case 'bibdk_mani_title':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
@@ -563,7 +570,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $identifiers = $entity->getIdentifiers();
         $value = _ting_openformat_get_markup_for_field($identifiers);
-        
+
         break;
 
       // priceInformation
@@ -599,6 +606,14 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $accessInformation = $entity->getAccessInformation();
         $value = _ting_openformat_get_markup_for_field($accessInformation);
+        break;
+
+      // restrictedUse
+      case 'bibdk_mani_infotext':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $infotext = $entity->getInfotext();
+        $infotext = ( $infotext ) ? t('drupal_text_' . $infotext, array(), array('context'=>'bibdk_openformat')) : NULL;
+        $value = _ting_openformat_get_markup_for_field($infotext);
         break;
 
      // publisher
@@ -667,13 +682,13 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
  * Creates a #markup array if content exists
  */
 function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_header = TRUE){
-  $return = NULL; 
+  $return = NULL;
   $markup = _ting_openformat_parse_element($elements, $divider, $use_header);
    if (isset($markup))
       $return  = array(
           '#markup' => $markup,
         );
-  return $return;      
+  return $return;
 }
 
 /**

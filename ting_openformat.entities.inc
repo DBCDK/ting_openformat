@@ -332,7 +332,6 @@ class manifestation extends manifestationMaster{
     if (isset($restrictedUse)) {
       return $restrictedUse;
     }
-
     elseif (isset($requestMethod) && $requestMethod != 'link' && $requestMethod != 'none' && $requestMethod != 'Old') {
       return $requestMethod;
     }

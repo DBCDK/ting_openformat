@@ -51,7 +51,7 @@ function ting_openformat_ding_entity_fields() {
 }
 
 /**
- * Set display settings 
+ * Set display settings
  */
 function ting_openformat_display_types($types) {
 
@@ -263,6 +263,11 @@ function ting_openformat_bibdk_fields() {
     ),
     'bibdk_mani_access_information' => array(
       'label' => 'Access Information',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
+      'display' => array('full'),
+    ),
+    'bibdk_mani_infotext' => array(
+      'label' => 'Info text',
       'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full'),
     ),
