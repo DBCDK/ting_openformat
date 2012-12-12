@@ -216,6 +216,11 @@ function ting_openformat_bibdk_fields() {
       'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
+    'bibdk_mani_pegi' => array(
+      'label' => 'Audience Pegi',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
+      'display' => array('full')
+    ),
     'bibdk_mani_used_language' => array(
       'label' => 'Used Language',
       'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),

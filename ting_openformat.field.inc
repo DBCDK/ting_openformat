@@ -179,6 +179,13 @@ function ting_openformat_field_info() {
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
+    'bibdk_mani_pegi' => array(
+      'label' => t('Audience PEGI'),
+      'description' => t('Audience PEGI of manifestation'),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
     'bibdk_mani_used_language' => array(
       'label' => t('Used Language'),
       'description' => t('Used Language of manifestation'),
@@ -520,6 +527,13 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $recommendedAudience = $entity->getRecommendedAudience();
         $value = _ting_openformat_get_markup_for_field($recommendedAudience);
+        break;
+
+ // audiencePegi
+      case 'bibdk_mani_pegi':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $audiencePegi = $entity->getAudiencePegi();
+        $value = _ting_openformat_get_markup_for_field($audiencePegi);
         break;
 
 

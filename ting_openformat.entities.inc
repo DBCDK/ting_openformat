@@ -573,6 +573,15 @@ class manifestationMaster {
     return (is_array($result)) ? reset($result) : $result;
   }
 
+/* \brief audiencePegi
+   * zero or more occurence(s)
+   */
+
+  public function getAudiencePegi() {
+    $result = ting_openformat_methods::parseFields($this->fields->details, array('audiencePegi'=> array('audiencePegiElement')));
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
   /* \brief usedLanguage
    * zero or more occurence(s)
    */
