@@ -188,6 +188,11 @@ class bibdkCollection {
     return (is_array($result)) ? reset($result) : $result;
   }
 
+  public function getPartOf() {
+    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('partOf'));
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
   public function getAuthor() {
     $result = ting_openformat_methods::parseFields($this->manifestations[0], array('creator'));
     return (is_array($result)) ? reset($result) : $result;
