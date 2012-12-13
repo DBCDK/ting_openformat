@@ -377,10 +377,10 @@ function ting_openformat_update_7008() {
  * Implements hook_update_N;
  * Update all field information
  * */
-function ting_openformat_update_7011() {
-  $fields = ting_openformat_ding_entity_fields();
+function ting_openformat_update_7012() {
+  /*$fields = ting_openformat_ding_entity_fields();
   foreach ($fields as $field_name => $field) {
     field_delete_field($field_name);
-  }
+  }*/
   ding_entity_modules_enabled(array('ting_openformat'));
 }
