@@ -451,7 +451,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
  */
 function ting_openformat_collection_view($bibdkobject) {
   $ids = $bibdkobject->getCollectionIds();
-  $uid = strtr($ids[0], array(':' => '', '-' => ''));
+  $uid = strtolower(strtr($ids[0], array(':' => '', '-' => '')));
   $form = drupal_get_form('ting_openformat_show_info_get_form', $ids, $uid);
   $actions = _prepare_view('bibdkCollection', $bibdkobject, 'full', NULL);
   return theme('ting_openformat_collection', array(
