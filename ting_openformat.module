@@ -69,6 +69,7 @@ function ting_openformat_get_manifestations($ids) {
   $client = new ting_client_class();
   $params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
   $params['objectId'] = $ids;
+  $params['includeHoldingsCount'] = true;
   $result = $client->do_get_object($params);
 
   if (empty($result->collections)) {
@@ -91,7 +92,7 @@ function ting_openformat_get_single($id) {
 
   $params['objectId'] = $id;
   $params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
-
+  $params['includeHoldingsCount'] = TRUE;
   // use getObjectRequest to retrieve a single work
   $client = new ting_client_class();
   $result = $client->do_get_object($params);
