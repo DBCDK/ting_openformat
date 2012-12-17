@@ -333,7 +333,9 @@ class manifestation extends manifestationMaster{
 
   public function getInfotext() {
     $restrictedUse = $this->getRestrictedUse();
+    $restrictedUse = (is_array($restrictedUse)) ? reset($restrictedUse) : $restrictedUse;
     $requestMethod = $this->getRequestMethod();
+    $requestMethod = (is_array($requestMethod)) ? reset($requestMethod) : $requestMethod;
     if (isset($restrictedUse)) {
       return $restrictedUse;
     }
