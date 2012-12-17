@@ -24,19 +24,23 @@ class bibdkWork {
     // set subworks
     foreach ($this->manifestations as $id => $manifestation) {
       $type = $manifestation->getType();
-
       if ($type === NULL) {
         $type = t('unknown', array(), array('context' => 'ting_openformat'));
+      }
+      else if (!is_array($type)){
+        $type = array($type);
       }
 
       $subType = (is_array($manifestation->getSubType())) ? implode(' + ', $manifestation->getSubType()) : $manifestation->getSubType();
       // note: "surplus" types, and "undefined" types are to be handled in iScrum.
-      $subWorks[$type][$subType][$id] = $manifestation;
+      foreach($type as $typeGroup)
+        $subWorks[$typeGroup][$subType][$id] = $manifestation;
     }
     foreach ($subWorks as $type => $sub) {
       foreach ($sub as $subtype => $manifestations) {
-        $this->subWorks[current($manifestations)->id] = entity_load('bibdkSubwork', $type, $manifestations);
-        $this->subWorks[current($manifestations)->id]->setSubType($subtype);
+        $bibdkSubwork = entity_load('bibdkSubwork', $type, $manifestations);
+        $bibdkSubwork->setSubType($subtype);
+        $this->subWorks[] = $bibdkSubwork;
       }
     }
 
@@ -184,6 +188,11 @@ class bibdkCollection {
     return (is_array($result)) ? reset($result) : $result;
   }
 
+  public function getPartOf() {
+    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('partOf'));
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
   public function getAuthor() {
     $result = ting_openformat_methods::parseFields($this->manifestations[0], array('creator'));
     return (is_array($result)) ? reset($result) : $result;
@@ -328,7 +337,6 @@ class manifestation extends manifestationMaster{
     if (isset($restrictedUse)) {
       return $restrictedUse;
     }
-
     elseif (isset($requestMethod) && $requestMethod != 'link' && $requestMethod != 'none' && $requestMethod != 'Old') {
       return $requestMethod;
     }
@@ -562,6 +570,15 @@ class manifestationMaster {
 
   public function getRecommendedAudience() {
     $result = ting_openformat_methods::parseFields($this->fields->details, array('audienceAge'=> array('audienceAgeElement')));
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
+/* \brief audiencePegi
+   * zero or more occurence(s)
+   */
+
+  public function getAudiencePegi() {
+    $result = ting_openformat_methods::parseFields($this->fields->details, array('audiencePegi'=> array('audiencePegiElement')));
     return (is_array($result)) ? reset($result) : $result;
   }
 
