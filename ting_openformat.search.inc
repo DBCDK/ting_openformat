@@ -261,7 +261,7 @@ function _ting_openformat_search_get_variables() {
   $params['objectFormat'] = variable_get('objectFormat', 'briefDisplay');
 
   //Set queryLanguage
-  $params['queryLanguage'] = 'cqldan';
+  $params['queryLanguage'] = 'cqleng';
   return $params;
 }
 
