@@ -260,6 +260,8 @@ function _ting_openformat_search_get_variables() {
   #$params['collectionType'] = variable_get('collectionType', 'work-1');
   $params['objectFormat'] = variable_get('objectFormat', 'briefDisplay');
 
+  //Set queryLanguage
+  $params['queryLanguage'] = 'cqldan';
   return $params;
 }
 
