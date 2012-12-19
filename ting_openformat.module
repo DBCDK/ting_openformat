@@ -433,13 +433,13 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
       }
     }
   }
-
-  $tabs = theme('ting_openformat_subwork_tabs', array('subWorks' => $ordered_subworks));
+  $ding_id = preg_replace('/[^a-zA-Z0-9-]+/', '-', $bibdkWork->id);
+  $tabs = theme('ting_openformat_subwork_tabs', array('subWorks' => $ordered_subworks, 'ding_id' => $ding_id));
   return theme('ting_openformat_work', array(
     'fields' => $work_fields,
     'subWorks' => $ordered_subworks,
     'tabs' => $tabs,
-    'ding_id' => $bibdkWork->id));
+    'ding_id' => $ding_id));
 }
 
 /**
