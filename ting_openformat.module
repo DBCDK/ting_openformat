@@ -69,6 +69,7 @@ function ting_openformat_get_manifestations($ids) {
   $client = new ting_client_class();
   $params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
   $params['objectId'] = $ids;
+  $params['includeHoldingsCount'] = true;
   $result = $client->do_get_object($params);
 
   if (empty($result->collections)) {
@@ -91,7 +92,7 @@ function ting_openformat_get_single($id) {
 
   $params['objectId'] = $id;
   $params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
-
+  $params['includeHoldingsCount'] = TRUE;
   // use getObjectRequest to retrieve a single work
   $client = new ting_client_class();
   $result = $client->do_get_object($params);
@@ -432,13 +433,13 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
       }
     }
   }
-
-  $tabs = theme('ting_openformat_subwork_tabs', array('subWorks' => $ordered_subworks));
+  $ding_id = preg_replace('/[^a-zA-Z0-9-]+/', '-', $bibdkWork->id);
+  $tabs = theme('ting_openformat_subwork_tabs', array('subWorks' => $ordered_subworks, 'ding_id' => $ding_id));
   return theme('ting_openformat_work', array(
     'fields' => $work_fields,
     'subWorks' => $ordered_subworks,
     'tabs' => $tabs,
-    'ding_id' => $bibdkWork->id));
+    'ding_id' => $ding_id));
 }
 
 /**
@@ -450,7 +451,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
  */
 function ting_openformat_collection_view($bibdkobject) {
   $ids = $bibdkobject->getCollectionIds();
-  $uid = strtr($ids[0], array(':' => '', '-' => ''));
+  $uid = strtolower(strtr($ids[0], array(':' => '', '-' => '')));
   $form = drupal_get_form('ting_openformat_show_info_get_form', $ids, $uid);
   $actions = _prepare_view('bibdkCollection', $bibdkobject, 'full', NULL);
   return theme('ting_openformat_collection', array(
