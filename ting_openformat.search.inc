@@ -106,18 +106,25 @@ function _ting_openformat_create_collection_entities(&$result) {
     $bibdkobjects = array();
     $original_manifestations = array();
     $entity_id = array();
-    $openformat = $collection->formattedCollection->formattedCollection->manifestation;
+    
+    // error check
+    $openformat = isset($collection->formattedCollection->formattedCollection->manifestation) ? $collection->formattedCollection->formattedCollection->manifestation : NULL;
+    
+    if( empty($openformat) ) {
+      // @TODO log errors
+      continue;
+    }
     _ting_openformat_parse_collection($original_manifestations, $entity_id, $openformat);
-    if (isset($entity_id)) {
+    if (!empty($entity_id)) {
       $conditions['manifestations'] = $original_manifestations;
       $bibdkEntities = entity_load('bibdkCollection', $entity_id, $conditions, FALSE);
       $bibdkEntities->parseManifestations(); //Temporary as malformed XML is returned from OpenSearch
       $bibdkobjects = $bibdkEntities;
-      unset($entity_id);
-    }
-    unset($result->collections);
-    $result->entities[] = $bibdkobjects;
+      //unset($entity_id);
+       $result->entities[] = $bibdkobjects;    
+    }   
   }
+  unset($result->collections);      
 }
 
 function _ting_openformat_parse_collection(&$original_manifestations, &$entity_id, $openformat) {
