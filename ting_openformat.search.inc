@@ -106,18 +106,30 @@ function _ting_openformat_create_collection_entities(&$result) {
     $bibdkobjects = array();
     $original_manifestations = array();
     $entity_id = array();
-    $openformat = $collection->formattedCollection->formattedCollection->manifestation;
+    
+    // error check
+    $openformat = isset($collection->formattedCollection->formattedCollection->manifestation) ? $collection->formattedCollection->formattedCollection->manifestation : NULL;
+    
+    if( empty($openformat) ) {      
+      watchdog('openformat','Formatted collection is not set',array(),WATCHDOG_ERROR);
+      continue;
+    }
     _ting_openformat_parse_collection($original_manifestations, $entity_id, $openformat);
-    if (isset($entity_id)) {
+    if (!empty($entity_id)) {
       $conditions['manifestations'] = $original_manifestations;
       $bibdkEntities = entity_load('bibdkCollection', $entity_id, $conditions, FALSE);
       $bibdkEntities->parseManifestations(); //Temporary as malformed XML is returned from OpenSearch
       $bibdkobjects = $bibdkEntities;
-      unset($entity_id);
+      //unset($entity_id);
+       $result->entities[] = $bibdkobjects;    
     }
-    unset($result->collections);
-    $result->entities[] = $bibdkobjects;
+    else{
+      // @TODO log errors
+      watchdog('openformat','ID is not set',array(),WATCHDOG_ERROR);
+      continue;     
+    }
   }
+  unset($result->collections);      
 }
 
 function _ting_openformat_parse_collection(&$original_manifestations, &$entity_id, $openformat) {
@@ -132,7 +144,7 @@ function _ting_openformat_parse_collection(&$original_manifestations, &$entity_i
 /** THIS FUNCTION SEEMS TO BE UNUSED - INVESTIGATE!
  * replace TingClientObjectCollection (returned from ting-client) with bibdkEntity(work)
  * */
-function _ting_openformat_load_entities($result) {
+/*function _ting_openformat_load_entities($result) {
   $bibdkobjects = array();
   if (is_array($result->collections)) {
     $ids = array();
@@ -156,7 +168,7 @@ function _ting_openformat_load_entities($result) {
   }
   unset($result->collections);
   $result->collections = $bibdkobjects;
-}
+}*/
 
 /** Set a search result array as defined for hook_search_execute
  *
