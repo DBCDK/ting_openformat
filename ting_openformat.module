@@ -410,7 +410,6 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
       $sub[$type][$subtype]['manifestations'][$manifestation->id] = ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL);
     }
   }
-
   $ordered_types = NULL; //variable_get("ting_openformat_types");
 
   if (!empty($ordered_types)) {
@@ -429,6 +428,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
         $trans = _ting_openformat_type_translation($type, $subtype);
         $type_id = $trans['type'];
         $ordered_subworks[$type_id][$subtype_id]['manifest'] = $val;
+        $ordered_subworks[$type_id][$subtype_id]['manifest']['localisation_link'] = ting_openformat_localisation_link(array_keys($ordered_subworks[$type_id][$subtype_id]['manifest']['manifestations']));
         $ordered_subworks[$type_id][$subtype_id]['translation'] = $trans;
       }
     }
@@ -441,6 +441,30 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
     'tabs' => $tabs,
     'ding_id' => $ding_id));
 }
+
+
+/**
+ * Creates render arrays for link to localisations
+ * @return array
+ */
+function ting_openformat_localisation_link($lookup_pids) {
+  $render = array(
+    'link' => array(
+      '#type' => 'link',
+      '#title' => '<span class="icon icon-left icon-lightgrey-list">&nbsp;</span>' . t("See localisations for this material", array(), array('context' => 'ting_openformat')),
+      '#href' => "overlay/holdings/" . implode(',',$lookup_pids),
+      '#options' => array(
+        'html' => TRUE,
+      ),
+      '#attributes' => array(
+        'class' => array('bibdk-popup-link', 'text-small', 'text-lightgrey'),
+        'rel' => 'holdings',
+      ),
+    ),
+  );
+  return $render;
+}
+
 
 /**
  * Generates the collection view with an 'Order any edition' button if view is
