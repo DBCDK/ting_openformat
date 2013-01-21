@@ -65,7 +65,7 @@ class bibdkWork {
   }
 
   public function getAbstract() {
-    $fields = array('abstract');
+    $fields = array('abstract' => array('abstractElement'));
     if (!isset($this->work->description)) {
       return NULL;
     }
@@ -73,7 +73,7 @@ class bibdkWork {
     $elements = $this->work->description;
     $result = ting_openformat_methods::parseFields($elements, $fields);
 
-    return (is_array($result)) ? reset($result) : $result;
+    return $result;
   }
 
   public function getCreator() {
@@ -598,7 +598,7 @@ class manifestationMaster {
    */
 
   public function getActorNote() {
-    $result = ting_openformat_methods::parseFields($this->fields->details, array('actorNote'));
+    $result = ting_openformat_methods::parseFields($this->fields->details, array('actorNote' => array('actorElement')));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -644,17 +644,50 @@ class manifestationMaster {
    * zero or more occurence(s)
    * identifierHeader zero or 1 occurence
    * identifier zero or more occurence(s)
-   * ISSN zero or more occurence(s)
    */
-
   public function getIdentifiers() {
     $fields = array('identifiers' => array(
       'identifierDescriptor' => 'header',
       'identifier',
-      'ISSN',
     ));
     $result = ting_openformat_methods::parseFields($this->fields->details, $fields);
     return (is_array($result)) ? reset($result) : $result;
+  }
+
+  /* \brief identifiersISBN
+   * zero or more occurence(s)
+   * identifier zero or more occurence(s)
+   */
+  public function getIdentifiersISBN() {
+    $fields = array('identifiersISBN' => array(
+      'identifier',
+    ));
+    $result = ting_openformat_methods::parseFields($this->fields->details, $fields);
+    return $result;
+  }
+
+  /* \brief identifiersISMN
+   * zero or more occurence(s)
+   * identifier zero or more occurence(s)
+   */
+  public function getIdentifiersISMN() {
+    $fields = array('identifiersISMN' => array(
+      'identifier',
+    ));
+    $result = ting_openformat_methods::parseFields($this->fields->details, $fields);
+    return $result;
+  }
+
+  /* \brief identifiersISSN
+   * zero or more occurence(s)
+   * identifier zero or more occurence(s)
+   */
+  public function getIdentifiersISSN() {
+    $fields = array('identifiersISSN' => array(
+      'identifier',
+    ));
+    $result = ting_openformat_methods::parseFields($this->fields->details, $fields);
+    return $result;
   }
 
   /* \brief priceInformation
