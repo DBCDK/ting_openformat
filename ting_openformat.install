@@ -264,6 +264,16 @@ function ting_openformat_bibdk_fields() {
       'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
+    'bibdk_mani_content_note' => array(
+      'label' => 'Content Note',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
+      'display' => array('full')
+    ),
+    'bibdk_mani_content_partial_note' => array(
+      'label' => 'Content Partial Note',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
+      'display' => array('full')
+    ),
     'bibdk_mani_originals' => array(
       'label' => 'Originals',
       'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
@@ -394,7 +404,7 @@ function ting_openformat_update_7008() {
  * Implements hook_update_N;
  * Update all field information
  * */
-function ting_openformat_update_7014() {
+function ting_openformat_update_7015() {
   /*$fields = ting_openformat_ding_entity_fields();
   foreach ($fields as $field_name => $field) {
     field_delete_field($field_name);

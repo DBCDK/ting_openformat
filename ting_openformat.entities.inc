@@ -427,7 +427,7 @@ class manifestationMaster {
    */
 
   public function getAlternativeTitle() {
-    $result = ting_openformat_methods::parseFields($this->fields->details, array('alternativeTitle' => array('alternativeTitleHeader' => 'header', "alternativeTitleElement")));
+    $result = ting_openformat_methods::parseFields($this->fields->details, array('alternativeTitle' => array('alternativeTitleDescriptor' => 'header', "alternativeTitleElement")));
     return $result;
   }
 
@@ -608,6 +608,30 @@ class manifestationMaster {
 
   public function getDescriptionNote() {
     $result = ting_openformat_methods::parseFields($this->fields->details, array('descriptionNote'));
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
+/* \brief contentPartialNote
+   * zero or more occurence(s)
+   */
+
+  public function getContentPartialNote() {
+    $fields = array(
+      'contentPartialNote' => array('contentPartialNoteDescription', 'contentPartialNoteElement')
+    );
+    $result = ting_openformat_methods::parseFields($this->fields->details, $fields);
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
+/* \brief contentNote
+   * zero or more occurence(s)
+   */
+
+  public function getContentNote() {
+    $fields = array(
+      'contentNote' => array('contentNoteDescription', 'contentNoteElement')
+    );
+    $result = ting_openformat_methods::parseFields($this->fields->details, $fields);
     return (is_array($result)) ? reset($result) : $result;
   }
 
