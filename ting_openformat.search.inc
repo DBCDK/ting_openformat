@@ -220,6 +220,8 @@ function _ting_openformat_facet_cache($client, $result, $params) {
 
     // do a zero search to get the facets
     $params['numResults'] = 0;
+    $params['objectFormat'] = 'DKABM';
+ 
     $facet_result = $client->do_search($params);
     if (isset($facet_result->facets)) {
       $result->facets = $facet_result->facets;

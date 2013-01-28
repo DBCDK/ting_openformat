@@ -207,6 +207,20 @@ function ting_openformat_field_info() {
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
+    'bibdk_mani_content_note' => array(
+      'label' => t('Content Note'),
+      'description' => t('Content Note of manifestation'),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
+    'bibdk_mani_content_partial_note' => array(
+      'label' => t('Content Partial Note'),
+      'description' => t('Content Note of manifestation'),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
     'bibdk_mani_references' => array(
       'label' => t('References'),
       'description' => t('References of manifestation'),
@@ -231,6 +245,27 @@ function ting_openformat_field_info() {
     'bibdk_mani_identifiers' => array(
       'label' => t('Identifiers'),
       'description' => t('Identifiers of manifestation'),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
+    'bibdk_mani_identifiers_isbn' => array(
+      'label' => t('ISBN'),
+      'description' => t('ISBN of manifestation'),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
+    'bibdk_mani_identifiers_ismn' => array(
+      'label' => t('ISMN'),
+      'description' => t('ISMN of manifestation'),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
+    'bibdk_mani_identifiers_issn' => array(
+      'label' => t('ISSN'),
+      'description' => t('ISSN of manifestation'),
       'default_widget' => 'text_textfield',
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
@@ -558,6 +593,20 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $value = _ting_openformat_get_markup_for_field($descriptionNote);
         break;
 
+      // descriptionNote
+      case 'bibdk_mani_content_note':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $note = $entity->getContentNote();
+        $value = _ting_openformat_get_markup_for_field($note);
+        break;
+
+      // descriptionNote
+      case 'bibdk_mani_content_partial_note':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $descriptionNote = $entity->getContentPartialNote();
+        $note = _ting_openformat_get_markup_for_field($note);
+        break;
+
       // references
       case 'bibdk_mani_references':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
@@ -584,7 +633,27 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $identifiers = $entity->getIdentifiers();
         $value = _ting_openformat_get_markup_for_field($identifiers);
+        break;
 
+      // identifiers ISBN
+      case 'bibdk_mani_identifiers_isbn':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $identifiers = $entity->getIdentifiersISBN();
+        $value = _ting_openformat_get_markup_for_field($identifiers);
+        break;
+
+      // identifiers ISMN
+      case 'bibdk_mani_identifiers_ismn':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $identifiers = $entity->getIdentifiersISMN();
+        $value = _ting_openformat_get_markup_for_field($identifiers);
+        break;
+
+      // identifiers ISSN
+      case 'bibdk_mani_identifiers_issn':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $identifiers = $entity->getIdentifiersISSN();
+        $value = _ting_openformat_get_markup_for_field($identifiers);
         break;
 
       // priceInformation
