@@ -527,6 +527,7 @@ function ting_openformat_show_info_get_form($form_id, $form_state) {
 function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
   $ids = $form_state['clicked_button']['#ids'];
   $uid = $form_state['clicked_button']['#uid'];
+  module_invoke_all('show_manifestation_info_prerender', $ids, $uid);
   $bibdkWork = ting_openformat_get_manifestations($ids);
   $view = ting_openformat_work_view(current($bibdkWork));
   $commands = array();
