@@ -429,7 +429,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
         $type_id = $trans['type'];
         $ordered_subworks[$type_id][$subtype_id]['manifest'] = $val;
         $ordered_subworks[$type_id][$subtype_id]['translation'] = $trans;
-        $ordered_subworks[$type_id][$subtype_id]['manifest']['localisation_link'] = _ting_openformat_subwork_materialtype_actions($ordered_subworks, $type_id, $subtype_id);
+        $ordered_subworks[$type_id][$subtype_id]['manifest']['subtype_actions'] = _ting_openformat_subwork_materialtype_actions($ordered_subworks, $type_id, $subtype_id);
       }
     }
   }
