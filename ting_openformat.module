@@ -428,8 +428,8 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
         $trans = _ting_openformat_type_translation($type, $subtype);
         $type_id = $trans['type'];
         $ordered_subworks[$type_id][$subtype_id]['manifest'] = $val;
-        $ordered_subworks[$type_id][$subtype_id]['manifest']['localisation_link'] = ting_openformat_localisation_link(array_keys($ordered_subworks[$type_id][$subtype_id]['manifest']['manifestations']));
         $ordered_subworks[$type_id][$subtype_id]['translation'] = $trans;
+        $ordered_subworks[$type_id][$subtype_id]['manifest']['subtype_actions'] = _ting_openformat_subwork_materialtype_actions($ordered_subworks, $type_id, $subtype_id);
       }
     }
   }
@@ -444,24 +444,14 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
 
 
 /**
- * Creates render arrays for link to localisations
+ * Creates a hook for other modules to add render arrays to subwork materialtypes
+ * @param $ordered_subworks
+ * @param $type_id
+ * @param $subtype_id
  * @return array
  */
-function ting_openformat_localisation_link($lookup_pids) {
-  $render = array(
-    'link' => array(
-      '#type' => 'link',
-      '#title' => '<span class="icon icon-left icon-lightgrey-list">&nbsp;</span>' . t("See localisations for this material", array(), array('context' => 'ting_openformat')),
-      '#href' => "overlay/holdings/" . implode(',',$lookup_pids),
-      '#options' => array(
-        'html' => TRUE,
-      ),
-      '#attributes' => array(
-        'class' => array('bibdk-popup-link', 'text-small', 'text-lightgrey'),
-        'rel' => 'holdings',
-      ),
-    ),
-  );
+function _ting_openformat_subwork_materialtype_actions($ordered_subworks, $type_id, $subtype_id) {
+  $render = module_invoke_all('ting_openformat_subwork_materialtype_actions', $ordered_subworks, $type_id, $subtype_id);
   return $render;
 }
 
@@ -527,6 +517,7 @@ function ting_openformat_show_info_get_form($form_id, $form_state) {
 function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
   $ids = $form_state['clicked_button']['#ids'];
   $uid = $form_state['clicked_button']['#uid'];
+  module_invoke_all('show_manifestation_info_prerender', $ids, $uid);
   $bibdkWork = ting_openformat_get_manifestations($ids);
   $view = ting_openformat_work_view(current($bibdkWork));
   $commands = array();
