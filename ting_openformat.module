@@ -407,7 +407,8 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
     $sub[$type][$subtype]['fields'] = _prepare_view('bibdkSubwork', $subWork, $view_mode, $langcode);
     $sub[$type][$subtype]['id'] = $id;
     foreach ($subWork->getManifestations() as $manifestation) {
-      $sub[$type][$subtype]['manifestations'][$manifestation->id] = ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL);
+      $manifestation_view = ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL);
+      $sub[$type][$subtype]['manifestations'][$manifestation->id] = drupal_render($manifestation_view);
     }
   }
   $ordered_types = NULL; //variable_get("ting_openformat_types");
@@ -532,8 +533,14 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
     $langcode = $GLOBALS['language_content']->language;
   }
 
-  $field_content = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
-  return theme('ting_openformat_manifestation', array('fields' => $field_content,));
+  $fields = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
+  $build = array(
+    '#theme' => 'ting_openformat_manifestation',
+    '#view_mode' => $view_mode,
+    '#language' => $langcode,
+    '#fields' => $fields,
+  );
+  return $build;
 }
 
 /**
