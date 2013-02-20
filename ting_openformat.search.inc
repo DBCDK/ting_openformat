@@ -251,6 +251,7 @@ function _ting_openformat_search_get_variables() {
   // results pr. page (opensearch::stepValue) ... in ting-client/lib/request/TingClientSearchRequest.php this is called numResults
   $resultsPerPage = variable_get('ting_search_results_per_page', 10);
   $params['numResults'] = $resultsPerPage;
+  $params['includeHoldingsCount'] = true;
 
   // page number (opensearch::start)
   $page = pager_find_page();
