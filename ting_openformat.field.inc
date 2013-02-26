@@ -773,12 +773,17 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
   return $element;
 }
 
+
 /**
- * Creates a #markup array if content exists
+ * @param $elements
+ * @param string $divider
+ * @param bool $use_header
+ * @param bool $return_link If FALSE value will be returned without markup for href. Otherwise complete markup for href is returned
+ * @return array|null
  */
-function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_header = TRUE) {
+function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_header = TRUE, $return_link = TRUE) {
   $return = NULL;
-  $markup = _ting_openformat_parse_element($elements, $divider, $use_header);
+  $markup = _ting_openformat_parse_element($elements, $divider, $use_header, $return_link);
   if (isset($markup)) {
     $return = array(
       '#markup' => $markup,
@@ -794,9 +799,10 @@ function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_
  * @param array $elements
  * @param string $divider
  * @param bool $use_header
+ * @param bool $return_link If FALSE value will be returned without markup for href. Otherwise complete markup for href is returned
  * @return string
  */
-function _ting_openformat_parse_element($elements, $divider = ". ", $use_header = TRUE) {
+function _ting_openformat_parse_element($elements, $divider = ". ", $use_header = TRUE, $return_link = TRUE) {
   if (!isset($elements)) {
     return NULL;
   }
@@ -805,7 +811,7 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
   }
   foreach ($elements as $key => $value) {
     if (is_array($value)) {
-      $array[] = _ting_openformat_parse_element($value, $divider, $use_header);
+      $array[] = _ting_openformat_parse_element($value, $divider, $use_header, $return_link);
     }
     elseif ($key === "header") {
       if ($use_header) {
@@ -813,7 +819,11 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
       }
     }
     elseif ($key === 'searchCode') {
-      $array[] = l($elements['display'], 'search/work/' . $elements['searchCode']);
+      if($return_link){
+        $array[] = l($elements['display'], 'search/work/' . $elements['searchCode']);
+      } else {
+        $array[] = $elements['display'];
+      }
     }
     elseif ($key === 'accessUrl') {
       $array[] = l($value, $value, array('attributes' => array('target' => '_blank')));
