@@ -405,11 +405,21 @@ function ting_openformat_field_load($entity_type, $entities, $field, $instances,
 
 /**
  * Implements hook_field_formatter_view
- * NOTE; $entity is of type bibdkWork or manifestation (
- * @see                                  ting_openformat.entities.inc)
  * it is possible to extract values directly from bibdkWork->work or bibdkWork->manifestations, but it is preferable to
- * add a method to bibdkWork class (@see e.g ting_openformat.entities.inc::bibdkWork::getCreator().) ... there will be changes in format
- * */
+ * add a method to bibdkWork class e.g
+ *
+ * @see  ting_openformat.entities.inc::bibdkWork::getCreator().) ... there will be changes in format
+ *
+ * @param $entity_type
+ * @param bibdkWork | manifestation $entity
+ * @param $field
+ * @param $instance
+ * @param $langcode
+ * @param $items
+ * @param $display
+ * @return array
+ * @see  ting_openformat.entities.inc
+ */
 function ting_openformat_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
   foreach ($items as $delta => $item) {
