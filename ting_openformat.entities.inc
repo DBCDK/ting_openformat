@@ -544,7 +544,6 @@ class manifestationMaster {
   /* \brief readabilityNumbers
     * zero or more occurence(s)
     */
-
   public function getReadabilityNumbers() {
     $result = ting_openformat_methods::parseFields($this->_getDetails(), array('readabilityNumbers' => array('readabilityNumber')));
     return (is_array($result)) ? reset($result) : $result;
