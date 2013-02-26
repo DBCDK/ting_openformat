@@ -631,7 +631,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
       case 'bibdk_mani_content_partial_note':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $descriptionNote = $entity->getContentPartialNote();
-        $descriptionNote = _ting_openformat_get_markup_for_field($descriptionNote);
+        $value = _ting_openformat_get_markup_for_field($descriptionNote);
         break;
 
       // references
