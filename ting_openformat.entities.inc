@@ -293,6 +293,7 @@ class manifestation extends manifestationMaster {
   public function __construct($manifestation) {
     $this->manifestation = $manifestation;
     $this->fields = $this->manifestation->main;
+    //dpm($manifestation);
   }
 
   public function getWork() {
