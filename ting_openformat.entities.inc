@@ -567,7 +567,6 @@ class manifestationMaster {
 
     return (is_array($result)) ? reset($result) : $result;
   }
-
   /* \brief textlevels
      * zero or 1 occurence
      * textLevel 1  or occurence(s)
