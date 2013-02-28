@@ -327,6 +327,12 @@ class manifestation extends manifestationMaster {
     return $result;
   }
 
+  public function getAbstract() {
+    $fields = array('abstract' => array('abstractElement'));
+    $elements = $this->getWork()->description;
+    $result = ting_openformat_methods::parseFields($elements, $fields);
+    return $result;
+  }
   /*
    * Return ID as array
    */

@@ -104,6 +104,16 @@ function ting_openformat_bibdk_fields() {
       'display' => array('full'),
     ),
     /********* MANIFESTATION ************/
+    'ting_openformat_mani_abstract' => array(
+      'label' => 'Work abstract',
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full'),
+    ),
+    'ting_openformat_mani_subjects' => array(
+      'label' => 'Work subjects',
+      'entity_type' => 'bibdkManifestation',
+      'display' => array('full'),
+    ),
     'bibdk_mani_infotext' => array(
       'label' => 'Info text',
       'entity_type' => array('bibdkManifestation'),
@@ -405,9 +415,13 @@ function ting_openformat_update_7008() {
  * Update all field information
  * */
 function ting_openformat_update_7015() {
-  /*$fields = ting_openformat_ding_entity_fields();
-  foreach ($fields as $field_name => $field) {
-    field_delete_field($field_name);
-  }*/
+  ding_entity_modules_enabled(array('ting_openformat'));
+}
+
+/**
+ * Implements hook_update_N;
+ * Update all field information
+ * */
+function ting_openformat_update_7016() {
   ding_entity_modules_enabled(array('ting_openformat'));
 }
