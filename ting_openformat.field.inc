@@ -508,7 +508,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $value = _ting_openformat_get_markup_for_field($orginalTitle);
         break;
       // alternative title
-      case 'bibdk_mani_alternative_title':
+      case 'bibdk_mani_alt_title':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $alternativeTitle = $entity->getAlternativeTitle();
         $value = _ting_openformat_get_markup_for_field($alternativeTitle);
