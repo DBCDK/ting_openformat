@@ -65,11 +65,15 @@ function ting_openformat_single($id) {
   return ting_openformat_work_view(current($bibdkEntity));
 }
 
+/**
+ * @param $ids
+ * @return array
+ */
 function ting_openformat_get_manifestations($ids) {
   $client = new ting_client_class();
   $params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
   $params['objectId'] = $ids;
-  $params['includeHoldingsCount'] = true;
+  $params['includeHoldingsCount'] = TRUE;
   $result = $client->do_get_object($params);
 
   if (empty($result->collections)) {
@@ -407,7 +411,8 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
     $sub[$type][$subtype]['fields'] = _prepare_view('bibdkSubwork', $subWork, $view_mode, $langcode);
     $sub[$type][$subtype]['id'] = $id;
     foreach ($subWork->getManifestations() as $manifestation) {
-      $sub[$type][$subtype]['manifestations'][$manifestation->id] = ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL);
+      $manifestation_view = ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL);
+      $sub[$type][$subtype]['manifestations'][$manifestation->id] = drupal_render($manifestation_view);
     }
   }
   $ordered_types = NULL; //variable_get("ting_openformat_types");
@@ -522,18 +527,30 @@ function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
   $view = ting_openformat_work_view(current($bibdkWork));
   $commands = array();
   $commands[] = ajax_command_remove("#ajax-$uid");
-  $commands[] = ajax_command_replace(null, $view);
+  $commands[] = ajax_command_replace(NULL, $view);
   //$commands[] = ajax_command_replace(NULL, "$ids $uid Dette er en test");
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 
+/**
+ * @param $manifestation
+ * @param string $view_mode
+ * @param null $langcode
+ * @return array
+ */
 function ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
     $langcode = $GLOBALS['language_content']->language;
   }
 
-  $field_content = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
-  return theme('ting_openformat_manifestation', array('fields' => $field_content,));
+  $fields = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
+  $build = array(
+    '#theme' => 'ting_openformat_manifestation',
+    '#view_mode' => $view_mode,
+    '#language' => $langcode,
+    '#fields' => $fields,
+  );
+  return $build;
 }
 
 /**
@@ -568,7 +585,12 @@ function ting_openformat_section_view($volume, $view_mode = 'full', $langcode = 
 
 /**
  * attach entity fields to a single entity. Return a renderable array
- * */
+ * @param $entity_type
+ * @param manifestation|bibdkWork|bibdkSubwork|bibdkCollection $object
+ * @param $view_mode
+ * @param $langcode
+ * @return array
+ */
 function _prepare_view($entity_type, $object, $view_mode, $langcode) {
   field_attach_prepare_view($entity_type, array($object->id => $object), $view_mode, $langcode);
   entity_prepare_view($entity_type, array($object->id => $object), $langcode);
