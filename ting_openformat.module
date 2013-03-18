@@ -760,6 +760,12 @@ function _ting_openformat_fetch_types() {
   }
 }
 
+/**
+ * Translates variables into strings
+ * @param $type
+ * @param $subtype
+ * @return array
+ */
 function _ting_openformat_type_translation($type, $subtype) {
 
   switch ($type) {
