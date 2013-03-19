@@ -12,7 +12,8 @@ class bibdkWork {
   public function __construct($work = NULL) {
     $this->work = $work;
   }
-  public function getId(){
+
+  public function getId() {
     return $this->id;
   }
 
@@ -78,10 +79,11 @@ class bibdkWork {
     return (is_array($result)) ? reset($result) : $result;
   }
 
-  private function _getDescription(){
+  private function _getDescription() {
     return (isset($this->work->description)) ? $this->work->description : NULL;
 
   }
+
   public function getAbstract() {
     $fields = array('abstract' => array('abstractElement'));
     $elements = $this->_getDescription();
@@ -107,9 +109,20 @@ class bibdkWork {
     return (is_array($result)) ? reset($result) : $result;
   }
 
+  /**
+   * @return array|mixed|null
+   */
+  public function getFurtherSearches() {
+    //TODO mmj this information should be extracted from each manifestation
+    $fields = array('furtherSearches' => array('furtherSearchType' => 'searchCode'));
+    $elements = $this->_getDescription();
+    #dpm($elements, 'elements');
+    $result = ting_openformat_methods::parseFields($elements, $fields);
+    return (is_array($result)) ? reset($result) : $result;
+  }
 }
 
-class   bibdkSubwork {
+class bibdkSubwork {
 
   public $id;
   public $ding_entity_id;
@@ -168,7 +181,6 @@ class   bibdkSubwork {
 
 class bibdkCollection {
 
-  //TODO fields should be private - currently being public for debug purpose
   private $manifestations;
   public $ding_entity_id;
   private $collectionTypes;
@@ -293,7 +305,6 @@ class manifestation extends manifestationMaster {
   public function __construct($manifestation) {
     $this->manifestation = $manifestation;
     $this->fields = $this->manifestation->main;
-    //dpm($manifestation);
   }
 
   public function getWork() {
@@ -306,7 +317,7 @@ class manifestation extends manifestationMaster {
    */
   public function getTitle() {
     $fields = array('titleFull');
-    $elements =isset($this->getWork()->title) ? $this->getWork()->title : NULL;
+    $elements = isset($this->getWork()->title) ? $this->getWork()->title : NULL;
     $result = ting_openformat_methods::parseFields($elements, $fields);
 
     return (is_array($result)) ? reset($result) : $result;
@@ -339,6 +350,7 @@ class manifestation extends manifestationMaster {
     $result = ting_openformat_methods::parseFields($elements, $fields);
     return $result;
   }
+
   /*
    * Return ID as array
    */
@@ -453,11 +465,11 @@ class manifestationMaster {
     $this->manifestation = $manifestation;
   }
 
-  private function _getDetails(){
+  private function _getDetails() {
     return isset($this->fields->details) ? $this->fields->details : NULL;
   }
 
-  private function _getPublicationDetails(){
+  private function _getPublicationDetails() {
     return isset($this->fields->publicationDetails) ? $this->fields->publicationDetails : NULL;
   }
 
@@ -504,7 +516,7 @@ class manifestationMaster {
    */
 
   public function getForms() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('forms' => array("formSubject"=>'searchCode')));
+    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('forms' => array("formSubject" => 'searchCode')));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -567,6 +579,7 @@ class manifestationMaster {
 
     return (is_array($result)) ? reset($result) : $result;
   }
+
   /* \brief textlevels
      * zero or 1 occurence
      * textLevel 1  or occurence(s)
@@ -619,7 +632,7 @@ class manifestationMaster {
    */
 
   public function getRecommendedAudience() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('audienceAge'=> array('audienceAgeElement')));
+    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('audienceAge' => array('audienceAgeElement')));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -628,7 +641,7 @@ class manifestationMaster {
      */
 
   public function getAudiencePegi() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('audiencePegi'=> array('audiencePegiElement')));
+    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('audiencePegi' => array('audiencePegiElement')));
     return (is_array($result)) ? reset($result) : $result;
   }
 

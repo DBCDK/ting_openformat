@@ -69,13 +69,13 @@ function ting_openformat_single($id) {
  * @param $ids
  * @return array
  */
-function ting_openformat_get_manifestations($ids) {
+  function ting_openformat_get_manifestations($ids) {
   $client = new ting_client_class();
   $params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
   $params['objectId'] = $ids;
   $params['includeHoldingsCount'] = TRUE;
   $result = $client->do_get_object($params);
-
+  dpm($result);
   if (empty($result->collections)) {
     return array();
   }
@@ -83,7 +83,7 @@ function ting_openformat_get_manifestations($ids) {
   foreach ($result->collections as $collection) {
     $openformat[] = $collection->formattedCollection->formattedCollection->manifestation;
   }
-
+  dpm($openformat, 'openformat');
   $original_manifestations = array();
   $entity_ids = array();
   _ting_openformat_parse_manifestations($original_manifestations, $entity_ids, $openformat);
@@ -405,6 +405,8 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
 
   $sub = array();
   $subWorks = $bibdkWork->getSubWorks();
+  dpm($bibdkWork);
+  dpm($bibdkWork->getManifestations(), 'manifestations');
   foreach ($subWorks as $id => $subWork) {
     $type = drupal_strtolower($subWork->getType());
     $subtype = $subWork->getSubType();
