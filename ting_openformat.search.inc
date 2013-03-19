@@ -106,11 +106,11 @@ function _ting_openformat_create_collection_entities(&$result) {
     $bibdkobjects = array();
     $original_manifestations = array();
     $entity_id = array();
-    
+
     // error check
     $openformat = isset($collection->formattedCollection->formattedCollection->manifestation) ? $collection->formattedCollection->formattedCollection->manifestation : NULL;
-    
-    if( empty($openformat) ) {      
+
+    if( empty($openformat) ) {
       watchdog('openformat','Formatted collection is not set',array(),WATCHDOG_ERROR);
       continue;
     }
@@ -121,15 +121,15 @@ function _ting_openformat_create_collection_entities(&$result) {
       $bibdkEntities->parseManifestations(); //Temporary as malformed XML is returned from OpenSearch
       $bibdkobjects = $bibdkEntities;
       //unset($entity_id);
-       $result->entities[] = $bibdkobjects;    
+       $result->entities[] = $bibdkobjects;
     }
     else{
       // @TODO log errors
       watchdog('openformat','ID is not set',array(),WATCHDOG_ERROR);
-      continue;     
+      continue;
     }
   }
-  unset($result->collections);      
+  unset($result->collections);
 }
 
 function _ting_openformat_parse_collection(&$original_manifestations, &$entity_id, $openformat) {
@@ -221,7 +221,7 @@ function _ting_openformat_facet_cache($client, $result, $params) {
     // do a zero search to get the facets
     $params['numResults'] = 0;
     $params['objectFormat'] = 'DKABM';
- 
+
     $facet_result = $client->do_search($params);
     if (isset($facet_result->facets)) {
       $result->facets = $facet_result->facets;
@@ -255,7 +255,7 @@ function _ting_openformat_search_get_variables() {
 
   // page number (opensearch::start)
   $page = pager_find_page();
-  $params['start'] = $page * $resultsPerPage;
+  $params['start'] = ( $page * $resultsPerPage ) + 1; // search results start at position 1
 
   // search profile (opensearch::profile)
   $params['profile'] = variable_get('ting_search_profile', FALSE);
