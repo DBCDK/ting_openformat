@@ -75,7 +75,8 @@ function ting_openformat_get_manifestations($ids) {
   $params['objectId'] = $ids;
   $params['includeHoldingsCount'] = TRUE;
   $result = $client->do_get_object($params);
-//  dpm($result);
+  //dpm($result);
+
   if (empty($result->collections)) {
     return array();
   }
