@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class bibdkWork
+ */
 class bibdkWork {
 
   public $id;
@@ -113,12 +116,31 @@ class bibdkWork {
    * @return array|mixed|null
    */
   public function getFurtherSearches() {
-    //TODO mmj this information should be extracted from each manifestation
-    $fields = array('furtherSearches' => array('furtherSearchType' => 'searchCode'));
-    $elements = $this->_getDescription();
-    #dpm($elements, 'elements');
-    $result = ting_openformat_methods::parseFields($elements, $fields);
+    $fields = array('furtherSearches' => array('furtherSearchType' => 'searchCode', 'furtherSearchFiction' => 'searchCode', 'furtherSearchElement' => 'searchCode'));
+    $manifestations = $this->getManifestations();
+
+    foreach ($manifestations as $manifestation) {
+      if (isset($manifestation->manifestation->work->description)) {
+        $elements[] = $manifestation->manifestation->work->description;
+      }
+      else {
+        continue;
+      }
+    }
+    $parsedFields = ting_openformat_methods::parseFields($elements, $fields);
+    dpm($parsedFields, 'parsedFields'); 
+
+    $result = array();
+    foreach ($parsed as $furtherSearches) {
+
+    }
+
+
     return (is_array($result)) ? reset($result) : $result;
+  }
+
+  private function _parseFurtherSearches() {
+
   }
 }
 
