@@ -116,31 +116,38 @@ class bibdkWork {
    * @return array|mixed|null
    */
   public function getFurtherSearches() {
-    $fields = array('furtherSearches' => array('furtherSearchType' => 'searchCode', 'furtherSearchFiction' => 'searchCode', 'furtherSearchElement' => 'searchCode'));
+    $fields = array('furtherSearchType' => 'searchCode', 'furtherSearchFiction' => 'searchCode', 'furtherSearchElement' => 'searchCode');
     $manifestations = $this->getManifestations();
 
     foreach ($manifestations as $manifestation) {
-      if (isset($manifestation->manifestation->work->description)) {
-        $elements[] = $manifestation->manifestation->work->description;
+      if (isset($manifestation->manifestation->work->description->furtherSearches)) {
+        $elements[] = $manifestation->manifestation->work->description->furtherSearches;
       }
       else {
         continue;
       }
     }
     $parsedFields = ting_openformat_methods::parseFields($elements, $fields);
-    dpm($parsedFields, 'parsedFields'); 
 
-    $result = array();
-    foreach ($parsed as $furtherSearches) {
-
-    }
-
-
-    return (is_array($result)) ? reset($result) : $result;
+    $result = $this->_parseFurtherSearches($parsedFields);
+    return $result;
   }
 
-  private function _parseFurtherSearches() {
-
+  /**
+   * @param $parsedFields
+   * @return array
+   */
+  private function _parseFurtherSearches($parsedFields) {
+    $ret = array();
+    foreach ($parsedFields as $furtherSearches) {
+      foreach ($furtherSearches as $key => $value) {
+        foreach ($value[0] as $elemnt) {
+          $ret[$key][$elemnt['display']]['searchCode'] = $elemnt['searchCode'];
+          $ret[$key][$elemnt['display']]['display'] = $elemnt['display'];
+        }
+      }
+    }
+    return $ret;
   }
 }
 

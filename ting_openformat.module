@@ -75,7 +75,6 @@ function ting_openformat_get_manifestations($ids) {
   $params['objectId'] = $ids;
   $params['includeHoldingsCount'] = TRUE;
   $result = $client->do_get_object($params);
-  //dpm($result);
 
   if (empty($result->collections)) {
     return array();
@@ -84,7 +83,7 @@ function ting_openformat_get_manifestations($ids) {
   foreach ($result->collections as $collection) {
     $openformat[] = $collection->formattedCollection->formattedCollection->manifestation;
   }
-//  dpm($openformat, 'openformat');
+
   $original_manifestations = array();
   $entity_ids = array();
   _ting_openformat_parse_manifestations($original_manifestations, $entity_ids, $openformat);
@@ -412,7 +411,6 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
 
   $sub = array();
   $subWorks = $bibdkWork->getSubWorks();
-  dpm($bibdkWork, 'bibdkWork');
   dpm($bibdkWork->getFurtherSearches(), 'furtherSearches');
 
   foreach ($subWorks as $id => $subWork) {
