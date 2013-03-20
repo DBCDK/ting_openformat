@@ -77,6 +77,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   }
 
   // set searchhistory
+  //TODO invoke hook instead of checking if module exists
   if (module_exists('bibdk_searchhistory')) {
     module_invoke('bibdk_searchhistory', 'set_search_results', $keys, $result);
   }
@@ -106,11 +107,11 @@ function _ting_openformat_create_collection_entities(&$result) {
     $bibdkobjects = array();
     $original_manifestations = array();
     $entity_id = array();
-    
+
     // error check
     $openformat = isset($collection->formattedCollection->formattedCollection->manifestation) ? $collection->formattedCollection->formattedCollection->manifestation : NULL;
-    
-    if( empty($openformat) ) {      
+
+    if( empty($openformat) ) {
       watchdog('openformat','Formatted collection is not set',array(),WATCHDOG_ERROR);
       continue;
     }
@@ -121,15 +122,15 @@ function _ting_openformat_create_collection_entities(&$result) {
       $bibdkEntities->parseManifestations(); //Temporary as malformed XML is returned from OpenSearch
       $bibdkobjects = $bibdkEntities;
       //unset($entity_id);
-       $result->entities[] = $bibdkobjects;    
+       $result->entities[] = $bibdkobjects;
     }
     else{
       // @TODO log errors
       watchdog('openformat','ID is not set',array(),WATCHDOG_ERROR);
-      continue;     
+      continue;
     }
   }
-  unset($result->collections);      
+  unset($result->collections);
 }
 
 function _ting_openformat_parse_collection(&$original_manifestations, &$entity_id, $openformat) {
@@ -140,35 +141,6 @@ function _ting_openformat_parse_collection(&$original_manifestations, &$entity_i
     }
   }
 }
-
-/** THIS FUNCTION SEEMS TO BE UNUSED - INVESTIGATE!
- * replace TingClientObjectCollection (returned from ting-client) with bibdkEntity(work)
- * */
-/*function _ting_openformat_load_entities($result) {
-  $bibdkobjects = array();
-  if (is_array($result->collections)) {
-    $ids = array();
-    foreach ($result->collections as &$collection) {
-      $original_manifestations = array();
-      $entity_ids = array();
-      // parse for manifestations
-
-      _ting_openformat_parse_manifestations($original_manifestations, $entity_ids, $openformat);
-      if (count($entity_ids) > 0) {
-        // conditions array is deprecated in drupal 8 .. @TODO find another solution .
-        $conditions['manifestations'] = $original_manifestations;
-
-        $bibdkEntities = entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
-
-        $bibdkobjects[] = $bibdkEntities;
-        // reset
-        $entity_ids = array();
-      }
-    }
-  }
-  unset($result->collections);
-  $result->collections = $bibdkobjects;
-}*/
 
 /** Set a search result array as defined for hook_search_execute
  *
@@ -221,7 +193,7 @@ function _ting_openformat_facet_cache($client, $result, $params) {
     // do a zero search to get the facets
     $params['numResults'] = 0;
     $params['objectFormat'] = 'DKABM';
- 
+
     $facet_result = $client->do_search($params);
     if (isset($facet_result->facets)) {
       $result->facets = $facet_result->facets;
