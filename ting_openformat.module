@@ -544,7 +544,6 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
   }
 
   $fields = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
-  usort($fields, '_ting_openformat_sortfields_by_weight');
   $build = array(
     '#theme' => 'ting_openformat_manifestation',
     '#view_mode' => $view_mode,
@@ -552,15 +551,6 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
     '#fields' => $fields,
   );
   return $build;
-}
-
-/**
- * @param array $a
- * @param array $b
- * @return Boolean
- */
-function _ting_openformat_sortfields_by_weight($a, $b) {
-  return $a['#weight'] - $b['#weight'];
 }
 
 /**
