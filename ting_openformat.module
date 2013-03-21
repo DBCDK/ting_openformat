@@ -398,20 +398,21 @@ function template_preprocess_ting_openformat_subwork_tabs(&$variables) {
  * @param null $langcode
  * @return string
  */
-function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = NULL) {
-  if (!is_object($bibdkWork)) {
-    return;
-  }
+function ting_openformat_work_view(bibdkWork $bibdkWork, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
     $langcode = $GLOBALS['language_content']->language;
   }
 
   $work_fields = array();
   $work_fields += _prepare_view('bibdkWorkEntity', $bibdkWork, $view_mode, $langcode);
+  dpm($work_fields, 'work_fields');
 
   $sub = array();
   $subWorks = $bibdkWork->getSubWorks();
-  dpm($bibdkWork->getFurtherSearches(), 'furtherSearches');
+
+  $furtherSearches = $bibdkWork->getFurtherSearches();
+  $furtherSearch = theme('ting_openformat_');
+  dpm($furtherSearch, 'furtherSearches');
 
   foreach ($subWorks as $id => $subWork) {
     $type = drupal_strtolower($subWork->getType());
@@ -451,7 +452,9 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
     'fields' => $work_fields,
     'subWorks' => $ordered_subworks,
     'tabs' => $tabs,
-    'ding_id' => $ding_id));
+    'ding_id' => $ding_id,
+    'furtherSearches' => $furtherSearch,
+    ));
 }
 
 
@@ -552,6 +555,10 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
   }
 
   $fields = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
+  dpm($fields, 'fields - 1');
+  #_ting_openformat_sortfields_by_weight($fields);
+  usort($fields, '_ting_openformat_sortfields_by_weight');
+  dpm($fields, 'fields - 2');
   $build = array(
     '#theme' => 'ting_openformat_manifestation',
     '#view_mode' => $view_mode,
@@ -559,6 +566,10 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
     '#fields' => $fields,
   );
   return $build;
+}
+
+function _ting_openformat_sortfields_by_weight($a, $b) {
+  return $a['#weight'] - $b['#weight'];
 }
 
 /**
