@@ -119,18 +119,15 @@ class bibdkWork {
     $fields = array('furtherSearchType' => 'searchCode', 'furtherSearchFiction' => 'searchCode', 'furtherSearchElement' => 'searchCode');
     $manifestations = $this->getManifestations();
 
+    $elements = array();
     foreach ($manifestations as $manifestation) {
       if (isset($manifestation->manifestation->work->description->furtherSearches)) {
         $elements[] = $manifestation->manifestation->work->description->furtherSearches;
       }
-      else {
-        continue;
-      }
     }
-    $parsedFields = ting_openformat_methods::parseFields($elements, $fields);
 
-    $result = $this->_parseFurtherSearches($parsedFields);
-    return $result;
+    $parsedFields = ting_openformat_methods::parseFields($elements, $fields);
+    return (!empty($parsedFields)) ? $this->_parseFurtherSearches($parsedFields) : NULL;
   }
 
   /**
@@ -932,6 +929,11 @@ class ting_openformat_methods {
     }
   }
 
+  /**
+   * @param $object
+   * @param array $fields
+   * @return array|null
+   */
   public static function parseFields($object, array $fields) {
     $ret = NULL;
     if (!isset($object)) {

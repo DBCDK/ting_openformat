@@ -392,28 +392,19 @@ function template_preprocess_ting_openformat_subwork_tabs(&$variables) {
 
 // @TODO - does this method belong here ??
 
-/**
- * @param bibdkWork $bibdkWork
- * @param string $view_mode
- * @param null $langcode
- * @return string
- */
-function ting_openformat_work_view(bibdkWork $bibdkWork, $view_mode = 'full', $langcode = NULL) {
+function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = NULL) {
+  if (!is_object($bibdkWork)) {
+    return;
+  }
   if (!isset($langcode)) {
     $langcode = $GLOBALS['language_content']->language;
   }
 
   $work_fields = array();
   $work_fields += _prepare_view('bibdkWorkEntity', $bibdkWork, $view_mode, $langcode);
-  dpm($work_fields, 'work_fields');
 
   $sub = array();
   $subWorks = $bibdkWork->getSubWorks();
-
-  $furtherSearches = $bibdkWork->getFurtherSearches();
-  $furtherSearch = theme('ting_openformat_');
-  dpm($furtherSearch, 'furtherSearches');
-
   foreach ($subWorks as $id => $subWork) {
     $type = drupal_strtolower($subWork->getType());
     $subtype = $subWork->getSubType();
@@ -452,15 +443,12 @@ function ting_openformat_work_view(bibdkWork $bibdkWork, $view_mode = 'full', $l
     'fields' => $work_fields,
     'subWorks' => $ordered_subworks,
     'tabs' => $tabs,
-    'ding_id' => $ding_id,
-    'furtherSearches' => $furtherSearch,
-    ));
+    'ding_id' => $ding_id));
 }
 
 
 /**
  * Creates a hook for other modules to add render arrays to subwork materialtypes
- *
  * @param $ordered_subworks
  * @param $type_id
  * @param $subtype_id
@@ -555,10 +543,6 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
   }
 
   $fields = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
-  dpm($fields, 'fields - 1');
-  #_ting_openformat_sortfields_by_weight($fields);
-  usort($fields, '_ting_openformat_sortfields_by_weight');
-  dpm($fields, 'fields - 2');
   $build = array(
     '#theme' => 'ting_openformat_manifestation',
     '#view_mode' => $view_mode,
@@ -568,13 +552,8 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
   return $build;
 }
 
-function _ting_openformat_sortfields_by_weight($a, $b) {
-  return $a['#weight'] - $b['#weight'];
-}
-
 /**
  * Create view for manifestation volume fields
- *
  * @param $volume
  * @param string $view_mode
  * @param null $langcode
@@ -590,7 +569,6 @@ function ting_openformat_volume_view($volume, $view_mode = 'full', $langcode = N
 
 /**
  * Create view for manifestation section fields
- *
  * @param $volume
  * @param string $view_mode
  * @param null $langcode
@@ -606,7 +584,6 @@ function ting_openformat_section_view($volume, $view_mode = 'full', $langcode = 
 
 /**
  * attach entity fields to a single entity. Return a renderable array
- *
  * @param $entity_type
  * @param manifestation|bibdkWork|bibdkSubwork|bibdkCollection $object
  * @param $view_mode
@@ -721,7 +698,7 @@ function ting_openformat_menu_alter(&$items) {
     }
     if (isset($items['admin/structure/manifestation/volume/fields'])) {
       $items['admin/structure/manifestation/volume'] = $items['admin/structure/manifestation/volume/fields'];
-      $item = & $items['admin/structure/manifestation/volume'];
+      $item = &$items['admin/structure/manifestation/volume'];
       $item['type'] = MENU_NORMAL_ITEM;
       $item['title'] = 'Manifestation Volume for bibliotek.dk';
       $item['description'] = 'Manage Volume display.';
@@ -734,7 +711,7 @@ function ting_openformat_menu_alter(&$items) {
     }
     if (isset($items['admin/structure/manifestation/section/fields'])) {
       $items['admin/structure/manifestation/section'] = $items['admin/structure/manifestation/section/fields'];
-      $item = & $items['admin/structure/manifestation/section'];
+      $item = &$items['admin/structure/manifestation/section'];
       $item['type'] = MENU_NORMAL_ITEM;
       $item['title'] = 'Manifestation Section for bibliotek.dk';
       $item['description'] = 'Manage Section display.';
@@ -784,7 +761,6 @@ function _ting_openformat_fetch_types() {
 
 /**
  * Translates variables into strings
- *
  * @param $type
  * @param $subtype
  * @return array
