@@ -127,7 +127,7 @@ class bibdkWork {
     }
 
     $parsedFields = ting_openformat_methods::parseFields($elements, $fields);
-    return (!empty($parsedFields)) ? $this->_parseFurtherSearches($parsedFields) : NULL;
+    return (!empty($parsedFields)) ? $this->_parseFurtherSearches($parsedFields) : array();
   }
 
   /**
