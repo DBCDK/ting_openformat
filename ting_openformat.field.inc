@@ -375,6 +375,13 @@ function ting_openformat_field_info() {
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
+    'bibdk_mani_distinction' => array(
+      'label' => t('Distinction'),
+      'description' => t('Title distinction'),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    )
   );
 }
 
@@ -780,6 +787,11 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         // entity is manifestationVolume ( @see ting_openformat.entities.inc::manifestation )
         $title = $entity->getCreators();
         $value = _ting_openformat_get_markup_for_field($title);
+        break;
+      case 'bibdk_mani_distinction':
+        // entity is manifestation
+        $distinction = $entity->getDistinction();
+        $value = _ting_openformat_get_markup_for_field($distinction);
         break;
     }
     if (isset($value)) {

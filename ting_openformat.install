@@ -119,6 +119,11 @@ function ting_openformat_bibdk_fields() {
       'entity_type' => array('bibdkManifestation'),
       'display' => array('full'),
     ),
+    'bibdk_mani_distinction' => array(
+      'label' => 'Distinction',
+      'entity_type' => array('bibdkManifestation'),
+      'display' => array('full'),
+    ),
     'bibdk_mani_title' => array(
       'entity_type' => array('bibdkManifestation'),
       'label' => 'Title',
