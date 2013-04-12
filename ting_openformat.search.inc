@@ -76,10 +76,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
     $search_results[] = _ting_openformat_set_search_result($entity);
   }
 
-  // set searchhistory
-  if (module_exists('bibdk_searchhistory')) {
-    module_invoke('bibdk_searchhistory', 'set_search_results', $keys, $result);
-  }
+   module_invoke_all('ting_openformat_search_results', $keys, $result);
 
   // Collections may contain more works than $params['numResults'], and we don't want a pager if there's only one page
   $total = ($result->numTotalCollections < $params['numResults'] && $params['start'] < $params['numResults']) ? $result->numTotalCollections : $result->numTotalObjects;
