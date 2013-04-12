@@ -58,6 +58,32 @@ function ting_openformat_menu() {
 
 
 /**
+ * Implements hook_worktabs_items().
+ * @param array $tabs
+ * @param bibdkWork $entity
+ * @return array
+ */
+function ting_openformat_worktabs_items($tabs, $entity) {
+  $tabs['subjects']['subjects'] = array(
+    'title' => t('subjects', array(), array('context' => 'ting_openformat')),
+    'btn_txt_closed' => t('view_more', array(), array('context' => 'ting_openformat')),
+    'rendered' => ting_openformat_get_tab_content($entity),
+    'weight' => 0,
+  );
+  return $tabs;
+}
+
+/**
+ * @param bibdkWork $entity
+ * @return array|null
+ */
+function ting_openformat_get_tab_content($entity) {
+  $subjects = $entity->getSubjects();
+  $markup = _ting_openformat_get_markup_for_field($subjects, '; ', FALSE);
+  return isset($markup) ? drupal_render($markup) : '';
+}
+
+/**
  * View single work
  */
 function ting_openformat_single($id) {
@@ -91,6 +117,10 @@ function ting_openformat_get_manifestations($ids) {
   return entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
 }
 
+/**
+ * @param $id
+ * @return null|string
+ */
 function ting_openformat_get_single($id) {
   $params = array();
 
