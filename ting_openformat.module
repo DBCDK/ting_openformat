@@ -151,6 +151,17 @@ function ting_openformat_form_ting_client_admin_webservices_settings_alter(&$for
     $element['#options']['bibliotekdkWorkDisplay'] = 'bibliotekdkWorkDisplay';
     // set default value
     //$form['webservices']['ting_search_openformat']['#default_value'] = 'bibliotekdkWorkDisplay';
+    $form['webservices']['cglLang'] = array(
+      '#type' => 'select',
+      '#title' => t('CQL language'),
+      '#description' => t('set the language of cql operators'),
+      '#options' => array(
+        'cgleng' => 'cqleng',
+        'cqldan' => 'cqldan'
+      ),
+      '#default_value' => variable_get('cglLang', 'cqleng'),
+
+    );
   }
 }
 

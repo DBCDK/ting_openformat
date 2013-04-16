@@ -273,7 +273,7 @@ function _ting_openformat_search_get_variables() {
   $params['objectFormat'] = variable_get('objectFormat', 'briefDisplay');
 
   //Set queryLanguage
-  $params['queryLanguage'] = 'cqleng';
+  $params['queryLanguage'] = variable_get('cglLang', 'cqleng');
   return $params;
 }
 
@@ -288,7 +288,8 @@ function _ting_openformat_set_facets(&$query, $facets) {
         $facetArray[] = $facet[0] . '="' . rawurldecode($facet[1]) . '"';
       }
     }
-    $query .= ' AND ' . implode(' AND ', $facetArray);
+    $op = (variable_get('cglLang', 'cqleng') == 'cqleng') ? ' AND ' : ' OG ';
+    $query .= $op . implode($op, $facetArray);
   }
 }
 
