@@ -524,11 +524,14 @@ function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
   $uid = $form_state['clicked_button']['#uid'];
   module_invoke_all('show_manifestation_info_prerender', $ids, $uid);
   $bibdkWork = ting_openformat_get_manifestations($ids);
-  $view = ting_openformat_work_view(current($bibdkWork));
+  $bibdkWork = current($bibdkWork);
+  $view = theme('status_messages');
+
+  $view .= ting_openformat_work_view($bibdkWork);
   $commands = array();
   $commands[] = ajax_command_remove("#ajax-$uid");
   $commands[] = ajax_command_replace(NULL, $view);
-  //$commands[] = ajax_command_replace(NULL, "$ids $uid Dette er en test");
+
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 
