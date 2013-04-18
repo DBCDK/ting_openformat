@@ -27,6 +27,14 @@ class bibdkWork {
     }
   }
 
+  public function getMaterialReview(){
+    $reviews = array();
+    foreach ($this->manifestations as $manifestation) {
+      $reviews += $manifestation->getMaterialReview();
+      }
+    return $reviews;
+  }
+
   public function getManifestations() {
     return $this->manifestations;
   }
@@ -453,6 +461,20 @@ class manifestation extends manifestationMaster {
       }
     }
     return FALSE;
+  }
+
+  public function getMaterialReview() {
+    if (!isset($this->manifestation->relationsData)) {
+      return array();
+    }
+    $reviews = array();
+    foreach ($this->manifestation->relationsData as $relation) {
+      if ($relation->relationType == 'dbcaddi:hasReview' && strpos($relation->relationUri, '870976-anmeld') !== false) {
+        $reviews[] = $relation->relationUri;
+      }
+    }
+
+    return $reviews;
   }
 
 }
