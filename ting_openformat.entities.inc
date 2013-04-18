@@ -442,6 +442,19 @@ class manifestation extends manifestationMaster {
     }
   }
 
+  public function getInfomediaLink() {
+    if (!isset($this->manifestation->relationsData)) {
+      return FALSE;
+    }
+
+    foreach ($this->manifestation->relationsData as $relation) {
+      if ($relation->relationType == 'dbcaddi:hasOnlineAccess' && $this->manifestation->main->type->{'$'} == 'Avisartikel') {
+        return $relation->relationUri;
+      }
+    }
+    return FALSE;
+  }
+
 }
 
 class manifestationMaster {
