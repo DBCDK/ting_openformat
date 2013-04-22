@@ -76,11 +76,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
     $search_results[] = _ting_openformat_set_search_result($entity);
   }
 
-  // set searchhistory
-  //TODO invoke hook instead of checking if module exists
-  if (module_exists('bibdk_searchhistory')) {
-    module_invoke('bibdk_searchhistory', 'set_search_results', $keys, $result);
-  }
+   module_invoke_all('ting_openformat_search_results', $keys, $result);
 
   // Collections may contain more works than $params['numResults'], and we don't want a pager if there's only one page
   $total = ($result->numTotalCollections < $params['numResults'] && $params['start'] < $params['numResults']) ? $result->numTotalCollections : $result->numTotalObjects;
@@ -248,7 +244,7 @@ function _ting_openformat_search_get_variables() {
   $params['objectFormat'] = variable_get('objectFormat', 'briefDisplay');
 
   //Set queryLanguage
-  $params['queryLanguage'] = 'cqleng';
+  $params['queryLanguage'] = variable_get('cglLang', 'cqleng');
   return $params;
 }
 
@@ -263,7 +259,8 @@ function _ting_openformat_set_facets(&$query, $facets) {
         $facetArray[] = $facet[0] . '="' . rawurldecode($facet[1]) . '"';
       }
     }
-    $query .= ' AND ' . implode(' AND ', $facetArray);
+    $op = (variable_get('cglLang', 'cqleng') == 'cqleng') ? ' AND ' : ' OG ';
+    $query .= $op . implode($op, $facetArray);
   }
 }
 
