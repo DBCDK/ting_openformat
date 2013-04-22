@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class bibdkWork
+ */
 class bibdkWork {
 
   public $id;
@@ -108,6 +111,40 @@ class bibdkWork {
     return (is_array($result)) ? reset($result) : $result;
   }
 
+  /**
+   * @return array|mixed|null
+   */
+  public function getFurtherSearches() {
+    $fields = array('furtherSearchType' => 'searchCode', 'furtherSearchFiction' => 'searchCode', 'furtherSearchElement' => 'searchCode');
+    $manifestations = $this->getManifestations();
+
+    $elements = array();
+    foreach ($manifestations as $manifestation) {
+      if (isset($manifestation->manifestation->work->description->furtherSearches)) {
+        $elements[] = $manifestation->manifestation->work->description->furtherSearches;
+      }
+    }
+
+    $parsedFields = ting_openformat_methods::parseFields($elements, $fields);
+    return (!empty($parsedFields)) ? $this->_parseFurtherSearches($parsedFields) : array();
+  }
+
+  /**
+   * @param $parsedFields
+   * @return array
+   */
+  private function _parseFurtherSearches($parsedFields) {
+    $ret = array();
+    foreach ($parsedFields as $furtherSearches) {
+      foreach ($furtherSearches as $key => $value) {
+        foreach ($value[0] as $elemnt) {
+          $ret[$key][$elemnt['display']]['searchCode'] = $elemnt['searchCode'];
+          $ret[$key][$elemnt['display']]['display'] = $elemnt['display'];
+        }
+      }
+    }
+    return $ret;
+  }
 }
 
 class bibdkSubwork {
@@ -169,7 +206,6 @@ class bibdkSubwork {
 
 class bibdkCollection {
 
-  //TODO fields should be private - currently being public for debug purpose
   private $manifestations;
   public $ding_entity_id;
   private $collectionTypes;
@@ -296,7 +332,6 @@ class manifestation extends manifestationMaster {
   public function __construct($manifestation) {
     $this->manifestation = $manifestation;
     $this->fields = $this->manifestation->main;
-    //dpm($manifestation);
   }
 
   public function getWork() {
@@ -916,6 +951,11 @@ class ting_openformat_methods {
     }
   }
 
+  /**
+   * @param $object
+   * @param array $fields
+   * @return array|null
+   */
   public static function parseFields($object, array $fields) {
     $ret = NULL;
     if (!isset($object)) {

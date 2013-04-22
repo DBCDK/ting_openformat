@@ -11,20 +11,6 @@
 
 function ting_openformat_field_info() {
   return array(
-    /*'ting_openformat_work_title' => array(
-      'label' => t('Title'),
-      'description' => t('title of work'),
-      'default_widget' => 'text_textfield',
-      'default_formatter' => 'ting_openformat_default_formatter',
-      'no_ui' => TRUE,
-    ),*/
-    /*'ting_openformat_work_creators' => array(
-      'label' => t('Creators'),
-      'description' => t('Creators of work'),
-      'default_widget' => 'text_textfield',
-      'default_formatter' => 'ting_openformat_default_formatter',
-      'no_ui' => TRUE,
-    ),*/
     'ting_openformat_work_subjects' => array(
       'label' => t('Subjects'),
       'description' => t('Subjects of work'),
@@ -847,9 +833,10 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
       }
     }
     elseif ($key === 'searchCode') {
-      if($return_link){
+      if ($return_link) {
         $array[] = l($elements['display'], 'search/work/' . $elements['searchCode']);
-      } else {
+      }
+      else {
         $array[] = $elements['display'];
       }
     }

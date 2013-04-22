@@ -76,10 +76,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
     $search_results[] = _ting_openformat_set_search_result($entity);
   }
 
-  // set searchhistory
-  if (module_exists('bibdk_searchhistory')) {
-    module_invoke('bibdk_searchhistory', 'set_search_results', $keys, $result);
-  }
+   module_invoke_all('ting_openformat_search_results', $keys, $result);
 
   // Collections may contain more works than $params['numResults'], and we don't want a pager if there's only one page
   $total = ($result->numTotalCollections < $params['numResults'] && $params['start'] < $params['numResults']) ? $result->numTotalCollections : $result->numTotalObjects;
@@ -140,35 +137,6 @@ function _ting_openformat_parse_collection(&$original_manifestations, &$entity_i
     }
   }
 }
-
-/** THIS FUNCTION SEEMS TO BE UNUSED - INVESTIGATE!
- * replace TingClientObjectCollection (returned from ting-client) with bibdkEntity(work)
- * */
-/*function _ting_openformat_load_entities($result) {
-  $bibdkobjects = array();
-  if (is_array($result->collections)) {
-    $ids = array();
-    foreach ($result->collections as &$collection) {
-      $original_manifestations = array();
-      $entity_ids = array();
-      // parse for manifestations
-
-      _ting_openformat_parse_manifestations($original_manifestations, $entity_ids, $openformat);
-      if (count($entity_ids) > 0) {
-        // conditions array is deprecated in drupal 8 .. @TODO find another solution .
-        $conditions['manifestations'] = $original_manifestations;
-
-        $bibdkEntities = entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
-
-        $bibdkobjects[] = $bibdkEntities;
-        // reset
-        $entity_ids = array();
-      }
-    }
-  }
-  unset($result->collections);
-  $result->collections = $bibdkobjects;
-}*/
 
 /** Set a search result array as defined for hook_search_execute
  *
@@ -276,7 +244,7 @@ function _ting_openformat_search_get_variables() {
   $params['objectFormat'] = variable_get('objectFormat', 'briefDisplay');
 
   //Set queryLanguage
-  $params['queryLanguage'] = 'cqleng';
+  $params['queryLanguage'] = variable_get('cglLang', 'cqleng');
   return $params;
 }
 
@@ -291,7 +259,8 @@ function _ting_openformat_set_facets(&$query, $facets) {
         $facetArray[] = $facet[0] . '="' . rawurldecode($facet[1]) . '"';
       }
     }
-    $query .= ' AND ' . implode(' AND ', $facetArray);
+    $op = (variable_get('cglLang', 'cqleng') == 'cqleng') ? ' AND ' : ' OG ';
+    $query .= $op . implode($op, $facetArray);
   }
 }
 
