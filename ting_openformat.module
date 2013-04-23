@@ -58,6 +58,32 @@ function ting_openformat_menu() {
 
 
 /**
+ * Implements hook_worktabs_items().
+ * @param array $tabs
+ * @param bibdkWork $entity
+ * @return array
+ */
+function ting_openformat_worktabs_items($tabs, $entity) {
+  $tabs['subjects']['subjects'] = array(
+    'title' => t('subjects', array(), array('context' => 'ting_openformat')),
+    'btn_txt_closed' => t('view_more', array(), array('context' => 'ting_openformat')),
+    'rendered' => ting_openformat_get_tab_content($entity),
+    'weight' => 0,
+  );
+  return $tabs;
+}
+
+/**
+ * @param bibdkWork $entity
+ * @return array|null
+ */
+function ting_openformat_get_tab_content($entity) {
+  $subjects = $entity->getSubjects();
+  $markup = _ting_openformat_get_markup_for_field($subjects, '; ', FALSE);
+  return isset($markup) ? drupal_render($markup) : '';
+}
+
+/**
  * View single work
  */
 function ting_openformat_single($id) {
@@ -97,7 +123,6 @@ function ting_openformat_get_manifestations($ids) {
   return entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
 }
 
-
 /**
  * Creates a hook for other modules to add parameters to getObject request.
  * @param $params
@@ -107,7 +132,10 @@ function _ting_openformat_getobject_params(&$params) {
   $params += module_invoke_all('ting_openformat_getobject_params');
 }
 
-
+/**
+ * @param $id
+ * @return null|string
+ */
 function ting_openformat_get_single($id) {
   $params = array();
 
@@ -168,6 +196,17 @@ function ting_openformat_form_ting_client_admin_webservices_settings_alter(&$for
     $element['#options']['bibliotekdkWorkDisplay'] = 'bibliotekdkWorkDisplay';
     // set default value
     //$form['webservices']['ting_search_openformat']['#default_value'] = 'bibliotekdkWorkDisplay';
+    $form['webservices']['cglLang'] = array(
+      '#type' => 'select',
+      '#title' => t('CQL language'),
+      '#description' => t('set the language of cql operators'),
+      '#options' => array(
+        'cgleng' => 'cqleng',
+        'cqldan' => 'cqldan'
+      ),
+      '#default_value' => variable_get('cglLang', 'cqleng'),
+
+    );
   }
 }
 
@@ -444,7 +483,6 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   }
   else {
     foreach ($sub as $type => $value) {
-      $type_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $type));
       foreach ($value as $subtype => $val) {
         $subtype_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $subtype));
         $trans = _ting_openformat_type_translation($type, $subtype);
@@ -541,11 +579,14 @@ function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
   $uid = $form_state['clicked_button']['#uid'];
   module_invoke_all('show_manifestation_info_prerender', $ids, $uid);
   $bibdkWork = ting_openformat_get_manifestations($ids);
-  $view = ting_openformat_work_view(current($bibdkWork));
+  $bibdkWork = current($bibdkWork);
+  $view = theme('status_messages');
+
+  $view .= ting_openformat_work_view($bibdkWork);
   $commands = array();
   $commands[] = ajax_command_remove("#ajax-$uid");
   $commands[] = ajax_command_replace(NULL, $view);
-  //$commands[] = ajax_command_replace(NULL, "$ids $uid Dette er en test");
+
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 
@@ -728,17 +769,17 @@ function ting_openformat_menu_alter(&$items) {
       );
     }
     if (isset($items['admin/structure/manifestation/section/fields'])) {
-    $items['admin/structure/manifestation/section'] = $items['admin/structure/manifestation/section/fields'];
-    $item = &$items['admin/structure/manifestation/section'];
-    $item['type'] = MENU_NORMAL_ITEM;
-    $item['title'] = 'Manifestation Section for bibliotek.dk';
-    $item['description'] = 'Manage Section display.';
+      $items['admin/structure/manifestation/section'] = $items['admin/structure/manifestation/section/fields'];
+      $item = &$items['admin/structure/manifestation/section'];
+      $item['type'] = MENU_NORMAL_ITEM;
+      $item['title'] = 'Manifestation Section for bibliotek.dk';
+      $item['description'] = 'Manage Section display.';
 
-    $items['admin/structure/manifestation/section/fields'] = array(
-      'title' => 'Manage fields',
-      'type' => MENU_DEFAULT_LOCAL_TASK,
-      'weight' => 1,
-    );
+      $items['admin/structure/manifestation/section/fields'] = array(
+        'title' => 'Manage fields',
+        'type' => MENU_DEFAULT_LOCAL_TASK,
+        'weight' => 1,
+      );
     }
   }
 }
