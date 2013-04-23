@@ -61,7 +61,7 @@ function ting_openformat_menu() {
  * View single work
  */
 function ting_openformat_single($id) {
-  $bibdkEntity = ting_openformat_get_single($id);
+  $bibdkEntity = ting_openformat_get_manifestations($id);
   return ting_openformat_work_view(current($bibdkEntity));
 }
 
