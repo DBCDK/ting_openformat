@@ -87,8 +87,20 @@ function ting_openformat_get_tab_content($entity) {
  * View single work
  */
 function ting_openformat_single($id) {
-  $bibdkEntity = ting_openformat_get_single($id);
-  return ting_openformat_work_view(current($bibdkEntity));
+  drupal_set_title('');
+  $bibdkEntity = ting_openformat_get_manifestations($id);
+  if (!isset($bibdkEntity) || count($bibdkEntity) == 0)
+    return t('no_work_found');
+  $bibdkEntity = reset($bibdkEntity);
+  $manifestation  = reset($bibdkEntity->manifestations);
+
+  return theme('ting_openformat_single_work', array(
+    'title' => $bibdkEntity->getTitle(),
+    'partOf' => drupal_render(_ting_openformat_get_markup_for_field($manifestation->getHostPublication())),
+    'author' => drupal_render(_ting_openformat_get_markup_for_field($bibdkEntity->getCreator())),
+    'ids' => $id,
+    'work' => ting_openformat_work_view($bibdkEntity),
+  ));
 }
 
 /**

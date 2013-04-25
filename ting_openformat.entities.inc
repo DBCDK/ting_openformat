@@ -211,8 +211,8 @@ class bibdkCollection {
   private $collectionTypes;
   private $collectionIds;
 
-  function __construct($manifestation) {
-    $this->manifestations = $manifestation['manifestations'];
+  function __construct($manifestations) {
+    $this->manifestations = $manifestations;
   }
 
   //TODO the below method should be reviewed as valid XML is expected from webservices in production
@@ -230,22 +230,22 @@ class bibdkCollection {
   }
 
   public function getId() {
-    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('identifier'));
+    $result = ting_openformat_methods::parseFields(current($this->manifestations), array('identifier'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
   public function getTitle() {
-    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('title'));
+    $result = ting_openformat_methods::parseFields(current($this->manifestations), array('title'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
   public function getPartOf() {
-    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('partOf'));
+    $result = ting_openformat_methods::parseFields(current($this->manifestations), array('partOf'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
   public function getAuthor() {
-    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('creator'));
+    $result = ting_openformat_methods::parseFields(current($this->manifestations), array('creator'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
