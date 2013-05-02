@@ -231,30 +231,6 @@ class ManifestationMaster {
     return (is_array($result)) ? reset($result) : $result;
   }
 
-  /* \brief contentPartialNote
-   * zero or more occurence(s)
-   */
-
-  public function getContentPartialNote() {
-    $fields = array(
-      'contentPartialNote' => array('contentPartialNoteDescription', 'contentPartialNoteElement')
-    );
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
-    return (is_array($result)) ? reset($result) : $result;
-  }
-
-  /* \brief contentNote
-   * zero or more occurence(s)
-   */
-
-  public function getContentNote() {
-    $fields = array(
-      'contentNote' => array('contentNoteDescription', 'contentNoteElement')
-    );
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
-    return (is_array($result)) ? reset($result) : $result;
-  }
-
   /* \brief references
    * zero or more occurence(s)
    */
