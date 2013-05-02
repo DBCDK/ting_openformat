@@ -150,7 +150,7 @@ function _ting_openformat_parse_collection(&$original_manifestations, &$entity_i
  * 'language': Language code for the item (usually two characters).
  *
  * @see hook_search_execute - http://api.drupal.org/api/drupal/modules%21search%21search.api.php/function/hook_search_execute/7
- * @param bibdkCollection $bibdkobject
+ * @param BibdkCollection $bibdkobject
  * @return Array result
  */
 function _ting_openformat_set_search_result($bibdkobject) {

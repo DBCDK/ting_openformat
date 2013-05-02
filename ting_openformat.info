@@ -12,6 +12,15 @@ files[] = ting_openformat.admin.inc
 files[] = ting_openformat.controllers.inc
 files[] = ting_openformat.entities.inc
 files[] = test/ting_openformat.test
+
+files[] = lib/BibdkCollection.inc
+files[] = lib/BibdkSubwork.inc
+files[] = lib/BibdkWork.inc
+files[] = lib/Manifestation.inc
+files[] = lib/ManifestationMaster.inc
+files[] = lib/ManifestationSection.inc
+files[] = lib/ManifestationVolume.inc
+
 scripts[] = js/ting_openformat.js
 
 dependencies[] = search

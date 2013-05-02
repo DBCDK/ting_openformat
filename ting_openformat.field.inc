@@ -418,7 +418,7 @@ function ting_openformat_field_load($entity_type, $entities, $field, $instances,
  * @see  ting_openformat.entities.inc::bibdkWork::getCreator().) ... there will be changes in format
  *
  * @param $entity_type
- * @param bibdkWork | manifestation $entity
+ * @param BibdkWork | Manifestation $entity
  * @param $field
  * @param $instance
  * @param $langcode

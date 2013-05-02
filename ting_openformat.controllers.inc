@@ -23,7 +23,7 @@ class bibdkEntityApiController implements DrupalEntityControllerInterface{
    **/
   public function load ($ids = array(), $conditions = array()) {
     //$entity = new bibdkWork($conditions['work']);
-    $entity = new bibdkWork();
+    $entity = new BibdkWork();
     $entity->setManifestations($conditions['manifestations']);
     $entity->id = $entity->ding_entity_id = key($entity->getManifestations());
     $entities[$entity->id] = $entity;
@@ -65,7 +65,7 @@ class bibdkEntityApiController implements DrupalEntityControllerInterface{
  **/
 class subWorkEntityApiController extends bibdkEntityApiController{
   public function load( $type = '', $manifestations = array() ) {
-    $entity = new bibdkSubwork($type, $manifestations);
+    $entity = new BibdkSubwork($type, $manifestations);
     $entity->id = $entity->ding_entity_id = current($manifestations)->id;
     $entities[$entity->id] = $entity;
     // attach fields
@@ -80,7 +80,7 @@ class subWorkEntityApiController extends bibdkEntityApiController{
  **/
 class ManifestionEntityApiController extends bibdkEntityApiController{
   public function load( $id = array(), $manifestation = array() ) {
-    $entity = new manifestation($manifestation);
+    $entity = new Manifestation($manifestation);
     $entity->id = $entity->ding_entity_id = $id;
     $entities[$entity->id] = $entity;
     // attach fields
@@ -88,7 +88,7 @@ class ManifestionEntityApiController extends bibdkEntityApiController{
 
     return $entities[$entity->id];
   }
-  
+
 }
 
 /**
@@ -96,7 +96,7 @@ class ManifestionEntityApiController extends bibdkEntityApiController{
  **/
 class CollectionEntityApiController extends bibdkEntityApiController {
   public function load( $id = array(), $manifestation = array() ) {
-    $entity = new bibdkCollection($manifestation);
+    $entity = new BibdkCollection($manifestation);
     $entity->id = $entity->ding_entity_id = $id;
     $entities[$entity->id] = $entity;
     // attach fields
@@ -108,7 +108,7 @@ class CollectionEntityApiController extends bibdkEntityApiController {
 
 class ManifestationVolumeEntityApiController extends bibdkEntityApiController {
   public function load( $id = array(), $volume = array() ) {
-    $entity = new manifestationVolume($volume);
+    $entity = new ManifestationVolume($volume);
     $entity->id = $entity->ding_entity_id = $id;
     $entities[$entity->id] = $entity;
     // attach fields
@@ -120,7 +120,7 @@ class ManifestationVolumeEntityApiController extends bibdkEntityApiController {
 
 class ManifestationSectionEntityApiController extends bibdkEntityApiController {
   public function load( $id = array(), $section = array() ) {
-    $entity = new manifestationSection($section);
+    $entity = new ManifestationSection($section);
     $entity->id = $entity->ding_entity_id = $id;
     $entities[$entity->id] = $entity;
     // attach fields
