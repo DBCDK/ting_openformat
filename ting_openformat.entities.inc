@@ -30,6 +30,14 @@ class bibdkWork {
     }
   }
 
+  public function getMaterialReview(){
+    $reviews = array();
+    foreach ($this->manifestations as $manifestation) {
+      $reviews += $manifestation->getMaterialReview();
+      }
+    return $reviews;
+  }
+
   public function getManifestations() {
     return $this->manifestations;
   }
@@ -335,7 +343,6 @@ class manifestation extends manifestationMaster {
   }
 
   public function getWork() {
-
     return isset($this->manifestation->work) ? $this->manifestation->work : NULL;
   }
 
@@ -477,6 +484,33 @@ class manifestation extends manifestationMaster {
     else {
       return $this->manifestation->section;
     }
+  }
+
+  public function getInfomediaLink() {
+    if (!isset($this->manifestation->relationsData)) {
+      return FALSE;
+    }
+
+    foreach ($this->manifestation->relationsData as $relation) {
+      if ($relation->relationType == 'dbcaddi:hasOnlineAccess' && $this->manifestation->main->type->{'$'} == 'Avisartikel') {
+        return $relation->relationUri;
+      }
+    }
+    return FALSE;
+  }
+
+  public function getMaterialReview() {
+    if (!isset($this->manifestation->relationsData)) {
+      return array();
+    }
+    $reviews = array();
+    foreach ($this->manifestation->relationsData as $relation) {
+      if ($relation->relationType == 'dbcaddi:hasReview' && strpos($relation->relationUri, '870976-anmeld') !== false) {
+        $reviews[] = $relation->relationUri;
+      }
+    }
+
+    return $reviews;
   }
 
 }

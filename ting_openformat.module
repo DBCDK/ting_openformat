@@ -112,14 +112,20 @@ function ting_openformat_get_manifestations($ids) {
   $params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
   $params['objectId'] = $ids;
   $params['includeHoldingsCount'] = TRUE;
-  $result = $client->do_get_object($params);
+  _ting_openformat_getobject_params($params);
 
+  $result = $client->do_get_object($params);
   if (empty($result->collections)) {
     return array();
   }
 
-  foreach ($result->collections as $collection) {
-    $openformat[] = $collection->formattedCollection->formattedCollection->manifestation;
+  foreach ($result->collections as $TingClientObjectCollection) {
+    foreach ( $TingClientObjectCollection->objects as $TingClientObject ) {
+      $relationsData = $TingClientObject->relationsData;
+    }
+    $manifestation = $TingClientObjectCollection->formattedCollection->formattedCollection->manifestation;
+    $manifestation->relationsData = $relationsData;
+    $openformat[] = $manifestation;
   }
 
   $original_manifestations = array();
@@ -127,6 +133,15 @@ function ting_openformat_get_manifestations($ids) {
   _ting_openformat_parse_manifestations($original_manifestations, $entity_ids, $openformat);
   $conditions['manifestations'] = $original_manifestations;
   return entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
+}
+
+/**
+ * Creates a hook for other modules to add parameters to getObject request.
+ * @param $params
+ * @return array
+ */
+function _ting_openformat_getobject_params(&$params) {
+  $params += module_invoke_all('ting_openformat_getobject_params');
 }
 
 /**
