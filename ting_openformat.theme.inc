@@ -65,6 +65,12 @@ function ting_openformat_theme() {
       'template' => 'ting_openformat_subwork_tabs',
       'render elements' => 'elements',
     ),
+    'ting_openformat_single_work' => array(
+      'path' => $path,
+      'variables' => array('title' => '','author'=> '','ids' => '', 'work' => '', 'uid' => ''),
+      'template' => 'ting_openformat_single_work',
+      'render elements' => 'elements',
+    ),
 
     'ting_openformat_mini_pager' => array(
       'variables' => array('tags' => array(), 'element' => 0, 'parameters' => array(), 'quantity' => 9),

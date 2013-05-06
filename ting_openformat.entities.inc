@@ -30,6 +30,14 @@ class bibdkWork {
     }
   }
 
+  public function getMaterialReview(){
+    $reviews = array();
+    foreach ($this->manifestations as $manifestation) {
+      $reviews += $manifestation->getMaterialReview();
+      }
+    return $reviews;
+  }
+
   public function getManifestations() {
     return $this->manifestations;
   }
@@ -211,8 +219,8 @@ class bibdkCollection {
   private $collectionTypes;
   private $collectionIds;
 
-  function __construct($manifestation) {
-    $this->manifestations = $manifestation['manifestations'];
+  function __construct($manifestations) {
+    $this->manifestations = $manifestations;
   }
 
   //TODO the below method should be reviewed as valid XML is expected from webservices in production
@@ -230,22 +238,22 @@ class bibdkCollection {
   }
 
   public function getId() {
-    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('identifier'));
+    $result = ting_openformat_methods::parseFields(current($this->manifestations), array('identifier'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
   public function getTitle() {
-    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('title'));
+    $result = ting_openformat_methods::parseFields(current($this->manifestations), array('title'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
   public function getPartOf() {
-    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('partOf'));
+    $result = ting_openformat_methods::parseFields(current($this->manifestations), array('partOf'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
   public function getAuthor() {
-    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('creator'));
+    $result = ting_openformat_methods::parseFields(current($this->manifestations), array('creator'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -335,7 +343,6 @@ class manifestation extends manifestationMaster {
   }
 
   public function getWork() {
-
     return isset($this->manifestation->work) ? $this->manifestation->work : NULL;
   }
 
@@ -477,6 +484,33 @@ class manifestation extends manifestationMaster {
     else {
       return $this->manifestation->section;
     }
+  }
+
+  public function getInfomediaLink() {
+    if (!isset($this->manifestation->relationsData)) {
+      return FALSE;
+    }
+
+    foreach ($this->manifestation->relationsData as $relation) {
+      if ($relation->relationType == 'dbcaddi:hasOnlineAccess' && $this->manifestation->main->type->{'$'} == 'Avisartikel') {
+        return $relation->relationUri;
+      }
+    }
+    return FALSE;
+  }
+
+  public function getMaterialReview() {
+    if (!isset($this->manifestation->relationsData)) {
+      return array();
+    }
+    $reviews = array();
+    foreach ($this->manifestation->relationsData as $relation) {
+      if ($relation->relationType == 'dbcaddi:hasReview' && strpos($relation->relationUri, '870976-anmeld') !== false) {
+        $reviews[] = $relation->relationUri;
+      }
+    }
+
+    return $reviews;
   }
 
 }
