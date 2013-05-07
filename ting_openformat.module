@@ -113,8 +113,8 @@ function ting_openformat_get_manifestations($ids) {
   $params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
   $params['objectId'] = $ids;
   $params['includeHoldingsCount'] = TRUE;
-  _ting_openformat_getobject_params($params);
-
+  //$params['relationData'] = 'uri';
+  drupal_alter('ting_openformat_getobject_params', $params);
   $result = $client->do_get_object($params);
   if (empty($result->collections)) {
     return array();
@@ -136,14 +136,6 @@ function ting_openformat_get_manifestations($ids) {
   return entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
 }
 
-/**
- * Creates a hook for other modules to add parameters to getObject request.
- * @param $params
- * @return array
- */
-function _ting_openformat_getobject_params(&$params) {
-  $params += module_invoke_all('ting_openformat_getobject_params');
-}
 
 /**
  * @param $id
