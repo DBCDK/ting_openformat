@@ -29,11 +29,8 @@ function hook_ting_openformat_subwork_materialtype_actions($ordered_subworks, $t
  * @return array
  *  An array with getObject parameters
  */
-function hook_ting_openformat_getobject_params() {
-  // example:
-  return array(
-    'relationData' => 'full',
-  );
+function hook_ting_openformat_getobject_params_alter(&$params) {
+  $params['relationData'] = 'uri';
 }
 
 
