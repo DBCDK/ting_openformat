@@ -809,8 +809,9 @@ function _ting_openformat_fetch_types() {
   );
 
   $client = new ting_client_class();
-  $result = $client->do_search($options);
-
+ // $result = $client->do_search($options);
+ $result = $client->do_request('search',$options);
+ 
   foreach ($result->facets['facet.type']->terms as $term => $count) {
     if (!isset($types[$term])) {
       $types[$term] = array("type" => $term, "count" => $count, "weight" => 1000);
