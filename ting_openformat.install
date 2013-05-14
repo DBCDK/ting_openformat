@@ -269,17 +269,17 @@ function ting_openformat_bibdk_fields() {
     ),
     'bibdk_mani_content_note' => array(
       'label' => 'Content Note',
-      'entity_type' => array('bibdkManifestation'),
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_content_partial_note' => array(
       'label' => 'Content Partial Note',
-      'entity_type' => array('bibdkManifestation'),
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_analytic_content' => array(
       'label' => 'Analytic Content',
-      'entity_type' => array('bibdkManifestation'),
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
     'bibdk_mani_originals' => array(

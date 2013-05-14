@@ -408,4 +408,19 @@ class ManifestationMaster {
     return (is_array($result)) ? reset($result) : $result;
   }
 
+
+  /** Deprecated
+   * @return null
+   */
+  public function getContentPartialNote() {
+    return null;
+  }
+
+  /** Deprecated
+   * @return null
+   */
+  public function getContentNote() {
+    return null;
+  }
+
 }
