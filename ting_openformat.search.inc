@@ -57,7 +57,8 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   }
   // do the actual search via ting_client_class
   $client = new ting_client_class();
-  $result = $client->do_search($params);
+ // $result = $client->do_search($params);
+  $result = $client->do_request('search',$params);
   if (!$result) {
     return array();
   }
@@ -190,7 +191,8 @@ function _ting_openformat_facet_cache($client, $result, $params) {
     $params['numResults'] = 0;
     $params['objectFormat'] = 'DKABM';
 
-    $facet_result = $client->do_search($params);
+    //$facet_result = $client->do_search($params);
+    $facet_result = $client->do_request('search',$params);
     if (isset($facet_result->facets)) {
       $result->facets = $facet_result->facets;
       cache_set($local_cache_key, $facet_result->facets, 'cache', CACHE_TEMPORARY);
