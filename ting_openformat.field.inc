@@ -638,7 +638,14 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
       case 'bibdk_mani_analytic_content':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $analyticContent = $entity->getAnalyticContent();
-        $value = _ting_openformat_get_markup_for_field($analyticContent, "<br />");
+        if (isset($analyticContent['analyticContent'][0])){
+          foreach ($analyticContent['analyticContent'][0] as $content){
+            $markup = _ting_openformat_get_markup_for_field($content, " ");
+            $values[] = $markup['#markup'];
+          }
+          $value['#markup'] = implode('<br />', $values);
+        }
+
         break;
 
       // references
