@@ -871,7 +871,13 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
   return $string;
 }
 
+/** Helper function to parse analytic content
+ * @param $analytic_content
+ * @return array|null
+ */
 function _ting_openformat_parse_analytic_content($analytic_content){
+  if (!isset($analytic_content))
+    return null;
   if (isset($analytic_content['analyticContent'][0])){
     foreach ($analytic_content['analyticContent'][0] as $content){
       foreach ($content as $key => $element) {

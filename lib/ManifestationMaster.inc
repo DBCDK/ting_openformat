@@ -422,5 +422,11 @@ class ManifestationMaster {
   public function getContentNote() {
     return null;
   }
+/** Deprecated
+   * @return null
+   */
+  public function getAnalyticContent() {
+    return null;
+  }
 
 }
