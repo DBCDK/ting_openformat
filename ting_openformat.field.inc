@@ -638,13 +638,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
       case 'bibdk_mani_analytic_content':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $analyticContent = $entity->getAnalyticContent();
-        if (isset($analyticContent['analyticContent'][0])){
-          foreach ($analyticContent['analyticContent'][0] as $content){
-            $markup = _ting_openformat_get_markup_for_field($content, " ");
-            $values[] = $markup['#markup'];
-          }
-          $value['#markup'] = implode('<br />', $values);
-        }
+        $value = _ting_openformat_parse_analytic_content($analyticContent);
 
         break;
 
@@ -875,6 +869,26 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
     $string .= implode($divider, $array);
   }
   return $string;
+}
+
+function _ting_openformat_parse_analytic_content($analytic_content){
+  if (isset($analytic_content['analyticContent'][0])){
+    foreach ($analytic_content['analyticContent'][0] as $content){
+      foreach ($content as $key => $element) {
+        $element_markup = _ting_openformat_get_markup_for_field($element, " ");
+
+        if ($key == 'analyticContributor')
+          $element_markup['#markup'] .= ":";
+
+        $element_values[] = $element_markup['#markup'];
+      }
+      $values[] = implode(' ', $element_values);
+      $element_values = array();
+
+    }
+    $value['#markup'] = implode('<br />', $values);
+  }
+  return $value;
 }
 
 //865 lines before refactoring
