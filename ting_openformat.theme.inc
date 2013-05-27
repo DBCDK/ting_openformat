@@ -26,7 +26,7 @@ function ting_openformat_theme() {
 
     'ting_openformat_work' => array(
       'path' => $path,
-      'variables' => array('fields' => array(),'subWorks'=>array(),'ding_id' => 0,),
+      'variables' => array('fields' => array(),'cover' => '', 'work_tabs' => '', 'subWorks'=>array(),'ding_id' => 0,),
       'template' => 'ting_openformat_work',
       'render elements' => 'elements',
     ),
