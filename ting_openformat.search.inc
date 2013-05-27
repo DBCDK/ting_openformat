@@ -239,14 +239,11 @@ function _ting_openformat_search_get_variables() {
     watchdog('openformat search', 'agency is not set - yields no search results', array(), WATCHDOG_ERROR, url('admin/config/ting/settings'));
   }
 
-  // objectformat (opensearch::objectFormat)
-  //$params['objectFormat'] = variable_get('ting_search_openformat','dkabm');
-  //Method for ajax_call
-  #$params['collectionType'] = variable_get('collectionType', 'work-1');
+  // set Object Format
   $params['objectFormat'] = variable_get('objectFormat', 'briefDisplay');
 
   //Set queryLanguage
-  $params['queryLanguage'] = variable_get('cglLang', 'cqleng');
+  $params['queryLanguage'] = ting_openformat_get_cql_language();
   return $params;
 }
 
@@ -261,7 +258,7 @@ function _ting_openformat_set_facets(&$query, $facets) {
         $facetArray[] = $facet[0] . '="' . rawurldecode($facet[1]) . '"';
       }
     }
-    $op = (variable_get('cglLang', 'cqleng') == 'cqleng') ? ' AND ' : ' OG ';
+    $op = ting_openformat_get_cql_commando('AND');
     $query .= $op . implode($op, $facetArray);
   }
 }

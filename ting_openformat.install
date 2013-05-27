@@ -425,6 +425,7 @@ function ting_openformat_update_7016() {
  * Fix typo in cql language option
  * */
 function ting_openformat_update_7017() {
-  if (variable_get('cglLang', 'cqleng') == 'cgleng')
-    variable_set('cglLang', 'cqleng');
+  /**
+   * Depricated update
+   */
 }
