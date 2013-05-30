@@ -849,7 +849,7 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
       $array[] = $value;
     }
   }
-  $string = (isset($header)) ? $header . " " : " ";
+  $string = (isset($header)) ? $header . " " : "";
   if (isset($array)) {
     $string .= implode($divider, $array);
   }
