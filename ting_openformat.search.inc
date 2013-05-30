@@ -58,6 +58,9 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   // do the actual search via ting_client_class
   $client = new ting_client_class();
  // $result = $client->do_search($params);
+
+  if (isset($params['query']) && empty($params['query']) )
+    return array();
   $result = $client->do_request('search',$params);
   if (!$result) {
     return array();
