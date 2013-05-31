@@ -121,13 +121,26 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
   }
 
   public function setUp(){
-    parent::setUp('devel');
+    parent::setUp('ting_openformat', 'devel');
+    variable_set('ting_search_url', 'http://lakiseks.dbc.dk/openbibdk/0.5/');
+    variable_set('bibdk_provider_security_code', 'testhest');
+    variable_set('search_active_modules', array('ting_openformat' => 'ting_openformat'));
+    variable_set('search_default_module', 'ting_openformat');
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content', 'search content'));
+    menu_rebuild();
   }
 
   public function testRunner(){
     $this->_testMethodGetMarkupForField();
     $this->_testMethodParseElement();
     $this->_testSearchDefaultVariables();
+    $this->_testEmptySearch();
+  }
+
+  private function _testEmptySearch(){
+    $this->drupalPost('', NULL, t('Search'));
+    $this->assertNoText('Error: No query found in request');
+    $this->assertText('Please enter some keywords.');
   }
 
 
