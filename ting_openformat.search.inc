@@ -57,7 +57,11 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   }
   // do the actual search via ting_client_class
   $client = new ting_client_class();
-  $result = $client->do_search($params);
+ // $result = $client->do_search($params);
+
+  if (isset($params['query']) && empty($params['query']) )
+    return array();
+  $result = $client->do_request('search',$params);
   if (!$result) {
     return array();
   }
@@ -150,7 +154,7 @@ function _ting_openformat_parse_collection(&$original_manifestations, &$entity_i
  * 'language': Language code for the item (usually two characters).
  *
  * @see hook_search_execute - http://api.drupal.org/api/drupal/modules%21search%21search.api.php/function/hook_search_execute/7
- * @param bibdkCollection $bibdkobject
+ * @param BibdkCollection $bibdkobject
  * @return Array result
  */
 function _ting_openformat_set_search_result($bibdkobject) {
@@ -190,7 +194,8 @@ function _ting_openformat_facet_cache($client, $result, $params) {
     $params['numResults'] = 0;
     $params['objectFormat'] = 'DKABM';
 
-    $facet_result = $client->do_search($params);
+    //$facet_result = $client->do_search($params);
+    $facet_result = $client->do_request('search',$params);
     if (isset($facet_result->facets)) {
       $result->facets = $facet_result->facets;
       cache_set($local_cache_key, $facet_result->facets, 'cache', CACHE_TEMPORARY);
@@ -237,14 +242,11 @@ function _ting_openformat_search_get_variables() {
     watchdog('openformat search', 'agency is not set - yields no search results', array(), WATCHDOG_ERROR, url('admin/config/ting/settings'));
   }
 
-  // objectformat (opensearch::objectFormat)
-  //$params['objectFormat'] = variable_get('ting_search_openformat','dkabm');
-  //Method for ajax_call
-  #$params['collectionType'] = variable_get('collectionType', 'work-1');
+  // set Object Format
   $params['objectFormat'] = variable_get('objectFormat', 'briefDisplay');
 
   //Set queryLanguage
-  $params['queryLanguage'] = variable_get('cglLang', 'cqleng');
+  $params['queryLanguage'] = ting_openformat_get_cql_language();
   return $params;
 }
 
@@ -259,7 +261,7 @@ function _ting_openformat_set_facets(&$query, $facets) {
         $facetArray[] = $facet[0] . '="' . rawurldecode($facet[1]) . '"';
       }
     }
-    $op = (variable_get('cglLang', 'cqleng') == 'cqleng') ? ' AND ' : ' OG ';
+    $op = ting_openformat_get_cql_commando('AND');
     $query .= $op . implode($op, $facetArray);
   }
 }

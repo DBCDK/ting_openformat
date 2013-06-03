@@ -221,6 +221,13 @@ function ting_openformat_field_info() {
       'default_formatter' => 'ting_openformat_default_formatter',
       'no_ui' => TRUE,
     ),
+     'bibdk_mani_analytic_content' => array(
+      'label' => t('Analytic Content'),
+      'description' => t('Analytic content of manifestation'),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'ting_openformat_default_formatter',
+      'no_ui' => TRUE,
+    ),
     'bibdk_mani_references' => array(
       'label' => t('References'),
       'description' => t('References of manifestation'),
@@ -418,7 +425,7 @@ function ting_openformat_field_load($entity_type, $entities, $field, $instances,
  * @see  ting_openformat.entities.inc::bibdkWork::getCreator().) ... there will be changes in format
  *
  * @param $entity_type
- * @param bibdkWork | manifestation $entity
+ * @param BibdkWork | Manifestation $entity
  * @param $field
  * @param $instance
  * @param $langcode
@@ -613,18 +620,26 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $value = _ting_openformat_get_markup_for_field($descriptionNote);
         break;
 
-      // descriptionNote
+      // contentNote
       case 'bibdk_mani_content_note':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $note = $entity->getContentNote();
         $value = _ting_openformat_get_markup_for_field($note);
         break;
 
-      // descriptionNote
+      // contentPartialNote
       case 'bibdk_mani_content_partial_note':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $descriptionNote = $entity->getContentPartialNote();
-        $value = _ting_openformat_get_markup_for_field($descriptionNote);
+        $value = _ting_openformat_get_markup_for_field($descriptionNote, "<br />");
+        break;
+
+     // descriptionNote
+      case 'bibdk_mani_analytic_content':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $analyticContent = $entity->getAnalyticContent();
+        $value = _ting_openformat_parse_analytic_content($analyticContent);
+
         break;
 
       // references
@@ -849,11 +864,37 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
       $array[] = $value;
     }
   }
-  $string = (isset($header)) ? $header . " " : " ";
+  $string = (isset($header)) ? $header . " " : "";
   if (isset($array)) {
     $string .= implode($divider, $array);
   }
   return $string;
+}
+
+/** Helper function to parse analytic content
+ * @param $analytic_content
+ * @return array|null
+ */
+function _ting_openformat_parse_analytic_content($analytic_content){
+  if (!isset($analytic_content))
+    return null;
+  if (isset($analytic_content['analyticContent'][0])){
+    foreach ($analytic_content['analyticContent'][0] as $content){
+      foreach ($content as $key => $element) {
+        $element_markup = _ting_openformat_get_markup_for_field($element, " ");
+
+        if ($key == 'analyticContributor')
+          $element_markup['#markup'] .= ":";
+
+        $element_values[] = $element_markup['#markup'];
+      }
+      $values[] = implode(' ', $element_values);
+      $element_values = array();
+
+    }
+    $value['#markup'] = implode('<br />', $values);
+  }
+  return $value;
 }
 
 //865 lines before refactoring

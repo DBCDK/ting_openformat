@@ -277,6 +277,11 @@ function ting_openformat_bibdk_fields() {
       'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full')
     ),
+    'bibdk_mani_analytic_content' => array(
+      'label' => 'Analytic Content',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
+      'display' => array('full')
+    ),
     'bibdk_mani_originals' => array(
       'label' => 'Originals',
       'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
