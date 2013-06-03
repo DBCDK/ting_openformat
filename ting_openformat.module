@@ -60,7 +60,7 @@ function ting_openformat_menu() {
 /**
  * Implements hook_worktabs_items().
  * @param array $tabs
- * @param bibdkWork $entity
+ * @param BibdkWork $entity
  * @return array
  */
 function ting_openformat_worktabs_items($tabs, $entity) {
@@ -74,7 +74,7 @@ function ting_openformat_worktabs_items($tabs, $entity) {
 }
 
 /**
- * @param bibdkWork $entity
+ * @param BibdkWork $entity
  * @return array|null
  */
 function ting_openformat_get_tab_content($entity) {
@@ -522,7 +522,7 @@ function _ting_openformat_subwork_materialtype_actions($ordered_subworks, $type_
  * Generates the collection view with an 'Order any edition' button if view is
  * implemented (requires bibdk_reservation module)
  *
- * @param bibdkCollection $bibdkobject
+ * @param BibdkCollection $bibdkobject
  * @return string
  */
 function ting_openformat_collection_view($bibdkobject) {
@@ -646,7 +646,7 @@ function ting_openformat_section_view($volume, $view_mode = 'full', $langcode = 
 /**
  * attach entity fields to a single entity. Return a renderable array
  * @param $entity_type
- * @param manifestation|bibdkWork|bibdkSubwork|bibdkCollection $object
+ * @param Manifestation|BibdkWork|BibdkSubwork|BibdkCollection $object
  * @param $view_mode
  * @param $langcode
  * @return array
