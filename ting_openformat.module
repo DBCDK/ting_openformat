@@ -199,19 +199,33 @@ function ting_openformat_form_ting_client_admin_webservices_settings_alter(&$for
     $element['#options']['dkabm'] = 'dkabm';
     // add bibliotekdkWorkDisplay to options
     $element['#options']['bibliotekdkWorkDisplay'] = 'bibliotekdkWorkDisplay';
-    // set default value
-    //$form['webservices']['ting_search_openformat']['#default_value'] = 'bibliotekdkWorkDisplay';
-    $form['webservices']['cglLang'] = array(
-      '#type' => 'select',
-      '#title' => t('CQL language'),
-      '#description' => t('set the language of cql operators'),
-      '#options' => array(
-        'cqleng' => 'cqleng',
-        'cqldan' => 'cqldan'
-      ),
-      '#default_value' => variable_get('cglLang', 'cqleng'),
-    );
   }
+}
+
+
+/** Translate CQL commandos. Only support english or danish
+ * @param $cql
+ * @return null|string
+ */
+function ting_openformat_get_cql_commando($cql){
+  $return = NULL;
+
+  switch ($cql){
+    case 'AND' :
+      $return = ting_openformat_get_cql_language() == 'cqldan' ? ' OG ': ' AND ';
+      break;
+    case 'OR' :
+      $return = ting_openformat_get_cql_language() == 'cqldan' ? ' ELLER ': ' OR ';
+      break;
+  }
+  return $return;
+}
+
+function ting_openformat_get_cql_language(){
+
+  global $language;
+
+  return $language->language == 'da' ? 'cqldan' : 'cqleng';
 }
 
 /* * ************ ENTITY *************** */

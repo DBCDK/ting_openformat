@@ -23,11 +23,10 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     parent::setUp();
   }
 
-
   public function testManifestationMethods() {
     $this->_testGetmethods("getSubType", "Grammofonplade");
     $this->_testGetmethods("getOriginalTitle", NULL);
-    $result = $this->_testGetmethods("getAnalyticContent", array (
+    $this->_testGetmethods("getAnalyticContent", array (
       'analyticContent' =>
       array (
         0 =>
@@ -64,6 +63,53 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
         ),
       ),
     ));
+
+}
+  public function testCqlCommando(){
+
+    global $language;
+
+    $saved_language = $language;
+
+    $language->language = 'en';
+
+    // Test English - AND
+    $result = ting_openformat_get_cql_commando('AND');
+    $expected = ' AND ';
+    $this->assertEqual($result, $expected, 'CQL Commando correcty translated');
+
+    // Test English - OR
+    $result = ting_openformat_get_cql_commando('OR');
+    $expected = ' OR ';
+    $this->assertEqual($result, $expected, 'CQL Commando correcty translated');
+
+    // Test English - NON VALID
+    $result = ting_openformat_get_cql_commando('FAIL');
+    $expected = NULL;
+    $this->assertEqual($result, $expected, 'CQL Commando correcty translated');
+
+
+    $language->language = 'da';
+
+    // Test Danish - AND
+    $result = ting_openformat_get_cql_commando('AND');
+    $expected = ' OG ';
+    $this->assertEqual($result, $expected, 'CQL Commando correcty translated');
+
+    // Test Danish - OR
+    $result = ting_openformat_get_cql_commando('OR');
+    $expected = ' ELLER ';
+    $this->assertEqual($result, $expected, 'CQL Commando correcty translated');
+
+    // Test Danish - NON Valid
+    $result = ting_openformat_get_cql_commando('FAIL');
+    $expected = NULL;
+    $this->assertEqual($result, $expected, 'CQL Commando correcty translated');
+
+
+    $language = $saved_language;
+
+
   }
 
   /**
@@ -115,8 +161,30 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
   }
 
   public function setUp(){
-    parent::setUp(array('ting_openformat'));
+    parent::setUp('ting_openformat');
+    variable_set('ting_search_url', 'http://lakiseks.dbc.dk/openbibdk/0.5/');
+    variable_set('bibdk_provider_security_code', 'testhest');
+    variable_set('search_active_modules', array('ting_openformat' => 'ting_openformat'));
+    variable_set('search_default_module', 'ting_openformat');
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content', 'search content'));
+    menu_rebuild();
   }
+
+  public function testRunner(){
+    $this->_testFields();
+    $this->_testFieldContent();
+    $this->_testMethodGetMarkupForField();
+    $this->_testMethodParseElement();
+    $this->_testSearchDefaultVariables();
+    $this->_testEmptySearch();
+  }
+
+  private function _testEmptySearch(){
+    $this->drupalPost('', NULL, t('Search'));
+    $this->assertNoText('Error: No query found in request');
+    $this->assertText('Please enter some keywords.');
+  }
+
 
   /**
    * Testing the _ting_openformat_get_markup_for_field() method
@@ -129,14 +197,13 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     //ensuring that a link by default is returned as part of the value of the #markup key
     $response = _ting_openformat_get_markup_for_field($element);
     $this->assertTrue(array_key_exists('#markup', $response), t('\'#markup\' present in respone from _ting_openformat_get_markup_for_field()'));
-
-    $result = strstr($response['#markup'], 'search/work/phrase.creator%3D%22Joanne%20K.%20Rowling%22');
-    $this->assertNotEqual($result, FALSE, t('href correctly received'));
+    $result = strstr($response['#markup'], 'search/work/phrase.creator%3D%22Joanne%20K.%20Rowling%22">Joanne K. Rowling</a>');
+    $this->assertTrue($result, t('href correctly received'));
 
     //ensuring that no link is returned when requested not to return href
     $response = _ting_openformat_get_markup_for_field($element, ', ', TRUE, FALSE);
     $this->assertTrue(array_key_exists('#markup', $response), t('\'#markup\' present in respone from _ting_openformat_get_markup_for_field()'));
-    $result = strstr($response['#markup'], 'phrase.creator%3D%22Joanne%20K.%20Rowling%22');
+    $result = strstr($response['#markup'], 'search/work/phrase.creator%3D%22Joanne%20K.%20Rowling%22">Joanne K. Rowling</a>');
     $this->assertFalse($result, t('No href received'));
   }
 
@@ -151,21 +218,45 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
 
     //ensuring that a link by default is returned as part of the value of the #markup key
     $response = _ting_openformat_parse_element($element);
-    $this->assertTrue(strstr($response, 'phrase.creator%3D%22Joanne%20K.%20Rowling%22'), t('href correctly received'));
+    $this->assertTrue(strstr($response, 'search/work/phrase.creator%3D%22Joanne%20K.%20Rowling%22">Joanne K. Rowling</a>'), t('href correctly received'));
 
     //ensuring that no link is returned when requested not to return href
     $response = _ting_openformat_parse_element($element, ', ', TRUE, FALSE);
-    $result = strstr($response, 'phrase.creator%3D%22Joanne%20K.%20Rowling%22');
+
+    $result = strstr($response, 'search/work/phrase.creator%3D%22Joanne%20K.%20Rowling%22">Joanne K. Rowling</a>');
     $this->assertFalse($result, t('No href received'));
+
+  }
+
+  private function _testSearchDefaultVariables(){
+    debug('Test method: _ting_openformat_search_get_variables()');
+    global $language;
+
+    $language_reset = $language;
+
+
+    // Test query language for with danish language
+
+    $language->language = 'da';
+    $variables = _ting_openformat_search_get_variables();
+
+    $result = $variables['queryLanguage'];
+    $language = $language_reset;
+    $this->assertEqual($result, 'cqldan', 'querylanguage is set to cqldan');
+
+
+    // Test query language for non - danish language
+    $language->language = 'en';
+    $variables = _ting_openformat_search_get_variables();
+
+    $result = $variables['queryLanguage'];
+    $language = $language_reset;
+    $this->assertEqual($result, 'cqleng', 'querylanguage is set to cqleng');
+
+
   }
 
 
-  public function testRunner(){
-    $this->_testFields();
-    $this->_testFieldContent();
-    $this->_testMethodGetMarkupForField();
-    $this->_testMethodPparseElement();
-  }
 
   /** Test if fields are created
   */
