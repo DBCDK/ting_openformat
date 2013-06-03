@@ -3,8 +3,8 @@
 module_load_include('inc', 'ting_openformat', 'lib/BibdkCollection');
 module_load_include('inc', 'ting_openformat', 'lib/BibdkSubwork');
 module_load_include('inc', 'ting_openformat', 'lib/BibdkWork');
-module_load_include('inc', 'ting_openformat', 'lib/Manifestation');
 module_load_include('inc', 'ting_openformat', 'lib/ManifestationMaster');
+module_load_include('inc', 'ting_openformat', 'lib/Manifestation');
 module_load_include('inc', 'ting_openformat', 'lib/ManifestationSection');
 module_load_include('inc', 'ting_openformat', 'lib/ManifestationVolume');
 
