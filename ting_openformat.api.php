@@ -35,5 +35,17 @@ function hook_ting_openformat_getobject_params_alter(&$params) {
 
 
 /**
+ * Add actions to the manifestation view
+ *
+ * @return array
+ */
+function hook_manifestation_actions($manifestation, $view_mode, $langcode) {
+  return array(
+
+  );
+}
+
+
+/**
  * @} End of "addtogroup hooks".
  */

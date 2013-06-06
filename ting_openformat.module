@@ -618,11 +618,15 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
   }
 
   $fields = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
+
+  $actions = module_invoke_all('manifestation_actions', $manifestation, $view_mode, $langcode);
+
   $build = array(
     '#theme' => 'ting_openformat_manifestation',
     '#view_mode' => $view_mode,
     '#language' => $langcode,
     '#fields' => $fields,
+    '#actions' => $actions,
   );
   return $build;
 }
