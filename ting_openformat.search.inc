@@ -187,7 +187,7 @@ function _ting_openformat_facet_cache($client, $result, $params) {
     }
     if (isset($facets)) {
       $params['facets'] = $facets;
-      $params['numFacets'] = variable_get('ding_facetbrowser_number_shown', 25);
+      $params['numFacets'] = variable_get('ding_facetbrowser_number_requested', 25);
     }
 
     // do a zero search to get the facets
