@@ -17,6 +17,21 @@ function ting_openformat_webservice_mockup_menu() {
   return $items;
 }
 
+function ting_openformat_webservice_mockup_ting_openformat_actions($type, $entity, $view_mode, $langcode){
+  if ($type == 'test'){
+    $actions['test2'] = array(
+      '#markup' => 'this_is_an_action_2',
+      '#weight' => 2,
+    );
+    $actions['test1'] = array(
+      '#markup' => 'this_is_an_action_1',
+      '#weight' => 1,
+    );
+
+    return $actions;
+  }
+}
+
 function ting_openformat_webservice_test() {
   return '<form name="test" action="ting_openformat_webservice" method="POST" target="_blank"><textarea name="xml"></textarea><input type="submit" name="sub" value="submit"/></form>';
 }

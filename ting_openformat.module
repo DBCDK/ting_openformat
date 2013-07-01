@@ -618,13 +618,35 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
   }
 
   $fields = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
+
+  $actions = ting_openformat_get_actions('bibdkManifestation', $manifestation, $view_mode, $langcode);
+
   $build = array(
     '#theme' => 'ting_openformat_manifestation',
     '#view_mode' => $view_mode,
     '#language' => $langcode,
     '#fields' => $fields,
+    '#actions' => $actions,
   );
   return $build;
+}
+
+function ting_openformat_get_actions($type, $entity, $view_mode = 'full', $langcode = NULL) {
+
+  $actions = module_invoke_all('ting_openformat_actions', $type, $entity, $view_mode, $langcode);
+
+  if (!empty($actions))
+    uasort($actions, 'element_sort');
+
+  return $actions;
+}
+/**
+ * @param array $a
+ * @param array $b
+ * @return Boolean
+ */
+function _ting_openformat_sortfields_by_weight($a, $b) {
+  return $a['#weight'] - $b['#weight'];
 }
 
 /**

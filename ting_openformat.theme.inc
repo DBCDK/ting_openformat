@@ -19,9 +19,9 @@ function ting_openformat_theme() {
     ),
     'ting_openformat_manifestation' => array(
       'path' => $path,
-      'variables' => array('fields'=> array(), 'view_mode' => 'full', 'id'=>0,),
+      'variables' => array('fields'=> array(), 'view_mode' => 'full', 'id'=>0, 'actions' => array()),
       'template' => 'ting_openformat_manifestation',
-      'render elements' => 'elements',
+      'render element' => 'elements',
     ),
 
     'ting_openformat_work' => array(
