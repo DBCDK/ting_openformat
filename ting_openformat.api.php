@@ -35,5 +35,21 @@ function hook_ting_openformat_getobject_params_alter(&$params) {
 
 
 /**
+ * Add actions to the manifestation view
+ *
+ * @return array A rendable array, with weight specified
+ */
+function hook_ting_openformat_actions($type, $entity, $view_mode, $langcode) {
+  if ($type == 'bibdkManifestation'){
+    $actions['export'] = array(
+      '#theme' => 'links',
+      '#links' => bibdk_actions_refexport_links($entity->id),
+      '#weight' => 1,
+    );
+    return $actions;
+  }
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

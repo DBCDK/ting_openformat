@@ -171,12 +171,37 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
   }
 
   public function testRunner(){
-    $this->_testFields();
+    /*$this->_testFields();
     $this->_testFieldContent();
     $this->_testMethodGetMarkupForField();
     $this->_testMethodParseElement();
     $this->_testSearchDefaultVariables();
-    $this->_testEmptySearch();
+    $this->_testEmptySearch();*/
+    $this->_testHookActions();
+  }
+
+
+  private function _testHookActions(){
+    $actions = ting_openformat_get_actions('test', new stdClass(), null, null);
+    $this->assertEqual($actions, array(), t('no actions added'));
+
+    module_enable(array('ting_openformat_webservice_mockup'));
+      $actions = ting_openformat_get_actions('test', new stdClass(), null, null);
+      $expected_result = array (
+        'test1' =>
+        array (
+          '#markup' => 'this_is_an_action_1',
+          '#weight' => 1,
+        ),
+        'test2' =>
+        array (
+          '#markup' => 'this_is_an_action_2',
+          '#weight' => 2,
+        ),
+      );
+
+    $this->assertEqual($actions, $expected_result, t('actions correctly added'));
+
   }
 
   private function _testEmptySearch(){
