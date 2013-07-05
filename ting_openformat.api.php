@@ -35,5 +35,22 @@ function hook_ting_openformat_getobject_params_alter(&$params) {
 
 
 /**
+ * Add extended query elements parameters to searchRequest.
+ *
+ * @return array
+ *  An array with preprocessed query elements
+ *  Example:
+ *  Param $qe = array(
+ *      ['term.type'][0] => 'book',
+ *      ['year.op'][0] => 'year_lt',
+ *      ['year.value'][0] => '2001',
+ *  Return $qe = array(
+ *      ['term.type'][0] => 'book',
+ *      ['#preprocessed'][0] => 'dkcclterm.year<2013',
+ */
+hook_ting_openformat_qe_preprocess($extended_query_elements) {
+}
+
+/**
  * @} End of "addtogroup hooks".
  */
