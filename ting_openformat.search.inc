@@ -289,13 +289,17 @@ function _ting_openformat_set_facets(&$query, $facets) {
  *
  * */
 function _ting_openformat_set_query_extended(&$query, $qe) {
-  if (isset($qe)) {
+  $preprocessed = array();
+
+  if ( isset($qe) ) {
 
     $res = array();
     $fields = array();
     $qe = module_invoke_all('ting_openformat_qe_preprocess', $qe);
-    $preprocessed = $qe['#preprocessed'];
-    unset($qe['#preprocessed']);
+    if ( isset($qe['#preprocessed']) ) {
+      $preprocessed = $qe['#preprocessed'];
+      unset($qe['#preprocessed']);
+    }
 
     $op = ting_openformat_get_cql_commando('OR');
     foreach ( $qe as $term => $group ) {
