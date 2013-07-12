@@ -129,7 +129,8 @@ function _ting_openformat_create_collection_entities(&$result) {
     $openformat = isset($collection->formattedCollection->formattedCollection->manifestation) ? $collection->formattedCollection->formattedCollection->manifestation : NULL;
 
     if( empty($openformat) ) {
-      watchdog('openformat','Formatted collection is not set',array(),WATCHDOG_ERROR);
+      $id = ( isset($collection->objects[0]->id) ) ? $collection->objects[0]->id : '';
+      watchdog('openformat','Formatted collection [id:\'%id\'] is not set',array('%id' => $id),WATCHDOG_ERROR);
       continue;
     }
     _ting_openformat_parse_collection($original_manifestations, $entity_id, $openformat);
