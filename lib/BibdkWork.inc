@@ -50,7 +50,7 @@ class BibdkWork {
     foreach ($this->manifestations as $id => $manifestation) {
       $type = $manifestation->getType();
       if ($type === NULL) {
-        $type = t('unknown', array(), array('context' => 'ting_openformat'));
+        $type = array(t('unknown', array(), array('context' => 'ting_openformat')));
       }
       else if (!is_array($type)) {
         $type = array($type);

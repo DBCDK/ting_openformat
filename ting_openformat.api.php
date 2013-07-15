@@ -35,10 +35,10 @@ function hook_ting_openformat_getobject_params_alter(&$params) {
 
 
 /**
- * Add actions to the manifestation view
- *
- * @return array A rendable array, with weight specified
- */
+* Add actions to the manifestation view
+*
+* @return array A rendable array, with weight specified
+*/
 function hook_ting_openformat_actions($type, $entity, $view_mode, $langcode) {
   if ($type == 'bibdkManifestation'){
     $actions['export'] = array(
@@ -49,6 +49,24 @@ function hook_ting_openformat_actions($type, $entity, $view_mode, $langcode) {
     return $actions;
   }
 }
+
+
+/**
+* Add extended query elements parameters to searchRequest.
+* @return array
+* An array with preprocessed query elements
+* Example: Combine year.op & year.value to new search expression
+* Param $qe = array(
+* ['term.type'][0] => 'book',
+* ['year.op'][0] => 'year_lt',
+* ['year.value'][0] => '2001',
+* Return $qe = array(
+* ['term.type'][0] => 'book',
+* ['#preprocessed'][0] => 'dkcclterm.year<2013',
+*/
+hook_ting_openformat_qe_preprocess($extended_query_elements) {
+}
+
 
 /**
  * @} End of "addtogroup hooks".
