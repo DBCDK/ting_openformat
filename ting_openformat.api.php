@@ -64,7 +64,7 @@ function hook_ting_openformat_actions($type, $entity, $view_mode, $langcode) {
 * ['term.type'][0] => 'book',
 * ['#preprocessed'][0] => 'dkcclterm.year<2013',
 */
-hook_ting_openformat_qe_preprocess($extended_query_elements) {
+function hook_ting_openformat_qe_preprocess($extended_query_elements) {
 }
 
 
