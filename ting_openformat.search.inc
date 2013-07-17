@@ -37,6 +37,7 @@ function _ting_openformat_handle_conditions(&$conditions) {
 function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   $params = array();
   // search phrase (query)
+
   $params['query'] = $keys;
   // save query to show in search_block
   drupal_static('ting_search_query', $keys);
@@ -46,21 +47,37 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   if (!empty($variables)) {
     $params = array_merge($params, $variables);
   }
+
   // selected facets from facetbrowser (in query)
-  if (isset($conditions['facets']) && $conditions['facets'] != NULL) {
+  if ( isset($conditions['facets']) && $conditions['facets'] != NULL ) {
     _ting_openformat_set_facets($params['query'], $conditions['facets']);
     unset($conditions['facets']);
   }
 
+  if ( isset($conditions['qe']) && $conditions['qe'] != NULL ) {
+    _ting_openformat_set_query_extended($params['query'], $conditions['qe']);
+    unset($conditions['qe']);
+  }
+
+  if ( !empty($conditions['qe']) ) {
+    if ( !empty($params['query']) ) {
+      $params['query'] .= _bibdk_custom_search_get_cql('AND');
+    }
+    $params['query'] .= $conditions['qe'];
+  }
+  unset($conditions['qe']);
+
   if (!empty($conditions)) {
     $params = array_merge($params, $conditions);
   }
+
   // do the actual search via ting_client_class
   $client = new ting_client_class();
  // $result = $client->do_search($params);
 
-  if (isset($params['query']) && empty($params['query']) )
+  if (isset($params['query']) && empty($params['query']) ) {
     return array();
+  }
   $result = $client->do_request('search',$params);
   if (!$result) {
     return array();
@@ -112,7 +129,8 @@ function _ting_openformat_create_collection_entities(&$result) {
     $openformat = isset($collection->formattedCollection->formattedCollection->manifestation) ? $collection->formattedCollection->formattedCollection->manifestation : NULL;
 
     if( empty($openformat) ) {
-      watchdog('openformat','Formatted collection is not set',array(),WATCHDOG_ERROR);
+      $id = ( isset($collection->objects[0]->id) ) ? $collection->objects[0]->id : '';
+      watchdog('openformat','Formatted collection [id:\'%id\'] is not set',array('%id' => $id),WATCHDOG_ERROR);
       continue;
     }
     _ting_openformat_parse_collection($original_manifestations, $entity_id, $openformat);
@@ -250,6 +268,7 @@ function _ting_openformat_search_get_variables() {
   return $params;
 }
 
+
 /** \brief Set facets for request
  *
  * */
@@ -266,23 +285,114 @@ function _ting_openformat_set_facets(&$query, $facets) {
   }
 }
 
+
+/** \brief Set facets for extended query
+ *
+ * */
+function _ting_openformat_set_query_extended(&$query, $qe) {
+  $preprocessed = array();
+
+  if ( isset($qe) ) {
+
+    $res = array();
+    $fields = array();
+    $qe = module_invoke_all('ting_openformat_qe_preprocess', $qe);
+    if ( isset($qe['#preprocessed']) ) {
+      $preprocessed = $qe['#preprocessed'];
+      unset($qe['#preprocessed']);
+    }
+
+    $op = ting_openformat_get_cql_commando('OR');
+    foreach ( $qe as $term => $group ) {
+      foreach ( $group as $key => $val ) {
+        $group[$key] = $term . '=' . $val;
+      }
+      $fields[] = '(' . implode($op, $group) . ')';
+    }
+
+    $op = ting_openformat_get_cql_commando('AND');
+    if ( !empty($fields) ) {
+      $res[] = '(' . implode($op, $fields) . ')';
+    }
+    foreach ( $preprocessed as $key => $term ) {
+      $res[] = $term;
+    }
+    $res = join($op, $res);
+
+    if ( $query ) {
+      $query .= $op;
+    }
+    $query .= $res;
+  }
+}
+
+
+function _ting_openformat_parse_extended_query($qe) {
+  if ( !is_array($qe) ) {
+    return NULL;
+  }
+
+  $fields = array();
+  $fields = module_invoke_all('ting_openformat_qe_preprocess', $qe);
+
+  if ( isset($qe['year.op']) ) {
+    if ( isset($qe['year.year']) ) {
+      switch ( $qe['year.op'][0] ) { //år, operator
+        case 'year_gt':
+          $fields[] = 'dkcclterm.år>' . $qe['year.year'][0]; //år, årstal
+          break;
+        case 'year_lt':
+          $fields[] = 'dkcclterm.år<' . $qe['year.year'][0]; //år, årstal
+          break;
+        case 'year_eq':
+          $fields[] = 'dkcclterm.år=' . $qe['year.year'][0]; //år, årstal
+          break;
+      }
+      unset($qe['year.year']);
+    }
+    unset($qe['year.op']);
+  }
+
+  $res = array();
+
+  $op = ting_openformat_get_cql_commando('OR');
+  foreach ( $qe as $term => $group ) {
+    foreach ( $group as $key => $val ) {
+      $group[$key] = $term . '=' . $val;
+    }
+    $fields[] = '(' . implode($op, $group) . ')';
+  }
+
+  $op = ting_openformat_get_cql_commando('AND');
+  if ( !empty($fields) ) {
+    $res[] = '(' . implode($op, $fields) . ')';
+  }
+
+  $res = join($op, $res);
+
+dpm($res);
+  return $res;
+}
+
 /**
  * Search conditions callback.
  */
 function ting_openformat_conditions_callback($query) {
   $conditions = array();
 
+  if ( !empty($_REQUEST['qe']) ) {
+    $conditions['qe'] = $_REQUEST['qe'];
+  }
+
   if (!empty($_REQUEST['size'])) {
     $conditions['size'] = (int)$_REQUEST['size'];
   }
 
-
-// set the sort parameter here - thus it will work when sort parameter is added to url
+  // set the sort parameter here - thus it will work when sort parameter is added to url
   if (!empty($_REQUEST['sort'])) {
     $conditions['sort'] = check_plain($_REQUEST['sort']);
   }
-  // default sort parameter
-  else {
+  else { // default sort parameter
     $conditions['sort'] = 'date_descending';
   }
 
