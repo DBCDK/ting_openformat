@@ -290,13 +290,18 @@ function _ting_openformat_set_facets(&$query, $facets) {
  *
  * */
 function _ting_openformat_set_query_extended(&$query, $qe) {
-  $preprocessed = array();
+  $cql = $preprocessed = array();
 
-  if ( isset($qe) ) {
+  if ( !empty($query) ) {
+    $cql[] = $query;
+  }
+
+  if ( !empty($qe) && count($qe) > 0 ) {
 
     $res = array();
     $fields = array();
     $qe = module_invoke_all('ting_openformat_qe_preprocess', $qe);
+
     if ( isset($qe['#preprocessed']) ) {
       $preprocessed = $qe['#preprocessed'];
       unset($qe['#preprocessed']);
@@ -314,65 +319,21 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
     if ( !empty($fields) ) {
       $res[] = '(' . implode($op, $fields) . ')';
     }
+
     foreach ( $preprocessed as $key => $term ) {
       $res[] = $term;
     }
-    $res = join($op, $res);
 
-    if ( $query ) {
-      $query .= $op;
+    if ( count($res) > 0 ) {
+      $cql[] = join($op, $res);
     }
-    $query .= $res;
+
   }
+
+  $query = join($op, $cql);
+
 }
 
-
-function _ting_openformat_parse_extended_query($qe) {
-  if ( !is_array($qe) ) {
-    return NULL;
-  }
-
-  $fields = array();
-  $fields = module_invoke_all('ting_openformat_qe_preprocess', $qe);
-
-  if ( isset($qe['year.op']) ) {
-    if ( isset($qe['year.year']) ) {
-      switch ( $qe['year.op'][0] ) { //år, operator
-        case 'year_gt':
-          $fields[] = 'dkcclterm.år>' . $qe['year.year'][0]; //år, årstal
-          break;
-        case 'year_lt':
-          $fields[] = 'dkcclterm.år<' . $qe['year.year'][0]; //år, årstal
-          break;
-        case 'year_eq':
-          $fields[] = 'dkcclterm.år=' . $qe['year.year'][0]; //år, årstal
-          break;
-      }
-      unset($qe['year.year']);
-    }
-    unset($qe['year.op']);
-  }
-
-  $res = array();
-
-  $op = ting_openformat_get_cql_commando('OR');
-  foreach ( $qe as $term => $group ) {
-    foreach ( $group as $key => $val ) {
-      $group[$key] = $term . '=' . $val;
-    }
-    $fields[] = '(' . implode($op, $group) . ')';
-  }
-
-  $op = ting_openformat_get_cql_commando('AND');
-  if ( !empty($fields) ) {
-    $res[] = '(' . implode($op, $fields) . ')';
-  }
-
-  $res = join($op, $res);
-
-dpm($res);
-  return $res;
-}
 
 /**
  * Search conditions callback.
