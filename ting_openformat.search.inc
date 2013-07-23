@@ -380,12 +380,12 @@ function ting_openformat_conditions_callback($query) {
       }
     }
     $conditions['facets'] = $_REQUEST['facets'];
-    if ($redirect === TRUE) {
+    if ( $redirect === TRUE ) {
       $facets = array();
       foreach ($conditions['facets'] as $facet) {
         $facets['facets'][] = $facet;
       }
-      drupal_goto(rawurldecode($_GET['q']), array('query' => $facets));
+      drupal_goto(rawurldecode($_GET['q']), array('query' => $facets + $conditions));
     }
   }
   return $conditions;
