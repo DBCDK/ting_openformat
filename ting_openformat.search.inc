@@ -341,6 +341,11 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
 function ting_openformat_conditions_callback($query) {
   $conditions = array();
 
+  $page_id = array();
+  if ( !empty($_REQUEST['page_id']) ) {
+    $page_id['page_id'] = $_REQUEST['page_id'];
+  }
+
   if ( !empty($_REQUEST['qe']) ) {
     $conditions['qe'] = $_REQUEST['qe'];
   }
@@ -385,7 +390,7 @@ function ting_openformat_conditions_callback($query) {
       foreach ($conditions['facets'] as $facet) {
         $facets['facets'][] = $facet;
       }
-      drupal_goto(rawurldecode($_GET['q']), array('query' => $facets + $conditions));
+      drupal_goto(rawurldecode($_GET['q']), array('query' => $facets + $conditions + $page_id));
     }
   }
   return $conditions;
