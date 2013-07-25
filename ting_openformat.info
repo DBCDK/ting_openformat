@@ -8,6 +8,8 @@ core = 7.x
 configure = admin/config/ting_openformat
 
 files[] = ting_openformat.module
+files[] = ting_openformat.field.inc
+files[] = ting_openformat.field_definitions.inc
 files[] = ting_openformat.admin.inc
 files[] = ting_openformat.controllers.inc
 files[] = ting_openformat.entities.inc
@@ -27,8 +29,8 @@ dependencies[] = search
 dependencies[] = ting_client
 dependencies[] = ctools
 dependencies[] = ding_entity
-
 dependencies[] = page_manager
+
 features[ctools][] = page_manager:pages_default:1
 features[features_api][] = api:1
 features[page_manager_handlers][] = search_ting_openformat_panel_context
