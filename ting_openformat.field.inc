@@ -239,7 +239,7 @@ function _ting_openformat_parse_analytic_content($analytic_content, $entity = NU
     $value['#markup'] = '';
     foreach ($analytic_content['analyticContent'][0] as $content){
       $element_values = array();
-      $break = '; ';
+      $break = ' ; ';
       foreach ($content as $key => $element) {
         $element_markup = _ting_openformat_get_markup_for_field($element, " ");
 
