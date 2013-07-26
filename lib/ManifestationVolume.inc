@@ -19,7 +19,7 @@ class ManifestationVolume extends ManifestationMaster {
     return NULL;
   }
 
-  public function getCreators() {
+  public function getCreator() {
     $fields = array('creator' => 'searchCode');
     if (isset($this->fields->creators)) {
       $element = $this->fields->creators;

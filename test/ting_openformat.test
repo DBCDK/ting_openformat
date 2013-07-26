@@ -287,11 +287,13 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
 
 
   private function _testDefaultFieldRendering() {
+    debug('Test field rendering');
 
     $manifestation = $this->_createObjects();
     $fields = ting_openformat_bibdk_fields();
 
     // test_results.php includes expected results for all fields in the variable $_ting_openformat_test_results    include_once 'test_results.php';
+    include_once 'test_results.php';
 
     foreach ($fields as $field_name => $field) {
 
