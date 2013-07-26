@@ -40,8 +40,8 @@ class BibdkSubwork {
   public function isReservable() {
     if (!isset($this->isReservable)) {
       $this->isReservable = FALSE;
-      foreach ($this->getManifestations() as $manifistation) {
-        if ($manifistation->isReservable()) {
+      foreach ($this->getManifestations() as $manifestation) {
+        if ($manifestation->isReservable()) {
           $this->isReservable = TRUE;
           break;
         }
@@ -53,6 +53,19 @@ class BibdkSubwork {
   public function isLink() {
     return FALSE;
   }
+
+  public function getHostPublicationID(){
+    $ids = array();
+    foreach ($this->getManifestations() as $manifestation) {
+      $id = $manifestation->getHostPublicationID();
+      $id = isset($id) ? $id : $manifestation->id;
+      $ids[$id] = $id;
+    }
+    dpm($ids);
+
+    return $ids;
+  }
+
 
 }
 
