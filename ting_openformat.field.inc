@@ -117,6 +117,10 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $infotext = ($infotext) ? t('drupal_text_' . $infotext, array(), array('context' => 'bibdk_openformat')) : NULL;
         $value = _ting_openformat_get_markup_for_field($infotext);
         break;
+      case 'bibdk_mani_analytic_content':
+        $analytic = $entity->getAnalyticContent();
+        $value = _ting_openformat_parse_analytic_content($analytic);
+        break;
       default :
         $content = _ting_openformat_default_field_view_content($field['field_name'], $entity);
         $value = _ting_openformat_get_markup_for_field($content);
@@ -232,20 +236,25 @@ function _ting_openformat_parse_analytic_content($analytic_content, $entity = NU
   if (!isset($analytic_content))
     return null;
   if (isset($analytic_content['analyticContent'][0])){
+    $value['#markup'] = '';
     foreach ($analytic_content['analyticContent'][0] as $content){
+      $element_values = array();
+      $break = '; ';
       foreach ($content as $key => $element) {
         $element_markup = _ting_openformat_get_markup_for_field($element, " ");
 
-        if ($key == 'analyticContributor')
+        if ($key == 'analyticContributor'){
           $element_markup['#markup'] .= ":";
+          $break = '<br />';
+        }
+
 
         $element_values[] = $element_markup['#markup'];
       }
-      $values[] = implode(' ', $element_values);
-      $element_values = array();
 
+      $value['#markup'] .= implode(' ', $element_values) . $break;
     }
-    $value['#markup'] = implode('<br />', $values);
+
   }
   return $value;
 }

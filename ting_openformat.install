@@ -150,4 +150,16 @@ function ting_openformat_update_7017() {
   ding_entity_modules_enabled(array('ting_openformat'));
 }
 
+/**
+ * Implements hook_update_N;
+ * Update Volume and Section field information
+ * */
+function ting_openformat_update_7018() {
+  field_delete_field('bibdk_mani_volume');
+  field_delete_field('bibdk_mani_section');
+  ding_entity_modules_enabled(array('ting_openformat'));
+
+}
+
+
 // 435 lines before refactoring

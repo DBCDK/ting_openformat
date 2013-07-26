@@ -347,6 +347,10 @@ function ting_openformat_bibdk_fields() {
           'type' => 'default',
           'label' => 'hidden'
         ),
+        'full' => array(
+          'type' => 'default',
+          'label' => 'hidden'
+        ),
       ),
       'description' => t('Section of manifestation'),
       'callback method' =>  'getSection',
@@ -356,6 +360,10 @@ function ting_openformat_bibdk_fields() {
       'label' => 'Volume',
       'custom_display' => array(
         'default' => array(
+          'type' => 'default',
+          'label' => 'hidden'
+        ),
+        'full' => array(
           'type' => 'default',
           'label' => 'hidden'
         ),
@@ -376,7 +384,7 @@ function ting_openformat_bibdk_fields() {
       'entity_type' => array('bibdkManifestationSection'),
       'display' => array('full'),
       'description' => t('Creators of Section'),
-      'callback method' =>  'getCreator',
+      'callback method' =>  'getCreators',
     ),
     //volume specific
     'bibdk_volume_title' => array(
@@ -391,7 +399,7 @@ function ting_openformat_bibdk_fields() {
       'entity_type' => array('bibdkManifestationVolume'),
       'display' => array('full'),
       'description' => t('Creators of Volume'),
-      'callback method' =>  'getCreator',
+      'callback method' =>  'getCreators',
     ),
   );
 
