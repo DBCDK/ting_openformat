@@ -232,31 +232,46 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
  * @param $analytic_content
  * @return array|null
  */
-function _ting_openformat_parse_analytic_content($analytic_content, $entity = NULL, $options = array()){
-  if (!isset($analytic_content))
+function _ting_openformat_parse_analytic_content($analytic_content, $entity = NULL, $options = array()) {
+
+  // Check variables
+  if (!isset($analytic_content) || !isset($analytic_content['analyticContent'][0])) {
     return null;
-  if (isset($analytic_content['analyticContent'][0])){
-    $value['#markup'] = '';
-    foreach ($analytic_content['analyticContent'][0] as $content){
-      $element_values = array();
-      $break = ' ; ';
-      foreach ($content as $key => $element) {
-        $element_markup = _ting_openformat_get_markup_for_field($element, " ");
-
-        if ($key == 'analyticContributor'){
-          $element_markup['#markup'] .= ":";
-          $break = '<br />';
-        }
-
-
-        $element_values[] = $element_markup['#markup'];
-      }
-
-      $value['#markup'] .= implode(' ', $element_values) . $break;
-    }
-
   }
+  $analytic_content = reset($analytic_content['analyticContent']);
+
+  // Parse through elements
+  foreach ($analytic_content as $element) {
+
+    $element_markup = _ting_openformat_parse_analytic_content_element($element);
+
+    // if element has analyticContributor it should start on a new line else it should be divided with ;
+    if (isset($markup)){
+      if (array_key_exists('analyticContributor', $element)) {
+        $markup .= '<br/>' . $element_markup;
+      } else {
+        $markup .= ' ; ' . $element_markup;
+      }
+    } else {
+      $markup = $element_markup;
+    }
+  }
+
+  $value['#markup'] = $markup;
   return $value;
+}
+
+function _ting_openformat_parse_analytic_content_element($element){
+  foreach ($element as $key => $value) {
+    $markup = _ting_openformat_get_markup_for_field($value, " ");
+    $markup = $markup['#markup'];
+    if ($key == 'analyticContributor') {
+      $markup .= ":";
+    }
+    $element_values[] = $markup;
+  }
+  return implode(' ', $element_values);
+
 }
 
 //900 lines before refactoring
