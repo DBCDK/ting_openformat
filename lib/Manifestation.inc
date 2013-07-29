@@ -222,4 +222,9 @@ class Manifestation extends ManifestationMaster {
     return $reviews;
   }
 
+  public function getHostPublicationID(){
+    $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('hostPublicationID'));
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
 }

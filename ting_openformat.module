@@ -484,6 +484,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
     $subtype = $subWork->getSubType();
     $sub[$type][$subtype]['fields'] = _prepare_view('bibdkSubwork', $subWork, $view_mode, $langcode);
     $sub[$type][$subtype]['id'] = $id;
+    $sub[$type][$subtype]['bibdkSubwork'] = $subWork;
     foreach ($subWork->getManifestations() as $manifestation) {
       $manifestation_view = ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL);
       $sub[$type][$subtype]['manifestations'][$manifestation->id] = drupal_render($manifestation_view);
@@ -507,7 +508,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
         $type_id = $trans['type'];
         $ordered_subworks[$type_id][$subtype_id]['manifest'] = $val;
         $ordered_subworks[$type_id][$subtype_id]['translation'] = $trans;
-        $ordered_subworks[$type_id][$subtype_id]['manifest']['subtype_actions'] = _ting_openformat_subwork_materialtype_actions($ordered_subworks, $type_id, $subtype_id);
+        $ordered_subworks[$type_id][$subtype_id]['manifest']['subtype_actions'] = _ting_openformat_subwork_materialtype_actions($ordered_subworks, $type_id, $subtype_id, $val['bibdkSubwork']);
       }
     }
   }
@@ -527,8 +528,8 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
  * @param $subtype_id
  * @return array
  */
-function _ting_openformat_subwork_materialtype_actions($ordered_subworks, $type_id, $subtype_id) {
-  $render = module_invoke_all('ting_openformat_subwork_materialtype_actions', $ordered_subworks, $type_id, $subtype_id);
+function _ting_openformat_subwork_materialtype_actions($ordered_subworks, $type_id, $subtype_id, $subWork) {
+  $render = module_invoke_all('ting_openformat_subwork_materialtype_actions', $ordered_subworks, $type_id, $subtype_id, $subWork);
   return $render;
 }
 
