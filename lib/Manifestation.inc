@@ -18,10 +18,6 @@ class Manifestation extends ManifestationMaster {
     return isset($this->manifestation->work) ? $this->manifestation->work : NULL;
   }
 
-  private function _getContent(){
-    return isset($this->fields->content) ? $this->fields->content : NULL;
-  }
-
   /**
    * @return array|mixed|null
    */
@@ -58,39 +54,6 @@ class Manifestation extends ManifestationMaster {
 
     $elements = isset($this->getWork()->description) ? $this->getWork()->description : NULL;
     $result = ting_openformat_methods::parseFields($elements, $fields);
-    return $result;
-  }
-
-  public function getAnalyticContent(){
-    $fields = array('analyticContent' => array(
-      'analyticContributor' => 'searchCode',
-      'analyticTitle' => array('analyticTitleMain' => 'searchCode', 'analyticRestOfTitle')
-    ));
-    $result = ting_openformat_methods::parseFields($this->_getContent(), $fields);
-    return $result;
-  }
-
-  /* \brief contentPartialNote
-   * zero or more occurence(s)
-   */
-
-  public function getContentPartialNote() {
-    $fields = array(
-      'contentPartialNote' => array('contentPartialNoteDescription', 'contentPartialNoteElement')
-    );
-    $result = ting_openformat_methods::parseFields($this->_getContent(), $fields);
-    return $result;
-  }
-
-  /* \brief contentNote
-   * zero or more occurence(s)
-   */
-
-  public function getContentNote() {
-    $fields = array(
-      'contentNote' => array('contentNoteDescription', 'contentNoteElement')
-    );
-    $result = ting_openformat_methods::parseFields($this->_getContent(), $fields);
     return $result;
   }
 

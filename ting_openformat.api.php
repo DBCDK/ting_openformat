@@ -10,6 +10,34 @@
  * @{
  */
 
+/** Add fields to ting_openformat entitites
+ * @return array
+ * You can add the following parameters to the array:
+ * label : label on the administration pages. Should not be wrapped in t()
+ * entity_type : It is possible to define more than one entity type with an array
+ * display : the different display types are defined in ting_openformat.install
+ * description : description for the field_ui
+ * callback method : method to get content from the field entity.
+ */
+function hook_ting_openformat_fields() {
+
+  $fields = array(
+    'ting_openformat_work_abstract' => array(
+      'label' => 'Work abstract',
+      'entity_type' => 'bibdkWorkEntity',
+      'display' => array('full'),
+      'description' => t('Description of work'),
+      'callback method' =>  'getAbstract',
+
+    ),
+  );
+
+  return $fields;
+
+}
+
+
+
 /**
  * Add actions to subwork material types.
  *

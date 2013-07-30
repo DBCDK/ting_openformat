@@ -409,24 +409,42 @@ class ManifestationMaster {
   }
 
 
-  /** Deprecated
-   * @return null
-   */
-  public function getContentPartialNote() {
-    return null;
+  public function getAnalyticContent(){
+    $fields = array('analyticContent' => array(
+      'analyticContributor' => 'searchCode',
+      'analyticTitle' => array('analyticTitleMain' => 'searchCode', 'analyticRestOfTitle')
+    ));
+    $result = ting_openformat_methods::parseFields($this->_getContent(), $fields);
+    return $result;
   }
 
-  /** Deprecated
-   * @return null
+  /* \brief contentPartialNote
+   * zero or more occurence(s)
    */
+
+  public function getContentPartialNote() {
+    $fields = array(
+      'contentPartialNote' => array('contentPartialNoteDescription', 'contentPartialNoteElement')
+    );
+    $result = ting_openformat_methods::parseFields($this->_getContent(), $fields);
+    return $result;
+  }
+
+  /* \brief contentNote
+   * zero or more occurence(s)
+   */
+
   public function getContentNote() {
-    return null;
+    $fields = array(
+      'contentNote' => array('contentNoteDescription', 'contentNoteElement')
+    );
+    $result = ting_openformat_methods::parseFields($this->_getContent(), $fields);
+    return $result;
   }
-/** Deprecated
-   * @return null
-   */
-  public function getAnalyticContent() {
-    return null;
+
+  private function _getContent(){
+    return isset($this->fields->content) ? $this->fields->content : NULL;
   }
+
 
 }
