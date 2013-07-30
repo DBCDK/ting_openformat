@@ -235,6 +235,7 @@ function theme_ting_openformat_pager($variables) {
  * Theme a mini pager with only first, previous and next links.
  */
 function theme_ting_openformat_mini_pager($variables) {
+  dpm($variables);
   $tags = $variables['tags'];
   $element = $variables['element'];
   $parameters = $variables['parameters'];
@@ -309,6 +310,5 @@ function theme_ting_openformat_mini_pager($variables) {
     );
 
     return $output;
-
   }
 }
