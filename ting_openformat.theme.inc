@@ -102,6 +102,7 @@ function ting_openformat_theme() {
 /**
  * Theme a pager
  */
+/*
 function theme_ting_openformat_pager($variables) {
   $tags = $variables['tags'];
   $element = $variables['element'];
@@ -229,11 +230,12 @@ function theme_ting_openformat_pager($variables) {
     }
     return theme('item_list', array('items' => $items, 'type' => 'ul', 'attributes' => array('class' => array('pager'))));
   }
-}
+}*/
 
 /**
  * Theme a mini pager with only first, previous and next links.
  */
+/*
 function theme_ting_openformat_mini_pager($variables) {
   dpm($variables);
   $tags = $variables['tags'];
@@ -312,3 +314,4 @@ function theme_ting_openformat_mini_pager($variables) {
     return $output;
   }
 }
+*/

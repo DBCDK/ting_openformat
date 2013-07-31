@@ -35,6 +35,8 @@ function _ting_openformat_handle_conditions(&$conditions) {
 
 /** implements hook_search_execute */
 function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
+  dpm($keys, 'keys');
+  dpm($conditions, 'conditions');
   $params = array();
   // search phrase (query)
 
@@ -108,6 +110,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   pager_default_initialize($total, $params['numResults']);
 
   if (!empty($search_results)) {
+    dpm($search_results, 'search_results');
     return $search_results;
   }
 
@@ -236,8 +239,9 @@ function _ting_openformat_set_default_facets() {
   return $facets;
 }
 
-/** \brief get variables and set corresponding search parameters
- * */
+/**
+ * Get variables and set corresponding search parameters
+ */
 function _ting_openformat_search_get_variables() {
   // results pr. page (opensearch::stepValue) ... in ting-client/lib/request/TingClientSearchRequest.php this is called numResults
   $resultsPerPage = variable_get('ting_search_results_per_page', 10);
