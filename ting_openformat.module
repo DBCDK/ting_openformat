@@ -66,25 +66,37 @@ function ting_openformat_menu() {
   return $items;
 }
 
+
+/** Load manifestations and insert into placeholder via AJAX
+ * @param $type
+ * @param $json json encoded manifestation ids
+ * @return json|false
+ */
 function ting_openformat_ajax_manifestations($type, $json){
 
-  // TODO: check variables
-  $bibdkEntity = ting_openformat_get_manifestations(json_decode($json));
+  $commands = array();
+
+  $manifestation_ids = json_decode($json);
+  if(is_array($manifestation_ids) || count($manifestation_ids) == 0){
+    return false;
+  }
+
+  $bibdkEntity = ting_openformat_get_manifestations($manifestation_ids);
 
   if (!isset($bibdkEntity) || count($bibdkEntity) == 0)
-    return t('no_work_found');
+    return false;
+
   $bibdkEntity = reset($bibdkEntity);
   $manifestations = $bibdkEntity->manifestations;
+
+  if (!isset($manifestations) || count($manifestations) == 0)
+    return false;
 
   foreach($manifestations as $manifestation){
     $view = drupal_render(ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL));
     $commands[] = ajax_command_replace('[data-id='. $manifestation->id.']', $view);
   }
-   $commands[] = array(
-     'command' => 'add_manifestations',
-     'selector' => 'kanin',
-     'data' => array('spis' => 'fisk'),
-   );
+
 
   ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
 }
@@ -496,6 +508,12 @@ function template_preprocess_ting_openformat_subwork_tabs(&$variables) {
   drupal_add_css($path . '/ting_openformat_subwork.css');
 }
 
+/** Creates html view for bibdkWorkEntity
+ * @param $bibdkWork
+ * @param string $view_mode
+ * @param null $langcode
+ * @return string
+ */
 function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = NULL) {
   if (!is_object($bibdkWork)) {
     return;
@@ -520,6 +538,10 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
         'ding_id' => $ding_id));
 }
 
+/** Get Subworks ordered by type and subtype
+ * @param $subWorks
+ * @return mixed
+ */
 function ting_openformat_get_ordered_subworks($subWorks){
   $sub = array();
   foreach ($subWorks as $id => $subWork) {
@@ -540,7 +562,12 @@ function ting_openformat_get_ordered_subworks($subWorks){
   return $ordered_subworks;
 }
 
-
+/** Creates html view for bibdkSubwork
+ * @param $bibdkSubwork
+ * @param string $view_mode
+ * @param null $langcode
+ * @return mixed
+ */
 function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langcode = NULL){
 
   $sub['fields'] = _prepare_view('bibdkSubwork', $bibdkSubwork, $view_mode, $langcode);
@@ -657,9 +684,6 @@ function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
 
   }
 
-  //$bibdkWork->setManifestations($bibdkWork->manifestations);
-
-
   $view = theme('status_messages');
 
   $view .= ting_openformat_work_view($bibdkWork);
@@ -695,23 +719,6 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
   return $build;
 }
 
-function ting_openformat_get_actions($type, $entity, $view_mode = 'full', $langcode = NULL) {
-
-  $actions = module_invoke_all('ting_openformat_actions', $type, $entity, $view_mode, $langcode);
-
-  if (!empty($actions))
-    uasort($actions, 'element_sort');
-
-  return $actions;
-}
-/**
- * @param array $a
- * @param array $b
- * @return Boolean
- */
-function _ting_openformat_sortfields_by_weight($a, $b) {
-  return $a['#weight'] - $b['#weight'];
-}
 
 /**
  * Create view for manifestation volume fields
@@ -760,6 +767,32 @@ function _prepare_view($entity_type, $object, $view_mode, $langcode) {
 
 /* * ********* END VIEWS ********** */
 
+
+
+/** Invokes hook_ting_openformat_actions
+ * @param $type
+ * @param $entity
+ * @param string $view_mode
+ * @param null $langcode
+ * @return array
+ */
+function ting_openformat_get_actions($type, $entity, $view_mode = 'full', $langcode = NULL) {
+
+  $actions = module_invoke_all('ting_openformat_actions', $type, $entity, $view_mode, $langcode);
+
+  if (!empty($actions))
+    uasort($actions, 'element_sort');
+
+  return $actions;
+}
+/**
+ * @param array $a
+ * @param array $b
+ * @return Boolean
+ */
+function _ting_openformat_sortfields_by_weight($a, $b) {
+  return $a['#weight'] - $b['#weight'];
+}
 
 /* * ***************** ADMIN **************** */
 
