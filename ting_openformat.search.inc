@@ -35,8 +35,9 @@ function _ting_openformat_handle_conditions(&$conditions) {
 
 /** implements hook_search_execute */
 function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
-  dpm($keys, 'keys');
-  dpm($conditions, 'conditions');
+//TODO mmj remove todos
+//  dpm($keys, 'keys');
+//  dpm($conditions, 'conditions');
   $params = array();
   // search phrase (query)
 
@@ -110,7 +111,6 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   pager_default_initialize($total, $params['numResults']);
 
   if (!empty($search_results)) {
-    dpm($search_results, 'search_results');
     return $search_results;
   }
 

@@ -71,14 +71,14 @@ function ting_openformat_theme() {
       'template' => 'ting_openformat_single_work',
       'render elements' => 'elements',
     ),
-
+/*
     'ting_openformat_mini_pager' => array(
       'variables' => array('tags' => array(), 'element' => 0, 'parameters' => array(), 'quantity' => 9),
     ),
     'ting_openformat_pager' => array(
       'variables' => array('tags' => array(), 'element' => 0, 'parameters' => array(), 'quantity' => 9),
     ),
-
+*/
     'ting_openformat_type_order_form' => array(
       'render element' => 'form',
       'file' => 'ting_openformat.admin.inc',

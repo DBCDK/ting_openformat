@@ -15,14 +15,28 @@ $plugin = array(
  */
 function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $context) {
   $block = new stdClass();
+  $results_per_page = variable_get('ting_search_results_per_page', 10);
 
-  if(_ting_openformat_get_search_result_count($panel_args)){
-    drupal_add_js(drupal_get_path('module', 'ting_openformat') . '/js/load_more.js');
+  if ($count = _ting_openformat_get_search_result_count($panel_args, $results_per_page)) {
+    $pages_count = ceil($count / $results_per_page);
+
+    $start = isset($_GET['page']) ? $_GET['page'] : 2;
+
+    drupal_add_js(drupal_get_path('module', 'ting_openformat') . '/js/ting_openformat_load_more_results.js', 'file');
+    drupal_add_js(array(
+        'ting_openformat_load_more_results' => array(
+          'pages' => $pages_count,
+          'start' => $start,
+        )
+      ),
+      'setting');
+
     $block->content = l(t('load_more_results', array(), array('context' => 'ting_openformat')), '#', array(
       'attributes' => array(
-        'class' => array(
-          'hest',
+        'id' => array(
+          'link'
         ),
+        'class' => array(),
       ),
     ));
   }
@@ -35,16 +49,59 @@ function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $c
  * If the count is below 10 FLASE is returned as no more pages than the one
  * already being displayed should be loaded.
  *
- * @param $panel_args
+ * @param $panel_args array
+ * @param $results_per_page int
  * @return bool | string
  */
-function _ting_openformat_get_search_result_count($panel_args){
+function _ting_openformat_get_search_result_count($panel_args, $results_per_page) {
   $query = $panel_args[0];
   $count = isset($_SESSION['searches'][$query]['count']) ? $_SESSION['searches'][$query]['count'] : NULL;
-  if($count && $count >= 11) {
+
+  if ($count && ($count - $results_per_page) >= 1) {
     return $count;
   }
   return FALSE;
+}
+
+function ting_openformat_load_more_results_ajax_callback(){
+  if(empty($_GET['keys'])){
+    //TODO mmj report error to user
+    //ajax_command_alert()
+  }
+  $keys = $_GET['keys'];
+  unset($_GET['keys']);
+
+  $unwanted_keyes = array('page_id', 'page', 'q');
+
+  foreach ($_GET as $key => $value) {
+    if(!in_array($key, $unwanted_keyes)){
+      $conditions[$key] = $value;
+    }
+  }
+
+  module_load_include('inc', 'ting_openformat', 'ting_openformat.search');
+
+  $results = ting_openformat_search_execute($keys, $conditions);
+  $anchor = 'load-more-results-' . $_GET['page'];
+
+  $html = '<a name="' . $anchor . '"></a>';
+  $html .= '<div class="load_more_res_splitter"> </div>';
+  foreach ($results as $result) {
+    $html .= $result['snippet'];
+  }
+
+  $commands[] = ajax_command_append('.ting_openformat-results', $html);
+
+  $commands[] = array(
+    'command' => 'add_more_results',
+    'data' => array(
+      'anchor' => $anchor,
+      'html' => $html,
+    ),
+  );
+
+  ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
+  exit(0);
 }
 
 
