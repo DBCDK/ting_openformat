@@ -2,7 +2,7 @@
 
 class BibdkCollection {
 
-  private $manifestations;
+  public $manifestations;
   public $ding_entity_id;
   private $collectionTypes;
   private $collectionIds;
@@ -51,6 +51,10 @@ class BibdkCollection {
 
   public function getCollectionTypes() {
     return $this->collectionTypes;
+  }
+
+  public function getManifestations(){
+    return $this->manifestations;
   }
 
 }

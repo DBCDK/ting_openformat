@@ -22,6 +22,7 @@ files[] = lib/Manifestation.inc
 files[] = lib/ManifestationMaster.inc
 files[] = lib/ManifestationSection.inc
 files[] = lib/ManifestationVolume.inc
+files[] = lib/BibdkBriefDisplay.inc
 
 scripts[] = js/ting_openformat.js
 
