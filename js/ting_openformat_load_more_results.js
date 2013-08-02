@@ -2,7 +2,6 @@
 
   Drupal.ajax.prototype.commands.add_more_results = function(ajax, response, status) {
     var loadMoreLink = $('.pane-ting-openformat-load-more-results #link');
-    console.log(status);
     if(status === 'success') {
       if(Drupal.settings.ting_openformat_load_more_results.start < Drupal.settings.ting_openformat_load_more_results.pages) {
         Drupal.settings.ting_openformat_load_more_results.start++;
@@ -78,7 +77,6 @@
 
   Drupal.behaviors.ting_openformat_load_more_results = {
     attach: function(context) {
-      console.log('attach');
       var element = $('.pane-ting-openformat-load-more-results #link', context);
       LoadMore.addAjax(element);
 
