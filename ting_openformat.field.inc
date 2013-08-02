@@ -247,14 +247,16 @@ function _ting_openformat_parse_analytic_content($analytic_content, $entity = NU
 
     // if element has analyticContributor it should start on a new line else it should be divided with ;
     if (isset($markup)){
-      if (array_key_exists('analyticContributor', $element)) {
+      if (array_key_exists('analyticContributor', $element) || (isset($prevElement) && array_key_exists('analyticContributor', $prevElement))) {
         $markup .= '<br/>' . $element_markup;
-      } else {
+      }
+      else {
         $markup .= ' ; ' . $element_markup;
       }
     } else {
       $markup = $element_markup;
     }
+    $prevElement = $element;
   }
 
   $value['#markup'] = $markup;
