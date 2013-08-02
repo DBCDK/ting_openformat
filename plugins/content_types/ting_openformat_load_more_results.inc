@@ -27,6 +27,7 @@ function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $c
         'ting_openformat_load_more_results' => array(
           'pages' => $pages_count,
           'start' => $start,
+          'loading' => FALSE,
         )
       ),
       'setting');
@@ -82,10 +83,8 @@ function ting_openformat_load_more_results_ajax_callback(){
   module_load_include('inc', 'ting_openformat', 'ting_openformat.search');
 
   $results = ting_openformat_search_execute($keys, $conditions);
-  $anchor = 'load-more-results-' . $_GET['page'];
-
-  $html = '<a name="' . $anchor . '"></a>';
-  $html .= '<div class="load_more_res_splitter"> </div>';
+  $id = 'load-more-results-' . $_GET['page'];
+  $html = '<div class="load_more_res_splitter" id="' . $id . '" > </div>';
   foreach ($results as $result) {
     $html .= $result['snippet'];
   }
@@ -95,7 +94,7 @@ function ting_openformat_load_more_results_ajax_callback(){
   $commands[] = array(
     'command' => 'add_more_results',
     'data' => array(
-      'anchor' => $anchor,
+      'anchor' => $id,
       'html' => $html,
     ),
   );

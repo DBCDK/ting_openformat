@@ -2,12 +2,7 @@
 
   Drupal.ajax.prototype.commands.add_more_results = function(ajax, response, status) {
     var loadMoreLink = $('.pane-ting-openformat-load-more-results #link');
-//    TODO mmj clean up console.logs
-    console.log('add_more_results');
-    console.log(ajax);
-    console.log(response);
     console.log(status);
-
     if(status === 'success') {
       if(Drupal.settings.ting_openformat_load_more_results.start < Drupal.settings.ting_openformat_load_more_results.pages) {
         Drupal.settings.ting_openformat_load_more_results.start++;
@@ -15,9 +10,15 @@
       }
 
       LoadMore.setSettings(loadMoreLink);
-      var anchor = $("a[name='"+ response.data.anchor +"']");
-      $('html,body').animate({scrollTop: anchor.offset().top}, 'slow');
+      if(!Drupal.settings.ting_openformat_load_more_results.infiniteLoading){
+        console.log('hest');
+        var anchor = $("#" + response.data.anchor);
+        $('html,body').animate({scrollTop: anchor.offset().top - 30}, 'slow');
+      }
+    } else {
+
     }
+    Drupal.settings.ting_openformat_load_more_results.infiniteLoading = false;
   };
 
 //=======================================
@@ -31,10 +32,12 @@
 
     element.click(function(e) {
       e.preventDefault();
-      element = $(this);
-      element.hide();
-      element.trigger('load_more_results');
-      element.unbind('load_more_results');
+      if(!Drupal.settings.ting_openformat_load_more_results.loading){
+        element = $(this);
+        element.hide();
+        element.trigger('load_more_results');
+        element.unbind('load_more_results');
+      }
     });
   };
 
@@ -53,14 +56,31 @@
     Drupal.ajax['load_more_results'] = new Drupal.ajax('load_more_results', element, element_settings);
   };
 
+  LoadMore.setInfiniteScroll = function() {
+    $(window).unbind('scroll');
+
+    $(window).scroll(function() {
+      if($(window).scrollTop() + $(window).height() == $(document).height() && !Drupal.settings.ting_openformat_load_more_results.loading) {
+        var element = $('.pane-ting-openformat-load-more-results #link');
+        element.hide();
+        element.trigger('load_more_results');
+        element.unbind('load_more_results');
+        Drupal.settings.ting_openformat_load_more_results.infiniteLoading = true;
+      }
+    });
+  };
+
 //=======================================
 //  LoadMore functionality - END
 //=======================================
 
   Drupal.behaviors.ting_openformat_load_more_results = {
     attach: function(context) {
+      console.log('attach');
       var element = $('.pane-ting-openformat-load-more-results #link', context);
       LoadMore.addAjax(element);
+
+      LoadMore.setInfiniteScroll();
     }
   };
 })(jQuery);
