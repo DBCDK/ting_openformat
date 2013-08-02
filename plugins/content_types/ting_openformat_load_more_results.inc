@@ -64,6 +64,13 @@ function _ting_openformat_get_search_result_count($panel_args, $results_per_page
   return FALSE;
 }
 
+/**
+ * Callback method handling the AJAX callback from
+ * ting_openformat_load_more_results.js.
+ * Executes a search with same parameters as the previous search, but requests
+ * the next 10 works and returns to the js-script that appends it to the
+ * existing display.
+ */
 function ting_openformat_load_more_results_ajax_callback() {
   if (empty($_GET['keys'])) {
     $commands[] = ajax_command_alert(t('No search keys provided and the search request can not be completed. Try make your search again from the beginning.', array(), array('context' => 'ting_openformat:error')));
@@ -83,7 +90,6 @@ function ting_openformat_load_more_results_ajax_callback() {
   }
 
   module_load_include('inc', 'ting_openformat', 'ting_openformat.search');
-
   $results = ting_openformat_search_execute($keys, $conditions);
 
   $id = 'load-more-results-' . $_GET['page'];
@@ -92,28 +98,30 @@ function ting_openformat_load_more_results_ajax_callback() {
   $html .= _ting_openformat_get_search_result_html($results);
 
   $commands[] = ajax_command_append('.ting_openformat-results', $html);
-
-  $commands[] = _ting_openformat_get_add_more_results_data($id, $html);
+  $commands[] = array(
+    'command' => 'add_more_results',
+    'data' => array(
+      'anchor' => $id,
+    ),
+  );
 
   ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
   exit(0);
 }
 
+/**
+ * Extract the HTML formatted string from results array and concatenates it
+ * into a single string and returns that string
+ *
+ * @param $results
+ * @return string
+ */
 function _ting_openformat_get_search_result_html($results){
   $html = '';
   foreach ($results as $result) {
     $html .= $result['snippet'];
   }
   return $html;
-}
-
-function _ting_openformat_get_add_more_results_data($id = NULL, $html = NULL){
-  return array(
-    'command' => 'add_more_results',
-    'data' => array(
-      'anchor' => $id,
-    ),
-  );
 }
 
 

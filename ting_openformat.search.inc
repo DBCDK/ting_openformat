@@ -12,15 +12,12 @@
 
 // load theme hooks
 module_load_include('inc', 'ting_openformat', 'ting_openformat.theme');
-// load search client
-//module_load_include('inc', 'ting_openformat','ting_openformat.search_client');
 
 /**
  * Implements hook_search_info().
  */
 function ting_openformat_search_info() {
   return array(
-    //'title' => t('Bibliotek.dk'),
     'title' => variable_get('search_client_name', 'well'),
     'path' => 'work',
     'conditions_callback' => 'ting_openformat_conditions_callback',);
@@ -35,11 +32,7 @@ function _ting_openformat_handle_conditions(&$conditions) {
 
 /** implements hook_search_execute */
 function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
-//TODO mmj remove todos
-//  dpm($keys, 'keys');
-//  dpm($conditions, 'conditions');
   $params = array();
-  // search phrase (query)
 
   $params['query'] = $keys;
   // save query to show in search_block
