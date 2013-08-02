@@ -10,15 +10,15 @@
       }
 
       LoadMore.setSettings(loadMoreLink);
-      if(!Drupal.settings.ting_openformat_load_more_results.infiniteLoading){
-        console.log('hest');
+      if(!Drupal.settings.ting_openformat_load_more_results.infiniteLoadingIsActive){
         var anchor = $("#" + response.data.anchor);
         $('html,body').animate({scrollTop: anchor.offset().top - 30}, 'slow');
       }
     } else {
 
     }
-    Drupal.settings.ting_openformat_load_more_results.infiniteLoading = false;
+    Drupal.settings.ting_openformat_load_more_results.loadingIsActive = false;
+    Drupal.settings.ting_openformat_load_more_results.infiniteLoadingIsActive = false;
   };
 
 //=======================================
@@ -37,6 +37,7 @@
         element.hide();
         element.trigger('load_more_results');
         element.unbind('load_more_results');
+        Drupal.settings.ting_openformat_load_more_results.loadingIsActive = true;
       }
     });
   };
@@ -65,7 +66,8 @@
         element.hide();
         element.trigger('load_more_results');
         element.unbind('load_more_results');
-        Drupal.settings.ting_openformat_load_more_results.infiniteLoading = true;
+        Drupal.settings.ting_openformat_load_more_results.infiniteLoadingIsActive = true;
+        Drupal.settings.ting_openformat_load_more_results.loadingIsActive = true;
       }
     });
   };

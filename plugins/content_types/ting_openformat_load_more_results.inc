@@ -27,7 +27,7 @@ function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $c
         'ting_openformat_load_more_results' => array(
           'pages' => $pages_count,
           'start' => $start,
-          'loading' => FALSE,
+          'loadingIsActive' => FALSE,
         )
       ),
       'setting');
@@ -64,18 +64,20 @@ function _ting_openformat_get_search_result_count($panel_args, $results_per_page
   return FALSE;
 }
 
-function ting_openformat_load_more_results_ajax_callback(){
-  if(empty($_GET['keys'])){
-    //TODO mmj report error to user
-    //ajax_command_alert()
+function ting_openformat_load_more_results_ajax_callback() {
+  if (empty($_GET['keys'])) {
+    $commands[] = ajax_command_alert(t('No search keys provided and the search request can not be completed. Try make your search again from the beginning.', array(), array('context' => 'ting_openformat:error')));
+    ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
+    exit(0);
   }
+
   $keys = $_GET['keys'];
   unset($_GET['keys']);
 
   $unwanted_keyes = array('page_id', 'page', 'q');
 
   foreach ($_GET as $key => $value) {
-    if(!in_array($key, $unwanted_keyes)){
+    if (!in_array($key, $unwanted_keyes)) {
       $conditions[$key] = $value;
     }
   }
@@ -83,24 +85,35 @@ function ting_openformat_load_more_results_ajax_callback(){
   module_load_include('inc', 'ting_openformat', 'ting_openformat.search');
 
   $results = ting_openformat_search_execute($keys, $conditions);
+
   $id = 'load-more-results-' . $_GET['page'];
   $html = '<div class="load_more_res_splitter" id="' . $id . '" > </div>';
-  foreach ($results as $result) {
-    $html .= $result['snippet'];
-  }
+
+  $html .= _ting_openformat_get_search_result_html($results);
 
   $commands[] = ajax_command_append('.ting_openformat-results', $html);
 
-  $commands[] = array(
-    'command' => 'add_more_results',
-    'data' => array(
-      'anchor' => $id,
-      'html' => $html,
-    ),
-  );
+  $commands[] = _ting_openformat_get_add_more_results_data($id, $html);
 
   ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
   exit(0);
+}
+
+function _ting_openformat_get_search_result_html($results){
+  $html = '';
+  foreach ($results as $result) {
+    $html .= $result['snippet'];
+  }
+  return $html;
+}
+
+function _ting_openformat_get_add_more_results_data($id = NULL, $html = NULL){
+  return array(
+    'command' => 'add_more_results',
+    'data' => array(
+      'anchor' => $id,
+    ),
+  );
 }
 
 
