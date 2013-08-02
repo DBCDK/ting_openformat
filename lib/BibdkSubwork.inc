@@ -61,7 +61,7 @@ class BibdkSubwork {
       $id = isset($id) ? $id : $manifestation->id;
       $ids[$id] = $id;
     }
-    
+
     return $ids;
   }
 

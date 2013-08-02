@@ -19,4 +19,9 @@ class BibdkBriefDisplay {
     return $this->manifestation->type->{'$'};
   }
 
+  public function getHostPublicationID(){
+    //type
+    return $this->id;
+  }
+
 }

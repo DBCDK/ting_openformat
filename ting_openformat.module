@@ -77,7 +77,7 @@ function ting_openformat_ajax_manifestations($type, $json){
   $commands = array();
 
   $manifestation_ids = json_decode($json);
-  if(is_array($manifestation_ids) || count($manifestation_ids) == 0){
+  if(!is_array($manifestation_ids) || count($manifestation_ids) == 0){
     return false;
   }
 
@@ -556,7 +556,7 @@ function ting_openformat_get_ordered_subworks($subWorks){
       $type_id = $trans['type'];
       $ordered_subworks[$type_id][$subtype_id]['manifest'] = $val;
       $ordered_subworks[$type_id][$subtype_id]['translation'] = $trans;
-      $ordered_subworks[$type_id][$subtype_id]['manifest']['subtype_actions'] = _ting_openformat_subwork_materialtype_actions($ordered_subworks, $type_id, $subtype_id, $val['bibdkSubwork']);
+      $ordered_subworks[$type_id][$subtype_id]['manifest']['subtype_actions'] = module_invoke_all('ting_openformat_subwork_materialtype_actions', $ordered_subworks, $type_id, $subtype_id, $val['bibdkSubwork']);
     }
   }
   return $ordered_subworks;
@@ -594,18 +594,6 @@ function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langc
     $sub['manifestations'][$manifestation->id] = drupal_render($manifestation_view);
   }
   return $sub;
-}
-
-/**
- * Creates a hook for other modules to add render arrays to subwork materialtypes
- * @param $ordered_subworks
- * @param $type_id
- * @param $subtype_id
- * @return array
- */
-function _ting_openformat_subwork_materialtype_actions($ordered_subworks, $type_id, $subtype_id, $subWork) {
-  $render = module_invoke_all('ting_openformat_subwork_materialtype_actions', $ordered_subworks, $type_id, $subtype_id, $subWork);
-  return $render;
 }
 
 /**
@@ -672,6 +660,20 @@ function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
   $ids = $form_state['clicked_button']['#ids'];
   $uid = $form_state['clicked_button']['#uid'];
   $collection = $form_state['clicked_button']['#collection'];
+
+
+  $view = ting_openformat_load_single_full_work($collection, $ids, $uid);
+
+  $view = theme('status_messages') . $view;
+
+  $commands = array();
+  $commands[] = ajax_command_remove("#ajax-$uid");
+  $commands[] = ajax_command_replace(NULL, $view);
+
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
+
+function  ting_openformat_load_single_full_work($collection, $ids, $uid){
   module_invoke_all('show_manifestation_info_prerender', $ids, $uid);
   foreach ($collection->manifestations as $manifestation) {
     if (!isset($bibdkWork)){
@@ -684,15 +686,10 @@ function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
 
   }
 
-  $view = theme('status_messages');
-
-  $view .= ting_openformat_work_view($bibdkWork);
-  $commands = array();
-  $commands[] = ajax_command_remove("#ajax-$uid");
-  $commands[] = ajax_command_replace(NULL, $view);
-
-  return array('#type' => 'ajax', '#commands' => $commands);
+  return ting_openformat_work_view($bibdkWork);
 }
+
+
 
 /**
  * @param $manifestation
