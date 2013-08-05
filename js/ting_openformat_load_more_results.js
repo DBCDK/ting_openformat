@@ -9,7 +9,7 @@
       }
 
       LoadMore.setSettings(loadMoreLink);
-      if(!Drupal.settings.ting_openformat_load_more_results.infiniteLoadingIsActive){
+      if(!Drupal.settings.ting_openformat_load_more_results.infiniteLoadingIsActive) {
         var anchor = $("#" + response.data.anchor);
         $('html,body').animate({scrollTop: anchor.offset().top - 30}, 'slow');
       }
@@ -31,7 +31,7 @@
 
     element.click(function(e) {
       e.preventDefault();
-      if(!Drupal.settings.ting_openformat_load_more_results.loading){
+      if(!Drupal.settings.ting_openformat_load_more_results.loading) {
         element = $(this);
         element.hide();
         element.trigger('load_more_results');
@@ -56,7 +56,7 @@
     Drupal.ajax['load_more_results'] = new Drupal.ajax('load_more_results', element, element_settings);
   };
 
-  LoadMore.setInfiniteScroll = function() {
+  LoadMore.initInfiniteScroll = function() {
     $(window).unbind('scroll');
 
     $(window).scroll(function() {
@@ -80,7 +80,7 @@
       var element = $('.pane-ting-openformat-load-more-results #link', context);
       LoadMore.addAjax(element);
 
-      LoadMore.setInfiniteScroll();
+      LoadMore.initInfiniteScroll();
     }
   };
 })(jQuery);
