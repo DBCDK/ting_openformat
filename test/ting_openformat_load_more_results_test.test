@@ -1,0 +1,17 @@
+<?php
+/**
+ * Author: Martin Møller
+ */ 
+class TingOpenformatLoadMoreResultsUnitTest extends DrupalUnitTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => t('Load more results unit test'),
+      'description' => t('Unittesting methods in plugins/content_types/ting_openformat_load_more_results.inc'),
+      'group' => t('Ting Openformat'),
+    );
+  }
+  
+  public function setUp() {
+    parent::setUp();
+  }
+}
