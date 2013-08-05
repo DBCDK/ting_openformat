@@ -119,7 +119,9 @@ function ting_openformat_load_more_results_ajax_callback() {
 function _ting_openformat_get_search_result_html($results){
   $html = '';
   foreach ($results as $result) {
-    $html .= $result['snippet'];
+    if(isset($result['snippet'])){
+      $html .= $result['snippet'];
+    }
   }
   return $html;
 }

@@ -14,4 +14,20 @@ class TingOpenformatLoadMoreResultsUnitTest extends DrupalUnitTestCase {
   public function setUp() {
     parent::setUp();
   }
+
+  public function testTing_openformat_load_more_results_admin_info(){
+    module_load_include('inc', 'ting_openformat', '/plugins/content_types/ting_openformat_load_more_results');
+    $results = drupal_json_decode(file_get_contents(drupal_get_path('module', 'ting_openformat') . '/test/mockup/test_load_more_results_results.json'));
+    $html = _ting_openformat_get_search_result_html($results);
+    $this->assertTrue(!empty($html), 'Not empty string returned', 'Method: _ting_openformat_get_search_result_html');
+
+    for ($i = 0; $i < count($results); $i++) {
+      $results[$i]['snippet'] = '';
+    }
+    $html = _ting_openformat_get_search_result_html($results);
+    $this->assertTrue(empty($html), 'Empty string returned when \'snippet\' doesn\'t exist', 'Method: _ting_openformat_get_search_result_html');
+
+    $html = _ting_openformat_get_search_result_html(array());
+    $this->assertTrue(empty($html), 'Empty string returned when empty array given', 'Method: _ting_openformat_get_search_result_html');
+  }
 }
