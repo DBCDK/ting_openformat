@@ -34,7 +34,9 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
 
     foreach ($fields as $field_name => $field) {
       $method = $_ting_openformat_test_results[$field_name]['method'];
+      debug($method);
       $expected = $_ting_openformat_test_results[$field_name]['_ting_openformat_default_field_view_content'];
+      debug($expected);
       $message = "method '$method' returns correct result";
       $this->_testGetmethods($method, $expected, $message);
     }
@@ -293,7 +295,8 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     $fields = ting_openformat_bibdk_fields();
 
     // test_results.php includes expected results for all fields in the variable $_ting_openformat_test_results    include_once 'test_results.php';
-    include_once 'test_results.php';
+   // include_once 'test_results.php';
+    require_once 'test_results.php';
 
     foreach ($fields as $field_name => $field) {
 
