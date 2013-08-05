@@ -2,7 +2,7 @@
 
 $plugin = array(
   'title' => t('Openformat Search - \'Load more collections\' link', array(), array('context' => 'ting_openformat')),
-  'admin info' => 'ting_openformat_load_more_results_admin_info', // A function that will return the information displayed on the admin screen (optional).
+  'admin info' => 'ting_openformat_load_more_results_admin_info',
   'single' => TRUE,
   'content_types' => array('ting_openformat_load_more_results'),
   'render callback' => 'ting_openformat_load_more_results_link',
@@ -81,7 +81,7 @@ function ting_openformat_load_more_results_ajax_callback() {
   $keys = $_GET['keys'];
   unset($_GET['keys']);
 
-  $unwanted_keyes = array('page_id', 'page', 'q');
+  $unwanted_keyes = array('page_id', 'page', 'q', 'req');
 
   foreach ($_GET as $key => $value) {
     if (!in_array($key, $unwanted_keyes)) {
