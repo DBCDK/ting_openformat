@@ -1,7 +1,8 @@
 <?php
+
 /**
- * Author: Martin Møller
- */ 
+ * Class TingOpenformatLoadMoreResultsUnitTest
+ */
 class TingOpenformatLoadMoreResultsUnitTest extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
@@ -13,6 +14,15 @@ class TingOpenformatLoadMoreResultsUnitTest extends DrupalUnitTestCase {
   
   public function setUp() {
     parent::setUp();
+  }
+
+  public function testTingOpenFormatLoadMoreResultsPlugin(){
+    include(drupal_get_path('module', 'ting_openformat') . '/plugins/content_types/ting_openformat_load_more_results.inc');
+    $this->assertTrue((isset($plugin) && !empty($plugin)), 'Plugin variable was found');
+    $this->assertTrue(isset($plugin['title']) && !empty($plugin['title']), '\'title\' was found and set');
+    $this->assertTrue(isset($plugin['admin info']) && !empty($plugin['admin info']), '\'admin info\' was found and set');
+    $this->assertTrue(isset($plugin['content_types']) && !empty($plugin['content_types']), '\'content_types\' was found and set');
+    $this->assertTrue(isset($plugin['render callback']) && !empty($plugin['render callback']), '\'render callback\' was found and set');
   }
 
   public function testTing_openformat_load_more_results_admin_info(){
@@ -29,5 +39,43 @@ class TingOpenformatLoadMoreResultsUnitTest extends DrupalUnitTestCase {
 
     $html = _ting_openformat_get_search_result_html(array());
     $this->assertTrue(empty($html), 'Empty string returned when empty array given', 'Method: _ting_openformat_get_search_result_html');
+  }
+}
+
+/**
+ * Class TingOpenFormatLoadMoreResultsWebTest
+ */
+class TingOpenFormatLoadMoreResultsWebTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => t('Load more results web test'),
+      'description' => t('Webtesting methods in plugins/content_types/ting_openformat_load_more_results.inc'),
+      'group' => t('Ting Openformat'),
+    );
+  }
+
+  public function setUp() {
+    parent::setUp();
+  }
+
+  public function testTing_openformat_load_more_results_admin_info(){
+    module_load_include('inc', 'ting_openformat', '/plugins/content_types/ting_openformat_load_more_results');
+    $block = ting_openformat_load_more_results_admin_info(NULL, NULL, NULL);
+    $this->assertTrue(is_object($block), t('Object returned as expected'));
+    $this->assertTrue((isset($block->title) && !empty($block->title)), t('Object has titlte set'));
+    $this->assertTrue((isset($block->content) && !empty($block->content)), t('Object has content set'));
+  }
+
+  public function test_ting_openformat_get_search_result_count(){
+    module_load_include('inc', 'ting_openformat', '/plugins/content_types/ting_openformat_load_more_results');
+    $panel_args = drupal_json_decode(file_get_contents(drupal_get_path('module', 'ting_openformat') . '/test/mockup/test_load_more_results_panel_args.json'));
+    unset($_SESSION['searches'][$panel_args[0]]['count']);
+
+    $count = _ting_openformat_get_search_result_count($panel_args, 10);
+    $this->assertEqual($count, FALSE, 'Expected count was returned');
+
+    $_SESSION['searches'][$panel_args[0]]['count'] = 50;
+    $count = _ting_openformat_get_search_result_count($panel_args, 10);
+    $this->assertEqual($count, 50, 'Expected count was returned');
   }
 }
