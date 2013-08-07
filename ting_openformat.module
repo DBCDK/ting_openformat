@@ -16,6 +16,15 @@ function ting_openformat_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_LOCAL_TASK,
   );
+  $items['ajax/load_more_results'] = array(
+    'title' => 'Load more results AJAX callback',
+    'description' => 'AJAX callback for ting_openformat_load_more_results. Loads X number of searchresults and returns the result to the client as JSON.',
+    'access arguments' => array('access content'),
+    'page callback' => 'ting_openformat_load_more_results_ajax_callback',
+    'file' => 'ting_openformat_load_more_results.inc',
+    'file path' => drupal_get_path('module', 'ting_openformat') . '/plugins/content_types/',
+    'type' => MENU_CALLBACK,
+  );
   $items['admin/config/ting'] = array(
     'title' => 'Openformat',
     'description' => 'Handle ting_openformat module (disable)',

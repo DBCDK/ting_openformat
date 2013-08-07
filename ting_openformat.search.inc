@@ -12,15 +12,12 @@
 
 // load theme hooks
 module_load_include('inc', 'ting_openformat', 'ting_openformat.theme');
-// load search client
-//module_load_include('inc', 'ting_openformat','ting_openformat.search_client');
 
 /**
  * Implements hook_search_info().
  */
 function ting_openformat_search_info() {
   return array(
-    //'title' => t('Bibliotek.dk'),
     'title' => variable_get('search_client_name', 'well'),
     'path' => 'work',
     'conditions_callback' => 'ting_openformat_conditions_callback',);
@@ -36,7 +33,6 @@ function _ting_openformat_handle_conditions(&$conditions) {
 /** implements hook_search_execute */
 function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   $params = array();
-  // search phrase (query)
 
   $params['query'] = $keys;
   // save query to show in search_block
@@ -236,8 +232,9 @@ function _ting_openformat_set_default_facets() {
   return $facets;
 }
 
-/** \brief get variables and set corresponding search parameters
- * */
+/**
+ * Get variables and set corresponding search parameters
+ */
 function _ting_openformat_search_get_variables() {
   // results pr. page (opensearch::stepValue) ... in ting-client/lib/request/TingClientSearchRequest.php this is called numResults
   $resultsPerPage = variable_get('ting_search_results_per_page', 10);
