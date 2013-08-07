@@ -37,9 +37,7 @@ if (module_exists('search')) {
  */
 function ting_openformat_ting_openformat_search_result_content_type_render($subtype, $conf, $args, $pane_context, $incoming_content) {
   $search_info = search_get_info();
-  /* if (empty($search_info[$conf['type']])) {
-    return;
-    }*/
+
   $info = $search_info['ting_openformat'];
 
   $keys = NULL;
@@ -54,9 +52,9 @@ function ting_openformat_ting_openformat_search_result_content_type_render($subt
   }
   $search_result=search_data($keys, $info['module'], $conditions);
 
-  $output = "<ol class=\"search-results $conf[type]-results\">\n";
+  $output = "<div class=\"search-results $conf[type]-results\">\n";
   if( count($search_result['#results']) > 0 ) {
-    foreach ($search_result['#results'] as $result) {    // $build = ting_collection_view($collection, 'teaser');
+    foreach ($search_result['#results'] as $result) {
       $output .= theme('search_result', array('result' => $result, 'module' => $conf['type']));
     }
   }
@@ -64,8 +62,7 @@ function ting_openformat_ting_openformat_search_result_content_type_render($subt
     $output .= t('Your search yielded no results');
     $output .= search_help('search#noresults', drupal_help_arg());
   }
-  $output .= "</ol>\n";
-  // $output .= theme('ting_search_pager', array('tags' => NULL,));
+  $output .= "</div>\n";
 
   $block->title = t('Search results');
   $block->content = $output;
