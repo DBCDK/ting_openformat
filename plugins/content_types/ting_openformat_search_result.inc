@@ -45,15 +45,15 @@ function ting_openformat_ting_openformat_search_result_content_type_render($subt
     $keys = $pane_context->data;
   }
 
-  $conditions =  NULL;
+  $conditions = NULL;
   if (isset($info['conditions_callback']) && function_exists($info['conditions_callback'])) {
     // Build an optional array of more search conditions.
     $conditions = $info['conditions_callback']($keys);
   }
-  $search_result=search_data($keys, $info['module'], $conditions);
+  $search_result = search_data($keys, $info['module'], $conditions);
 
   $output = "<div class=\"search-results $conf[type]-results\">\n";
-  if( count($search_result['#results']) > 0 ) {
+  if (count($search_result['#results']) > 0) {
     foreach ($search_result['#results'] as $result) {
       $output .= theme('search_result', array('result' => $result, 'module' => $conf['type']));
     }
