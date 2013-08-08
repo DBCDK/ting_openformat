@@ -1,4 +1,4 @@
-<div class="wrapper">
+<div class="wrapper <?php print $work_type; ?>">
   <div><?php print $title; ?></div>
   <div><?php print $author; ?></div>
   <div><?php print $ids; ?></div>
