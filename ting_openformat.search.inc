@@ -31,7 +31,7 @@ function _ting_openformat_handle_conditions(&$conditions) {
 }
 
 /** implements hook_search_execute */
-function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
+function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more = NULL) {
   $params = array();
 
   $params['query'] = $keys;
@@ -94,6 +94,8 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   }
 
    module_invoke_all('ting_openformat_search_results', $keys, $result);
+  $more = $result->more;
+  $search_results['more'] = $result->more;
 
   // Collections may contain more works than $params['numResults'], and we don't want a pager if there's only one page
   $total = ($result->numTotalCollections < $params['numResults'] && $params['start'] < $params['numResults']) ? $result->numTotalCollections : $result->numTotalObjects;
@@ -104,6 +106,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   pager_default_initialize($total, $params['numResults']);
 
   if (!empty($search_results)) {
+    #dpm($search_results);
     return $search_results;
   }
 

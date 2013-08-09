@@ -15,17 +15,19 @@ $plugin = array(
  */
 function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $context) {
   $block = new stdClass();
-  $results_per_page = variable_get('ting_search_results_per_page', 10);
 
-  if ($count = _ting_openformat_get_search_result_count($panel_args, $results_per_page)) {
-    $pages_count = ceil($count / $results_per_page);
+  $result = drupal_static('ting_search_results');
+  $more = isset($result->more) ? $result->more : NULL;
+
+  if ($more) {
 
     $start = isset($_GET['page']) ? $_GET['page'] : 2;
 
     drupal_add_js(drupal_get_path('module', 'ting_openformat') . '/js/ting_openformat_load_more_results.js', 'file');
     drupal_add_js(array(
         'ting_openformat_load_more_results' => array(
-          'pages' => $pages_count,
+          'more' => $more,
+          #'pages' => $pages_count,
           'start' => $start,
           'loadingIsActive' => FALSE,
         )
@@ -43,25 +45,6 @@ function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $c
   }
 
   return $block;
-}
-
-/**
- * Finds the result count for the current search and returns the number of pages.
- * If the count is below 10 FLASE is returned as no more pages than the one
- * already being displayed should be loaded.
- *
- * @param $panel_args array
- * @param $results_per_page int
- * @return bool | string
- */
-function _ting_openformat_get_search_result_count($panel_args, $results_per_page) {
-  $query = $panel_args[0];
-  $count = isset($_SESSION['searches'][$query]['count']) ? $_SESSION['searches'][$query]['count'] : NULL;
-
-  if ($count && ($count - $results_per_page) >= 1) {
-    return $count;
-  }
-  return FALSE;
 }
 
 /**
@@ -92,6 +75,8 @@ function ting_openformat_load_more_results_ajax_callback() {
   module_load_include('inc', 'ting_openformat', 'ting_openformat.search');
   $results = ting_openformat_search_execute($keys, $conditions);
 
+  $more = isset($results['more']) ? $results['more'] : FALSE;
+
   $id = 'load-more-results-' . $_GET['page'];
   $html = '<div class="load_more_res_splitter" id="' . $id . '" > </div>';
 
@@ -102,6 +87,7 @@ function ting_openformat_load_more_results_ajax_callback() {
     'command' => 'add_more_results',
     'data' => array(
       'anchor' => $id,
+      'more' => $more,
     ),
   );
 
