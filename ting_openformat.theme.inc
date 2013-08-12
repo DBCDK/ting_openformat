@@ -40,7 +40,7 @@ function ting_openformat_theme() {
 
     'ting_openformat_collection' => array(
       'path' => $path,
-      'variables' => array('title' => '','author'=> '','ids' => '', 'show_info' => ''),
+      'variables' => array('title' => '','author'=> '','ids' => '', 'work_type' => '', 'type' => '', 'show_info' => ''),
       'template' => 'ting_openformat_collection',
       'render elements' => 'elements',
     ),
@@ -71,14 +71,14 @@ function ting_openformat_theme() {
       'template' => 'ting_openformat_single_work',
       'render elements' => 'elements',
     ),
-
+/*
     'ting_openformat_mini_pager' => array(
       'variables' => array('tags' => array(), 'element' => 0, 'parameters' => array(), 'quantity' => 9),
     ),
     'ting_openformat_pager' => array(
       'variables' => array('tags' => array(), 'element' => 0, 'parameters' => array(), 'quantity' => 9),
     ),
-
+*/
     'ting_openformat_type_order_form' => array(
       'render element' => 'form',
       'file' => 'ting_openformat.admin.inc',
@@ -102,6 +102,7 @@ function ting_openformat_theme() {
 /**
  * Theme a pager
  */
+/*
 function theme_ting_openformat_pager($variables) {
   $tags = $variables['tags'];
   $element = $variables['element'];
@@ -229,12 +230,14 @@ function theme_ting_openformat_pager($variables) {
     }
     return theme('item_list', array('items' => $items, 'type' => 'ul', 'attributes' => array('class' => array('pager'))));
   }
-}
+}*/
 
 /**
  * Theme a mini pager with only first, previous and next links.
  */
+/*
 function theme_ting_openformat_mini_pager($variables) {
+  dpm($variables);
   $tags = $variables['tags'];
   $element = $variables['element'];
   $parameters = $variables['parameters'];
@@ -309,6 +312,6 @@ function theme_ting_openformat_mini_pager($variables) {
     );
 
     return $output;
-
   }
 }
+*/

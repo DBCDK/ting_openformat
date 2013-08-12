@@ -53,4 +53,14 @@ class BibdkCollection {
     return $this->collectionTypes;
   }
 
+  public function getWorkType() {
+    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('workType'));
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
+  public function getType() {
+    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('type'));
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
 }

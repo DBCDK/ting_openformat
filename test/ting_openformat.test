@@ -6,6 +6,7 @@
 class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
 
   private $manifestation;
+  private $fields;
 
   /**
    * @return array
@@ -20,52 +21,28 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
 
   public function setUp() {
     $this->_createObjects();
+    $this->fields = ting_openformat_bibdk_fields();
     parent::setUp();
   }
 
   public function testManifestationMethods() {
-    $this->_testGetmethods("getSubType", "Grammofonplade");
-    $this->_testGetmethods("getOriginalTitle", NULL);
-    $this->_testGetmethods("getAnalyticContent", array (
-      'analyticContent' =>
-      array (
-        0 =>
-        array (
-          'analyticContributor' =>
-          array (
-            0 =>
-            array (
-              0 =>
-              array (
-                'searchCode' => 'phrase.creator="Giuseppe Verdi"',
-                'display' => 'Giuseppe Verdi',
-              ),
-            ),
-          ),
-          'analyticTitle' =>
-          array (
-            0 =>
-            array (
-              'analyticTitleMain' =>
-              array (
-                0 =>
-                array (
-                  0 =>
-                  array (
-                    'searchCode' => 'dkcclphrase.lti="Rigoletto uddrag"',
-                    'display' => 'Rigoletto (uddrag)',
-                  ),
-                ),
-              ),
-              'analyticRestOfTitle' => '/ Jussi Björling, tenor ; Leonard Warren, baryton ; orkester ; dirigent: Cesare Sordero',
-            ),
-          ),
-        ),
-      ),
-    ));
 
-}
-  public function testCqlCommando(){
+    $fields = $this->fields;
+
+    // test_results.php includes expected results for all fields in the variable $_ting_openformat_test_results
+    include_once 'test_results.php';
+
+    foreach ($fields as $field_name => $field) {
+      $method = $_ting_openformat_test_results[$field_name]['method'];
+      debug($method);
+      $expected = $_ting_openformat_test_results[$field_name]['_ting_openformat_default_field_view_content'];
+      debug($expected);
+      $message = "method '$method' returns correct result";
+      $this->_testGetmethods($method, $expected, $message);
+    }
+  }
+
+  public function testCqlCommando() {
 
     global $language;
 
@@ -109,23 +86,23 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
 
     $language = $saved_language;
 
-
   }
 
   /**
    * @param $method
    * @param $expected_result
    */
-  private function _testGetmethods($method, $expected_result) {
+  private function _testGetmethods($method, $expected_result, $message) {
     $manifestation = $this->manifestation;
     $serial_result = $result = $manifestation->$method();
-    $message = "$method method returned : " . print_r($result, TRUE) . " Should be " . print_r($expected_result, TRUE);
+    //$message = "$method method returned : " . print_r($result, TRUE) . " Should be " . print_r($expected_result, TRUE);
     if (is_array($expected_result)) {
       $expected_result = serialize($expected_result);
       $serial_result = serialize($result);
     }
 
     $this->assertEqual($expected_result, $serial_result, $message);
+
     return $result;
 
   }
@@ -138,11 +115,8 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     $this->manifestation = entity_load('bibdkManifestation', $manifestation_object->adminData->pid->{'$'}, $manifestation_object);
   }
 
-
-
-
-
 }
+
 
 /**
  * WebTest class for ting_openformat module
@@ -160,7 +134,7 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     );
   }
 
-  public function setUp(){
+  public function setUp() {
     parent::setUp('ting_openformat');
     variable_set('ting_search_url', 'http://lakiseks.dbc.dk/openbibdk/0.5/');
     variable_set('bibdk_provider_security_code', 'testhest');
@@ -170,46 +144,47 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     menu_rebuild();
   }
 
-  public function testRunner(){
-    /*$this->_testFields();
+  public function testRunner() {
+    $this->_testFields();
     $this->_testFieldContent();
     $this->_testMethodGetMarkupForField();
     $this->_testMethodParseElement();
     $this->_testSearchDefaultVariables();
-    $this->_testEmptySearch();*/
+    $this->_testEmptySearch();
     $this->_testHookActions();
+    $this->_testDefaultFieldRendering();
   }
 
 
-  private function _testHookActions(){
+  private function _testHookActions() {
+    debug(__FUNCTION__);
     $actions = ting_openformat_get_actions('test', new stdClass(), null, null);
     $this->assertEqual($actions, array(), t('no actions added'));
 
     module_enable(array('ting_openformat_webservice_mockup'));
-      $actions = ting_openformat_get_actions('test', new stdClass(), null, null);
-      $expected_result = array (
-        'test1' =>
-        array (
-          '#markup' => 'this_is_an_action_1',
-          '#weight' => 1,
-        ),
-        'test2' =>
-        array (
-          '#markup' => 'this_is_an_action_2',
-          '#weight' => 2,
-        ),
-      );
+    $actions = ting_openformat_get_actions('test', new stdClass(), null, null);
+    $expected_result = array(
+      'test1' =>
+      array(
+        '#markup' => 'this_is_an_action_1',
+        '#weight' => 1,
+      ),
+      'test2' =>
+      array(
+        '#markup' => 'this_is_an_action_2',
+        '#weight' => 2,
+      ),
+    );
 
     $this->assertEqual($actions, $expected_result, t('actions correctly added'));
-
   }
 
-  private function _testEmptySearch(){
+  private function _testEmptySearch() {
+    debug(__FUNCTION__);
     $this->drupalPost('', NULL, t('Search'));
     $this->assertNoText('Error: No query found in request');
     $this->assertText('Please enter some keywords.');
   }
-
 
   /**
    * Testing the _ting_openformat_get_markup_for_field() method
@@ -236,7 +211,7 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
    * Testing the _ting_openformat_parse_element() method
    * Pretty much the same as the above test except no '#markup' key
    */
-  private function _testMethodPparseElement() {
+  private function _testMethodParseElement() {
     debug('Testing _ting_openformat_parse_element()');
     //loading the element to parse
     $element = drupal_json_decode(file_get_contents(drupal_get_path('module', 'ting_openformat') . '/test/mockup/element.json'));
@@ -253,7 +228,7 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
 
   }
 
-  private function _testSearchDefaultVariables(){
+  private function _testSearchDefaultVariables() {
     debug('Test method: _ting_openformat_search_get_variables()');
     global $language;
 
@@ -277,15 +252,13 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     $result = $variables['queryLanguage'];
     $language = $language_reset;
     $this->assertEqual($result, 'cqleng', 'querylanguage is set to cqleng');
-
-
   }
 
 
-
   /** Test if fields are created
-  */
-  private function _testFields(){
+   */
+  private function _testFields() {
+    debug(__FUNCTION__);
     // Login as admin user
     $perms = user_role_permissions(array(array_search('administrator', user_roles()) => 'administrator'));
     $perms = array_keys($perms[array_search('administrator', user_roles())]);
@@ -300,7 +273,8 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
   /**
    * Test if field content is generated
    */
-  private function _testFieldContent(){
+  private function _testFieldContent() {
+    debug(__FUNCTION__);
     // Get a manifestation entity with content
     $manifestation = $this->_createObjects();
     $view = ting_openformat_manifestation_view($manifestation);
@@ -309,8 +283,40 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
 
     // Test if Analytic content i present in html
     $this->assertTrue(strpos($html, 'Giuseppe Verdi') !== FALSE, t('Found first part of analytic content'));
-    $this->assertTrue(strpos($html, 'Rigoletto (uddrag)') !== FALSE, t('Found second part of analytic content') );
+    $this->assertTrue(strpos($html, 'Rigoletto (uddrag)') !== FALSE, t('Found second part of analytic content'));
     $this->assertTrue(strpos($html, '/ Jussi Björling, tenor ; Leonard Warren, baryton ; orkester ; dirigent: Cesare Sordero') !== FALSE, t('Found third part of analytic content'));
+  }
+
+
+  private function _testDefaultFieldRendering() {
+    debug('Test field rendering');
+
+    $manifestation = $this->_createObjects();
+    $fields = ting_openformat_bibdk_fields();
+
+    // test_results.php includes expected results for all fields in the variable $_ting_openformat_test_results    include_once 'test_results.php';
+   // include_once 'test_results.php';
+    require_once 'test_results.php';
+
+    foreach ($fields as $field_name => $field) {
+
+      // Test _ting_openformat_default_field_view_content
+      $result = _ting_openformat_default_field_view_content($field_name, $manifestation);
+      $expected = $_ting_openformat_test_results[$field_name]['_ting_openformat_default_field_view_content'];
+      $this->assertEqual($result, $expected, format_string('field "@field" correctly parsed by _ting_openformat_default_field_view_content', array(
+        '@field' => $field_name,
+      )));
+
+      // Test _ting_openformat_parse_element
+      $result = _ting_openformat_parse_element($result);
+      $expected = $_ting_openformat_test_results[$field_name]['_ting_openformat_parse_element'];
+      $expected = str_replace('[base_path]', base_path(), $expected);
+      $this->assertEqual($result, $expected, format_string('field "@field" correctly parsed by _ting_openformat_parse_element', array(
+        '@field' => $field_name,
+      )));
+
+    }
+
   }
 
 

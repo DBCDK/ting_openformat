@@ -1,9 +1,10 @@
 <?php
-
 // load search info and hooks
 module_load_include('inc', 'ting_openformat', 'ting_openformat.search');
 module_load_include('inc', 'ting_openformat', 'ting_openformat.entities');
+module_load_include('inc', 'ting_openformat', 'ting_openformat.field_definitions');
 module_load_include('inc', 'ting_openformat', 'ting_openformat.field');
+
 
 function ting_openformat_menu() {
   $items = array();
@@ -14,6 +15,15 @@ function ting_openformat_menu() {
     'page callback' => 'ting_openformat_single',
     'access arguments' => array('access content'),
     'type' => MENU_LOCAL_TASK,
+  );
+  $items['ajax/load_more_results'] = array(
+    'title' => 'Load more results AJAX callback',
+    'description' => 'AJAX callback for ting_openformat_load_more_results. Loads X number of searchresults and returns the result to the client as JSON.',
+    'access arguments' => array('access content'),
+    'page callback' => 'ting_openformat_load_more_results_ajax_callback',
+    'file' => 'ting_openformat_load_more_results.inc',
+    'file path' => drupal_get_path('module', 'ting_openformat') . '/plugins/content_types/',
+    'type' => MENU_CALLBACK,
   );
   $items['admin/config/ting'] = array(
     'title' => 'Openformat',
@@ -545,10 +555,14 @@ function ting_openformat_collection_view($bibdkobject) {
   $uid = strtolower(strtr($ids[0], array(':' => '', '-' => '')));
   $form = drupal_get_form('ting_openformat_show_info_get_form', $ids, $uid);
   $actions = _prepare_view('bibdkCollection', $bibdkobject, 'full', NULL);
+  $workType = $bibdkobject->getWorkType();
+  $type = $bibdkobject->getType();
   return theme('ting_openformat_collection', array(
         'title' => $bibdkobject->getTitle(),
         'partOf' => $bibdkobject->getPartOf(),
         'author' => $bibdkobject->getAuthor(),
+        'work_type' => ( !empty($workType) ) ? 'type-' . $workType : 'type-undefined',
+        'type' => $type,
         'ids' => implode(',', $ids),
         'showinfo' => drupal_render($form),
         'uid' => $uid,

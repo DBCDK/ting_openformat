@@ -12,15 +12,12 @@
 
 // load theme hooks
 module_load_include('inc', 'ting_openformat', 'ting_openformat.theme');
-// load search client
-//module_load_include('inc', 'ting_openformat','ting_openformat.search_client');
 
 /**
  * Implements hook_search_info().
  */
 function ting_openformat_search_info() {
   return array(
-    //'title' => t('Bibliotek.dk'),
     'title' => variable_get('search_client_name', 'well'),
     'path' => 'work',
     'conditions_callback' => 'ting_openformat_conditions_callback',);
@@ -34,9 +31,8 @@ function _ting_openformat_handle_conditions(&$conditions) {
 }
 
 /** implements hook_search_execute */
-function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
+function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more = NULL) {
   $params = array();
-  // search phrase (query)
 
   $params['query'] = $keys;
   // save query to show in search_block
@@ -98,6 +94,8 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   }
 
    module_invoke_all('ting_openformat_search_results', $keys, $result);
+  $more = $result->more;
+  $search_results['more'] = $result->more;
 
   // Collections may contain more works than $params['numResults'], and we don't want a pager if there's only one page
   $total = ($result->numTotalCollections < $params['numResults'] && $params['start'] < $params['numResults']) ? $result->numTotalCollections : $result->numTotalObjects;
@@ -108,6 +106,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL) {
   pager_default_initialize($total, $params['numResults']);
 
   if (!empty($search_results)) {
+    #dpm($search_results);
     return $search_results;
   }
 
@@ -236,8 +235,9 @@ function _ting_openformat_set_default_facets() {
   return $facets;
 }
 
-/** \brief get variables and set corresponding search parameters
- * */
+/**
+ * Get variables and set corresponding search parameters
+ */
 function _ting_openformat_search_get_variables() {
   // results pr. page (opensearch::stepValue) ... in ting-client/lib/request/TingClientSearchRequest.php this is called numResults
   $resultsPerPage = variable_get('ting_search_results_per_page', 10);
@@ -341,6 +341,11 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
 function ting_openformat_conditions_callback($query) {
   $conditions = array();
 
+  $page_id = array();
+  if ( !empty($_REQUEST['page_id']) ) {
+    $page_id['page_id'] = $_REQUEST['page_id'];
+  }
+
   if ( !empty($_REQUEST['qe']) ) {
     $conditions['qe'] = $_REQUEST['qe'];
   }
@@ -380,12 +385,12 @@ function ting_openformat_conditions_callback($query) {
       }
     }
     $conditions['facets'] = $_REQUEST['facets'];
-    if ($redirect === TRUE) {
+    if ( $redirect === TRUE ) {
       $facets = array();
       foreach ($conditions['facets'] as $facet) {
         $facets['facets'][] = $facet;
       }
-      drupal_goto(rawurldecode($_GET['q']), array('query' => $facets));
+      drupal_goto(rawurldecode($_GET['q']), array('query' => $facets + $conditions + $page_id));
     }
   }
   return $conditions;
