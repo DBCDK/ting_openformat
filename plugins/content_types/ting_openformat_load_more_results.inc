@@ -55,14 +55,10 @@ function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $c
  * existing display.
  */
 function ting_openformat_load_more_results_ajax_callback() {
-  if (empty($_GET['keys'])) {
-    $commands[] = ajax_command_alert(t('No search keys provided and the search request can not be completed. Try make your search again from the beginning.', array(), array('context' => 'ting_openformat:error')));
-    ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
-    exit(0);
+  if (!empty($_GET['keys'])) {
+    $keys = $_GET['keys'];
+    unset($_GET['keys']);
   }
-
-  $keys = $_GET['keys'];
-  unset($_GET['keys']);
 
   $unwanted_keyes = array('page_id', 'page', 'q', 'req');
 
@@ -102,10 +98,10 @@ function ting_openformat_load_more_results_ajax_callback() {
  * @param $results
  * @return string
  */
-function _ting_openformat_get_search_result_html($results){
+function _ting_openformat_get_search_result_html($results) {
   $html = '';
   foreach ($results as $result) {
-    if(isset($result['snippet'])){
+    if (isset($result['snippet'])) {
       $html .= $result['snippet'];
     }
   }
