@@ -61,7 +61,7 @@ class BibdkWork {
     }
     $this->subWorks = array();
     foreach ($this->manifestations as $id => $manifestation) {
-      $type = $manifestation->getType();
+      $type = $manifestation->getBriefDisplayType();
       if ($type === NULL) {
         $type = array(t('unknown', array(), array('context' => 'ting_openformat')));
       }

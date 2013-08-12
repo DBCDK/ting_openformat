@@ -75,8 +75,10 @@ function ting_openformat_menu() {
 function ting_openformat_ajax_manifestations($type, $json){
 
   $commands = array();
-
   $manifestation_ids = json_decode($json);
+
+  #$commands[] = ajax_command_alert($manifestation_ids);
+
   if(!is_array($manifestation_ids) || count($manifestation_ids) == 0){
     return false;
   }
@@ -94,7 +96,15 @@ function ting_openformat_ajax_manifestations($type, $json){
 
   foreach($manifestations as $manifestation){
     $view = drupal_render(ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL));
-    $commands[] = ajax_command_replace('[data-id='. $manifestation->id.']', $view);
+    #$commands[] = ajax_command_alert($view);
+    #$commands[] = ajax_command_replace('[data-id='. $manifestation->id.']', $view);
+    $commands[] = array(
+      'command' => 'add_manifestations',
+      'selector' => '[data-id='. $manifestation->id.']',
+      'data' => $view,
+    );
+
+
   }
 
 
@@ -676,12 +686,15 @@ function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
 function  ting_openformat_load_single_full_work($collection, $ids, $uid){
   module_invoke_all('show_manifestation_info_prerender', $ids, $uid);
   foreach ($collection->manifestations as $manifestation) {
+    $briefDisplay = new BibdkBriefDisplay($manifestation);
     if (!isset($bibdkWork)){
-      $bibdkWork = ting_openformat_get_manifestations($manifestation->identifier->{'$'});
+      $bibdkWork = ting_openformat_get_manifestations($briefDisplay->id);
       $bibdkWork = current($bibdkWork);
+      $bibdkWork->manifestations[$briefDisplay->id]->setBriefDisplayType($briefDisplay->gettype());
+      $bibdkWork->manifestations[$briefDisplay->id]->setSubType($briefDisplay->getSubtype());
     }
     else {
-      $bibdkWork->manifestations[$manifestation->identifier->{'$'}] = new BibdkBriefDisplay($manifestation);
+      $bibdkWork->manifestations[$briefDisplay->id] = $briefDisplay;
     }
 
   }

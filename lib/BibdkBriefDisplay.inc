@@ -11,7 +11,17 @@ class BibdkBriefDisplay {
 
   public function getType(){
     //worktype
-    return $this->manifestation->workType->{'$'};
+    $type = array();
+    if ($this->manifestation->accessType->{'$'} == 'online'){
+      $type[] = 'online';
+    }
+    $type[] = $this->manifestation->workType->{'$'};
+    return $type;
+  }
+
+  public function getBriefDisplayType(){
+    //worktype
+    return $this->getType();
   }
 
   public function getSubtype(){
