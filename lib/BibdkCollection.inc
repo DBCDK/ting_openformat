@@ -32,8 +32,18 @@ class BibdkCollection {
 
   public function getTitle() {
     $result = ting_openformat_methods::parseFields($this->manifestations[0], array('title'));
-    return (is_array($result)) ? reset($result) : $result;
+    $title = (is_array($result)) ? reset($result) : $result;
+
+    $dependent_title = $this->getDependentTitle();
+    return (!empty($dependent_title)) ? $title . " : " . implode('. ', $dependent_title) : $title;
+
   }
+
+  public function getDependentTitle() {
+    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('dependentTitle'));
+    return $result;
+  }
+
 
   public function getPartOf() {
     $result = ting_openformat_methods::parseFields($this->manifestations[0], array('partOf'));
