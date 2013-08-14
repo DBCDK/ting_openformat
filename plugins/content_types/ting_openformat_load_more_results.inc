@@ -70,7 +70,7 @@ function ting_openformat_load_more_results_ajax_callback() {
 
   module_load_include('inc', 'ting_openformat', 'ting_openformat.search');
   $results = ting_openformat_search_execute($keys, $conditions);
-  dpm($results);
+  
   $more = isset($results['more']) ? $results['more'] : FALSE;
 
   $id = 'load-more-results-' . $_GET['page'];
