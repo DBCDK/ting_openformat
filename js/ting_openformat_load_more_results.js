@@ -1,7 +1,6 @@
 (function($) {
 
   Drupal.ajax.prototype.commands.add_more_results = function(ajax, response, status) {
-    console.log(response);
     Drupal.settings.ting_openformat_load_more_results.more = response.data.more;
     var loadMoreLink = $('.pane-ting-openformat-load-more-results #link');
     if(status === 'success') {
