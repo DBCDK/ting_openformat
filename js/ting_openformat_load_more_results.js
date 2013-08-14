@@ -1,12 +1,13 @@
 (function($) {
 
   Drupal.ajax.prototype.commands.add_more_results = function(ajax, response, status) {
+    console.log(response);
     Drupal.settings.ting_openformat_load_more_results.more = response.data.more;
     var loadMoreLink = $('.pane-ting-openformat-load-more-results #link');
     if(status === 'success') {
       if(Drupal.settings.ting_openformat_load_more_results.more) {
         Drupal.settings.ting_openformat_load_more_results.start++;
-          loadMoreLink.show();
+        loadMoreLink.show();
       }
 
       LoadMore.setSettings(loadMoreLink);
@@ -60,15 +61,26 @@
     $(window).unbind('scroll');
 
     $(window).scroll(function() {
-      if($(window).scrollTop() + $(window).height() == $(document).height() && Drupal.settings.ting_openformat_load_more_results.more) {
-        var element = $('.pane-ting-openformat-load-more-results #link');
-        element.hide();
-        element.trigger('load_more_results');
-        element.unbind('load_more_results');
-        Drupal.settings.ting_openformat_load_more_results.infiniteLoadingIsActive = true;
-        Drupal.settings.ting_openformat_load_more_results.loadingIsActive = true;
+      var toScroll = $('.pane-ting-openformat-load-more-results').offset().top;
+      if($(window).scrollTop() + $(window).height() >= toScroll && Drupal.settings.ting_openformat_load_more_results.more) {
+        LoadMore.infiniteLoad();
       }
     });
+  };
+
+  LoadMore.loadingIsOk = function() {
+    return !Drupal.settings.ting_openformat_load_more_results.loadingIsActive;
+  };
+
+  LoadMore.infiniteLoad = function() {
+    if(LoadMore.loadingIsOk()) {
+      var element = $('.pane-ting-openformat-load-more-results #link');
+      element.hide();
+      element.trigger('load_more_results');
+      element.unbind('load_more_results');
+      Drupal.settings.ting_openformat_load_more_results.infiniteLoadingIsActive = true;
+      Drupal.settings.ting_openformat_load_more_results.loadingIsActive = true;
+    }
   };
 
 //=======================================
@@ -77,10 +89,14 @@
 
   Drupal.behaviors.ting_openformat_load_more_results = {
     attach: function(context) {
-        var element = $('.pane-ting-openformat-load-more-results #link', context);
-        LoadMore.addAjax(element);
+      var element = $('.pane-ting-openformat-load-more-results #link', context);
+      LoadMore.addAjax(element);
 
-        LoadMore.initInfiniteScroll();
+      LoadMore.initInfiniteScroll();
+      if(Drupal.settings.ting_openformat_load_more_results.firstLoad) {
+        Drupal.settings.ting_openformat_load_more_results.firstLoad = false;
+        LoadMore.infiniteLoad();
+      }
     }
   };
 })(jQuery);
