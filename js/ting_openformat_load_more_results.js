@@ -92,7 +92,7 @@
       LoadMore.addAjax(element);
 
       LoadMore.initInfiniteScroll();
-      if(Drupal.settings.ting_openformat_load_more_results.firstLoad) {
+      if(Drupal.settings.ting_openformat_load_more_results.firstLoad && Drupal.settings.ting_openformat_load_more_results.more) {
         Drupal.settings.ting_openformat_load_more_results.firstLoad = false;
         LoadMore.infiniteLoad();
       }
