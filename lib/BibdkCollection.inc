@@ -8,7 +8,7 @@ class BibdkCollection {
   private $collectionIds;
 
   function __construct($manifestation) {
-    $this->manifestations = $manifestation['manifestations'];
+    $this->manifestations = isset($manifestation['manifestations']) ? $manifestation['manifestations'] : NULL;
   }
 
   //TODO the below method should be reviewed as valid XML is expected from webservices in production

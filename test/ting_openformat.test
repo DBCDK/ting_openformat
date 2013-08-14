@@ -88,6 +88,55 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
 
   }
 
+  public function testBibdkCollection(){
+
+    $manifestation = new stdClass();
+    $manifestation->acessType->{'$'} = 'physical';
+    $manifestation->fedoraPid->{'$'} = '870970-basis:27295150';
+    $manifestation->identifier->{'$'} = '870970-basis:27295150';
+    $manifestation->language->{'$'} = 'Flere sprog';
+    $manifestation->title->{'$'} = 'First choice for sjette';
+    $manifestation->dependentTitle->{'$'} = 'Teacher\'s book';
+    $manifestation->type->{'$'} = 'Bog';
+    $manifestation->workType->{'$'} = 'book';
+
+    $manifestations = array(
+      'manifestations' => array($manifestation)
+    );
+
+
+    $collection = new BibdkCollection($manifestations);
+
+    $result = $collection->getTitle();
+    $expected_result = 'First choice for sjette : Teacher\'s book';
+    $this->assertEqual($result, $expected_result, 'Title parsed correctly');
+
+    $result = $collection->getType();
+    $expected_result = 'Bog';
+    $this->assertEqual($result, $expected_result, 'Type parsed correctly');
+
+    $result = $collection->getWorkType();
+    $expected_result = 'book';
+    $this->assertEqual($result, $expected_result, 'Worktype parsed correctly');
+
+    $manifestations = array();
+    $collection = new BibdkCollection($manifestations);
+    $result = $collection->getTitle();
+    $expected_result = NULL;
+    $this->assertEqual($result, $expected_result, 'Title parsed correctly');
+
+    $result = $collection->getType();
+    $expected_result = NULL;
+    $this->assertEqual($result, $expected_result, 'Type parsed correctly');
+
+    $result = $collection->getWorkType();
+    $expected_result = NULL;
+    $this->assertEqual($result, $expected_result, 'Worktype parsed correctly');
+
+
+
+}
+
   /**
    * @param $method
    * @param $expected_result
