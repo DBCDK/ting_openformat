@@ -10,6 +10,7 @@
       }
 
       LoadMore.setSettings(loadMoreLink);
+      Drupal.settings.ting_openformat_load_more_results.anchor = response.data.anchor;
       if(!Drupal.settings.ting_openformat_load_more_results.infiniteLoadingIsActive) {
         var anchor = $("#" + response.data.anchor);
         $('html,body').animate({scrollTop: anchor.offset().top - 30}, 'slow');
@@ -60,7 +61,8 @@
     $(window).unbind('scroll');
 
     $(window).scroll(function() {
-      var toScroll = $('.pane-ting-openformat-load-more-results').offset().top;
+      var anchor = $('#' + Drupal.settings.ting_openformat_load_more_results.anchor);
+      var toScroll = (anchor.offset()) ? anchor.offset().top : $('.pane-ting-openformat-load-more-results').offset().top;
       if($(window).scrollTop() + $(window).height() >= toScroll && Drupal.settings.ting_openformat_load_more_results.more) {
         LoadMore.infiniteLoad();
       }
@@ -73,6 +75,7 @@
 
   LoadMore.infiniteLoad = function() {
     if(LoadMore.loadingIsOk()) {
+      console.log('LoadMore.infiniteLoad');
       var element = $('.pane-ting-openformat-load-more-results #link');
       element.hide();
       element.trigger('load_more_results');
