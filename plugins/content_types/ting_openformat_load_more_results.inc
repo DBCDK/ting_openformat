@@ -21,7 +21,7 @@ function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $c
 
   if ($more) {
 
-    $start = isset($_GET['page']) ? $_GET['page'] : 2;
+    $start = isset($_GET['page']) ? $_GET['page'] : 1;
 
     drupal_add_js(drupal_get_path('module', 'ting_openformat') . '/js/ting_openformat_load_more_results.js', 'file');
     drupal_add_js(array(
@@ -70,7 +70,7 @@ function ting_openformat_load_more_results_ajax_callback() {
 
   module_load_include('inc', 'ting_openformat', 'ting_openformat.search');
   $results = ting_openformat_search_execute($keys, $conditions);
-  
+
   $more = isset($results['more']) ? $results['more'] : FALSE;
 
   $id = 'load-more-results-' . $_GET['page'];
