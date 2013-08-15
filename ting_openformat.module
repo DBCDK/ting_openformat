@@ -584,8 +584,7 @@ function _ting_openformat_get_types_list($bibdkobject){
   $items = array();
   foreach($types as $type => $ids) {
     $class =  _ting_openformat_get_type_class($type);
-    #$items[$class] =  '<li><span class="' . $class . '">&nbsp;</span></li>';
-    $items[$class] =  '<span class="materialtype-andre-medier-icon-small">&nbsp;</span>';
+    $items[$class] =  '<span class="' . $class . '">&nbsp;</span>';
   }
 
   $list = array(
@@ -601,7 +600,7 @@ function _ting_openformat_get_types_list($bibdkobject){
 }
 
 function _ting_openformat_get_type_class($type){
-  $class = '.materialtype-';
+  $class = 'materialtype materialtype-';
   switch ($type) {
     case 'Akvarel':
       $class = t('Akvarel');
@@ -636,11 +635,9 @@ function _ting_openformat_get_type_class($type){
     case 'Billedtæppe':
       $class = t('Billedtæppe');
       break;
-    case 'Blu ray':
-      $class = t('Blu ray');
-      break;
+
     case 'Bog':
-      $class = t('Bog');
+      $class .= 'bog';
       break;
     case 'Bog stor skrift':
       $class = t('Bog stor skrift');
@@ -675,6 +672,10 @@ function _ting_openformat_get_type_class($type){
     case 'Dvd ':
     case 'DVD (film)':
     case 'DVD-rom':
+    case 'Film (net)':
+    case 'Blu ray':
+    case 'Blu-ray':
+    case 'Video':
       $class .= 'film';
       break;
     case 'Ebog':
@@ -685,9 +686,6 @@ function _ting_openformat_get_type_class($type){
       break;
     case 'Fastplade':
       $class = t('Fastplade');
-      break;
-    case 'Film (net)':
-      $class = t('Film (net)');
       break;
     case 'Flipover-materiale':
       $class = t('Flipover-materiale');
@@ -798,13 +796,10 @@ function _ting_openformat_get_type_class($type){
       $class = t('Planche');
       break;
     case 'Playstation':
-      $class = t('Playstation');
-      break;
     case 'Playstation 2':
-      $class = t('Playstation 2');
-      break;
     case 'Playstation 3':
-      $class = t('Playstation 3');
+    case 'Spil':
+      $class = 'spil';
       break;
     case 'Postkort':
       $class = t('Postkort');
@@ -813,7 +808,7 @@ function _ting_openformat_get_type_class($type){
       $class = t('PSP');
       break;
     case 'Punktskrift':
-      $class = t('Punktskrift');
+      $class = 'punktskrift';
       break;
     case 'Puslespil':
       $class = t('Puslespil');
@@ -827,9 +822,7 @@ function _ting_openformat_get_type_class($type){
     case 'Serie':
       $class = t('Serie');
       break;
-    case 'Spil':
-      $class = t('Spil');
-      break;
+
     case 'Spolelydbånd':
       $class = t('Spolelydbånd');
       break;
@@ -866,9 +859,7 @@ function _ting_openformat_get_type_class($type){
     case 'Udstillingsmontage':
       $class = t('Udstillingsmontage');
       break;
-    case 'Video':
-      $class = t('Video');
-      break;
+
     case 'Wii':
       $class = t('Wii');
       break;
