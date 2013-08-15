@@ -557,6 +557,7 @@ function ting_openformat_collection_view($bibdkobject) {
   $actions = _prepare_view('bibdkCollection', $bibdkobject, 'full', NULL);
   $workType = $bibdkobject->getWorkType();
   $type = $bibdkobject->getType();
+  $types_classes = _ting_openformat_get_types_list($bibdkobject);
   return theme('ting_openformat_collection', array(
         'title' => $bibdkobject->getTitle(),
         'partOf' => $bibdkobject->getPartOf(),
@@ -567,7 +568,327 @@ function ting_openformat_collection_view($bibdkobject) {
         'showinfo' => drupal_render($form),
         'uid' => $uid,
         'actions' => (!empty($actions)) ? $actions : array(),
+        'types' => $types_classes,
       ));
+}
+
+/**
+ * Genrates a list with classes based on the material types in the given
+ * collection
+ *
+ * @param BibdkCollection $bibdkobject
+ * @return array
+ */
+function _ting_openformat_get_types_list($bibdkobject){
+  $types = $bibdkobject->getCollectionTypes();
+  $items = array();
+  foreach($types as $type => $ids) {
+    $class =  _ting_openformat_get_type_class($type);
+    #$items[$class] =  '<li><span class="' . $class . '">&nbsp;</span></li>';
+    $items[$class] =  '<span class="materialtype-andre-medier-icon-small">&nbsp;</span>';
+  }
+
+  $list = array(
+    '#type' => 'ol',
+    '#theme' => 'item_list',
+    '#items' => $items,
+    '#attributes' => array(
+      'class' => 'material-types-list',
+    ),
+  );
+
+  return drupal_render($list);
+}
+
+function _ting_openformat_get_type_class($type){
+  $class = '.materialtype-';
+  switch ($type) {
+    case 'Akvarel':
+      $class = t('Akvarel');
+      break;
+    case 'Anmeldelse':
+      $class = t('Anmeldelse');
+      break;
+    case 'Arkitekturtegning':
+      $class = t('Arkitekturtegning');
+      break;
+    case 'Artikel':
+      $class = t('Artikel');
+      break;
+    case 'Avis':
+      $class = t('Avis');
+      break;
+    case 'Avis (net)':
+      $class = t('Avis (net)');
+      break;
+    case 'Avisartikel':
+      $class = t('Avisartikel');
+      break;
+    case 'Billedbog':
+      $class = t('Billedbog');
+      break;
+    case 'Billedbånd':
+      $class = t('Billedbånd');
+      break;
+    case 'Billedkort':
+      $class = t('Billedkort');
+      break;
+    case 'Billedtæppe':
+      $class = t('Billedtæppe');
+      break;
+    case 'Blu ray':
+      $class = t('Blu ray');
+      break;
+    case 'Bog':
+      $class = t('Bog');
+      break;
+    case 'Bog stor skrift':
+      $class = t('Bog stor skrift');
+      break;
+    case 'CD':
+      $class = t('CD');
+      break;
+    case 'Cd (musik)':
+      $class = t('Cd (musik)');
+      break;
+    case 'CD-I':
+      $class = t('CD-I');
+      break;
+    case 'CD-rom':
+      $class = t('CD-rom');
+      break;
+    case 'Cd-rom (mp3)':
+      $class = t('Cd-rom (mp3)');
+      break;
+    case 'DCC-bånd':
+      $class = t('DCC-bånd');
+      break;
+    case 'Dias':
+      $class = t('Dias');
+      break;
+    case 'Diskette':
+      $class = t('Diskette');
+      break;
+    case 'DTBook':
+      $class = t('DTBook');
+      break;
+    case 'Dvd ':
+    case 'DVD (film)':
+    case 'DVD-rom':
+      $class .= 'film';
+      break;
+    case 'Ebog':
+      $class = t('Ebog');
+      break;
+    case 'Emnekasse':
+      $class = t('Emnekasse');
+      break;
+    case 'Fastplade':
+      $class = t('Fastplade');
+      break;
+    case 'Film (net)':
+      $class = t('Film (net)');
+      break;
+    case 'Flipover-materiale':
+      $class = t('Flipover-materiale');
+      break;
+    case 'Flonellografmateriale':
+      $class = t('Flonellografmateriale');
+      break;
+    case 'Foto':
+      $class = t('Foto');
+      break;
+    case 'Foto-cd':
+      $class = t('Foto-cd');
+      break;
+    case 'Fotoreproduktion':
+      $class = t('Fotoreproduktion');
+      break;
+    case 'GameBoy':
+      $class = t('GameBoy');
+      break;
+    case 'GameBoy Advance':
+      $class = t('GameBoy Advance');
+      break;
+    case 'Graphic novel':
+      $class = t('Graphic novel');
+      break;
+    case 'Grafisk blad':
+      $class = t('Grafisk blad');
+      break;
+    case 'Grammofonplade':
+      $class = t('Grammofonplade');
+      break;
+    case 'Kassettelydbånd':
+      $class = t('Kassettelydbånd');
+      break;
+    case 'Kort':
+      $class = t('Kort');
+      break;
+    case 'Kunstreproduktion':
+      $class = t('Kunstreproduktion');
+      break;
+    case 'Laborativt materiale':
+      $class = t('Laborativt materiale');
+      break;
+    case 'Legetøj':
+      $class = t('Legetøj');
+      break;
+    case 'Lydbog (bånd)':
+      $class = t('Lydbog (bånd)');
+      break;
+    case 'Lydbog (cd)':
+      $class = t('Lydbog (cd)');
+      break;
+    case 'Lydbog (net)':
+      $class = t('Lydbog (net)');
+      break;
+    case 'Lydbog (cd-mp3)':
+      $class = t('Lydbog (cd-mp3)');
+      break;
+    case 'Maleri':
+      $class = t('Maleri');
+      break;
+    case 'Materiale til indlæringsapparat':
+      $class = t('Materiale til indlæringsapparat');
+      break;
+    case 'Mikroform':
+      $class = t('Mikroform');
+      break;
+    case 'Mini disc':
+      $class = t('Mini disc');
+      break;
+    case 'Musik (net)':
+      $class = t('Musik (net)');
+      break;
+    case 'Måleapparat':
+      $class = t('Måleapparat');
+      break;
+    case 'Netdokument':
+      $class = t('Netdokument');
+      break;
+    case 'Nintendo DS':
+      $class = t('Nintendo DS');
+      break;
+    case 'Node':
+      $class = t('Node');
+      break;
+    case 'Pc-spil':
+      $class = t('Pc-spil');
+      break;
+    case 'Pc-spil (net)':
+      $class = t('Pc-spil (net)');
+      break;
+    case 'Ordkort':
+      $class = t('Ordkort');
+      break;
+    case 'Originalkunst':
+      $class = t('Originalkunst');
+      break;
+    case 'Periodikum':
+      $class = t('Periodikum');
+      break;
+    case 'Periodikum (net)':
+      $class = t('Periodikum (net)');
+      break;
+    case 'Plakat':
+      $class = t('Plakat');
+      break;
+    case 'Planche':
+      $class = t('Planche');
+      break;
+    case 'Playstation':
+      $class = t('Playstation');
+      break;
+    case 'Playstation 2':
+      $class = t('Playstation 2');
+      break;
+    case 'Playstation 3':
+      $class = t('Playstation 3');
+      break;
+    case 'Postkort':
+      $class = t('Postkort');
+      break;
+    case 'PSP':
+      $class = t('PSP');
+      break;
+    case 'Punktskrift':
+      $class = t('Punktskrift');
+      break;
+    case 'Puslespil':
+      $class = t('Puslespil');
+      break;
+    case 'Sammensat materiale':
+      $class = t('Sammensat materiale');
+      break;
+    case 'Sang':
+      $class = t('Sang');
+      break;
+    case 'Serie':
+      $class = t('Serie');
+      break;
+    case 'Spil':
+      $class = t('Spil');
+      break;
+    case 'Spolelydbånd':
+      $class = t('Spolelydbånd');
+      break;
+    case 'Symbolkort':
+      $class = t('Symbolkort');
+      break;
+    case 'Teateropførelse':
+      $class = t('Teateropførelse');
+      break;
+    case 'Tegneserie':
+      $class = t('Tegneserie');
+      break;
+    case 'Tegning':
+      $class = t('Tegning');
+      break;
+    case 'Teknisk tegning':
+      $class = t('Teknisk tegning');
+      break;
+    case 'Tidsskrift':
+      $class = t('Tidsskrift');
+      break;
+    case 'Tidsskrift (net)':
+      $class = t('Tidsskrift (net)');
+      break;
+    case 'Tidsskriftsartikel':
+      $class = t('Tidsskriftsartikel');
+      break;
+    case 'Transparent':
+      $class = t('Transparent');
+      break;
+    case 'Udstilling':
+      $class = t('Udstilling');
+      break;
+    case 'Udstillingsmontage':
+      $class = t('Udstillingsmontage');
+      break;
+    case 'Video':
+      $class = t('Video');
+      break;
+    case 'Wii':
+      $class = t('Wii');
+      break;
+    case 'Xbox':
+      $class = t('Xbox');
+      break;
+    case 'Xbox 360':
+      $class = t('Xbox 360');
+      break;
+    case 'Øvelsesmodel':
+      $class = t('Øvelsesmodel');
+      break;
+    case 'Årbog':
+      $class = t('Årbog');
+      break;
+  }
+
+  $class .= '-icon-small';
+
+  return $class;
 }
 
 /**
@@ -946,7 +1267,13 @@ function _ting_openformat_type_translation($type, $subtype) {
     case 'Blu ray':
       $subtype = t('Blu ray');
       break;
+    case 'Blu-ray':
+      $subtype = t('Blu-ray');
+      break;
     case 'Bog':
+      $subtype = t('Bog');
+      break;
+    case 'bog':
       $subtype = t('Bog');
       break;
     case 'Bog stor skrift':

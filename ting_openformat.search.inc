@@ -106,7 +106,6 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   pager_default_initialize($total, $params['numResults']);
 
   if (!empty($search_results)) {
-    #dpm($search_results);
     return $search_results;
   }
 
