@@ -21,15 +21,15 @@ function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $c
 
   if ($more) {
 
-    $start = isset($_GET['page']) ? $_GET['page'] : 2;
+    $start = isset($_GET['page']) ? $_GET['page'] : 1;
 
     drupal_add_js(drupal_get_path('module', 'ting_openformat') . '/js/ting_openformat_load_more_results.js', 'file');
     drupal_add_js(array(
         'ting_openformat_load_more_results' => array(
           'more' => $more,
-          #'pages' => $pages_count,
           'start' => $start,
           'loadingIsActive' => FALSE,
+          'firstLoad' => TRUE,
         )
       ),
       'setting');
