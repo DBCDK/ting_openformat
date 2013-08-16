@@ -536,6 +536,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
  * @param $ordered_subworks
  * @param $type_id
  * @param $subtype_id
+ * @param $subWork
  * @return array
  */
 function _ting_openformat_subwork_materialtype_actions($ordered_subworks, $type_id, $subtype_id, $subWork) {
@@ -577,7 +578,7 @@ function ting_openformat_collection_view($bibdkobject) {
  * collection
  *
  * @param BibdkCollection $bibdkobject
- * @return array
+ * @return String html
  */
 function _ting_openformat_get_types_list($bibdkobject){
   $types = $bibdkobject->getWorkTypes();
