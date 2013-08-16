@@ -68,6 +68,37 @@ class BibdkCollection {
     return (is_array($result)) ? reset($result) : $result;
   }
 
+  public function getAccessType(){
+    $result = ting_openformat_methods::parseFields($this->manifestations, array('accessType'));
+    return (is_array($result)) ? $result : array();
+  }
+
+  /**
+   * @return bool
+   */
+  public function isOnline(){
+    $manifestations = $this->getAccessType();
+    if(is_array($manifestations)){
+      foreach ($manifestations as $manifestation) {
+        if($manifestation['accessType'] === 'online'){
+          return TRUE;
+        }
+      }
+    }
+    return FALSE;
+  }
+
+  public function getWorkTypes() {
+    $result = ting_openformat_methods::parseFields($this->manifestations, array('workType'));
+    $res = array();
+    if(is_array($result)){
+      foreach ($result as $index => $type) {
+        $res[$type['workType']] = $type['workType'];
+      }
+    }
+    return $res;
+  }
+
   public function getType() {
     $result = ting_openformat_methods::parseFields($this->manifestations[0], array('type'));
     return (is_array($result)) ? reset($result) : $result;

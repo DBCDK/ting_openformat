@@ -536,6 +536,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
  * @param $ordered_subworks
  * @param $type_id
  * @param $subtype_id
+ * @param $subWork
  * @return array
  */
 function _ting_openformat_subwork_materialtype_actions($ordered_subworks, $type_id, $subtype_id, $subWork) {
@@ -557,6 +558,7 @@ function ting_openformat_collection_view($bibdkobject) {
   $actions = _prepare_view('bibdkCollection', $bibdkobject, 'full', NULL);
   $workType = $bibdkobject->getWorkType();
   $type = $bibdkobject->getType();
+  $types_classes = _ting_openformat_get_types_list($bibdkobject);
   return theme('ting_openformat_collection', array(
         'title' => $bibdkobject->getTitle(),
         'partOf' => $bibdkobject->getPartOf(),
@@ -567,14 +569,46 @@ function ting_openformat_collection_view($bibdkobject) {
         'showinfo' => drupal_render($form),
         'uid' => $uid,
         'actions' => (!empty($actions)) ? $actions : array(),
+        'types' => $types_classes,
       ));
+}
+
+/**
+ * Genrates a list with classes based on the material types in the given
+ * collection
+ *
+ * @param BibdkCollection $bibdkobject
+ * @return String html
+ */
+function _ting_openformat_get_types_list($bibdkobject){
+  $types = $bibdkobject->getWorkTypes();
+  $items = array();
+  foreach($types as $type => $ids) {
+    $items[$type] =  '<span class="materialtype ' . $type . '-icon-small " title="'. t($type) .'">&nbsp;</span>';
+  }
+
+  if($bibdkobject->isOnline()){
+    $items['net-icon-small'] =  '<span class="materialtype online-icon-small" title="'. t('online') .'">&nbsp;</span>';
+  }
+
+  $list = array(
+    '#type' => 'ol',
+    '#theme' => 'item_list',
+    '#items' => $items,
+    '#attributes' => array(
+      'class' => 'material-types-list',
+    ),
+  );
+
+
+  return drupal_render($list);
 }
 
 /**
  * Generates form for 'View more info' on search results page
  *
- * @param type $form_id
- * @param type $form_state
+ * @param array $form_id
+ * @param array $form_state
  * @return array
  */
 function ting_openformat_show_info_get_form($form_id, $form_state) {
@@ -946,7 +980,13 @@ function _ting_openformat_type_translation($type, $subtype) {
     case 'Blu ray':
       $subtype = t('Blu ray');
       break;
+    case 'Blu-ray':
+      $subtype = t('Blu-ray');
+      break;
     case 'Bog':
+      $subtype = t('Bog');
+      break;
+    case 'bog':
       $subtype = t('Bog');
       break;
     case 'Bog stor skrift':
