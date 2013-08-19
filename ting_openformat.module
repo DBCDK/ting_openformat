@@ -25,6 +25,7 @@ function ting_openformat_menu() {
     'file' => 'ting_openformat_load_more_results.inc',
     'file path' => drupal_get_path('module', 'ting_openformat') . '/plugins/content_types/',
     'type' => MENU_CALLBACK,
+  );
   $items['ting_openformat/ajax/manifestations'] = array(
     'title' => 'Single work',
     'description' => 'View single work',
