@@ -16,6 +16,7 @@ function ting_openformat_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_LOCAL_TASK,
   );
+
   $items['ajax/load_more_results'] = array(
     'title' => 'Load more results AJAX callback',
     'description' => 'AJAX callback for ting_openformat_load_more_results. Loads X number of searchresults and returns the result to the client as JSON.',
@@ -24,6 +25,13 @@ function ting_openformat_menu() {
     'file' => 'ting_openformat_load_more_results.inc',
     'file path' => drupal_get_path('module', 'ting_openformat') . '/plugins/content_types/',
     'type' => MENU_CALLBACK,
+  $items['ting_openformat/ajax/manifestations'] = array(
+    'title' => 'Single work',
+    'description' => 'View single work',
+    'page arguments' => array(1),
+    'page callback' => 'ting_openformat_ajax_manifestations',
+    'access arguments' => array('access content'),
+    'type' => MENU_LOCAL_TASK,
   );
   $items['admin/config/ting'] = array(
     'title' => 'Openformat',
@@ -65,6 +73,51 @@ function ting_openformat_menu() {
   );
 
   return $items;
+}
+
+
+/** Load manifestations and insert into placeholder via AJAX
+ * @param $type
+ * @param $json json encoded manifestation ids
+ * @return json|false
+ */
+function ting_openformat_ajax_manifestations($type, $json){
+
+  $commands = array();
+  $manifestation_ids = json_decode($json);
+
+  #$commands[] = ajax_command_alert($manifestation_ids);
+
+  if(!is_array($manifestation_ids) || count($manifestation_ids) == 0){
+    return false;
+  }
+
+  $bibdkEntity = ting_openformat_get_manifestations($manifestation_ids);
+
+  if (!isset($bibdkEntity) || count($bibdkEntity) == 0)
+    return false;
+
+  $bibdkEntity = reset($bibdkEntity);
+  $manifestations = $bibdkEntity->manifestations;
+
+  if (!isset($manifestations) || count($manifestations) == 0)
+    return false;
+
+  foreach($manifestations as $manifestation){
+    $view = drupal_render(ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL));
+    #$commands[] = ajax_command_alert($view);
+    #$commands[] = ajax_command_replace('[data-id='. $manifestation->id.']', $view);
+    $commands[] = array(
+      'command' => 'add_manifestations',
+      'selector' => '[data-id='. $manifestation->id.']',
+      'data' => $view,
+    );
+
+
+  }
+
+
+  ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
 }
 
 /**
@@ -474,8 +527,12 @@ function template_preprocess_ting_openformat_subwork_tabs(&$variables) {
   drupal_add_css($path . '/ting_openformat_subwork.css');
 }
 
-// @TODO - does this method belong here ??
-
+/** Creates html view for bibdkWorkEntity
+ * @param $bibdkWork
+ * @param string $view_mode
+ * @param null $langcode
+ * @return string
+ */
 function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = NULL) {
   if (!is_object($bibdkWork)) {
     return;
@@ -487,41 +544,10 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   $work_fields = array();
   $work_fields += _prepare_view('bibdkWorkEntity', $bibdkWork, $view_mode, $langcode);
 
-  $sub = array();
   $subWorks = $bibdkWork->getSubWorks();
-  foreach ($subWorks as $id => $subWork) {
-    $type = drupal_strtolower($subWork->getType());
-    $subtype = $subWork->getSubType();
-    $sub[$type][$subtype]['fields'] = _prepare_view('bibdkSubwork', $subWork, $view_mode, $langcode);
-    $sub[$type][$subtype]['id'] = $id;
-    $sub[$type][$subtype]['bibdkSubwork'] = $subWork;
-    foreach ($subWork->getManifestations() as $manifestation) {
-      $manifestation_view = ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL);
-      $sub[$type][$subtype]['manifestations'][$manifestation->id] = drupal_render($manifestation_view);
-    }
-  }
-  $ordered_types = NULL; //variable_get("ting_openformat_types");
 
-  if (!empty($ordered_types)) {
-    foreach ($ordered_types as $type => $value) {
-      $type_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $type));
-      if (isset($sub[$type])) {
-        $ordered_subworks[$type_id] = $sub[$type];
-      }
-    }
-  }
-  else {
-    foreach ($sub as $type => $value) {
-      foreach ($value as $subtype => $val) {
-        $subtype_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $subtype));
-        $trans = _ting_openformat_type_translation($type, $subtype);
-        $type_id = $trans['type'];
-        $ordered_subworks[$type_id][$subtype_id]['manifest'] = $val;
-        $ordered_subworks[$type_id][$subtype_id]['translation'] = $trans;
-        $ordered_subworks[$type_id][$subtype_id]['manifest']['subtype_actions'] = _ting_openformat_subwork_materialtype_actions($ordered_subworks, $type_id, $subtype_id, $val['bibdkSubwork']);
-      }
-    }
-  }
+  $ordered_subworks = ting_openformat_get_ordered_subworks($subWorks);
+
   $ding_id = preg_replace('/[^a-zA-Z0-9-]+/', '-', $bibdkWork->id);
   $tabs = theme('ting_openformat_subwork_tabs', array('subWorks' => $ordered_subworks, 'ding_id' => $ding_id));
   return theme('ting_openformat_work', array(
@@ -531,17 +557,62 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
         'ding_id' => $ding_id));
 }
 
-/**
- * Creates a hook for other modules to add render arrays to subwork materialtypes
- * @param $ordered_subworks
- * @param $type_id
- * @param $subtype_id
- * @param $subWork
- * @return array
+/** Get Subworks ordered by type and subtype
+ * @param $subWorks
+ * @return mixed
  */
-function _ting_openformat_subwork_materialtype_actions($ordered_subworks, $type_id, $subtype_id, $subWork) {
-  $render = module_invoke_all('ting_openformat_subwork_materialtype_actions', $ordered_subworks, $type_id, $subtype_id, $subWork);
-  return $render;
+function ting_openformat_get_ordered_subworks($subWorks){
+  $sub = array();
+  foreach ($subWorks as $id => $subWork) {
+    $type = drupal_strtolower($subWork->getType());
+    $subtype = $subWork->getSubType();
+    $sub[$type][$subtype] = ting_openformat_subwork_view($subWork, $view_mode, $langcode);
+  }
+  foreach ($sub as $type => $value) {
+    foreach ($value as $subtype => $val) {
+      $subtype_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $subtype));
+      $trans = _ting_openformat_type_translation($type, $subtype);
+      $type_id = $trans['type'];
+      $ordered_subworks[$type_id][$subtype_id]['manifest'] = $val;
+      $ordered_subworks[$type_id][$subtype_id]['translation'] = $trans;
+      $ordered_subworks[$type_id][$subtype_id]['manifest']['subtype_actions'] = module_invoke_all('ting_openformat_subwork_materialtype_actions', $ordered_subworks, $type_id, $subtype_id, $val['bibdkSubwork']);
+    }
+  }
+  return $ordered_subworks;
+}
+
+/** Creates html view for bibdkSubwork
+ * @param $bibdkSubwork
+ * @param string $view_mode
+ * @param null $langcode
+ * @return mixed
+ */
+function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langcode = NULL){
+
+  $sub['fields'] = _prepare_view('bibdkSubwork', $bibdkSubwork, $view_mode, $langcode);
+  $sub['id'] = $id;
+  $sub['bibdkSubwork'] = $bibdkSubwork;
+  foreach ($bibdkSubwork->getManifestations() as $manifestation) {
+    if (get_class($manifestation) == 'Manifestation'){
+      // first element is parsed
+      $manifestation_view = ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL);
+    }
+    else {
+      // other elements are given a container
+      $manifestation_view = array(
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#attributes' => array(
+          'class' => 'manifestation-container',
+          'data-id' => $manifestation->id,
+        ),
+
+      );
+      // container for the remaining
+    }
+    $sub['manifestations'][$manifestation->id] = drupal_render($manifestation_view);
+  }
+  return $sub;
 }
 
 /**
@@ -552,9 +623,9 @@ function _ting_openformat_subwork_materialtype_actions($ordered_subworks, $type_
  * @return string
  */
 function ting_openformat_collection_view($bibdkobject) {
-  $ids = $bibdkobject->getCollectionIds();
-  $uid = strtolower(strtr($ids[0], array(':' => '', '-' => '')));
-  $form = drupal_get_form('ting_openformat_show_info_get_form', $ids, $uid);
+  $all_ids_in_collection = $bibdkobject->getCollectionIds();
+  $uid = strtolower(strtr(reset($all_ids_in_collection), array(':' => '', '-' => '')));
+  $form = drupal_get_form('ting_openformat_show_info_get_form', $bibdkobject, $uid);
   $actions = _prepare_view('bibdkCollection', $bibdkobject, 'full', NULL);
   $workType = $bibdkobject->getWorkType();
   $type = $bibdkobject->getType();
@@ -565,7 +636,7 @@ function ting_openformat_collection_view($bibdkobject) {
         'author' => $bibdkobject->getAuthor(),
         'work_type' => ( !empty($workType) ) ? 'type-' . $workType : 'type-undefined',
         'type' => $type,
-        'ids' => implode(',', $ids),
+        'ids' => implode(',', $all_ids_in_collection),
         'showinfo' => drupal_render($form),
         'uid' => $uid,
         'actions' => (!empty($actions)) ? $actions : array(),
@@ -611,13 +682,15 @@ function _ting_openformat_get_types_list($bibdkobject){
  * @param array $form_state
  * @return array
  */
-function ting_openformat_show_info_get_form($form_id, $form_state) {
-  $uid = $form_state['build_info']['args'][1];
+function ting_openformat_show_info_get_form($form_id, $form_state, $bibdkObject, $uid) {
+  //$uid = $form_state['build_info']['args'][1];
+  $all_ids_in_collection = $bibdkObject->getCollectionIds();
   $form['info'] = array(
     '#type' => 'button',
     '#value' => '',
-    '#ids' => $form_state['build_info']['args'][0],
+    '#ids' => $all_ids_in_collection,
     '#uid' => $uid,
+    '#collection' => $bibdkObject,
     '#id' => 'work_' . $uid,
     '#prefix' => "<span id='ajax-$uid'>",
     '#suffix' => "</span>",
@@ -642,18 +715,40 @@ function ting_openformat_show_info_get_form($form_id, $form_state) {
 function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
   $ids = $form_state['clicked_button']['#ids'];
   $uid = $form_state['clicked_button']['#uid'];
-  module_invoke_all('show_manifestation_info_prerender', $ids, $uid);
-  $bibdkWork = ting_openformat_get_manifestations($ids);
-  $bibdkWork = current($bibdkWork);
-  $view = theme('status_messages');
+  $collection = $form_state['clicked_button']['#collection'];
 
-  $view .= ting_openformat_work_view($bibdkWork);
+
+  $view = ting_openformat_load_single_full_work($collection, $ids, $uid);
+
+  $view = theme('status_messages') . $view;
+
   $commands = array();
   $commands[] = ajax_command_remove("#ajax-$uid");
   $commands[] = ajax_command_replace(NULL, $view);
 
   return array('#type' => 'ajax', '#commands' => $commands);
 }
+
+function  ting_openformat_load_single_full_work($collection, $ids, $uid){
+  module_invoke_all('show_manifestation_info_prerender', $ids, $uid);
+  foreach ($collection->manifestations as $manifestation) {
+    $briefDisplay = new BibdkBriefDisplay($manifestation);
+    if (!isset($bibdkWork)){
+      $bibdkWork = ting_openformat_get_manifestations($briefDisplay->id);
+      $bibdkWork = current($bibdkWork);
+      $bibdkWork->manifestations[$briefDisplay->id]->setBriefDisplayType($briefDisplay->gettype());
+      $bibdkWork->manifestations[$briefDisplay->id]->setSubType($briefDisplay->getSubtype());
+    }
+    else {
+      $bibdkWork->manifestations[$briefDisplay->id] = $briefDisplay;
+    }
+
+  }
+
+  return ting_openformat_work_view($bibdkWork);
+}
+
+
 
 /**
  * @param $manifestation
@@ -680,23 +775,6 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
   return $build;
 }
 
-function ting_openformat_get_actions($type, $entity, $view_mode = 'full', $langcode = NULL) {
-
-  $actions = module_invoke_all('ting_openformat_actions', $type, $entity, $view_mode, $langcode);
-
-  if (!empty($actions))
-    uasort($actions, 'element_sort');
-
-  return $actions;
-}
-/**
- * @param array $a
- * @param array $b
- * @return Boolean
- */
-function _ting_openformat_sortfields_by_weight($a, $b) {
-  return $a['#weight'] - $b['#weight'];
-}
 
 /**
  * Create view for manifestation volume fields
@@ -745,6 +823,32 @@ function _prepare_view($entity_type, $object, $view_mode, $langcode) {
 
 /* * ********* END VIEWS ********** */
 
+
+
+/** Invokes hook_ting_openformat_actions
+ * @param $type
+ * @param $entity
+ * @param string $view_mode
+ * @param null $langcode
+ * @return array
+ */
+function ting_openformat_get_actions($type, $entity, $view_mode = 'full', $langcode = NULL) {
+
+  $actions = module_invoke_all('ting_openformat_actions', $type, $entity, $view_mode, $langcode);
+
+  if (!empty($actions))
+    uasort($actions, 'element_sort');
+
+  return $actions;
+}
+/**
+ * @param array $a
+ * @param array $b
+ * @return Boolean
+ */
+function _ting_openformat_sortfields_by_weight($a, $b) {
+  return $a['#weight'] - $b['#weight'];
+}
 
 /* * ***************** ADMIN **************** */
 

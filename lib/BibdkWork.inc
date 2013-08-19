@@ -10,7 +10,7 @@ class BibdkWork {
   public $description;
   public $work;
   public $manifestations = array();
-  public $subWorks = array();
+  public $subWorks;
 
   public function __construct($work = NULL) {
     $this->work = $work;
@@ -31,9 +31,12 @@ class BibdkWork {
   }
 
   public function getMaterialReview(){
+
     $reviews = array();
+
     foreach ($this->manifestations as $manifestation) {
-      $reviews += $manifestation->getMaterialReview();
+      if (method_exists($manifestation, 'getMaterialReview'))
+        $reviews += $manifestation->getMaterialReview();
     }
     return $reviews;
   }
@@ -46,9 +49,19 @@ class BibdkWork {
     foreach ($manifestations as $id => $manifestation) {
       $this->manifestations[$id] = entity_load('bibdkManifestation', $id, $manifestation);
     }
-    // set subworks
+
+
+    // set work part
+    $this->work = reset($this->manifestations)->getWork();
+  }
+
+  public function getSubWorks() {
+    if (isset($this->subWorks)){
+      return $this->subWorks;
+    }
+    $this->subWorks = array();
     foreach ($this->manifestations as $id => $manifestation) {
-      $type = $manifestation->getType();
+      $type = $manifestation->getBriefDisplayType();
       if ($type === NULL) {
         $type = array(t('unknown', array(), array('context' => 'ting_openformat')));
       }
@@ -70,15 +83,6 @@ class BibdkWork {
       }
     }
 
-    // @TODO; should manifestations be sorted by sortkey ??
-    // rewind manifestations array
-    reset($this->manifestations);
-    $top_manifestation = current($this->manifestations);
-    // set work part
-    $this->work = current($this->manifestations)->getWork();
-  }
-
-  public function getSubWorks() {
     return $this->subWorks;
   }
 

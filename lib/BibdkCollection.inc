@@ -2,7 +2,7 @@
 
 class BibdkCollection {
 
-  private $manifestations;
+  public $manifestations;
   public $ding_entity_id;
   private $collectionTypes;
   private $collectionIds;
@@ -102,6 +102,10 @@ class BibdkCollection {
   public function getType() {
     $result = ting_openformat_methods::parseFields($this->manifestations[0], array('type'));
     return (is_array($result)) ? reset($result) : $result;
+  }
+
+  public function getManifestations(){
+    return $this->manifestations;
   }
 
 }

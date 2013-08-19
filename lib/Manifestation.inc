@@ -5,6 +5,9 @@
  */
 class Manifestation extends ManifestationMaster {
 
+  private $briefDisplayType;
+  private $subType;
+
   /**
    * @param $manifestation
    */
@@ -117,12 +120,33 @@ class Manifestation extends ManifestationMaster {
     return (is_array($result)) ? reset($result) : $result;
   }
 
+  /** Set eksternal type. Typically from briefdisplay
+   * @param $subtype string|array
+   */
+  public function setBriefDisplayType($type) {
+    $this->briefDisplayType = $type;
+  }
+
+  /** get external type
+   * @return mixed
+   */
+  public function getBriefDisplayType(){
+    return $this->briefDisplayType;
+  }
+
+  /** Set eksternal type. Typically from briefdisplay
+   * @param $subtype string|array
+   */
+  public function setSubType($type) {
+    $this->subType = $type;
+  }
+
+
   /* \brief type of manifestation
    * 1 occurence
    */
-
   public function getSubType() {
-    $result = ting_openformat_methods::parseFields($this->manifestation->main, array('type'));
+    $result = isset($this->subType) ? $this->subType : ting_openformat_methods::parseFields($this->manifestation->main, array('type'));
     if (is_array($result['type'])) {
       $result['type'] = implode(' + ', $result['type']);
     }
@@ -136,7 +160,7 @@ class Manifestation extends ManifestationMaster {
 
   public function getType() {
     // NB: gets 'typeGroup'. If you need 'type' see: getSubType()
-    $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('typeGroup'));
+    $result = (isset($this->type)) ? array($this->type) : ting_openformat_methods::parseFields($this->manifestation->adminData, array('typeGroup'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
