@@ -94,11 +94,11 @@
       var element = $('.pane-ting-openformat-load-more-results #link', context);
       LoadMore.addAjax(element);
 
-      LoadMore.initInfiniteScroll();
-      if(Drupal.settings.ting_openformat_load_more_results.firstLoad && Drupal.settings.ting_openformat_load_more_results.more) {
+      //LoadMore.initInfiniteScroll();
+/*      if(Drupal.settings.ting_openformat_load_more_results.firstLoad && Drupal.settings.ting_openformat_load_more_results.more) {
         Drupal.settings.ting_openformat_load_more_results.firstLoad = false;
         LoadMore.infiniteLoad();
-      }
+      }*/
     }
   };
 })(jQuery);
