@@ -7,7 +7,7 @@
 
 (function ($) {
 
-    var TingOpenformat = {}
+
 
     Drupal.ajax.prototype.commands.add_manifestations = function (ajax, response, status){
         // We don't know what response.data contains: it might be a string of text
@@ -30,8 +30,12 @@
 
             TingOpenformat.activateSubWorkTabs(context);
             TingOpenformat.loadManifestationsWithAjax(context);
+            TingOpenformat.loadWorkEvent(context);
+            TingOpenformat.addFullViewButtonEvent(context);
         }
     };
+
+    var TingOpenformat = {}
 
     TingOpenformat.activateSubWorkTabs = function (context) {
         $("div.ting_openformat_subwork_tab", context).click(function () {
@@ -89,13 +93,28 @@
         element_settings.url = url;
         element_settings.event = (typeof event != 'undefined') ? event : 'load_manifestations';
         element_settings.progress = { type: 'throbber' };
-        element_settings.submit = { spil: 'fisk' };
 
         var id = element.attr('id');
         Drupal.ajax[id] = new Drupal.ajax(id, element, element_settings);
         element.trigger('load_manifestations');
         element.unbind('load_manifestations');
 
+    }
+
+    TingOpenformat.addFullViewButtonEvent = function (context){
+
+        $('.full-view-links a', context).click(function(e){
+            $('.full-view-links a').toggleClass('inactive');
+            $('.work-toggle-element').trigger('load-work');
+        });
+
+    }
+
+    TingOpenformat.loadWorkEvent = function (context) {
+        $('.work-toggle-element', context).bind('load-work', function(e) {
+            var id = $(this).attr('href');
+            $(id).trigger('click');
+        });
     }
 
 
