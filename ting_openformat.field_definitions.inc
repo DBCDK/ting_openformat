@@ -27,7 +27,7 @@ function ting_openformat_bibdk_fields() {
     /********* MANIFESTATION ************/
     'bibdk_latest_reprint' => array(
       'label' => 'Latest reprint',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation','bibdkManifestationVolume'),
       'display' => array('full'),
       'description' => t('descripton for latest reprint'),
       'callback method' =>  'getLatestReprint',
