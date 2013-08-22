@@ -25,14 +25,13 @@ function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $c
 
     drupal_add_js(drupal_get_path('module', 'ting_openformat') . '/js/ting_openformat_load_more_results.js', 'file');
     drupal_add_js(array(
-        'ting_openformat_load_more_results' => array(
-          'more' => $more,
-          'start' => $start,
-          'loadingIsActive' => FALSE,
-          'firstLoad' => TRUE,
-        )
-      ),
-      'setting');
+      'ting_openformat_load_more_results' => array(
+        'more' => $more,
+        'start' => $start,
+        'loadingIsActive' => FALSE,
+        'firstLoad' => TRUE,
+      )
+        ), 'setting');
 
     $block->content = l(t('load_more_results', array(), array('context' => 'ting_openformat')), '#', array(
       'attributes' => array(
@@ -41,7 +40,7 @@ function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $c
         ),
         'class' => array(),
       ),
-    ));
+        ));
   }
 
   return $block;
@@ -55,8 +54,10 @@ function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $c
  * existing display.
  */
 function ting_openformat_load_more_results_ajax_callback() {
-  if (!empty($_GET['keys'])) {
-    $keys = $_GET['keys'];
+  if (isset($_GET['keys'])) {
+    if (!empty($_GET['keys'])) {
+      $keys = $_GET['keys'];
+    }
     unset($_GET['keys']);
   }
 
@@ -107,7 +108,6 @@ function _ting_openformat_get_search_result_html($results) {
   }
   return $html;
 }
-
 
 /**
  * 'admin info' callback for panel pane.
