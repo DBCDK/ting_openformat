@@ -35,6 +35,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   $params = array();
 
   $params['query'] = $keys;
+
   // save query to show in search_block
   drupal_static('ting_search_query', $keys);
   // get parameters set as variables
@@ -282,8 +283,11 @@ function _ting_openformat_set_facets(&$query, $facets) {
         $facetArray[] = $facet[0] . '="' . rawurldecode($facet[1]) . '"';
       }
     }
-    $op = ting_openformat_get_cql_commando('AND');
-    $query .= $op . implode($op, $facetArray);
+    if ( !empty($query) ) {
+      $query .= ting_openformat_get_cql_commando('AND') . implode($op, $facetArray);
+    } else {
+      $query .= implode(ting_openformat_get_cql_commando('AND'), $facetArray);
+    }
   }
 }
 
