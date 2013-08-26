@@ -54,8 +54,10 @@ function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $c
  * existing display.
  */
 function ting_openformat_load_more_results_ajax_callback() {
-  if (isset($_GET['keys'])) {
-    if (!empty($_GET['keys'])) {
+  $keys = '';
+
+  if ( isset($_GET['keys']) ) {
+    if ( !empty($_GET['keys']) ) {
       $keys = $_GET['keys'];
     }
     unset($_GET['keys']);
