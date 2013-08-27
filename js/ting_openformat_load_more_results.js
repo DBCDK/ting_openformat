@@ -75,7 +75,6 @@
 
   LoadMore.infiniteLoad = function() {
     if(LoadMore.loadingIsOk()) {
-      console.log('LoadMore.infiniteLoad');
       var element = $('.pane-ting-openformat-load-more-results #link');
       element.hide();
       element.trigger('load_more_results');

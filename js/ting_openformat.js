@@ -9,19 +9,21 @@
 
     var TingOpenformat = {}
 
-    Drupal.ajax.prototype.commands.add_manifestations = function (ajax, response, status){
-        // We don't know what response.data contains: it might be a string of text
-        // without HTML, so don't rely on jQuery correctly iterpreting
-        // $(response.data) as new HTML rather than a CSS selector. Also, if
-        // response.data contains top-level text nodes, they get lost with either
-        // $(response.data) or $('<div></div>').replaceWith(response.data).
-        var new_content_wrapped = $('<div></div>').html(response.data);
-        var new_content = new_content_wrapped.contents();
-        $(response.selector).replaceWith(response.data);
-        if (new_content.parents('html').length > 0) {
-            // Apply any settings from the returned JSON if available.
-            var settings = response.settings || ajax.settings || Drupal.settings;
-            Drupal.attachBehaviors(new_content, settings);
+    if (typeof(Drupal.ajax) != 'undefined') {
+        Drupal.ajax.prototype.commands.add_manifestations = function (ajax, response, status) {
+            // We don't know what response.data contains: it might be a string of text
+            // without HTML, so don't rely on jQuery correctly iterpreting
+            // $(response.data) as new HTML rather than a CSS selector. Also, if
+            // response.data contains top-level text nodes, they get lost with either
+            // $(response.data) or $('<div></div>').replaceWith(response.data).
+            var new_content_wrapped = $('<div></div>').html(response.data);
+            var new_content = new_content_wrapped.contents();
+            $(response.selector).replaceWith(response.data);
+            if (new_content.parents('html').length > 0) {
+                // Apply any settings from the returned JSON if available.
+                var settings = response.settings || ajax.settings || Drupal.settings;
+                Drupal.attachBehaviors(new_content, settings);
+            }
         }
     }
 
