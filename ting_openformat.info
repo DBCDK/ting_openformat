@@ -1,7 +1,7 @@
 name = Search client
 description = Searching for bibdk.
 package = Bibliotek.dk
-version = 7.x-0.24
+version = 7.x-0.25
 core = 7.x
 
 ;configure link from module list
@@ -23,6 +23,7 @@ files[] = lib/Manifestation.inc
 files[] = lib/ManifestationMaster.inc
 files[] = lib/ManifestationSection.inc
 files[] = lib/ManifestationVolume.inc
+files[] = lib/BibdkBriefDisplay.inc
 
 scripts[] = js/ting_openformat.js
 

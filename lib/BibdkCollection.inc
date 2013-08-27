@@ -2,13 +2,13 @@
 
 class BibdkCollection {
 
-  private $manifestations;
+  public $manifestations;
   public $ding_entity_id;
   private $collectionTypes;
   private $collectionIds;
 
   function __construct($manifestation) {
-    $this->manifestations = $manifestation['manifestations'];
+    $this->manifestations = isset($manifestation['manifestations']) ? $manifestation['manifestations'] : NULL;
   }
 
   //TODO the below method should be reviewed as valid XML is expected from webservices in production
@@ -32,8 +32,18 @@ class BibdkCollection {
 
   public function getTitle() {
     $result = ting_openformat_methods::parseFields($this->manifestations[0], array('title'));
-    return (is_array($result)) ? reset($result) : $result;
+    $title = (is_array($result)) ? reset($result) : $result;
+
+    $dependent_title = $this->getDependentTitle();
+    return (!empty($dependent_title)) ? $title . " : " . implode('. ', $dependent_title) : $title;
+
   }
+
+  public function getDependentTitle() {
+    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('dependentTitle'));
+    return $result;
+  }
+
 
   public function getPartOf() {
     $result = ting_openformat_methods::parseFields($this->manifestations[0], array('partOf'));
@@ -58,9 +68,44 @@ class BibdkCollection {
     return (is_array($result)) ? reset($result) : $result;
   }
 
+  public function getAccessType(){
+    $result = ting_openformat_methods::parseFields($this->manifestations, array('accessType'));
+    return (is_array($result)) ? $result : array();
+  }
+
+  /**
+   * @return bool
+   */
+  public function isOnline(){
+    $manifestations = $this->getAccessType();
+    if(is_array($manifestations)){
+      foreach ($manifestations as $manifestation) {
+        if($manifestation['accessType'] === 'online'){
+          return TRUE;
+        }
+      }
+    }
+    return FALSE;
+  }
+
+  public function getWorkTypes() {
+    $result = ting_openformat_methods::parseFields($this->manifestations, array('workType'));
+    $res = array();
+    if(is_array($result)){
+      foreach ($result as $index => $type) {
+        $res[$type['workType']] = $type['workType'];
+      }
+    }
+    return $res;
+  }
+
   public function getType() {
     $result = ting_openformat_methods::parseFields($this->manifestations[0], array('type'));
     return (is_array($result)) ? reset($result) : $result;
+  }
+
+  public function getManifestations(){
+    return $this->manifestations;
   }
 
 }

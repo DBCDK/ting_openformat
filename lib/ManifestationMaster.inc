@@ -445,6 +445,14 @@ class ManifestationMaster {
   private function _getContent(){
     return isset($this->fields->content) ? $this->fields->content : NULL;
   }
-
-
+  
+  public function getLatestReprint() {
+    $fields = array(
+      'latestReprint' => array('latestReprint' => 'latestReprintElement'),
+    );
+    $result = ting_openformat_methods::parseFields($this->_getPublicationDetails(), $fields);
+    
+    return $result;
+  }
+  
 }

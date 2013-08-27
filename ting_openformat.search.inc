@@ -35,6 +35,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   $params = array();
 
   $params['query'] = $keys;
+
   // save query to show in search_block
   drupal_static('ting_search_query', $keys);
   // get parameters set as variables
@@ -106,7 +107,6 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   pager_default_initialize($total, $params['numResults']);
 
   if (!empty($search_results)) {
-    #dpm($search_results);
     return $search_results;
   }
 
@@ -118,6 +118,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
  * Set collection entities
  * */
 function _ting_openformat_create_collection_entities(&$result) {
+
   $result->entities = array();
   foreach ($result->collections as $collection) {
     $bibdkobjects = array();
@@ -137,6 +138,7 @@ function _ting_openformat_create_collection_entities(&$result) {
       $conditions['manifestations'] = $original_manifestations;
       $bibdkEntities = entity_load('bibdkCollection', $entity_id, $conditions, FALSE);
       $bibdkEntities->parseManifestations(); //Temporary as malformed XML is returned from OpenSearch
+      //dpm($bibdkEntities);
       $bibdkobjects = $bibdkEntities;
       //unset($entity_id);
        $result->entities[] = $bibdkobjects;
@@ -148,6 +150,7 @@ function _ting_openformat_create_collection_entities(&$result) {
     }
   }
   unset($result->collections);
+  $_SESSION['search_result'][$result->search_key] = $result;
 }
 
 function _ting_openformat_parse_collection(&$original_manifestations, &$entity_id, $openformat) {
@@ -280,8 +283,11 @@ function _ting_openformat_set_facets(&$query, $facets) {
         $facetArray[] = $facet[0] . '="' . rawurldecode($facet[1]) . '"';
       }
     }
-    $op = ting_openformat_get_cql_commando('AND');
-    $query .= $op . implode($op, $facetArray);
+    if ( !empty($query) ) {
+      $query .= ting_openformat_get_cql_commando('AND') . implode($op, $facetArray);
+    } else {
+      $query .= implode(ting_openformat_get_cql_commando('AND'), $facetArray);
+    }
   }
 }
 
