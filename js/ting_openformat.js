@@ -104,14 +104,24 @@
     TingOpenformat.addFullViewButtonEvent = function (context){
 
         $('.full-view-links a', context).click(function(e){
-            $('.full-view-links a').toggleClass('inactive');
-            $('.work-toggle-element').trigger('load-work');
+            if (!$(this).hasClass('inactive')){
+                $('.full-view-links a').toggleClass('inactive');
+            }
+
+            if ($(this).attr('id') === 'ting-openformat-full-view-button-expanded'){
+                $('.work-toggle-element').trigger('show-work');
+            }
+            else {
+                $('.work-toggle-element').trigger('hide-work');
+            }
+
+
         });
 
     }
 
     TingOpenformat.loadWorkEvent = function (context) {
-        $('.work-toggle-element', context).bind('load-work', function(e) {
+        $('.work-toggle-element', context).bind('show-work', function(e) {
             var id = $(this).attr('href');
             $(id).trigger('click');
         });
