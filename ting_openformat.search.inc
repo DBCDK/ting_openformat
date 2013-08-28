@@ -277,6 +277,7 @@ function _ting_openformat_search_get_variables() {
  * */
 function _ting_openformat_set_facets(&$query, $facets) {
   if (isset($facets)) {
+    $op = ting_openformat_get_cql_commando('AND');
     foreach ($facets as $facet) {
       $facet = explode(':', $facet, 2);
       if ($facet[0]) {
@@ -284,9 +285,9 @@ function _ting_openformat_set_facets(&$query, $facets) {
       }
     }
     if ( !empty($query) ) {
-      $query .= ting_openformat_get_cql_commando('AND') . implode($op, $facetArray);
+      $query .= $op . implode($op, $facetArray);
     } else {
-      $query .= implode(ting_openformat_get_cql_commando('AND'), $facetArray);
+      $query .= implode($op, $facetArray);
     }
   }
 }
