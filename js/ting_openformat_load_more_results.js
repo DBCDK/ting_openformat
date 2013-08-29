@@ -57,7 +57,7 @@
     Drupal.ajax['load_more_results'] = new Drupal.ajax('load_more_results', element, element_settings);
   };
 
-  LoadMore.initInfiniteScroll = function() {
+ /* LoadMore.initInfiniteScroll = function() {
     $(window).unbind('scroll');
 
     $(window).scroll(function() {
@@ -67,7 +67,7 @@
         LoadMore.infiniteLoad();
       }
     });
-  };
+  };*/
 
   LoadMore.loadingIsOk = function() {
     return !Drupal.settings.ting_openformat_load_more_results.loadingIsActive;
@@ -93,7 +93,7 @@
       var element = $('.pane-ting-openformat-load-more-results #link', context);
       LoadMore.addAjax(element);
 
-      LoadMore.initInfiniteScroll();
+     // LoadMore.initInfiniteScroll();
       if(Drupal.settings.ting_openformat_load_more_results.firstLoad && Drupal.settings.ting_openformat_load_more_results.more) {
         Drupal.settings.ting_openformat_load_more_results.firstLoad = false;
         LoadMore.infiniteLoad();
