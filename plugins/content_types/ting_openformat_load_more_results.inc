@@ -38,7 +38,7 @@ function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $c
         'id' => array(
           'link'
         ),
-        'class' => array(),
+        'class' => array(drupal_html_class('ting_openformat_load_more_results_link')),
       ),
         ));
   }
