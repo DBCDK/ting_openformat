@@ -29,7 +29,7 @@ function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $c
         'more' => $more,
         'start' => $start,
         'loadingIsActive' => FALSE,
-        'firstLoad' => TRUE,
+        'firstLoad' => FALSE,
       )
         ), 'setting');
 
