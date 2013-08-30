@@ -46,7 +46,7 @@
     var key = $('#edit-search-block-form--2').val();
 
     var element_settings = {};
-    element_settings.url = Drupal.settings.basePath + 'ajax/load_more_results' + window.location.search + '&keys=' + key + '&page=' + Drupal.settings.ting_openformat_load_more_results.start;
+    element_settings.url = encodeURI(Drupal.settings.basePath + 'ajax/load_more_results' + window.location.search + '&keys=' + key + '&page=' + Drupal.settings.ting_openformat_load_more_results.start);
     element_settings.event = 'load_more_results';
     element_settings.progress = { type: 'throbber'};
 
