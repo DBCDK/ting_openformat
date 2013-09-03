@@ -98,7 +98,7 @@ function ting_openformat_load_more_results_ajax_callback() {
 
 function _ting_openformat_set_load_more_results_link() {
   $keys = drupal_static('ting_search_query');
-
+  
   if (isset($_GET['sort'])) {
     $query['sort'] = $_GET['sort'];
   }
@@ -108,6 +108,12 @@ function _ting_openformat_set_load_more_results_link() {
   if (isset($_GET['page_id'])) {
     $query['page_id'] = $_GET['page_id'];
   }
+  
+  if (isset($_GET['facets'])) {
+    $query['facets'] = $_GET['facets'];
+  }
+  
+  
 
   $query['keys'] = isset($keys) ? $keys : $_GET['keys'];
 
