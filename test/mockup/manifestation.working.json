@@ -1,1 +1,382 @@
-{"searchResponse":{"result":{"hitCount":{"$":"1"},"collectionCount":{"$":"1"},"more":{"$":"false"},"searchResult":[{"collection":{"resultPosition":{"$":"1"},"numberOfObjects":{"$":"1"},"object":[{"identifier":{"$":"870970-basis:41937165"},"creationDate":{"$":"2002-12-18"},"formatsAvailable":{"format":[{"$":"dkabm"},{"$":"marcxchange"}]}}]},"formattedCollection":{"workDisplay":{"manifestation":{"work":{"title":{"titleFull":{"$":"Rigoletto"},"titleSpecific":{"$":"Rigoletto (Giulini)"}},"creators":{"creator":{"searchCode":{"$":"\"Giuseppe Verdi\"","@phrase":{"$":"phrase.creator"}},"display":{"$":"Giuseppe Verdi"},"@className":{"$":"link"}}},"description":{"subjects":{"subject":[{"searchCode":{"$":"\"romantik\"","@phrase":{"$":"dkcclphrase.lem"}},"display":{"$":"romantik"},"@className":{"$":"link"},"@punctuation":{"$":" ; "}},{"searchCode":{"$":"\"opera\"","@phrase":{"$":"dkcclphrase.lem"}},"display":{"$":"opera"},"@className":{"$":"link"},"@punctuation":{"$":" ; "}},{"searchCode":{"$":"\"vokal\"","@phrase":{"$":"dkcclphrase.lem"}},"display":{"$":"vokal"},"@className":{"$":"link"},"@punctuation":{"$":" ; "}},{"searchCode":{"$":"\"1850-1859\"","@phrase":{"$":"dkcclphrase.lem"}},"display":{"$":"1850-1859"},"@className":{"$":"link"},"@punctuation":{"$":" ; "}},{"searchCode":{"$":"\"Italien\"","@phrase":{"$":"dkcclphrase.lem"}},"display":{"$":"Italien"},"@className":{"$":"link"},"@punctuation":{"$":" ; "}}]},"furtherSearches":{"furtherSearchElement":[{"searchCode":{"$":"\"romantik\"","@phrase":{"$":"dkcclphrase.lem"}},"display":{"$":"romantik"},"@className":{"$":"link"}},{"searchCode":{"$":"\"opera\"","@phrase":{"$":"dkcclphrase.lem"}},"display":{"$":"opera"},"@className":{"$":"link"}},{"searchCode":{"$":"\"vokal\"","@phrase":{"$":"dkcclphrase.lem"}},"display":{"$":"vokal"},"@className":{"$":"link"}},{"searchCode":{"$":"\"1850-1859\"","@phrase":{"$":"dkcclphrase.lem"}},"display":{"$":"1850-1859"},"@className":{"$":"link"}},{"searchCode":{"$":"\"Italien\"","@phrase":{"$":"dkcclphrase.lem"}},"display":{"$":"Italien"},"@className":{"$":"link"}}],"furtherSearchType":{"searchCode":{"$":"\"Grammofonplade\"","@phrase":{"$":"facet.type"}},"display":{"$":"Grammofonplade"},"@className":{"$":"link"}}}}},"adminData":{"pid":{"$":"870970-basis:41937165"},"typeGroup":{"$":"music"},"orsOrderMaterialType":{"$":"music"}},"main":{"content":{"analyticContent":{"analyticContributor":{"searchCode":{"$":"\"Giuseppe Verdi\"","@phrase":{"$":"phrase.creator"}},"display":{"$":"Giuseppe Verdi"},"@className":{"$":"link"}},"analyticTitle":{"analyticTitleMain":{"searchCode":{"$":"\"Rigoletto uddrag\"","@phrase":{"$":"dkcclphrase.lti"}},"display":{"$":"Rigoletto (uddrag)"},"@className":{"$":"link"}},"analyticRestOfTitle":{"$":"\/ Jussi Bj\u00f6rling, tenor ; Leonard Warren, baryton ; orkester ; dirigent: Cesare Sordero"}}}},"details":{"contributors":{"$":"solister: Kostas Paskalis, Renata Scotto, Luciano Pavarotti, Bianca Bartoluzzi, Paolo Washington, Plinio Clabassi m. fl. ; Roms Operas Kor og Orkester ; dirigent: Carlo Maria Giulini"},"format":{"$":"3 plader, mono","@punctuation":{"$":" ; "}},"shelf":{"shelfMusic":{"$":"Operaer"}},"descriptionNote":[{"$":"Live-optagelser, 19. november 1966 (Rigoletto) og 1945 (Rigoletto (uddrag))"},{"$":"Sunget p\u00e5 italiensk"}],"identifiers":{"identifier":{"$":"L'Estro Armonico EA 020"}},"priceInformation":{"price":{"$":"kr. 139.00"}}},"publicationDetails":{"publisher":{"$":"L'Estro Armonico","@punctuation":{"$":", "}}},"type":{"$":"Grammofonplade","@punctuation":{"$":" + "}},"distinction":{"$":"Giulini"}}}}},"@":"of"}],"facetResult":{"$":""},"time":{"$":"0.222683"}}},"@namespaces":{"$":"http:\/\/oss.dbc.dk\/ns\/opensearch","ac":"http:\/\/biblstandard.dk\/ac\/namespace\/","dbcaddi":"http:\/\/oss.dbc.dk\/rdf\/dbcaddi#","dbcbib":"http:\/\/oss.dbc.dk\/rdf\/dbcbib#","dc":"http:\/\/purl.org\/dc\/elements\/1.1\/","dcmitype":"http:\/\/purl.org\/dc\/dcmitype\/","dcterms":"http:\/\/purl.org\/dc\/terms\/","dkabm":"http:\/\/biblstandard.dk\/abm\/namespace\/dkabm\/","dkdcplus":"http:\/\/biblstandard.dk\/abm\/namespace\/dkdcplus\/","docbook":"http:\/\/docbook.org\/ns\/docbook","marcx":"info:lc\/xmlns\/marcxchange-v1","of":"http:\/\/oss.dbc.dk\/ns\/openformat","ofo":"http:\/\/oss.dbc.dk\/ns\/openformatoutput","oso":"http:\/\/oss.dbc.dk\/ns\/opensearchobjects","oss":"http:\/\/oss.dbc.dk\/ns\/osstypes","xs":"http:\/\/www.w3.org\/2001\/XMLSchema","xsi":"http:\/\/www.w3.org\/2001\/XMLSchema-instance"}}
+{"searchResponse": {
+  "result": {
+    "hitCount": {
+      "$": "1"
+    },
+    "collectionCount": {
+      "$": "1"
+    },
+    "more": {
+      "$": "false"
+    },
+    "searchResult": [
+      {
+        "collection": {
+          "resultPosition": {
+            "$": "1"
+          },
+          "numberOfObjects": {
+            "$": "1"
+          },
+          "object": [
+            {
+              "identifier": {
+                "$": "870970-basis:41937165"
+              },
+              "creationDate": {
+                "$": "2002-12-18"
+              },
+              "formatsAvailable": {
+                "format": [
+                  {
+                    "$": "dkabm"
+                  },
+                  {
+                    "$": "marcxchange"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "formattedCollection": {
+          "workDisplay": {
+            "manifestation": {
+              "work": {
+                "title": {
+                  "titleFull": {
+                    "$": "Rigoletto"
+                  },
+                  "titleSpecific": {
+                    "$": "Rigoletto (Giulini)"
+                  }
+                },
+                "creators": {
+                  "creator": {
+                    "searchCode": {
+                      "$": "\"Giuseppe Verdi\"",
+                      "@phrase": {
+                        "$": "phrase.creator"
+                      }
+                    },
+                    "display": {
+                      "$": "Giuseppe Verdi"
+                    },
+                    "@className": {
+                      "$": "link"
+                    }
+                  }
+                },
+                "description": {
+                  "subjects": {
+                    "subject": [
+                      {
+                        "searchCode": {
+                          "$": "\"romantik\"",
+                          "@phrase": {
+                            "$": "dkcclphrase.lem"
+                          }
+                        },
+                        "display": {
+                          "$": "romantik"
+                        },
+                        "@className": {
+                          "$": "link"
+                        },
+                        "@punctuation": {
+                          "$": " ; "
+                        }
+                      },
+                      {
+                        "searchCode": {
+                          "$": "\"opera\"",
+                          "@phrase": {
+                            "$": "dkcclphrase.lem"
+                          }
+                        },
+                        "display": {
+                          "$": "opera"
+                        },
+                        "@className": {
+                          "$": "link"
+                        },
+                        "@punctuation": {
+                          "$": " ; "
+                        }
+                      },
+                      {
+                        "searchCode": {
+                          "$": "\"vokal\"",
+                          "@phrase": {
+                            "$": "dkcclphrase.lem"
+                          }
+                        },
+                        "display": {
+                          "$": "vokal"
+                        },
+                        "@className": {
+                          "$": "link"
+                        },
+                        "@punctuation": {
+                          "$": " ; "
+                        }
+                      },
+                      {
+                        "searchCode": {
+                          "$": "\"1850-1859\"",
+                          "@phrase": {
+                            "$": "dkcclphrase.lem"
+                          }
+                        },
+                        "display": {
+                          "$": "1850-1859"
+                        },
+                        "@className": {
+                          "$": "link"
+                        },
+                        "@punctuation": {
+                          "$": " ; "
+                        }
+                      },
+                      {
+                        "searchCode": {
+                          "$": "\"Italien\"",
+                          "@phrase": {
+                            "$": "dkcclphrase.lem"
+                          }
+                        },
+                        "display": {
+                          "$": "Italien"
+                        },
+                        "@className": {
+                          "$": "link"
+                        },
+                        "@punctuation": {
+                          "$": " ; "
+                        }
+                      }
+                    ]
+                  },
+                  "furtherSearches": {
+                    "furtherSearchElement": [
+                      {
+                        "searchCode": {
+                          "$": "\"romantik\"",
+                          "@phrase": {
+                            "$": "dkcclphrase.lem"
+                          }
+                        },
+                        "display": {
+                          "$": "romantik"
+                        },
+                        "@className": {
+                          "$": "link"
+                        }
+                      },
+                      {
+                        "searchCode": {
+                          "$": "\"opera\"",
+                          "@phrase": {
+                            "$": "dkcclphrase.lem"
+                          }
+                        },
+                        "display": {
+                          "$": "opera"
+                        },
+                        "@className": {
+                          "$": "link"
+                        }
+                      },
+                      {
+                        "searchCode": {
+                          "$": "\"vokal\"",
+                          "@phrase": {
+                            "$": "dkcclphrase.lem"
+                          }
+                        },
+                        "display": {
+                          "$": "vokal"
+                        },
+                        "@className": {
+                          "$": "link"
+                        }
+                      },
+                      {
+                        "searchCode": {
+                          "$": "\"1850-1859\"",
+                          "@phrase": {
+                            "$": "dkcclphrase.lem"
+                          }
+                        },
+                        "display": {
+                          "$": "1850-1859"
+                        },
+                        "@className": {
+                          "$": "link"
+                        }
+                      },
+                      {
+                        "searchCode": {
+                          "$": "\"Italien\"",
+                          "@phrase": {
+                            "$": "dkcclphrase.lem"
+                          }
+                        },
+                        "display": {
+                          "$": "Italien"
+                        },
+                        "@className": {
+                          "$": "link"
+                        }
+                      }
+                    ],
+                    "furtherSearchType": {
+                      "searchCode": {
+                        "$": "\"Grammofonplade\"",
+                        "@phrase": {
+                          "$": "facet.type"
+                        }
+                      },
+                      "display": {
+                        "$": "Grammofonplade"
+                      },
+                      "@className": {
+                        "$": "link"
+                      }
+                    }
+                  }
+                }
+              },
+              "adminData": {
+                "pid": {
+                  "$": "870970-basis:41937165"
+                },
+                "typeGroup": {
+                  "$": "music"
+                },
+                "orsOrderMaterialType": {
+                  "$": "music"
+                }
+              },
+              "main": {
+                "content": {
+                  "analyticContent": {
+                    "analyticContributor": {
+                      "searchCode": {
+                        "$": "\"Giuseppe Verdi\"",
+                        "@phrase": {
+                          "$": "phrase.creator"
+                        }
+                      },
+                      "display": {
+                        "$": "Giuseppe Verdi"
+                      },
+                      "@className": {
+                        "$": "link"
+                      }
+                    },
+                    "analyticTitle": {
+                      "analyticTitleMain": {
+                        "searchCode": {
+                          "$": "\"Rigoletto uddrag\"",
+                          "@phrase": {
+                            "$": "dkcclphrase.lti"
+                          }
+                        },
+                        "display": {
+                          "$": "Rigoletto (uddrag)"
+                        },
+                        "@className": {
+                          "$": "link"
+                        }
+                      },
+                      "analyticRestOfTitle": {
+                        "$": "\/ Jussi Bj\u00f6rling, tenor ; Leonard Warren, baryton ; orkester ; dirigent: Cesare Sordero"
+                      }
+                    }
+                  }
+                },
+                "details": {
+                  "contributors": {
+                    "$": "solister: Kostas Paskalis, Renata Scotto, Luciano Pavarotti, Bianca Bartoluzzi, Paolo Washington, Plinio Clabassi m. fl. ; Roms Operas Kor og Orkester ; dirigent: Carlo Maria Giulini"
+                  },
+                  "format": {
+                    "$": "3 plader, mono",
+                    "@punctuation": {
+                      "$": " ; "
+                    }
+                  },
+                  "shelf": {
+                    "shelfMusic": {
+                      "$": "Operaer"
+                    }
+                  },
+                  "descriptionNote": [
+                    {
+                      "$": "Live-optagelser, 19. november 1966 (Rigoletto) og 1945 (Rigoletto (uddrag))"
+                    },
+                    {
+                      "$": "Sunget p\u00e5 italiensk"
+                    }
+                  ],
+                  "identifiers": {
+                    "identifier": {
+                      "$": "L'Estro Armonico EA 020"
+                    }
+                  },
+                  "priceInformation": {
+                    "price": {
+                      "$": "kr. 139.00"
+                    }
+                  }
+                },
+                "publicationDetails": {
+                  "publisher": {
+                    "$": "L'Estro Armonico",
+                    "@punctuation": {
+                      "$": ", "
+                    }
+                  }
+                },
+                "type": {
+                  "$": "Grammofonplade",
+                  "@punctuation": {
+                    "$": " + "
+                  }
+                },
+                "distinction": {
+                  "$": "Giulini"
+                }
+              }
+            }
+          }
+        },
+        "@": "of"
+      }
+    ],
+    "facetResult": {
+      "$": ""
+    },
+    "time": {
+      "$": "0.222683"
+    }
+  }
+}, "@namespaces": {
+  "$": "http:\/\/oss.dbc.dk\/ns\/opensearch",
+  "ac": "http:\/\/biblstandard.dk\/ac\/namespace\/",
+  "dbcaddi": "http:\/\/oss.dbc.dk\/rdf\/dbcaddi#",
+  "dbcbib": "http:\/\/oss.dbc.dk\/rdf\/dbcbib#",
+  "dc": "http:\/\/purl.org\/dc\/elements\/1.1\/",
+  "dcmitype": "http:\/\/purl.org\/dc\/dcmitype\/",
+  "dcterms": "http:\/\/purl.org\/dc\/terms\/",
+  "dkabm": "http:\/\/biblstandard.dk\/abm\/namespace\/dkabm\/",
+  "dkdcplus": "http:\/\/biblstandard.dk\/abm\/namespace\/dkdcplus\/",
+  "docbook": "http:\/\/docbook.org\/ns\/docbook",
+  "marcx": "info:lc\/xmlns\/marcxchange-v1",
+  "of": "http:\/\/oss.dbc.dk\/ns\/openformat",
+  "ofo": "http:\/\/oss.dbc.dk\/ns\/openformatoutput",
+  "oso": "http:\/\/oss.dbc.dk\/ns\/opensearchobjects",
+  "oss": "http:\/\/oss.dbc.dk\/ns\/osstypes",
+  "xs": "http:\/\/www.w3.org\/2001\/XMLSchema",
+  "xsi": "http:\/\/www.w3.org\/2001\/XMLSchema-instance"
+}}
