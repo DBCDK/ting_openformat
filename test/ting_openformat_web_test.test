@@ -191,8 +191,6 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
 
       // Test _ting_openformat_parse_element
       $result = _ting_openformat_parse_element($result);
-      debug($result);
-      debug($field_name);
       $expected = $_ting_openformat_test_results[$field_name]['_ting_openformat_parse_element'];
       $expected = str_replace('[base_path]', base_path(), $expected);
       $this->assertEqual($result, $expected, format_string('field "@field" correctly parsed by _ting_openformat_parse_element', array(
