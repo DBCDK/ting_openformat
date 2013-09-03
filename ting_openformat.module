@@ -591,7 +591,6 @@ function ting_openformat_get_ordered_subworks($subWorks){
 function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langcode = NULL){
 
   $sub['fields'] = _prepare_view('bibdkSubwork', $bibdkSubwork, $view_mode, $langcode);
-  #$sub['id'] = $id;
   $sub['bibdkSubwork'] = $bibdkSubwork;
   foreach ($bibdkSubwork->getManifestations() as $manifestation) {
     if (get_class($manifestation) == 'Manifestation'){
