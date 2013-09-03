@@ -680,6 +680,8 @@ function _ting_openformat_get_types_list($bibdkobject){
  *
  * @param array $form_id
  * @param array $form_state
+ * @param $bibdkObject
+ * @param $uid
  * @return array
  */
 function ting_openformat_show_info_get_form($form_id, $form_state, $bibdkObject, $uid) {

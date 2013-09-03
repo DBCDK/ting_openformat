@@ -451,7 +451,7 @@ class ManifestationMaster {
       'latestReprint' => array('latestReprint' => 'latestReprintElement'),
     );
     $result = ting_openformat_methods::parseFields($this->_getPublicationDetails(), $fields);
-    
+
     return $result;
   }
   
