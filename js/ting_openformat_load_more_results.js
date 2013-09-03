@@ -2,10 +2,10 @@
 
   Drupal.ajax.prototype.commands.add_more_results = function(ajax, response, status) {
     Drupal.settings.ting_openformat_load_more_results.more = response.data.more;
+    Drupal.settings.ting_openformat_load_more_results.link = response.data.link;
     var loadMoreLink = $('.pane-ting-openformat-load-more-results #link');
     if(status === 'success') {
       if(Drupal.settings.ting_openformat_load_more_results.more) {
-        Drupal.settings.ting_openformat_load_more_results.start++;
         loadMoreLink.show();
       }
 
@@ -43,16 +43,9 @@
   };
 
   LoadMore.setSettings = function(element) {
-    var key = $('#edit-search-block-form--2').val();
-
     var element_settings = {};
-
-    if (window.location.search == ''){
-        element_settings.url = encodeURI(Drupal.settings.basePath + 'ajax/load_more_results/' + '?keys=' + key + '&page=' + Drupal.settings.ting_openformat_load_more_results.start);
-    }
-    else {
-        element_settings.url = encodeURI(Drupal.settings.basePath + 'ajax/load_more_results' + window.location.search + '&keys=' + key + '&page=' + Drupal.settings.ting_openformat_load_more_results.start);
-    }
+    
+    element_settings.url = Drupal.settings.ting_openformat_load_more_results.link;
 
     element_settings.event = 'load_more_results';
     element_settings.progress = { type: 'throbber'};
