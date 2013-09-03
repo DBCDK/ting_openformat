@@ -529,7 +529,7 @@ function template_preprocess_ting_openformat_subwork_tabs(&$variables) {
 }
 
 /** Creates html view for bibdkWorkEntity
- * @param $bibdkWork
+ * @param Manifestation|BibdkWork|BibdkSubwork|BibdkCollection $bibdkWork
  * @param string $view_mode
  * @param null $langcode
  * @return string
@@ -567,7 +567,7 @@ function ting_openformat_get_ordered_subworks($subWorks){
   foreach ($subWorks as $id => $subWork) {
     $type = drupal_strtolower($subWork->getType());
     $subtype = $subWork->getSubType();
-    $sub[$type][$subtype] = ting_openformat_subwork_view($subWork, $view_mode, $langcode);
+    $sub[$type][$subtype] = ting_openformat_subwork_view($subWork);
   }
   foreach ($sub as $type => $value) {
     foreach ($value as $subtype => $val) {
@@ -591,7 +591,7 @@ function ting_openformat_get_ordered_subworks($subWorks){
 function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langcode = NULL){
 
   $sub['fields'] = _prepare_view('bibdkSubwork', $bibdkSubwork, $view_mode, $langcode);
-  $sub['id'] = $id;
+  #$sub['id'] = $id;
   $sub['bibdkSubwork'] = $bibdkSubwork;
   foreach ($bibdkSubwork->getManifestations() as $manifestation) {
     if (get_class($manifestation) == 'Manifestation'){
