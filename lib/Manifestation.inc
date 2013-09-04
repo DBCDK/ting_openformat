@@ -188,7 +188,7 @@ class Manifestation extends ManifestationMaster {
     }
 
     foreach ($this->manifestation->relationsData as $relation) {
-      if ($relation->relationType == 'dbcaddi:hasOnlineAccess' && in_array($this->manifestation->main->type->{'$'}, array('Avisartikel', 'Anmeldelse'))) {
+      if ($relation->relationType == 'dbcaddi:hasOnlineAccess' && strpos($relation->relationUri, 'useraccessinfomedia') !== false) {
         return $relation->relationUri;
       }
     }
@@ -199,7 +199,6 @@ class Manifestation extends ManifestationMaster {
     if (!isset($this->manifestation->relationsData)) {
       return array();
     }
-    dpm($this->manifestation->relationsData);
     $reviews = array();
     foreach ($this->manifestation->relationsData as $relation) {
       if ($relation->relationType == 'dbcaddi:hasReview' && ((strpos($relation->relationUri, '870971') !== false) || (strpos($relation->relationUri, '150005') !== false))) {
