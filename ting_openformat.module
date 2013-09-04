@@ -171,13 +171,14 @@ function ting_openformat_single($id) {
  * @param $ids
  * @return array
  */
-function ting_openformat_get_manifestations($ids) {
+function ting_openformat_get_manifestations($ids, $params = array()) {
   $client = new ting_client_class();
-  $params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
-  $params['objectId'] = $ids;
-  $params['includeHoldingsCount'] = TRUE;
+  $default_params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
+  $default_params['objectId'] = $ids;
+  $default_params['includeHoldingsCount'] = TRUE;
   //$params['relationData'] = 'uri';
-  drupal_alter('ting_openformat_getobject_params', $params);
+  drupal_alter('ting_openformat_getobject_params', $default_params);
+  $params += $default_params;
   $result = $client->do_request('object', $params);
   if (empty($result->collections)) {
     return array();

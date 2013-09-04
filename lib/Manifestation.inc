@@ -188,14 +188,30 @@ class Manifestation extends ManifestationMaster {
     }
 
     foreach ($this->manifestation->relationsData as $relation) {
-      if ($relation->relationType == 'dbcaddi:hasOnlineAccess' && $this->manifestation->main->type->{'$'} == 'Avisartikel') {
+      if ($relation->relationType == 'dbcaddi:hasOnlineAccess' && in_array($this->manifestation->main->type->{'$'}, array('Avisartikel', 'Anmeldelse'))) {
         return $relation->relationUri;
       }
     }
     return FALSE;
   }
 
+  public function getNewsPaperReviews() {
+    if (!isset($this->manifestation->relationsData)) {
+      return array();
+    }
+    dpm($this->manifestation->relationsData);
+    $reviews = array();
+    foreach ($this->manifestation->relationsData as $relation) {
+      if ($relation->relationType == 'dbcaddi:hasReview' && ((strpos($relation->relationUri, '870971') !== false) || (strpos($relation->relationUri, '150005') !== false))) {
+        $reviews[] = $relation->relationUri;
+      }
+    }
+
+    return $reviews;
+  }
+
   public function getMaterialReview() {
+
     if (!isset($this->manifestation->relationsData)) {
       return array();
     }
@@ -211,6 +227,14 @@ class Manifestation extends ManifestationMaster {
 
   public function getHostPublicationID(){
     $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('hostPublicationID'));
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
+  public function getReviewRatings(){
+    $fields = array('reviewRatings');
+    $elements = isset($this->getWork()->description) ? $this->getWork()->description : NULL;
+    $result = ting_openformat_methods::parseFields($elements, $fields);
+
     return (is_array($result)) ? reset($result) : $result;
   }
 
