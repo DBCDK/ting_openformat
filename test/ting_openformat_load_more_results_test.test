@@ -7,17 +7,17 @@ class TingOpenformatLoadMoreResultsUnitTest extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
       'name' => t('Load more results unit test'),
-      'description' => t('Unittesting methods in plugins/content_types/ting_openformat_load_more_results.inc'),
+      'description' => t('Unittesting methods in plugins/content_types/ting_openformat_load_more.inc'),
       'group' => t('Ting Openformat'),
     );
   }
-  
+
   public function setUp() {
     parent::setUp();
   }
 
   public function testTingOpenFormatLoadMoreResultsPlugin(){
-    include(drupal_get_path('module', 'ting_openformat') . '/plugins/content_types/ting_openformat_load_more_results.inc');
+    include(drupal_get_path('module', 'ting_openformat') . '/plugins/content_types/ting_openformat_load_more.inc');
     $this->assertTrue((isset($plugin) && !empty($plugin)), 'Plugin variable was found');
     $this->assertTrue(isset($plugin['title']) && !empty($plugin['title']), '\'title\' was found and set');
     $this->assertTrue(isset($plugin['admin info']) && !empty($plugin['admin info']), '\'admin info\' was found and set');
@@ -49,7 +49,7 @@ class TingOpenFormatLoadMoreResultsWebTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => t('Load more results web test'),
-      'description' => t('Webtesting methods in plugins/content_types/ting_openformat_load_more_results.inc'),
+      'description' => t('Webtesting methods in plugins/content_types/ting_openformat_load_more.inc'),
       'group' => t('Ting Openformat'),
     );
   }
