@@ -121,6 +121,11 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $analytic = $entity->getAnalyticContent();
         $value = _ting_openformat_parse_analytic_content($analytic);
         break;
+      case 'bibdk_mani_access_information':
+        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
+        $urls = $entity->getAccessInformation();
+        $value = _ting_openformat_get_markup_for_field($urls, '<br />');
+        break;
       default :
         $content = _ting_openformat_default_field_view_content($field['field_name'], $entity);
         $value = _ting_openformat_get_markup_for_field($content);
@@ -136,6 +141,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
 /** Generic Helper function to get content elements for a speficic filed
  * @param $field_name
  * @param $entity
+ * @throws Exception
  * @return null
  */
 function _ting_openformat_default_field_view_content($field_name, $entity){
@@ -212,7 +218,7 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
         $array[] = $elements['display'];
       }
     }
-    elseif ($key === 'accessUrl') {
+    elseif ($key === 'accessUrl' || valid_url($value, TRUE)) {
       $array[] = l($value, $value, array('attributes' => array('target' => '_blank')));
     }
     elseif ($key === 'display') { /*do nothing*/
