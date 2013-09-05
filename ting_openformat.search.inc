@@ -121,7 +121,6 @@ function _ting_openformat_create_collection_entities(&$result) {
 
   $result->entities = array();
   foreach ($result->collections as $collection) {
-    $bibdkobjects = array();
     $original_manifestations = array();
     $entity_id = array();
 
@@ -138,9 +137,7 @@ function _ting_openformat_create_collection_entities(&$result) {
       $conditions['manifestations'] = $original_manifestations;
       $bibdkEntities = entity_load('bibdkCollection', $entity_id, $conditions, FALSE);
       $bibdkEntities->parseManifestations(); //Temporary as malformed XML is returned from OpenSearch
-      //dpm($bibdkEntities);
       $bibdkobjects = $bibdkEntities;
-      //unset($entity_id);
        $result->entities[] = $bibdkobjects;
     }
     else{
@@ -189,14 +186,14 @@ function _ting_openformat_set_search_result($bibdkobject) {
   return $result;
 }
 
-/** \brief set facet for search result. Look in cache if not found do a request and set cache
+/**
+ * Set facet for search result. Look in cache if not found do a request and set cache
+ * Returns nothing, but sets facet for $result-object given as parameter
  *
  * @param $client - search_client
  * @param $params - parameters for searchrequest
  * @param $result - search result
- *
- * @return nothing, but sets facet for $result-object given as parameter
- * */
+ **/
 function _ting_openformat_facet_cache($client, $result, $params) {
   // check facets; get from cache if set - else do zero search to get facets
   $local_cache_key = 'facets-' . $result->cacheKey;
