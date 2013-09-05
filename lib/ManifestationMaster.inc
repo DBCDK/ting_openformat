@@ -344,18 +344,25 @@ class ManifestationMaster {
     return $result;
   }
 
-  /* \brief accessInformation
-   * zero or 1 occurence
+  /**
+   * Checks accessInformation on the manifestation and returns any URL's found
+   *
+   * accessInformation zero or 1 occurence
    * accessUrl 1 or more occurence(s)
+   *
+   * @return array|null
    */
-
   public function getAccessInformation() {
     $fields = array('accessInformation' => array(
       'accessUrl',
     ));
 
     $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
-    return (is_array($result)) ? reset($result) : $result;
+
+    if(!is_array($result['accessInformation'][0]['accessUrl'])) { //ensuring that an array is returned no matter the count of URL's
+      $result['accessInformation'][0]['accessUrl'] = array($result['accessInformation'][0]['accessUrl']);
+    }
+    return $result['accessInformation'][0];
   }
 
   /* \brief publisher
