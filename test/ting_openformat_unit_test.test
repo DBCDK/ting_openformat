@@ -30,7 +30,7 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     $fields = $this->fields;
 
     // test_results.php includes expected results for all fields in the variable $_ting_openformat_test_results
-    include_once 'test_results.php';
+    require(drupal_get_path('module', 'ting_openformat') . '/test/test_results.php');
 
     foreach ($fields as $field_name => $field) {
       $method = $_ting_openformat_test_results[$field_name]['method'];
@@ -133,9 +133,6 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     $result = $collection->getWorkType();
     $expected_result = NULL;
     $this->assertEqual($result, $expected_result, 'Worktype parsed correctly');
-
-
-
 }
 
   /**
@@ -145,8 +142,8 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
   private function _testGetmethods($method, $expected_result, $message) {
     $manifestation = $this->manifestation;
     $serial_result = $result = $manifestation->$method();
-    debug($serial_result);
-    //$message = "$method method returned : " . print_r($result, TRUE) . " Should be " . print_r($expected_result, TRUE);
+
+
     if (is_array($expected_result)) {
       $expected_result = serialize($expected_result);
       $serial_result = serialize($result);
