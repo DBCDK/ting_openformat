@@ -359,10 +359,12 @@ class ManifestationMaster {
 
     $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
 
-    if(!is_array($result['accessInformation'][0]['accessUrl'])) { //ensuring that an array is returned no matter the count of URL's
+    //ensuring that an array is returned no matter the count of URL's
+    if(!is_array($result['accessInformation'][0]['accessUrl'])) {
       $result['accessInformation'][0]['accessUrl'] = array($result['accessInformation'][0]['accessUrl']);
     }
-    return $result['accessInformation'][0];
+
+    return $result;
   }
 
   /* \brief publisher
