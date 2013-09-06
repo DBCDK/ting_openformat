@@ -122,9 +122,8 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $value = _ting_openformat_parse_analytic_content($analytic);
         break;
       case 'bibdk_mani_access_information':
-        // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $urls = $entity->getAccessInformation();
-        $value = _ting_openformat_get_markup_for_field($urls, '<br />');
+        $value = _ting_openformat_parse_urls($urls);
         break;
       default :
         $content = _ting_openformat_default_field_view_content($field['field_name'], $entity);
@@ -218,7 +217,7 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
         $array[] = $elements['display'];
       }
     }
-    elseif ($key === 'accessUrl' || valid_url($value, TRUE)) {
+    elseif ($key === 'accessUrl') {
       $array[] = l($value, $value, array('attributes' => array('target' => '_blank')));
     }
     elseif ($key === 'display') { /*do nothing*/
@@ -232,6 +231,30 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
     $string .= implode($divider, $array);
   }
   return $string;
+}
+
+/**
+ * @param array $urls
+ * @return null|string
+ */
+function _ting_openformat_parse_urls($urls) {
+
+  $data = drupal_json_encode($urls);
+  $path = drupal_get_path('module', 'ting_openformat') . '/test/mockup/urls_objects_temp.json';
+  file_unmanaged_save_data($data, $path, FILE_EXISTS_REPLACE);
+
+  if(!is_array($urls) || !isset($urls['accessInformation'][0]['accessUrl'])){
+    return NULL;
+  }
+
+  $urls = $urls['accessInformation'][0]['accessUrl'];
+
+  $links = '';
+  foreach ($urls as $url) {
+    $links .= l($url, $url, array('attributes' => array('target' => '_blank'))) . '<br />';
+  }
+
+  return $links;
 }
 
 /** Helper function to parse analytic content
