@@ -418,9 +418,15 @@ $_ting_openformat_test_results = array(
   array(
     'method' => 'getAccessInformation',
     '_ting_openformat_default_field_view_content' => array(
-      'accessUrl' =>
+      'accessInformation' =>
       array(
-        0 => NULL,
+        0 =>
+        array(
+          'accessUrl' =>
+          array(
+            0 => NULL,
+          ),
+        ),
       ),
     ),
     '_ting_openformat_parse_element' => '',

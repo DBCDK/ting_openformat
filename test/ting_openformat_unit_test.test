@@ -34,7 +34,7 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
 
     foreach ($fields as $field_name => $field) {
       $method = $_ting_openformat_test_results[$field_name]['method'];
-      if(!$method){
+      if (!$method) {
         return;
       }
       $expected = $_ting_openformat_test_results[$field_name]['_ting_openformat_default_field_view_content'];
@@ -89,7 +89,7 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
 
   }
 
-  public function testBibdkCollection(){
+  public function testBibdkCollection() {
 
     $manifestation = new stdClass();
     $manifestation->acessType->{'$'} = 'physical';
@@ -133,16 +133,17 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     $result = $collection->getWorkType();
     $expected_result = NULL;
     $this->assertEqual($result, $expected_result, 'Worktype parsed correctly');
-}
+  }
 
   /**
    * @param $method
    * @param $expected_result
+   * @param $message
+   * @return
    */
   private function _testGetmethods($method, $expected_result, $message) {
     $manifestation = $this->manifestation;
     $serial_result = $result = $manifestation->$method();
-
 
     if (is_array($expected_result)) {
       $expected_result = serialize($expected_result);
@@ -161,5 +162,4 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     $manifestation_object = $result->searchResponse->result->searchResult[0]->formattedCollection->workDisplay->manifestation;
     $this->manifestation = entity_load('bibdkManifestation', $manifestation_object->adminData->pid->{'$'}, $manifestation_object);
   }
-
 }
