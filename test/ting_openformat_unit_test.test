@@ -13,7 +13,7 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
    */
   public static function getInfo() {
     return array(
-      'name' => t('Unittest'),
+      'name' => t('Ting OpenFormat Unittest'),
       'description' => t('Tests the methods of the different entities'),
       'group' => t('Ting Openformat'),
     );
