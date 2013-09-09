@@ -7,6 +7,7 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
 
   private $manifestation;
   private $fields;
+  private $path;
 
   /**
    * @return array
@@ -20,17 +21,18 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
   }
 
   public function setUp() {
+    module_load_include('module', 'ting_openformat', 'ting_openformat');
+    $this->path = drupal_get_path("module", "ting_openformat");
     $this->_createObjects();
     $this->fields = ting_openformat_bibdk_fields();
-    parent::setUp();
+    parent::setUp('ting_openformat');
   }
 
   public function testManifestationMethods() {
-
     $fields = $this->fields;
 
     // test_results.php includes expected results for all fields in the variable $_ting_openformat_test_results
-    include_once 'test_results.php';
+    include_once $this->path . '/test/test_results.php';
 
     foreach ($fields as $field_name => $field) {
       $method = $_ting_openformat_test_results[$field_name]['method'];
@@ -44,7 +46,6 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
   }
 
   public function testCqlCommando() {
-
     global $language;
 
     $saved_language = $language;
@@ -158,11 +159,13 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
   }
 
   private function _createObjects() {
+    module_load_include('module', 'ting_openformat', 'ting_openformat');
+    module_load_include('inc', 'ting_openformat', 'lib/Manifestation');
     $file = file_get_contents(drupal_get_path("module", "ting_openformat") . "/test/mockup/manifestation.working.json");
     $result = json_decode($file);
 
     $manifestation_object = $result->searchResponse->result->searchResult[0]->formattedCollection->workDisplay->manifestation;
-    $this->manifestation = entity_load('bibdkManifestation', $manifestation_object->adminData->pid->{'$'}, $manifestation_object);
+    $this->manifestation = new Manifestation($manifestation_object); //entity_load('bibdkManifestation', $manifestation_object->adminData->pid->{'$'}, $manifestation_object);
   }
 
 }
