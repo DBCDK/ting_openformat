@@ -60,7 +60,7 @@ class TingOpenFormatLoadMoreResultsWebTest extends DrupalWebTestCase {
 
 
   public function testTing_openformat_load_more_results_admin_info(){
-    module_load_include('inc', 'ting_openformat', '/plugins/content_types/ting_openformat_load_more_results');
+    module_load_include('inc', 'ting_openformat', '/plugins/content_types/ting_openformat_load_more');
     $block = ting_openformat_load_more_results_admin_info(NULL, NULL, NULL);
     $this->assertTrue(is_object($block), t('Object returned as expected'));
     $this->assertTrue((isset($block->title) && !empty($block->title)), t('Object has titlte set'));
