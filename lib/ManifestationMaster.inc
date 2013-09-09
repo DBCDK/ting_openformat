@@ -2,6 +2,9 @@
 
 
 
+/**
+ * Class ManifestationMaster
+ */
 class ManifestationMaster {
 
   public $id;
@@ -345,7 +348,8 @@ class ManifestationMaster {
   }
 
   /**
-   * Checks accessInformation on the manifestation and returns any URL's found
+   * Checks accessInformation on the manifestation and returns any URL's found.
+   * Returning NULL if none is found.
    *
    * accessInformation zero or 1 occurence
    * accessUrl 1 or more occurence(s)
@@ -360,7 +364,7 @@ class ManifestationMaster {
     $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
 
     //ensuring that an array is returned no matter the count of URL's
-    if(!is_array($result['accessInformation'][0]['accessUrl'])) {
+    if ($result && !is_array($result['accessInformation'][0]['accessUrl'])) {
       $result['accessInformation'][0]['accessUrl'] = array($result['accessInformation'][0]['accessUrl']);
     }
 
@@ -418,7 +422,7 @@ class ManifestationMaster {
   }
 
 
-  public function getAnalyticContent(){
+  public function getAnalyticContent() {
     $fields = array('analyticContent' => array(
       'analyticContributor' => 'searchCode',
       'analyticTitle' => array('analyticTitleMain' => 'searchCode', 'analyticRestOfTitle')
@@ -451,10 +455,10 @@ class ManifestationMaster {
     return $result;
   }
 
-  private function _getContent(){
+  private function _getContent() {
     return isset($this->fields->content) ? $this->fields->content : NULL;
   }
-  
+
   public function getLatestReprint() {
     $fields = array(
       'latestReprint' => array('latestReprint' => 'latestReprintElement'),
@@ -463,5 +467,5 @@ class ManifestationMaster {
 
     return $result;
   }
-  
+
 }
