@@ -60,10 +60,11 @@ class Manifestation extends ManifestationMaster {
     return $result;
   }
 
-  /*
+  /**
    * Return ID as array
+   *
+   * @return array
    */
-
   public function getIDs() {
     return array($this->id);
   }
