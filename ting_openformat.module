@@ -22,7 +22,7 @@ function ting_openformat_menu() {
     'description' => 'AJAX callback for ting_openformat_load_more_results. Loads X number of searchresults and returns the result to the client as JSON.',
     'access arguments' => array('access content'),
     'page callback' => 'ting_openformat_load_more_results_ajax_callback',
-    'file' => 'ting_openformat_load_more_results.inc',
+    'file' => 'ting_openformat_load_more.inc',
     'file path' => drupal_get_path('module', 'ting_openformat') . '/plugins/content_types/',
     'type' => MENU_CALLBACK,
   );

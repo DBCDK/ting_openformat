@@ -7,7 +7,7 @@
 
 (function ($) {
 
-    var TingOpenformat = {}
+
 
     if (typeof(Drupal.ajax) != 'undefined') {
         Drupal.ajax.prototype.commands.add_manifestations = function (ajax, response, status) {
@@ -32,8 +32,12 @@
 
             TingOpenformat.activateSubWorkTabs(context);
             TingOpenformat.loadManifestationsWithAjax(context);
+            TingOpenformat.loadWorkEvent(context);
+            TingOpenformat.addFullViewButtonEvent(context);
         }
     };
+
+    var TingOpenformat = {}
 
     TingOpenformat.activateSubWorkTabs = function (context) {
         $("div.ting_openformat_subwork_tab", context).click(function () {
@@ -91,13 +95,38 @@
         element_settings.url = url;
         element_settings.event = (typeof event != 'undefined') ? event : 'load_manifestations';
         element_settings.progress = { type: 'throbber' };
-        element_settings.submit = { spil: 'fisk' };
 
         var id = element.attr('id');
         Drupal.ajax[id] = new Drupal.ajax(id, element, element_settings);
         element.trigger('load_manifestations');
         element.unbind('load_manifestations');
 
+    }
+
+    TingOpenformat.addFullViewButtonEvent = function (context){
+
+        $('.full-view-links a', context).click(function(e){
+            if (!$(this).hasClass('inactive')){
+                $('.full-view-links a').toggleClass('inactive');
+            }
+
+            if ($(this).attr('id') === 'ting-openformat-full-view-button-expanded'){
+                $('.work-toggle-element').trigger('show-work');
+            }
+            else {
+                $('.work-toggle-element').trigger('hide-work');
+            }
+
+
+        });
+
+    }
+
+    TingOpenformat.loadWorkEvent = function (context) {
+        $('.work-toggle-element', context).bind('show-work', function(e) {
+            var id = $(this).attr('href');
+            $(id).trigger('click');
+        });
     }
 
 
