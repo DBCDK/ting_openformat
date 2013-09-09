@@ -202,7 +202,7 @@ class Manifestation extends ManifestationMaster {
     $reviews = array();
     foreach ($this->manifestation->relationsData as $relation) {
       if ($relation->relationType == 'dbcaddi:hasReview' && ((strpos($relation->relationUri, '870971') !== false) || (strpos($relation->relationUri, '150005') !== false))) {
-        $reviews[] = $relation->relationUri;
+        $reviews[$relation->relationUri] = $relation->relationUri;
       }
     }
 

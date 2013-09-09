@@ -38,7 +38,8 @@ class BibdkWork {
       if (method_exists($manifestation, 'getNewsPaperReviews'))
         $reviews += $manifestation->getNewsPaperReviews();
     }
-    return $reviews;
+
+    return array_keys($reviews);
   }
 
   public function getMaterialReview(){
