@@ -239,9 +239,10 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
  */
 function _ting_openformat_parse_urls($urls) {
 
-  $data = drupal_json_encode($urls);
+  //TODO mmj remove
+  /*$data = drupal_json_encode($urls);
   $path = drupal_get_path('module', 'ting_openformat') . '/test/mockup/urls_objects_temp.json';
-  file_unmanaged_save_data($data, $path, FILE_EXISTS_REPLACE);
+  file_unmanaged_save_data($data, $path, FILE_EXISTS_REPLACE);*/
 
   if(!is_array($urls) || !isset($urls['accessInformation'][0]['accessUrl'])){
     return NULL;
