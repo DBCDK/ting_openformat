@@ -417,18 +417,7 @@ $_ting_openformat_test_results = array(
   'bibdk_mani_access_information' =>
   array(
     'method' => 'getAccessInformation',
-    '_ting_openformat_default_field_view_content' => array(
-      'accessInformation' =>
-      array(
-        0 =>
-        array(
-          'accessUrl' =>
-          array(
-            0 => NULL,
-          ),
-        ),
-      ),
-    ),
+    '_ting_openformat_default_field_view_content' => NULL,
     '_ting_openformat_parse_element' => '',
   ),
   'bibdk_mani_pub_format' =>
