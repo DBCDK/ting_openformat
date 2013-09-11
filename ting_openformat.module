@@ -22,7 +22,7 @@ function ting_openformat_menu() {
     'description' => 'AJAX callback for ting_openformat_load_more_results. Loads X number of searchresults and returns the result to the client as JSON.',
     'access arguments' => array('access content'),
     'page callback' => 'ting_openformat_load_more_results_ajax_callback',
-    'file' => 'ting_openformat_load_more_results.inc',
+    'file' => 'ting_openformat_load_more.inc',
     'file path' => drupal_get_path('module', 'ting_openformat') . '/plugins/content_types/',
     'type' => MENU_CALLBACK,
   );
@@ -530,7 +530,7 @@ function template_preprocess_ting_openformat_subwork_tabs(&$variables) {
 }
 
 /** Creates html view for bibdkWorkEntity
- * @param $bibdkWork
+ * @param Manifestation|BibdkWork|BibdkSubwork|BibdkCollection $bibdkWork
  * @param string $view_mode
  * @param null $langcode
  * @return string
@@ -568,7 +568,7 @@ function ting_openformat_get_ordered_subworks($subWorks){
   foreach ($subWorks as $id => $subWork) {
     $type = drupal_strtolower($subWork->getType());
     $subtype = $subWork->getSubType();
-    $sub[$type][$subtype] = ting_openformat_subwork_view($subWork, $view_mode, $langcode);
+    $sub[$type][$subtype] = ting_openformat_subwork_view($subWork);
   }
   foreach ($sub as $type => $value) {
     foreach ($value as $subtype => $val) {
@@ -592,7 +592,6 @@ function ting_openformat_get_ordered_subworks($subWorks){
 function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langcode = NULL){
 
   $sub['fields'] = _prepare_view('bibdkSubwork', $bibdkSubwork, $view_mode, $langcode);
-  $sub['id'] = $id;
   $sub['bibdkSubwork'] = $bibdkSubwork;
   foreach ($bibdkSubwork->getManifestations() as $manifestation) {
     if (get_class($manifestation) == 'Manifestation'){
@@ -682,6 +681,8 @@ function _ting_openformat_get_types_list($bibdkobject){
  *
  * @param array $form_id
  * @param array $form_state
+ * @param $bibdkObject
+ * @param $uid
  * @return array
  */
 function ting_openformat_show_info_get_form($form_id, $form_state, $bibdkObject, $uid) {

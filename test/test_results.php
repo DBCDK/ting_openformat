@@ -506,4 +506,10 @@ $_ting_openformat_test_results = array(
     ),
     '_ting_openformat_parse_element' => '<a href="[base_path]search/work/phrase.creator%3D%22Giuseppe%20Verdi%22">Giuseppe Verdi</a>',
   ),
+  'bibdk_latest_reprint' =>
+  array(
+    'method' => 'getLatestReprint',
+    '_ting_openformat_default_field_view_content' => NULL,
+    '_ting_openformat_parse_element' => NULL,
+  ),
 );

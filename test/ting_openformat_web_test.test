@@ -1,173 +1,6 @@
 <?php
 
 /**
- * Test class for ting_openformat
- */
-class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
-
-  private $manifestation;
-  private $fields;
-
-  /**
-   * @return array
-   */
-  public static function getInfo() {
-    return array(
-      'name' => t('Unittest'),
-      'description' => t('Tests the methods of the different entities'),
-      'group' => t('Ting Openformat'),
-    );
-  }
-
-  public function setUp() {
-    $this->_createObjects();
-    $this->fields = ting_openformat_bibdk_fields();
-    parent::setUp();
-  }
-
-  public function testManifestationMethods() {
-
-    $fields = $this->fields;
-
-    // test_results.php includes expected results for all fields in the variable $_ting_openformat_test_results
-    include_once 'test_results.php';
-
-    foreach ($fields as $field_name => $field) {
-      $method = $_ting_openformat_test_results[$field_name]['method'];
-      debug($method);
-      $expected = $_ting_openformat_test_results[$field_name]['_ting_openformat_default_field_view_content'];
-      debug($expected);
-      $message = "method '$method' returns correct result";
-      $this->_testGetmethods($method, $expected, $message);
-    }
-  }
-
-  public function testCqlCommando() {
-
-    global $language;
-
-    $saved_language = $language;
-
-    $language->language = 'en';
-
-    // Test English - AND
-    $result = ting_openformat_get_cql_commando('AND');
-    $expected = ' AND ';
-    $this->assertEqual($result, $expected, 'CQL Commando correcty translated');
-
-    // Test English - OR
-    $result = ting_openformat_get_cql_commando('OR');
-    $expected = ' OR ';
-    $this->assertEqual($result, $expected, 'CQL Commando correcty translated');
-
-    // Test English - NON VALID
-    $result = ting_openformat_get_cql_commando('FAIL');
-    $expected = NULL;
-    $this->assertEqual($result, $expected, 'CQL Commando correcty translated');
-
-
-    $language->language = 'da';
-
-    // Test Danish - AND
-    $result = ting_openformat_get_cql_commando('AND');
-    $expected = ' OG ';
-    $this->assertEqual($result, $expected, 'CQL Commando correcty translated');
-
-    // Test Danish - OR
-    $result = ting_openformat_get_cql_commando('OR');
-    $expected = ' ELLER ';
-    $this->assertEqual($result, $expected, 'CQL Commando correcty translated');
-
-    // Test Danish - NON Valid
-    $result = ting_openformat_get_cql_commando('FAIL');
-    $expected = NULL;
-    $this->assertEqual($result, $expected, 'CQL Commando correcty translated');
-
-
-    $language = $saved_language;
-
-  }
-
-  public function testBibdkCollection(){
-
-    $manifestation = new stdClass();
-    $manifestation->acessType->{'$'} = 'physical';
-    $manifestation->fedoraPid->{'$'} = '870970-basis:27295150';
-    $manifestation->identifier->{'$'} = '870970-basis:27295150';
-    $manifestation->language->{'$'} = 'Flere sprog';
-    $manifestation->title->{'$'} = 'First choice for sjette';
-    $manifestation->dependentTitle->{'$'} = 'Teacher\'s book';
-    $manifestation->type->{'$'} = 'Bog';
-    $manifestation->workType->{'$'} = 'book';
-
-    $manifestations = array(
-      'manifestations' => array($manifestation)
-    );
-
-
-    $collection = new BibdkCollection($manifestations);
-
-    $result = $collection->getTitle();
-    $expected_result = 'First choice for sjette : Teacher\'s book';
-    $this->assertEqual($result, $expected_result, 'Title parsed correctly');
-
-    $result = $collection->getType();
-    $expected_result = 'Bog';
-    $this->assertEqual($result, $expected_result, 'Type parsed correctly');
-
-    $result = $collection->getWorkType();
-    $expected_result = 'book';
-    $this->assertEqual($result, $expected_result, 'Worktype parsed correctly');
-
-    $manifestations = array();
-    $collection = new BibdkCollection($manifestations);
-    $result = $collection->getTitle();
-    $expected_result = NULL;
-    $this->assertEqual($result, $expected_result, 'Title parsed correctly');
-
-    $result = $collection->getType();
-    $expected_result = NULL;
-    $this->assertEqual($result, $expected_result, 'Type parsed correctly');
-
-    $result = $collection->getWorkType();
-    $expected_result = NULL;
-    $this->assertEqual($result, $expected_result, 'Worktype parsed correctly');
-
-
-
-}
-
-  /**
-   * @param $method
-   * @param $expected_result
-   */
-  private function _testGetmethods($method, $expected_result, $message) {
-    $manifestation = $this->manifestation;
-    $serial_result = $result = $manifestation->$method();
-    //$message = "$method method returned : " . print_r($result, TRUE) . " Should be " . print_r($expected_result, TRUE);
-    if (is_array($expected_result)) {
-      $expected_result = serialize($expected_result);
-      $serial_result = serialize($result);
-    }
-
-    $this->assertEqual($expected_result, $serial_result, $message);
-
-    return $result;
-
-  }
-
-  private function _createObjects() {
-    $file = file_get_contents(drupal_get_path("module", "ting_openformat") . "/test/mockup/manifestation.working.json");
-    $result = json_decode($file);
-
-    $manifestation_object = $result->searchResponse->result->searchResult[0]->formattedCollection->workDisplay->manifestation;
-    $this->manifestation = entity_load('bibdkManifestation', $manifestation_object->adminData->pid->{'$'}, $manifestation_object);
-  }
-
-}
-
-
-/**
  * WebTest class for ting_openformat module
  */
 class TingOpenFormatWebTestCase extends DrupalWebTestCase {
@@ -344,7 +177,7 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     $fields = ting_openformat_bibdk_fields();
 
     // test_results.php includes expected results for all fields in the variable $_ting_openformat_test_results    include_once 'test_results.php';
-   // include_once 'test_results.php';
+    // include_once 'test_results.php';
     require_once 'test_results.php';
 
     foreach ($fields as $field_name => $field) {
@@ -378,5 +211,3 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
   }
 
 }
-
-
