@@ -1,10 +1,10 @@
 <?php
 
 $plugin = array(
-  'title' => t('Openformat Search - \'Load more collections\' link', array(), array('context' => 'ting_openformat')),
+  'title' => t('Load more collections', array(), array('context' => 'ting_openformat')),
   'admin info' => 'ting_openformat_load_more_results_admin_info',
   'single' => TRUE,
-  'content_types' => array('ting_openformat_load_more_results'),
+  'content_types' => array('ting_openformat_load_more'),
   'render callback' => 'ting_openformat_load_more_results_link',
   'category' => t('Openformat'),
   'render last' => TRUE,
@@ -30,6 +30,7 @@ function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $c
         'start' => $start,
         'loadingIsActive' => FALSE,
         'firstLoad' => FALSE,
+        'link' => _ting_openformat_set_load_more_results_link(),
       )
         ), 'setting');
 
@@ -56,8 +57,8 @@ function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $c
 function ting_openformat_load_more_results_ajax_callback() {
   $keys = '';
 
-  if ( isset($_GET['keys']) ) {
-    if ( !empty($_GET['keys']) ) {
+  if (isset($_GET['keys'])) {
+    if (!empty($_GET['keys'])) {
       $keys = $_GET['keys'];
     }
     unset($_GET['keys']);
@@ -87,11 +88,37 @@ function ting_openformat_load_more_results_ajax_callback() {
     'data' => array(
       'anchor' => $id,
       'more' => $more,
+      'link' => _ting_openformat_set_load_more_results_link(),
     ),
   );
 
   ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
   exit(0);
+}
+
+function _ting_openformat_set_load_more_results_link() {
+  $keys = drupal_static('ting_search_query');
+  
+  if (isset($_GET['sort'])) {
+    $query['sort'] = $_GET['sort'];
+  }
+  if (isset($_GET['qe'])) {
+    $query['qe'] = $_GET['qe'];
+  }
+  if (isset($_GET['page_id'])) {
+    $query['page_id'] = $_GET['page_id'];
+  }
+  
+  if (isset($_GET['facets'])) {
+    $query['facets'] = $_GET['facets'];
+  }
+  
+  
+
+  $query['keys'] = isset($keys) ? $keys : $_GET['keys'];
+
+  $query['page'] = isset($_GET['page']) ? ((int) $_GET['page']) + 1 : 1;
+  return url('ajax/load_more_results/', array('query' => $query));
 }
 
 /**
