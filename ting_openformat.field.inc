@@ -205,7 +205,7 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
       }
     }
     elseif ($key === 'searchCode') {
-      if ($return_link) {
+      if ($return_link && isset($elements['searchCode'])) {
         $array[] = l($elements['display'], 'search/work/' . $elements['searchCode']);
       }
       else {
