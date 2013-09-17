@@ -569,6 +569,7 @@ function ting_openformat_get_ordered_subworks($subWorks){
     $subtype = $subWork->getSubType();
     $sub[$type][$subtype] = ting_openformat_subwork_view($subWork);
   }
+  
   foreach ($sub as $type => $value) {
     foreach ($value as $subtype => $val) {
       $subtype_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $subtype));
@@ -1020,6 +1021,9 @@ function _ting_openformat_fetch_types() {
 function _ting_openformat_type_translation($type, $subtype) {
 
   switch ($type) {
+    case 'book':
+      $type = t('book_placeholder', array(), array('context' => 'ting_openformat'));
+      break;
     case 'literature':
       $type = t('literature');
       break;
@@ -1039,7 +1043,7 @@ function _ting_openformat_type_translation($type, $subtype) {
       $type = t('audiobook');
       break;
     case 'sheetmusic':
-      $type = t('sheetmusic');
+      $type = t('sheetmusic_placeholder', array(), array('context' => 'ting_openformat'));
       break;
     case 'none':
       $type = t('none');
@@ -1087,7 +1091,7 @@ function _ting_openformat_type_translation($type, $subtype) {
       $subtype = t('Blu ray');
       break;
     case 'Blu-ray':
-      $subtype = t('Blu-ray');
+      $subtype = t('blu-ray_placeholder', array(), array('context' => 'ting_openformat'));
       break;
     case 'Bog':
       $subtype = t('Bog');
@@ -1095,17 +1099,23 @@ function _ting_openformat_type_translation($type, $subtype) {
     case 'bog':
       $subtype = t('Bog');
       break;
+    case 'Bånd':
+      $subtype = t('bånd_placeholder', array(), array('context' => 'ting_openformat'));
+      break;
     case 'Bog stor skrift':
       $subtype = t('Bog stor skrift');
       break;
     case 'CD':
-      $subtype = t('CD');
+      $subtype = t('cd_placeholder', array(), array('context' => 'ting_openformat'));
       break;
     case 'Cd (musik)':
       $subtype = t('Cd (musik)');
       break;
     case 'CD-I':
       $subtype = t('CD-I');
+      break;
+    case 'Cd-rom':
+      $subtype = t('cd-rom__placeholder', array(), array('context' => 'ting_openformat'));
       break;
     case 'CD-rom':
       $subtype = t('CD-rom');
@@ -1124,6 +1134,9 @@ function _ting_openformat_type_translation($type, $subtype) {
       break;
     case 'DTBook':
       $subtype = t('DTBook');
+      break;
+    case 'Dvd':
+      $subtype = t('dvd_placeholder', array(), array('context' => 'ting_openformat'));
       break;
     case 'DVD (film)':
       $subtype = t('DVD (film)');
@@ -1285,7 +1298,7 @@ function _ting_openformat_type_translation($type, $subtype) {
       $subtype = t('Spil');
       break;
     case 'Spolelydbånd':
-      $subtype = t('Spolelydbånd');
+      $subtype = t('spolelydbånd_placeholder', array(), array('context' => 'ting_openformat'));
       break;
     case 'Symbolkort':
       $subtype = t('Symbolkort');
