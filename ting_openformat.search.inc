@@ -345,6 +345,11 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
 function ting_openformat_conditions_callback($query) {
   $conditions = array();
 
+    // check tracking id
+  if (!empty($_REQUEST['trackingId'])) {
+    $conditions['trackingId'] = $_REQUEST['trackingId'];
+  }
+  
   $page_id = array();
   if ( !empty($_REQUEST['page_id']) ) {
     $page_id['page_id'] = $_REQUEST['page_id'];
