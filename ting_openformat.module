@@ -158,9 +158,13 @@ function ting_openformat_single($id) {
   $bibdkEntity = reset($bibdkEntity);
   $manifestation = reset($bibdkEntity->manifestations);
 
+  $host_publication = $manifestation->getHostPublication();
+  $part_of = isset($host_publication) ? drupal_render(_ting_openformat_get_markup_for_field($host_publication)) : NULL;
+
+
   return theme('ting_openformat_single_work', array(
         'title' => $bibdkEntity->getTitle(),
-        'partOf' => drupal_render(_ting_openformat_get_markup_for_field($manifestation->getHostPublication())),
+        'partOf' => $part_of,
         'author' => drupal_render(_ting_openformat_get_markup_for_field($bibdkEntity->getCreator())),
         'ids' => $id,
         'work' => ting_openformat_work_view($bibdkEntity),
@@ -171,13 +175,14 @@ function ting_openformat_single($id) {
  * @param $ids
  * @return array
  */
-function ting_openformat_get_manifestations($ids) {
+function ting_openformat_get_manifestations($ids, $params = array()) {
   $client = new ting_client_class();
-  $params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
-  $params['objectId'] = $ids;
-  $params['includeHoldingsCount'] = TRUE;
+  $default_params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
+  $default_params['objectId'] = $ids;
+  $default_params['includeHoldingsCount'] = TRUE;
   //$params['relationData'] = 'uri';
-  drupal_alter('ting_openformat_getobject_params', $params);
+  drupal_alter('ting_openformat_getobject_params', $default_params);
+  $params += $default_params;
   $result = $client->do_request('object', $params);
   if (empty($result->collections)) {
     return array();
@@ -569,6 +574,7 @@ function ting_openformat_get_ordered_subworks($subWorks){
     $subtype = $subWork->getSubType();
     $sub[$type][$subtype] = ting_openformat_subwork_view($subWork);
   }
+  
   foreach ($sub as $type => $value) {
     foreach ($value as $subtype => $val) {
       $subtype_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $subtype));
@@ -1020,6 +1026,9 @@ function _ting_openformat_fetch_types() {
 function _ting_openformat_type_translation($type, $subtype) {
 
   switch ($type) {
+    case 'book':
+      $type = t('book_placeholder', array(), array('context' => 'ting_openformat'));
+      break;
     case 'literature':
       $type = t('literature');
       break;
@@ -1039,7 +1048,7 @@ function _ting_openformat_type_translation($type, $subtype) {
       $type = t('audiobook');
       break;
     case 'sheetmusic':
-      $type = t('sheetmusic');
+      $type = t('sheetmusic_placeholder', array(), array('context' => 'ting_openformat'));
       break;
     case 'none':
       $type = t('none');
@@ -1087,7 +1096,7 @@ function _ting_openformat_type_translation($type, $subtype) {
       $subtype = t('Blu ray');
       break;
     case 'Blu-ray':
-      $subtype = t('Blu-ray');
+      $subtype = t('blu-ray_placeholder', array(), array('context' => 'ting_openformat'));
       break;
     case 'Bog':
       $subtype = t('Bog');
@@ -1095,17 +1104,23 @@ function _ting_openformat_type_translation($type, $subtype) {
     case 'bog':
       $subtype = t('Bog');
       break;
+    case 'Bånd':
+      $subtype = t('bånd_placeholder', array(), array('context' => 'ting_openformat'));
+      break;
     case 'Bog stor skrift':
       $subtype = t('Bog stor skrift');
       break;
     case 'CD':
-      $subtype = t('CD');
+      $subtype = t('cd_placeholder', array(), array('context' => 'ting_openformat'));
       break;
     case 'Cd (musik)':
       $subtype = t('Cd (musik)');
       break;
     case 'CD-I':
       $subtype = t('CD-I');
+      break;
+    case 'Cd-rom':
+      $subtype = t('cd-rom__placeholder', array(), array('context' => 'ting_openformat'));
       break;
     case 'CD-rom':
       $subtype = t('CD-rom');
@@ -1124,6 +1139,9 @@ function _ting_openformat_type_translation($type, $subtype) {
       break;
     case 'DTBook':
       $subtype = t('DTBook');
+      break;
+    case 'Dvd':
+      $subtype = t('dvd_placeholder', array(), array('context' => 'ting_openformat'));
       break;
     case 'DVD (film)':
       $subtype = t('DVD (film)');
@@ -1285,7 +1303,7 @@ function _ting_openformat_type_translation($type, $subtype) {
       $subtype = t('Spil');
       break;
     case 'Spolelydbånd':
-      $subtype = t('Spolelydbånd');
+      $subtype = t('spolelydbånd_placeholder', array(), array('context' => 'ting_openformat'));
       break;
     case 'Symbolkort':
       $subtype = t('Symbolkort');

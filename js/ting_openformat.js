@@ -18,7 +18,11 @@
             // $(response.data) or $('<div></div>').replaceWith(response.data).
             var new_content_wrapped = $('<div></div>').html(response.data);
             var new_content = new_content_wrapped.contents();
-            $(response.selector).replaceWith(response.data);
+            if (new_content.length != 1 || new_content.get(0).nodeType != 1) {
+                new_content = new_content_wrapped;
+            }
+
+            $(response.selector).replaceWith(new_content);
             if (new_content.parents('html').length > 0) {
                 // Apply any settings from the returned JSON if available.
                 var settings = response.settings || ajax.settings || Drupal.settings;

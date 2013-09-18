@@ -30,6 +30,18 @@ class BibdkWork {
     }
   }
 
+  public function getArticleReviews(){
+
+    $reviews = array();
+
+    foreach ($this->manifestations as $manifestation) {
+      if (method_exists($manifestation, 'getNewsPaperReviews'))
+        $reviews += $manifestation->getNewsPaperReviews();
+    }
+
+    return array_keys($reviews);
+  }
+
   public function getMaterialReview(){
 
     $reviews = array();

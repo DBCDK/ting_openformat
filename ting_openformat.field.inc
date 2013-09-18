@@ -121,6 +121,10 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $analytic = $entity->getAnalyticContent();
         $value = _ting_openformat_parse_analytic_content($analytic);
         break;
+      case 'bibdk_mani_access_information':
+        $urls = $entity->getAccessInformation();
+        $value = _ting_openformat_parse_urls($urls);
+        break;
       default :
         $content = _ting_openformat_default_field_view_content($field['field_name'], $entity);
         $value = _ting_openformat_get_markup_for_field($content);
@@ -136,6 +140,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
 /** Generic Helper function to get content elements for a speficic filed
  * @param $field_name
  * @param $entity
+ * @throws Exception
  * @return null
  */
 function _ting_openformat_default_field_view_content($field_name, $entity){
@@ -186,7 +191,7 @@ function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_
  * @param bool $return_link If FALSE value will be returned without markup for href. Otherwise complete markup for href is returned
  * @return string
  */
-function _ting_openformat_parse_element($elements, $divider = ". ", $use_header = TRUE, $return_link = TRUE) {
+function _ting_openformat_parse_element($elements, $divider = ". ", $use_header = TRUE, $return_link = TRUE, $link_label = NULL) {
 
   if (!isset($elements)) {
     return NULL;
@@ -197,7 +202,7 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
 
   foreach ($elements as $key => $value) {
     if (is_array($value)) {
-      $array[] = _ting_openformat_parse_element($value, $divider, $use_header, $return_link);
+      $array[] = _ting_openformat_parse_element($value, $divider, $use_header, $return_link, $link_label);
     }
     elseif ($key === "header") {
       if ($use_header) {
@@ -205,7 +210,7 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
       }
     }
     elseif ($key === 'searchCode') {
-      if ($return_link) {
+      if ($return_link && isset($elements['searchCode'])) {
         $array[] = l($elements['display'], 'search/work/' . $elements['searchCode']);
       }
       else {
@@ -213,7 +218,8 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
       }
     }
     elseif ($key === 'accessUrl') {
-      $array[] = l($value, $value, array('attributes' => array('target' => '_blank')));
+      $label = isset($link_label) ? $link_label : $value;
+      $array[] = l($label, $value, array('attributes' => array('target' => '_blank'), 'html' => true));
     }
     elseif ($key === 'display') { /*do nothing*/
     }
@@ -228,8 +234,30 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
   return $string;
 }
 
-/** Helper function to parse analytic content
+/**
+ * @param array $urls
+ * @return null|string
+ */
+function _ting_openformat_parse_urls($urls) {
+  if(!is_array($urls) || !isset($urls['accessInformation'][0]['accessUrl'])){
+    return NULL;
+  }
+
+  $urls = $urls['accessInformation'][0]['accessUrl'];
+
+  $links = '';
+  foreach ($urls as $url) {
+    $links .= l($url, $url, array('attributes' => array('target' => '_blank'))) . '<br />';
+  }
+
+  return $links;
+}
+
+/**
+ * Helper function to parse analytic content
  * @param $analytic_content
+ * @param null $entity
+ * @param array $options
  * @return array|null
  */
 function _ting_openformat_parse_analytic_content($analytic_content, $entity = NULL, $options = array()) {
@@ -263,6 +291,10 @@ function _ting_openformat_parse_analytic_content($analytic_content, $entity = NU
   return $value;
 }
 
+/**
+ * @param $element
+ * @return string
+ */
 function _ting_openformat_parse_analytic_content_element($element){
   foreach ($element as $key => $value) {
     $markup = _ting_openformat_get_markup_for_field($value, " ");

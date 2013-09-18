@@ -10,7 +10,7 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
    */
   public static function getInfo() {
     return array(
-      'name' => t('Webtest'),
+      'name' => t('Ting OpenFormat Webtest'),
       'description' => t('Tests methods in ting_openformat module that requires database access'),
       'group' => t('Ting Openformat'),
     );
@@ -35,6 +35,7 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     $this->_testEmptySearch();
     $this->_testHookActions();
     $this->_testDefaultFieldRendering();
+    $this->_test_ting_openformat_parse_urls();
   }
 
 
@@ -176,9 +177,11 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     $manifestation = $this->_createObjects();
     $fields = ting_openformat_bibdk_fields();
 
-    // test_results.php includes expected results for all fields in the variable $_ting_openformat_test_results    include_once 'test_results.php';
-    // include_once 'test_results.php';
-    require_once 'test_results.php';
+    /**
+    * test_results.php includes expected results for all fields in the variable
+    * $_ting_openformat_test_results.
+     */
+    require(drupal_get_path('module', 'ting_openformat') . '/test/test_results.php');
 
     foreach ($fields as $field_name => $field) {
 
@@ -196,9 +199,38 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
       $this->assertEqual($result, $expected, format_string('field "@field" correctly parsed by _ting_openformat_parse_element', array(
         '@field' => $field_name,
       )));
+    }
+  }
 
+  /**
+   * Testing method _ting_openformat_parse_urls() specifically
+   * @see ting_openformat.field.inc
+   */
+  private function _test_ting_openformat_parse_urls(){
+    debug(__FUNCTION__);
+    $urls = json_decode(file_get_contents(drupal_get_path('module', 'ting_openformat') . '/test/mockup/urls_objects.json'), TRUE);
+
+    $singleUrl = $urls['singleUrl'];
+    $rawUrl = $singleUrl['accessInformation'][0]['accessUrl'][0];
+    $expectedFregment = 'href="' . $rawUrl . '"';
+
+    $link = _ting_openformat_parse_urls($singleUrl);
+    $this->assertTrue(strpos($link, $expectedFregment) !== FALSE, 'Found expected fragment');
+
+    $multipleUrls = $urls['multipleUrls'];
+    $links = _ting_openformat_parse_urls($multipleUrls);
+
+    $count = 0;
+    foreach ($multipleUrls['accessInformation'][0]['accessUrl'] as $rawUrl) {
+      $expectedFregment = 'href="' . $rawUrl . '"';
+      $found = strpos($links, $expectedFregment) !== FALSE;
+      $this->assertTrue($found, 'Multiple URL\'s Found expected fragment');
+      if($found){
+        $count++;
+      }
     }
 
+    $this->assertEqual($count, 3, t('Found three URL-fragments as expected. Found %count', array('%count' => $count)));
   }
 
 
