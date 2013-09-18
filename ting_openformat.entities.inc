@@ -20,8 +20,8 @@ class ting_openformat_methods {
     }
 
     foreach ($stdObjects as $object) {
-      if (isset($object->searchCode)){
-        $subject['searchCode'] = self::_getSearchCodeElement($object->searchCode);
+      if (isset($object->searchCode) || isset($object->display)){
+        $subject['searchCode'] = isset($object->searchCode) ? self::_getSearchCodeElement($object->searchCode) : NULL;
         $subject['display'] = isset($object->display) ? $object->display->{'$'} : NULL;
       } elseif (isset($object->{'$'})){
         $subject = $object->{'$'};

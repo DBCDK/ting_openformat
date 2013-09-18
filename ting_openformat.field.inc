@@ -191,7 +191,7 @@ function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_
  * @param bool $return_link If FALSE value will be returned without markup for href. Otherwise complete markup for href is returned
  * @return string
  */
-function _ting_openformat_parse_element($elements, $divider = ". ", $use_header = TRUE, $return_link = TRUE) {
+function _ting_openformat_parse_element($elements, $divider = ". ", $use_header = TRUE, $return_link = TRUE, $link_label = NULL) {
 
   if (!isset($elements)) {
     return NULL;
@@ -202,7 +202,7 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
 
   foreach ($elements as $key => $value) {
     if (is_array($value)) {
-      $array[] = _ting_openformat_parse_element($value, $divider, $use_header, $return_link);
+      $array[] = _ting_openformat_parse_element($value, $divider, $use_header, $return_link, $link_label);
     }
     elseif ($key === "header") {
       if ($use_header) {
@@ -210,7 +210,7 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
       }
     }
     elseif ($key === 'searchCode') {
-      if ($return_link) {
+      if ($return_link && isset($elements['searchCode'])) {
         $array[] = l($elements['display'], 'search/work/' . $elements['searchCode']);
       }
       else {
@@ -218,7 +218,8 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
       }
     }
     elseif ($key === 'accessUrl') {
-      $array[] = l($value, $value, array('attributes' => array('target' => '_blank')));
+      $label = isset($link_label) ? $link_label : $value;
+      $array[] = l($label, $value, array('attributes' => array('target' => '_blank'), 'html' => true));
     }
     elseif ($key === 'display') { /*do nothing*/
     }
