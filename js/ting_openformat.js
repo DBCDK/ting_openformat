@@ -7,9 +7,7 @@
 
 (function ($) {
 
-
-
-    if (typeof(Drupal.ajax) != 'undefined') {
+  if (typeof(Drupal.ajax) != 'undefined') {
         Drupal.ajax.prototype.commands.add_manifestations = function (ajax, response, status) {
             // We don't know what response.data contains: it might be a string of text
             // without HTML, so don't rely on jQuery correctly iterpreting
