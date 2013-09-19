@@ -20,7 +20,9 @@
         new_content = new_content_wrapped;
       }
 
-      $(response.selector).replaceWith(new_content);
+      var elements = $(response.selector);
+      $(elements[0]).replaceWith(new_content);
+
       if(new_content.parents('html').length > 0) {
         // Apply any settings from the returned JSON if available.
         var settings = response.settings || ajax.settings || Drupal.settings;
