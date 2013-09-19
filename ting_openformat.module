@@ -117,7 +117,6 @@ function ting_openformat_ajax_manifestations($type, $json) {
 
   }
 
-
   ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
 }
 
@@ -177,7 +176,6 @@ function ting_openformat_single($id) {
  * @return array
  */
 function ting_openformat_get_manifestations($ids, $params = array()) {
-  fb('hest');
   $client = new ting_client_class();
   $default_params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
   $default_params['objectId'] = $ids;
