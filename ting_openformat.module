@@ -682,7 +682,7 @@ function ting_openformat_set_tracking_id() {
     $trackId .= ':';
   }
 
-  $trackId .=  $collectionCount;
+  $trackId .=  'bibdkGui_'.$collectionCount;
 
   return $trackId;
 }
