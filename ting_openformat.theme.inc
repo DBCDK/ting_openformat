@@ -40,7 +40,7 @@ function ting_openformat_theme() {
 
     'ting_openformat_collection' => array(
       'path' => $path,
-      'variables' => array('title' => '','author'=> '','ids' => '', 'work_type' => '', 'type' => '', 'show_info' => ''),
+      'variables' => array('title' => '','author'=> '','ids' => '', 'work_type' => '', 'type' => '', 'show_info' => '', 'modified_url' => ''),
       'template' => 'ting_openformat_collection',
       'render elements' => 'elements',
     ),

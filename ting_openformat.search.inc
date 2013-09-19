@@ -44,7 +44,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   if (!empty($variables)) {
     $params = array_merge($params, $variables);
   }
-
+  
   // selected facets from facetbrowser (in query)
   if ( isset($conditions['facets']) && $conditions['facets'] != NULL ) {
     _ting_openformat_set_facets($params['query'], $conditions['facets']);
