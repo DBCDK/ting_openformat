@@ -44,6 +44,19 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
       $this->_testGetmethods($method, $expected, $message);
     }
   }
+  
+  /** Test that trackingId is set properly
+   * 
+   */
+  public function testTrackingId(){
+    $_GET = array('trackingId'=>'TESTHEST');
+    for( $i=0; $i < 10; $i++){
+      $trackId = ting_openformat_set_tracking_id();
+    }
+    $this->assertEqual('TESTHEST:bibdkGui_10', $trackId,'TrackingId '.$trackId.' is set correct');
+  }
+  
+  
 
   public function testCqlCommando() {
     global $language;
@@ -88,7 +101,7 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
 
     $language = $saved_language;
 
-  }
+  }  
 
   public function testBibdkCollection() {
 
