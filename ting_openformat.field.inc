@@ -201,7 +201,14 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
   }
 
   foreach ($elements as $key => $value) {
-    if (is_array($value)) {
+    if ($key === 'accessUrl'){
+      $label = isset($link_label) ? $link_label : $value;
+      $value = (!is_array($value)) ? array($value) : $value;
+      foreach($value as $url){
+        $array[] = l($label, $url, array('attributes' => array('target' => '_blank'), 'html' => true));
+      }
+    }
+    else if (is_array($value)) {
       $array[] = _ting_openformat_parse_element($value, $divider, $use_header, $return_link, $link_label);
     }
     elseif ($key === "header") {
@@ -216,10 +223,6 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
       else {
         $array[] = $elements['display'];
       }
-    }
-    elseif ($key === 'accessUrl') {
-      $label = isset($link_label) ? $link_label : $value;
-      $array[] = l($label, $value, array('attributes' => array('target' => '_blank'), 'html' => true));
     }
     elseif ($key === 'display') { /*do nothing*/
     }
