@@ -578,7 +578,8 @@ function ting_openformat_get_ordered_subworks($subWorks) {
   foreach ($sub as $type => $value) {
     foreach ($value as $subtype => $val) {
       $subtype_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $subtype));
-      $trans = _ting_openformat_type_translation($type, $subtype);
+      #$trans = _ting_openformat_type_translation($type, $subtype);
+      $trans = array('type' => t($type), 'subtype' => t($subtype));
       $type_id = $trans['type'];
       $ordered_subworks[$type_id][$subtype_id]['manifest'] = $val;
       $ordered_subworks[$type_id][$subtype_id]['translation'] = $trans;
@@ -1019,8 +1020,13 @@ function _ting_openformat_fetch_types() {
 
 /**
  * Translates variables into strings
+ *
  * @param $type
  * @param $subtype
+ *
+ * @deprecated as a test this function is being deprecated and should be removed
+ * following US #1172 if accepted
+ *
  * @return array
  */
 function _ting_openformat_type_translation($type, $subtype) {
