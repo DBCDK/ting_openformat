@@ -121,10 +121,10 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $analytic = $entity->getAnalyticContent();
         $value = _ting_openformat_parse_analytic_content($analytic);
         break;
-      /*case 'bibdk_mani_access_information':
+      case 'bibdk_mani_access_information':
         $urls = $entity->getAccessInformation();
-        $value = _ting_openformat_parse_urls($urls);
-        break;*/
+        $value = _ting_openformat_get_markup_for_field($urls, '<br/>');
+        break;
       default :
         $content = _ting_openformat_default_field_view_content($field['field_name'], $entity);
         $value = _ting_openformat_get_markup_for_field($content);
