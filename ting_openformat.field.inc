@@ -123,7 +123,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         break;
       case 'bibdk_mani_access_information':
         $urls = $entity->getAccessInformation();
-        $value = _ting_openformat_parse_urls($urls);
+        $value = _ting_openformat_get_markup_for_field($urls, '<br/>');
         break;
       default :
         $content = _ting_openformat_default_field_view_content($field['field_name'], $entity);
@@ -203,10 +203,13 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
   foreach ($elements as $key => $value) {
     if ($key === 'accessUrl'){
       $label = isset($link_label) ? $link_label : $value;
-      $value = (!is_array($value)) ? array($value) : $value;
-      foreach($value as $url){
-        $array[] = l($label, $url, array('attributes' => array('target' => '_blank'), 'html' => true));
+      $descriptor = '';
+      if (isset($elements['accessUrlDescriptor'])){
+        $descriptor = ' ' . $elements['accessUrlDescriptor'];
+        unset($elements['accessUrlDescriptor']);
       }
+
+      $array[] = l($label, $value, array('attributes' => array('target' => '_blank'), 'html' => true)) . $descriptor;
     }
     else if (is_array($value)) {
       $array[] = _ting_openformat_parse_element($value, $divider, $use_header, $return_link, $link_label);
@@ -224,7 +227,7 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
         $array[] = $elements['display'];
       }
     }
-    elseif ($key === 'display') { /*do nothing*/
+    elseif ($key === 'display' || $key === 'accessUrlDescriptor') { /*do nothing*/
     }
     else {
       $array[] = $value;
