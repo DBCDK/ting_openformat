@@ -692,7 +692,6 @@ function _ting_openformat_get_types_list($bibdkobject) {
  * @return array
  */
 function ting_openformat_show_info_get_form($form_id, $form_state, $bibdkObject, $uid) {
-  //$uid = $form_state['build_info']['args'][1];
   $all_ids_in_collection = $bibdkObject->getCollectionIds();
   $form['info'] = array(
     '#type' => 'button',
