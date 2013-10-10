@@ -190,13 +190,13 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     $this->assertEqual(count($info['accessInformation'][0]['accessUrl']), 1, 'Got array count of 1 as expected');
 
     debug('Testing manifestation with multiple URLs');
-    $multipleUrlManifestation = unserialize(file_get_contents(drupal_get_path('module', 'bibdk_reservation') . '/test/mockup/serialized/multipleUrl.serialized'));
+    $multipleUrlManifestation = unserialize(file_get_contents(drupal_get_path('module', 'ting_openformat') . '/test/mockup/serialized/multipleUrl.serialized'));
 
     $info = $multipleUrlManifestation->getAccessInformation();
 
     $this->assertTrue(is_array($info), 'Got array');
     $this->assertTrue(isset($info['accessInformation'][0]['accessUrl']), 'Got array formatted as expected');
-    $this->assertEqual(count($info['accessInformation'][0]['accessUrl']), 3, 'Got array count of 1 as expected');
+    $this->assertEqual(count($info['accessInformation'][0]['accessUrl']), 3, 'Got array count of 3 as expected');
 
   }
 }

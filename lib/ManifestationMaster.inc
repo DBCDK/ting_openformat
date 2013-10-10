@@ -359,16 +359,30 @@ class ManifestationMaster {
   public function getAccessInformation() {
     $fields = array('accessInformation' => array(
       'accessUrl',
+      'accessUrlDescriptor',
     ));
 
     $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
 
-    //ensuring that an array is returned no matter the count of URL's
-    if ($result && !is_array($result['accessInformation'][0]['accessUrl'])) {
-      $result['accessInformation'][0]['accessUrl'] = array($result['accessInformation'][0]['accessUrl']);
+    return $result;
+  }
+
+
+  /**
+   * Return the first AccessUrl element in the AccessInformation Array
+   * @return array|null
+   */
+  public function getSingleAccessUrl(){
+    $urls = $this->getAccessInformation();
+
+    while(is_array($urls)){
+      if (isset($urls['accessUrl']))
+        return $urls;
+      else
+        $urls = reset($urls);
     }
 
-    return $result;
+    return NULL;
   }
 
   /* \brief publisher
