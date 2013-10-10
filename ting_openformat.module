@@ -723,12 +723,14 @@ function _ting_openformat_get_types_list($bibdkobject) {
 /**
  * Generates form for 'View more info' on search results page
  *
- * @param array $form_id
+ * @param $form
  * @param array $form_state
  * @param $bibdkObject
  * @param $uid
+ * @param int $trackId
  * @return array
  */
+
 function ting_openformat_show_info_get_form($form, $form_state, $bibdkObject, $uid, $trackId = 0) {
   //$uid = $form_state['build_info']['args'][1];
   $all_ids_in_collection = $bibdkObject->getCollectionIds();
