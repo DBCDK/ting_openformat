@@ -550,7 +550,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
 
   $ordered_subworks = ting_openformat_get_ordered_subworks($subWorks);
 
-  $ding_id = preg_replace('/[^a-zA-Z0-9-]+/', '-', $bibdkWork->id);
+  $ding_id = preg_replace('/[^a-zA-Z0-9]+/', '', $bibdkWork->id);
   $tabs = theme('ting_openformat_subwork_tabs', array('subWorks' => $ordered_subworks, 'ding_id' => $ding_id));
   return theme('ting_openformat_work', array(
     'fields' => $work_fields,
@@ -574,7 +574,6 @@ function ting_openformat_get_ordered_subworks($subWorks) {
   foreach ($sub as $type => $value) {
     foreach ($value as $subtype => $val) {
       $subtype_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $subtype));
-      #$trans = _ting_openformat_type_translation($type, $subtype);
       $trans = array('type' => t($type), 'subtype' => t($subtype));
       $type_id = $trans['type'];
       $ordered_subworks[$type_id][$subtype_id]['manifest'] = $val;
