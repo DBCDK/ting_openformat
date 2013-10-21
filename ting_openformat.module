@@ -1,10 +1,10 @@
 <?php
+
 // load search info and hooks
 module_load_include('inc', 'ting_openformat', 'ting_openformat.search');
 module_load_include('inc', 'ting_openformat', 'ting_openformat.entities');
 module_load_include('inc', 'ting_openformat', 'ting_openformat.field_definitions');
 module_load_include('inc', 'ting_openformat', 'ting_openformat.field');
-
 
 function ting_openformat_menu() {
   $items = array();
@@ -76,7 +76,6 @@ function ting_openformat_menu() {
   return $items;
 }
 
-
 /** Load manifestations and insert into placeholder via AJAX
  * @param $type
  * @param $json json encoded manifestation ids
@@ -114,9 +113,7 @@ function ting_openformat_ajax_manifestations($type, $json) {
       'selector' => '[data-id=' . $manifestation->id . ']',
       'data' => $view,
     );
-
   }
-
   ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
 }
 
@@ -270,7 +267,6 @@ function ting_openformat_form_ting_client_admin_webservices_settings_alter(&$for
     $element['#options']['bibliotekdkWorkDisplay'] = 'bibliotekdkWorkDisplay';
   }
 }
-
 
 /** Translate CQL commandos. Only support english or danish
  * @param $cql
@@ -554,7 +550,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
 
   $ordered_subworks = ting_openformat_get_ordered_subworks($subWorks);
 
-  $ding_id = preg_replace('/[^a-zA-Z0-9-]+/', '-', $bibdkWork->id);
+  $ding_id = preg_replace('/[^a-zA-Z0-9]+/', '', $bibdkWork->id);
   $tabs = theme('ting_openformat_subwork_tabs', array('subWorks' => $ordered_subworks, 'ding_id' => $ding_id));
   return theme('ting_openformat_work', array(
     'fields' => $work_fields,
@@ -578,7 +574,6 @@ function ting_openformat_get_ordered_subworks($subWorks) {
   foreach ($sub as $type => $value) {
     foreach ($value as $subtype => $val) {
       $subtype_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $subtype));
-      #$trans = _ting_openformat_type_translation($type, $subtype);
       $trans = array('type' => t($type), 'subtype' => t($subtype));
       $type_id = $trans['type'];
       $ordered_subworks[$type_id][$subtype_id]['manifest'] = $val;
@@ -613,7 +608,6 @@ function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langc
           'class' => 'manifestation-container',
           'data-id' => $manifestation->id,
         ),
-
       );
       // container for the remaining
     }
@@ -632,11 +626,14 @@ function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langc
 function ting_openformat_collection_view($bibdkobject) {
   $all_ids_in_collection = $bibdkobject->getCollectionIds();
   $uid = strtolower(strtr(reset($all_ids_in_collection), array(':' => '', '-' => '')));
-  $form = drupal_get_form('ting_openformat_show_info_get_form', $bibdkobject, $uid);
+  $trackId = ting_openformat_set_tracking_id();
+  
+  $form = drupal_get_form('ting_openformat_show_info_get_form', $bibdkobject, $uid, $trackId);
   $actions = _prepare_view('bibdkCollection', $bibdkobject, 'full', NULL);
   $workType = $bibdkobject->getWorkType();
   $type = $bibdkobject->getType();
   $types_classes = _ting_openformat_get_types_list($bibdkobject);
+
   return theme('ting_openformat_collection', array(
     'title' => $bibdkobject->getTitle(),
     'partOf' => $bibdkobject->getPartOf(),
@@ -649,6 +646,46 @@ function ting_openformat_collection_view($bibdkobject) {
     'actions' => (!empty($actions)) ? $actions : array(),
     'types' => $types_classes,
   ));
+  
+}
+
+/** set tracking parameter in url. If trackingId is already set
+ * append gui specific track. Else create tracking id for webservices.
+ * 
+ * trackingid := $_GET['ẗrackingId'] . ':' . [number of collection on page]
+ * 
+ * @TODO add a timestamp? 
+ *
+ * @staticvar string $trackingId 
+ * @staticvar int $collectionCount
+ * @return string 
+ */
+function ting_openformat_set_tracking_id() {
+  static $trackingId;
+  static $collectionCount;
+
+  if (!isset($trackingId)) {
+    if (isset($_GET['trackingId'])) {
+      $trackingId = $_GET['trackingId'];
+    }
+    else {
+      $trackingId = '';
+    }
+  }
+
+  if (!isset($collectionCount)) {
+    $collectionCount = 0;
+  }
+  $collectionCount++;
+
+  $trackId = $trackingId; 
+  if (strlen($trackId) > 1) {
+    $trackId .= ':';
+  }
+
+  $trackId .=  'bibdkGui_'.$collectionCount;
+
+  return $trackId;
 }
 
 /**
@@ -685,16 +722,19 @@ function _ting_openformat_get_types_list($bibdkobject) {
 /**
  * Generates form for 'View more info' on search results page
  *
- * @param array $form_id
+ * @param $form
  * @param array $form_state
  * @param $bibdkObject
  * @param $uid
+ * @param int $trackId
  * @return array
  */
-function ting_openformat_show_info_get_form($form_id, $form_state, $bibdkObject, $uid) {
+
+function ting_openformat_show_info_get_form($form, $form_state, $bibdkObject, $uid, $trackId = 0) {
   //$uid = $form_state['build_info']['args'][1];
   $all_ids_in_collection = $bibdkObject->getCollectionIds();
   $form['info'] = array(
+    '#trackId' => $trackId,
     '#type' => 'button',
     '#value' => '',
     '#ids' => $all_ids_in_collection,
@@ -726,8 +766,9 @@ function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
   $uid = $form_state['clicked_button']['#uid'];
   $collection = $form_state['clicked_button']['#collection'];
 
+  $tracking_id = $form_state['clicked_button']['#trackId'];
 
-  $view = ting_openformat_load_single_full_work($collection, $ids, $uid);
+  $view = ting_openformat_load_single_full_work($collection, $ids, $uid, $tracking_id);
 
   $view = theme('status_messages') . $view;
 
@@ -738,12 +779,13 @@ function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 
-function  ting_openformat_load_single_full_work($collection, $ids, $uid) {
+
+function ting_openformat_load_single_full_work($collection, $ids, $uid, $tracking_id = 0) {
   module_invoke_all('show_manifestation_info_prerender', $ids, $uid);
   foreach ($collection->manifestations as $manifestation) {
     $briefDisplay = new BibdkBriefDisplay($manifestation);
     if (!isset($bibdkWork)) {
-      $bibdkWork = ting_openformat_get_manifestations($briefDisplay->id);
+      $bibdkWork = ting_openformat_get_manifestations($briefDisplay->id, array('trackingId' => $tracking_id));
       $bibdkWork = current($bibdkWork);
       $bibdkWork->manifestations[$briefDisplay->id]->setBriefDisplayType($briefDisplay->gettype());
       $bibdkWork->manifestations[$briefDisplay->id]->setSubType($briefDisplay->getSubtype());
@@ -751,7 +793,6 @@ function  ting_openformat_load_single_full_work($collection, $ids, $uid) {
     else {
       $bibdkWork->manifestations[$briefDisplay->id] = $briefDisplay;
     }
-
   }
 
   return ting_openformat_work_view($bibdkWork);
@@ -782,7 +823,6 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
   );
   return $build;
 }
-
 
 /**
  * Create view for manifestation volume fields

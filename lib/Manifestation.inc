@@ -159,8 +159,12 @@ class Manifestation extends ManifestationMaster {
     return (is_array($result)) ? reset($result) : $result;
   }
 
+  /**
+   * Gets 'typeGroup'. If you need 'type' see: getSubType()
+   * @return array|mixed|null
+   * @see getSubType()
+   */
   public function getType() {
-    // NB: gets 'typeGroup'. If you need 'type' see: getSubType()
     $result = (isset($this->type)) ? array($this->type) : ting_openformat_methods::parseFields($this->manifestation->adminData, array('typeGroup'));
     return (is_array($result)) ? reset($result) : $result;
   }
