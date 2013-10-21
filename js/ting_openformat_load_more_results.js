@@ -3,7 +3,7 @@
   Drupal.ajax.prototype.commands.add_more_results = function(ajax, response, status) {
     Drupal.settings.ting_openformat_load_more_results.more = response.data.more;
     Drupal.settings.ting_openformat_load_more_results.link = response.data.link;
-    var loadMoreLink = $('.pane-ting-openformat-load-more #link');
+    var loadMoreLink = $('.pane-ting-openformat-load-more #selid-load-more-results');
     if(status === 'success') {
       if(Drupal.settings.ting_openformat_load_more_results.more) {
         loadMoreLink.show();
@@ -75,7 +75,7 @@
 
   LoadMore.infiniteLoad = function() {
     if(LoadMore.loadingIsOk()) {
-      var element = $('.pane-ting-openformat-load-more #link');
+      var element = $('.pane-ting-openformat-load-more #selid-load-more-results');
       element.hide();
       element.trigger('load_more_results');
       element.unbind('load_more_results');
@@ -90,7 +90,7 @@
 
   Drupal.behaviors.ting_openformat_load_more_results = {
     attach: function(context) {
-      var element = $('.pane-ting-openformat-load-more #link', context);
+      var element = $('.pane-ting-openformat-load-more #selid-load-more-results', context);
       LoadMore.addAjax(element);
 
      // LoadMore.initInfiniteScroll();

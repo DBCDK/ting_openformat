@@ -37,7 +37,7 @@ function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $c
     $block->content = l(t('load_more_results', array(), array('context' => 'ting_openformat')), '#', array(
       'attributes' => array(
         'id' => array(
-          'link', 'selid-load-more-results'
+          'selid-load-more-results'
         ),
         'class' => array(drupal_html_class('ting_openformat_load_more_results_link')),
       ),
