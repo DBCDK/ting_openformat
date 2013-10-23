@@ -12,11 +12,15 @@ class Manifestation extends ManifestationMaster {
    * @param $manifestation
    */
   public function __construct($manifestation) {
+    dpm($manifestation);
     $this->manifestation = $manifestation;
     $this->fields = $this->manifestation->main;
     $this->getAnalyticContent();
   }
 
+  /**
+   * @return string|null
+   */
   public function getWork() {
     return isset($this->manifestation->work) ? $this->manifestation->work : NULL;
   }
@@ -26,7 +30,18 @@ class Manifestation extends ManifestationMaster {
    */
   public function getTitle() {
     $fields = array('titleFull');
-    $elements = isset($this->getWork()->title) ? $this->getWork()->title : NULL;
+    $elements = isset($this->getWork()->titleSpecific) ? $this->getWork()->titleSpecific : NULL;
+    $result = ting_openformat_methods::parseFields($elements, $fields);
+
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
+  /**
+   * @return array|mixed|null
+   */
+  public function getTitleSpecific() {
+    $fields = array('titleSpecific');
+    $elements = isset($this->getWork()->titleSpecific) ? $this->getWork()->titleSpecific : NULL;
     $result = ting_openformat_methods::parseFields($elements, $fields);
 
     return (is_array($result)) ? reset($result) : $result;
