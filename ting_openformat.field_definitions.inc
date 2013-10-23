@@ -76,7 +76,7 @@ function ting_openformat_bibdk_fields() {
       'label' => 'Title Sepcific',
       'display' => array('reservation', 'full'),
       'description' => t('Specific title of manifestation'),
-      'callback method' =>  'getTitleSpecifc',
+      'callback method' =>  'getTitleSpecific',
     ),
     'bibdk_mani_creators' => array(
       'label' => 'Creators',
