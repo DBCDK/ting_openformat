@@ -29,7 +29,7 @@ class Manifestation extends ManifestationMaster {
    */
   public function getTitle() {
     $fields = array('titleFull');
-    $elements = isset($this->getWork()->titleSpecific) ? $this->getWork()->titleSpecific : NULL;
+    $elements = isset($this->getWork()->title) ? $this->getWork()->title : NULL;
     $result = ting_openformat_methods::parseFields($elements, $fields);
 
     return (is_array($result)) ? reset($result) : $result;
@@ -40,7 +40,7 @@ class Manifestation extends ManifestationMaster {
    */
   public function getTitleSpecific() {
     $fields = array('titleSpecific');
-    $elements = isset($this->getWork()->titleSpecific) ? $this->getWork()->titleSpecific : NULL;
+    $elements = isset($this->getWork()->title) ? $this->getWork()->title : NULL;
     $result = ting_openformat_methods::parseFields($elements, $fields);
 
     return (is_array($result)) ? reset($result) : $result;
