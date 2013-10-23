@@ -161,12 +161,11 @@ function ting_openformat_update_7018() {
 
 }
 
-
 /**
  * Implements hook_update_N;
  * Update all field information
- * */
-function ting_openformat_update_7023() {
+ **/
+function ting_openformat_update_7024() {
   ding_entity_modules_enabled(array('ting_openformat'));
 }
 
