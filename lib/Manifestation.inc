@@ -12,7 +12,6 @@ class Manifestation extends ManifestationMaster {
    * @param $manifestation
    */
   public function __construct($manifestation) {
-    dpm($manifestation);
     $this->manifestation = $manifestation;
     $this->fields = $this->manifestation->main;
     $this->getAnalyticContent();
