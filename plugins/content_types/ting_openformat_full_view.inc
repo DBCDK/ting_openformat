@@ -11,19 +11,19 @@ $plugin = array(
   'render last' => TRUE,
 );
 
-function ting_openformat_full_view_button($subtype, $conf, $panel_args, $context){
+function ting_openformat_full_view_button($subtype, $conf, $panel_args, $context) {
 
- $block = new stdClass();
+  $block = new stdClass();
 
 
   $content['short'] = array(
     '#theme' => 'link',
     '#text' => ' <span class="icon full-view closed"> </span> ' . t('short view', array(), array('context' => 'ting_openformat')),
-    '#path' => null,
+    '#path' => NULL,
     '#options' => array(
-      'html' => true,
+      'html' => TRUE,
       'fragment' => 'full-view',
-      'external' => true,
+      'external' => TRUE,
       'attributes' => array(
         'id' => 'ting-openformat-full-view-button-closed',
         'class' => 'inactive',
@@ -35,11 +35,11 @@ function ting_openformat_full_view_button($subtype, $conf, $panel_args, $context
   $content['full'] = array(
     '#theme' => 'link',
     '#text' => '<span class="icon full-view expanded"> </span> ' . t('full view', array(), array('context' => 'ting_openformat')),
-    '#path' => null,
+    '#path' => NULL,
     '#options' => array(
-      'html' => true,
+      'html' => TRUE,
       'fragment' => 'full-view',
-      'external' => true,
+      'external' => TRUE,
       'attributes' => array(
         'id' => 'ting-openformat-full-view-button-expanded'
       ),
@@ -60,6 +60,6 @@ function ting_openformat_full_view_button($subtype, $conf, $panel_args, $context
 
 }
 
-function ting_openformat_full_view_admin (){
+function ting_openformat_full_view_admin() {
 
 }
