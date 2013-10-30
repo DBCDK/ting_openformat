@@ -35,7 +35,7 @@ class BibdkCollection {
     $title = (is_array($result)) ? reset($result) : $result;
 
     $dependent_title = $this->getDependentTitle();
-    return (!empty($dependent_title)) ? $title . " : " . implode('. ', $dependent_title) : $title;
+    return (!empty($dependent_title)) ? $title . " </br> " . implode('. ', $dependent_title) : $title;
 
   }
 
