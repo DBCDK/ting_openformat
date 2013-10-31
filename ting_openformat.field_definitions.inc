@@ -25,6 +25,14 @@ function ting_openformat_bibdk_fields() {
 
     ),
     /********* MANIFESTATION ************/
+    'bibdk_dependent_title'  => array(
+      'label' => 'DependentTitle',
+      'entity_type' => array('bibdkManifestation','bibdkManifestationVolume'),
+      'display' => array('full'),
+      'description' => t('descripton for dependent title'),
+      'callback method' =>  'getDependentTitle',
+    ),
+    
     'bibdk_latest_reprint' => array(
       'label' => 'Latest reprint',
       'entity_type' => array('bibdkManifestation','bibdkManifestationVolume'),

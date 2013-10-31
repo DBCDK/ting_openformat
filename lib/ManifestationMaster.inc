@@ -24,13 +24,18 @@ class ManifestationMaster {
   private function _getPublicationDetails() {
     return isset($this->fields->publicationDetails) ? $this->fields->publicationDetails : NULL;
   }
+  
+  public function getDependentTitle(){
+    $result = ting_openformat_methods::parseFields($this->getWork(), array('title'=>array('dependentTitle')));
+    return $result;
+  }
 
   /* \brief Distinction
    * zero or more occurence(s)
    */
 
   public function getDistinction() {
-    $result = ting_openformat_methods::parseFields($this->fields, array('distinction'));
+    $result = ting_openformat_methods::parseFields($this->work, array('distinction'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
