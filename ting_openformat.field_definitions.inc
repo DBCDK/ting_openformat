@@ -81,8 +81,8 @@ function ting_openformat_bibdk_fields() {
     ),
     'bibdk_mani_title_specific' => array(
       'entity_type' => array('bibdkManifestation'),
-      'label' => 'Title Sepcific',
-      'display' => array('reservation', 'full'),
+      'label' => 'Title Specific',
+      'display' => array('reservation', 'full', 'cart'),
       'description' => t('Specific title of manifestation'),
       'callback method' =>  'getTitleSpecific',
     ),
