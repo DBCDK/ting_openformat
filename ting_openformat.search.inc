@@ -94,7 +94,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
     $search_results[] = _ting_openformat_set_search_result($entity);
   }
 
-   module_invoke_all('ting_openformat_search_results', $keys, $result);
+  module_invoke_all('ting_openformat_search_results', $keys, $result);
   $more = $result->more;
   $search_results['more'] = $result->more;
 
@@ -116,29 +116,30 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
 
 /**
  * Set collection entities
- * */
+ **/
 function _ting_openformat_create_collection_entities(&$result) {
-
   $result->entities = array();
   foreach ($result->collections as $collection) {
     $original_manifestations = array();
     $entity_id = array();
 
-    // error check
-    $openformat = isset($collection->formattedCollection->formattedCollection->manifestation) ? $collection->formattedCollection->formattedCollection->manifestation : NULL;
+    /* @var $collection TingClientObjectCollection */
+    $openformat = isset($collection->getFormattedCollection()->getBriefDisplay()->manifestation) ? $collection->getFormattedCollection()->getBriefDisplay()->manifestation : NULL;
 
     if( empty($openformat) ) {
-      $id = ( isset($collection->objects[0]->id) ) ? $collection->objects[0]->id : '';
+      $objects = $collection->getObjects();
+      $id = ( isset($objects[0]->id) ) ? $objects[0]->id : '';
       watchdog('openformat','Formatted collection [id:\'%id\'] is not set',array('%id' => $id),WATCHDOG_ERROR);
       continue;
     }
     _ting_openformat_parse_collection($original_manifestations, $entity_id, $openformat);
     if (!empty($entity_id)) {
       $conditions['manifestations'] = $original_manifestations;
+      $conditions['workOne'] = !is_null($collection->getFormattedCollection()->getSingleWorkDisplay()) ? $collection->getFormattedCollection()->getSingleWorkDisplay() : NULL;
       $bibdkEntities = entity_load('bibdkCollection', $entity_id, $conditions, FALSE);
       $bibdkEntities->parseManifestations(); //Temporary as malformed XML is returned from OpenSearch
       $bibdkobjects = $bibdkEntities;
-       $result->entities[] = $bibdkobjects;
+      $result->entities[] = $bibdkobjects;
     }
     else{
       // @TODO log errors
@@ -159,7 +160,8 @@ function _ting_openformat_parse_collection(&$original_manifestations, &$entity_i
   }
 }
 
-/** Set a search result array as defined for hook_search_execute
+/**
+ * Set a search result array as defined for hook_search_execute
  *
  * 'link': Required. The URL of the found item.
  * 'type': The type of item (such as the content type).
@@ -260,8 +262,13 @@ function _ting_openformat_search_get_variables() {
     watchdog('openformat search', 'agency is not set - yields no search results', array(), WATCHDOG_ERROR, url('admin/config/ting/settings'));
   }
 
-  // set Object Format
-  $params['objectFormat'] = variable_get('objectFormat', 'briefDisplay');
+
+  if(isset($_SESSION['search_settings']['full_view']) && $_SESSION['search_settings']['full_view'] == TRUE){
+    $params['collectionType'] = 'work-1';
+    $params['objectFormat'][] = 'bibliotekdkWorkDisplay';
+  }
+
+  $params['objectFormat'][] = variable_get('objectFormat', 'briefDisplay');
 
   //Set queryLanguage
   $params['queryLanguage'] = ting_openformat_get_cql_language();
@@ -362,6 +369,8 @@ function ting_openformat_conditions_callback($query) {
   if (!empty($_REQUEST['size'])) {
     $conditions['size'] = (int)$_REQUEST['size'];
   }
+
+  $_SESSION['search_settings']['full_view'] = !empty($_REQUEST['full_view']) ? (bool)$_REQUEST['full_view'] : FALSE;
 
   // set the sort parameter here - thus it will work when sort parameter is added to url
   if (!empty($_REQUEST['sort'])) {
