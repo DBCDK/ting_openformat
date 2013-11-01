@@ -116,7 +116,8 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     $manifestation->workType->{'$'} = 'book';
 
     $manifestations = array(
-      'manifestations' => array($manifestation)
+      'manifestations' => array($manifestation),
+      'workOne' => new stdClass(),
     );
 
 
@@ -134,6 +135,9 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     $expected_result = 'book';
     $this->assertEqual($result, $expected_result, 'Worktype parsed correctly');
 
+    $result = $collection->getWorkOne();
+    $this->assertTrue(is_object($result), 'workOne parsed correctly');
+
     $manifestations = array();
     $collection = new BibdkCollection($manifestations);
     $result = $collection->getTitle();
@@ -147,6 +151,10 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     $result = $collection->getWorkType();
     $expected_result = NULL;
     $this->assertEqual($result, $expected_result, 'Worktype parsed correctly');
+
+    $result = $collection->getWorkOne();
+    $expected_result = NULL;
+    $this->assertEqual($result, $expected_result, 'Empty workOne parsed correctly');
   }
 
   /**
