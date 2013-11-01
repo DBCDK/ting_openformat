@@ -7,8 +7,8 @@
 
 /**
  * Implements hook_field_info().
+ * @return array
  */
-
 function ting_openformat_field_info() {
 
   $field_default = array(
@@ -18,7 +18,7 @@ function ting_openformat_field_info() {
   );
 
   $fields_definitions = ting_openformat_bibdk_fields();
-
+  $fields = array();
   foreach($fields_definitions as $name => $field){
     $fields[$name]['label'] = t($field['label']);
     $fields[$name]['description'] = $field['description'];
