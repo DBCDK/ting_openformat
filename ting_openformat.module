@@ -328,175 +328,6 @@ function ting_openformat_get_cql_language() {
   return $language->language == 'da' ? 'cqldan' : 'cqleng';
 }
 
-/* * ************ ENTITY *************** */
-//TODO mmj move this to bottom of file
-
-/**
- * Implements hook_entity_info
- * for bibdk we need 3 entities: work, subwork and manifestation
- * */
-function ting_openformat_entity_info() {
-  $return = array(
-    'bibdkManifestation' => array(
-      'label' => t('openformat manifestation'),
-      'fieldable' => TRUE,
-      'base table' => 'ting_openformat_manifestation',
-      'ding_entity_type' => 'bibdk_manifestation',
-      /* for clarity. default implementation of load hook */
-      // 'load hook' => 'manifestation_load',
-      'description' => t('openformat fields'),
-      'controller class' => 'ManifestionEntityApiController',
-      'entity keys' => array(
-        'id' => 'ding_entity_id',
-      ),
-      'bundles' => array(
-        'bibdkManifestation' => array(
-          'label' => 'openformat manifestation',
-          'admin' => array(
-            'path' => 'admin/structure/manifestations',
-            'access arguments' => array('administer content types'),
-          ),
-        ),
-      ),
-      'view modes' => array(
-        'full' => array(
-          'label' => t('Full content'),
-          'custom settings' => TRUE,
-        ),
-        'reservation' => array(
-          'label' => t('Reservation'),
-          'custom settings' => TRUE,
-        ),
-      ),
-    ),
-    'bibdkManifestationVolume' => array(
-      'label' => t('Manifestation Volume'),
-      'fieldable' => TRUE,
-      'base table' => 'ting_openformat_manifestation',
-      'ding_entity_type' => 'bibdk_manifestation_volume',
-      'description' => t('Manifestation volume fields'),
-      'controller class' => 'ManifestationVolumeEntityApiController',
-      'entity keys' => array(
-        'id' => 'ding_entity_id',
-      ),
-      'bundles' => array(
-        'bibdkManifestationVolume' => array(
-          'label' => 'Manifestation volume fields',
-          'admin' => array(
-            'path' => 'admin/structure/manifestation/volume',
-            'access arguments' => array('administer content types'),
-          ),
-        ),
-      ),
-    ),
-    'bibdkManifestationSection' => array(
-      'label' => t('Manifestation Section'),
-      'fieldable' => TRUE,
-      'base table' => 'ting_openformat_manifestation',
-      'ding_entity_type' => 'bibdk_manifestation_section',
-      'description' => t('Manifestation section fields'),
-      'controller class' => 'ManifestationSectionEntityApiController',
-      'entity keys' => array(
-        'id' => 'ding_entity_id',
-      ),
-      'bundles' => array(
-        'bibdkManifestationSection' => array(
-          'label' => 'Manifestation section fields',
-          'admin' => array(
-            'path' => 'admin/structure/manifestation/section',
-            'access arguments' => array('administer content types'),
-          ),
-        ),
-      ),
-    ),
-    'bibdkCollection' => array(
-      'label' => t('Bibdk collection'),
-      'fieldable' => TRUE,
-      'base table' => 'ting_openformat_manifestation',
-      'ding_entity_type' => 'bibdk_collection',
-      'description' => t('Bibdk collection'),
-      'controller class' => 'CollectionEntityApiController',
-      'entity keys' => array(
-        'id' => 'ding_entity_id',
-      ),
-      'bundles' => array(
-        'bibdkCollection' => array(
-          'label' => 'openformat collection',
-          'admin' => array(
-            'path' => 'admin/structure/collection',
-            'access arguments' => array('administer content types'),
-          ),
-        ),
-      ),
-      'view modes' => array(
-        'full' => array(
-          'label' => t('Full content'),
-          'custom settings' => TRUE,
-        ),
-      ),
-    ),
-    'bibdkSubwork' => array(
-      'label' => t('Subwork'),
-      'fieldable' => TRUE,
-      'base table' => 'ting_openformat_manifestation',
-      // make this a ding_entity ?
-      'ding_entity_type' => 'bibdk_subwork',
-      //'ding_entity_type' => 'ting_openformat_manifestation',
-      //'ding_entity_menu' => '/manifestation/%ting_manifestation',
-      //'ding_entity_index' => 2,
-
-      /* for clarity. default implementation of load hook */
-      // 'load hook' => 'manifestation_load',
-      'description' => t('Manifestations grouped by type'),
-      'controller class' => 'subWorkEntityAPIController',
-      'entity keys' => array(
-        'id' => 'ding_entity_id',
-      ),
-      'bundles' => array(
-        'bibdkSubwork' => array(
-          'label' => t('Subwork'),
-          'admin' => array(
-            'path' => 'admin/structure/subworks',
-            'access arguments' => array('administer content types'),
-          ),
-        ),
-      ),
-    ),
-    'bibdkWorkEntity' => array(
-      'label' => t('Bibdk entity placeholder for manifestations'),
-      'fieldable' => TRUE,
-      // ?? do we need the base table -- it is not used for anything since controllerclass
-      // only implements DrupalEntityControllerInterface and not DrupalDefaultEntityController
-      'base table' => 'ting_openformat_manifestation',
-      // make this a ding_entity ?
-      'ding_entity_type' => 'bibdk_entity',
-      //'ding_entity_type' => 'ting_openformat_manifestation',
-      //'ding_entity_menu' => '/manifestation/%ting_manifestation',
-      //'ding_entity_index' => 2,
-      //... could an additional argument be used in ding_entity ?? maybe for setting bundels
-      // 'ding_entity_bundle' => 'bibdk_entity',
-      'controller class' => 'bibdkEntityApiController',
-      'load hook' => 'manifestations_load',
-      'entity keys' => array(
-        //'id' => 'tid',
-        //'ding_entity_id' => 'ding_entity_id',
-        'id' => 'ding_entity_id',
-      ),
-      'bundles' => array(
-        'bibdkWorkEntity' => array(
-          'label' => 'bibdkWorkEntity',
-          'admin' => array(
-            'path' => 'admin/structure/bibdkWork',
-            'access arguments' => array('administer content types'),
-          ),
-        ),
-      ),
-    )
-  );
-
-  return $return;
-}
-
 /**
  * Load hook as set in entity_info
  * load hook is not currently used .. maybe later.
@@ -1504,4 +1335,153 @@ function _ting_openformat_type_translation($type, $subtype) {
       break;
   }
   return array('type' => $type, 'subtype' => $subtype);
+}
+
+/* * ************ ENTITY *************** */
+
+/**
+ * Implements hook_entity_info
+ * for bibdk we need 3 entities: work, subwork and manifestation
+ **/
+function ting_openformat_entity_info() {
+  $return = array(
+    'bibdkManifestation' => array(
+      'label' => t('openformat manifestation'),
+      'fieldable' => TRUE,
+      'base table' => 'ting_openformat_manifestation',
+      'ding_entity_type' => 'bibdk_manifestation',
+      'description' => t('openformat fields'),
+      'controller class' => 'ManifestionEntityApiController',
+      'entity keys' => array(
+        'id' => 'ding_entity_id',
+      ),
+      'bundles' => array(
+        'bibdkManifestation' => array(
+          'label' => 'openformat manifestation',
+          'admin' => array(
+            'path' => 'admin/structure/manifestations',
+            'access arguments' => array('administer content types'),
+          ),
+        ),
+      ),
+      'view modes' => array(
+        'full' => array(
+          'label' => t('Full content'),
+          'custom settings' => TRUE,
+        ),
+        'reservation' => array(
+          'label' => t('Reservation'),
+          'custom settings' => TRUE,
+        ),
+      ),
+    ),
+    'bibdkManifestationVolume' => array(
+      'label' => t('Manifestation Volume'),
+      'fieldable' => TRUE,
+      'base table' => 'ting_openformat_manifestation',
+      'ding_entity_type' => 'bibdk_manifestation_volume',
+      'description' => t('Manifestation volume fields'),
+      'controller class' => 'ManifestationVolumeEntityApiController',
+      'entity keys' => array(
+        'id' => 'ding_entity_id',
+      ),
+      'bundles' => array(
+        'bibdkManifestationVolume' => array(
+          'label' => 'Manifestation volume fields',
+          'admin' => array(
+            'path' => 'admin/structure/manifestation/volume',
+            'access arguments' => array('administer content types'),
+          ),
+        ),
+      ),
+    ),
+    'bibdkManifestationSection' => array(
+      'label' => t('Manifestation Section'),
+      'fieldable' => TRUE,
+      'base table' => 'ting_openformat_manifestation',
+      'ding_entity_type' => 'bibdk_manifestation_section',
+      'description' => t('Manifestation section fields'),
+      'controller class' => 'ManifestationSectionEntityApiController',
+      'entity keys' => array(
+        'id' => 'ding_entity_id',
+      ),
+      'bundles' => array(
+        'bibdkManifestationSection' => array(
+          'label' => 'Manifestation section fields',
+          'admin' => array(
+            'path' => 'admin/structure/manifestation/section',
+            'access arguments' => array('administer content types'),
+          ),
+        ),
+      ),
+    ),
+    'bibdkCollection' => array(
+      'label' => t('Bibdk collection'),
+      'fieldable' => TRUE,
+      'base table' => 'ting_openformat_manifestation',
+      'ding_entity_type' => 'bibdk_collection',
+      'description' => t('Bibdk collection'),
+      'controller class' => 'CollectionEntityApiController',
+      'entity keys' => array(
+        'id' => 'ding_entity_id',
+      ),
+      'bundles' => array(
+        'bibdkCollection' => array(
+          'label' => 'openformat collection',
+          'admin' => array(
+            'path' => 'admin/structure/collection',
+            'access arguments' => array('administer content types'),
+          ),
+        ),
+      ),
+      'view modes' => array(
+        'full' => array(
+          'label' => t('Full content'),
+          'custom settings' => TRUE,
+        ),
+      ),
+    ),
+    'bibdkSubwork' => array(
+      'label' => t('Subwork'),
+      'fieldable' => TRUE,
+      'base table' => 'ting_openformat_manifestation',
+      'ding_entity_type' => 'bibdk_subwork',
+      'description' => t('Manifestations grouped by type'),
+      'controller class' => 'subWorkEntityAPIController',
+      'entity keys' => array(
+        'id' => 'ding_entity_id',
+      ),
+      'bundles' => array(
+        'bibdkSubwork' => array(
+          'label' => t('Subwork'),
+          'admin' => array(
+            'path' => 'admin/structure/subworks',
+            'access arguments' => array('administer content types'),
+          ),
+        ),
+      ),
+    ),
+    'bibdkWorkEntity' => array(
+      'label' => t('Bibdk entity placeholder for manifestations'),
+      'fieldable' => TRUE,
+      'base table' => 'ting_openformat_manifestation',
+      'ding_entity_type' => 'bibdk_entity',
+      'controller class' => 'bibdkEntityApiController',
+      'load hook' => 'manifestations_load',
+      'entity keys' => array(
+        'id' => 'ding_entity_id',
+      ),
+      'bundles' => array(
+        'bibdkWorkEntity' => array(
+          'label' => 'bibdkWorkEntity',
+          'admin' => array(
+            'path' => 'admin/structure/bibdkWork',
+            'access arguments' => array('administer content types'),
+          ),
+        ),
+      ),
+    )
+  );
+
+  return $return;
 }
