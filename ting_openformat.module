@@ -85,7 +85,7 @@ function ting_openformat_menu() {
   return $items;
 }
 
-function ting_openformat_load_full_view(){
+function ting_openformat_load_full_view() {
   fb($_GET);
   fb(func_get_args());
   drupal_goto('');
@@ -103,20 +103,20 @@ function ting_openformat_ajax_manifestations($type, $json) {
   #$commands[] = ajax_command_alert($manifestation_ids);
 
   if (!is_array($manifestation_ids) || count($manifestation_ids) == 0) {
-    return false;
+    return FALSE;
   }
 
   $bibdkEntity = ting_openformat_get_manifestations($manifestation_ids);
 
   if (!isset($bibdkEntity) || count($bibdkEntity) == 0) {
-    return false;
+    return FALSE;
   }
 
   $bibdkEntity = reset($bibdkEntity);
   $manifestations = $bibdkEntity->manifestations;
 
   if (!isset($manifestations) || count($manifestations) == 0) {
-    return false;
+    return FALSE;
   }
 
   foreach ($manifestations as $manifestation) {
@@ -145,6 +145,7 @@ function ting_openformat_worktabs_items($tabs, $entity) {
     'rendered' => ting_openformat_get_tab_content($entity),
     'weight' => 0,
   );
+
   return $tabs;
 }
 
@@ -155,6 +156,7 @@ function ting_openformat_worktabs_items($tabs, $entity) {
 function ting_openformat_get_tab_content($entity) {
   $subjects = $entity->getSubjects();
   $markup = _ting_openformat_get_markup_for_field($subjects, '; ', FALSE);
+
   return isset($markup) ? drupal_render($markup) : '';
 }
 
@@ -199,7 +201,8 @@ function ting_openformat_get_manifestations($ids, $params = array()) {
 
   if (empty($result->collections)) {
     return array();
-  } else {
+  }
+  else {
     return ting_openformat_pre_parse_manifestations($result);
   }
 }
@@ -213,7 +216,8 @@ function ting_openformat_pre_parse_manifestations($result) {
   //TODO mmj implement this block on full view
   foreach ($result->collections as $TingClientObjectCollection) {
     /* @var $TingClientObjectCollection TingClientObjectCollection */
-    $manifestation = $TingClientObjectCollection->getFormattedCollection()->getWorkDisplay()->manifestation;
+    $manifestation = $TingClientObjectCollection->getFormattedCollection()
+      ->getWorkDisplay()->manifestation;
     foreach ($TingClientObjectCollection->getObjects() as $TingClientObject) {
       $relationsData = isset($TingClientObject->relationsData) ? $TingClientObject->relationsData : FALSE;
     }
@@ -230,12 +234,13 @@ function ting_openformat_pre_parse_manifestations($result) {
  * @param $openformat
  * @return mixed
  */
-function _ting_openformat_get_bibdk_work_entity($openformat){
+function _ting_openformat_get_bibdk_work_entity($openformat) {
   $original_manifestations = array();
-    $entity_ids = array();
-    _ting_openformat_parse_manifestations($original_manifestations, $entity_ids, $openformat);
-    $conditions['manifestations'] = $original_manifestations;
-    return entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
+  $entity_ids = array();
+  _ting_openformat_parse_manifestations($original_manifestations, $entity_ids, $openformat);
+  $conditions['manifestations'] = $original_manifestations;
+
+  return entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
 }
 
 /**
@@ -266,6 +271,7 @@ function ting_openformat_get_single($id) {
 
   // conditions array is deprecated in drupal 8.
   $conditions['manifestations'] = $original_manifestations;
+
   return entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
 }
 
@@ -318,6 +324,7 @@ function ting_openformat_get_cql_commando($cql) {
       $return = ting_openformat_get_cql_language() == 'cqldan' ? ' ELLER ' : ' OR ';
       break;
   }
+
   return $return;
 }
 
@@ -334,6 +341,7 @@ function ting_openformat_get_cql_language() {
  */
 function ting_openformat_manifestations_load($stdObjects) {
   $ret = array();
+
   return $ret;
 }
 
@@ -381,7 +389,8 @@ function ting_openformat_ding_devel_timers() {
     'search_client_net' => array(
       'title' => 'Search client net time was @time ms.',
       'include in total' => FALSE,
-    ));
+    )
+  );
 }
 
 /* * *********** VIEWS ************* */
@@ -419,12 +428,17 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   $ordered_subworks = ting_openformat_get_ordered_subworks($subWorks);
 
   $ding_id = preg_replace('/[^a-zA-Z0-9]+/', '', $bibdkWork->id);
-  $tabs = theme('ting_openformat_subwork_tabs', array('subWorks' => $ordered_subworks, 'ding_id' => $ding_id));
+  $tabs = theme('ting_openformat_subwork_tabs', array(
+    'subWorks' => $ordered_subworks,
+    'ding_id' => $ding_id
+  ));
+
   return theme('ting_openformat_work', array(
     'fields' => $work_fields,
     'subWorks' => $ordered_subworks,
     'tabs' => $tabs,
-    'ding_id' => $ding_id));
+    'ding_id' => $ding_id
+  ));
 }
 
 /** Get Subworks ordered by type and subtype
@@ -449,6 +463,7 @@ function ting_openformat_get_ordered_subworks($subWorks) {
       $ordered_subworks[$type_id][$subtype_id]['manifest']['subtype_actions'] = module_invoke_all('ting_openformat_subwork_materialtype_actions', $ordered_subworks, $type_id, $subtype_id, $val['bibdkSubwork']);
     }
   }
+
   return $ordered_subworks;
 }
 
@@ -481,6 +496,7 @@ function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langc
     }
     $sub['manifestations'][$manifestation->id] = drupal_render($manifestation_view);
   }
+
   return $sub;
 }
 
@@ -491,9 +507,10 @@ function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langc
  * @return string
  */
 function ting_openformat_collection_view($bibdkobject) {
-  if(isset($_SESSION['search_settings']['full_view']) && $_SESSION['search_settings']['full_view'] == TRUE){
+  if (isset($_SESSION['search_settings']['full_view']) && $_SESSION['search_settings']['full_view'] == TRUE) {
     return ting_openformat_generate_collection_view_full_view($bibdkobject);
-  } else {
+  }
+  else {
     return ting_openformat_generate_collection_view_short_view($bibdkobject);
   }
 }
@@ -505,9 +522,12 @@ function ting_openformat_collection_view($bibdkobject) {
  * @param BibdkCollection $bibdkobject
  * @return string
  */
-function ting_openformat_generate_collection_view_full_view($bibdkobject){
+function ting_openformat_generate_collection_view_full_view($bibdkobject) {
   $all_ids_in_collection = $bibdkobject->getCollectionIds();
-  $uid = strtolower(strtr(reset($all_ids_in_collection), array(':' => '', '-' => '')));
+  $uid = strtolower(strtr(reset($all_ids_in_collection), array(
+    ':' => '',
+    '-' => ''
+  )));
   $trackId = ting_openformat_set_tracking_id();
 
   #$form = drupal_get_form('ting_openformat_show_info_get_form', $bibdkobject, $uid, $trackId);
@@ -544,9 +564,12 @@ function ting_openformat_generate_collection_view_full_view($bibdkobject){
  * @param $bibdkobject
  * @return string
  */
-function ting_openformat_generate_collection_view_short_view($bibdkobject){
+function ting_openformat_generate_collection_view_short_view($bibdkobject) {
   $all_ids_in_collection = $bibdkobject->getCollectionIds();
-  $uid = strtolower(strtr(reset($all_ids_in_collection), array(':' => '', '-' => '')));
+  $uid = strtolower(strtr(reset($all_ids_in_collection), array(
+    ':' => '',
+    '-' => ''
+  )));
   $trackId = ting_openformat_set_tracking_id();
 
   $form = drupal_get_form('ting_openformat_show_info_get_form', $bibdkobject, $uid, $trackId);
@@ -603,7 +626,7 @@ function ting_openformat_set_tracking_id() {
     $trackId .= ':';
   }
 
-  $trackId .=  'bibdkGui_'.$collectionCount;
+  $trackId .= 'bibdkGui_' . $collectionCount;
 
   return $trackId;
 }
@@ -670,6 +693,7 @@ function ting_openformat_show_info_get_form($form, $form_state, $bibdkObject, $u
       'event' => 'click',
     ),
   );
+
   return $form;
 }
 
@@ -712,9 +736,10 @@ function ting_openformat_load_single_full_work($collection, $ids, $uid, $trackin
   foreach ($collection->manifestations as $manifestation) {
     $briefDisplay = new BibdkBriefDisplay($manifestation);
     if (!isset($bibdkWork)) {
-      if($bibdkWork = $collection->getWorkOne()){
+      if ($bibdkWork = $collection->getWorkOne()) {
         $bibdkWork = _ting_openformat_get_bibdk_work_entity(array($bibdkWork));
-      } else {
+      }
+      else {
         $bibdkWork = ting_openformat_get_manifestations($briefDisplay->id, array('trackingId' => $tracking_id));
       }
 
@@ -726,6 +751,7 @@ function ting_openformat_load_single_full_work($collection, $ids, $uid, $trackin
       $bibdkWork->manifestations[$briefDisplay->id] = $briefDisplay;
     }
   }
+
   return ting_openformat_work_view($bibdkWork);
 }
 
@@ -752,6 +778,7 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
     '#fields' => $fields,
     '#actions' => $actions,
   );
+
   return $build;
 }
 
@@ -767,6 +794,7 @@ function ting_openformat_volume_view($volume, $view_mode = 'full', $langcode = N
     $langcode = $GLOBALS['language_content']->language;
   }
   $field_content = _prepare_view('bibdkManifestationVolume', $volume, $view_mode, $langcode);
+
   return drupal_render($field_content);
 }
 
@@ -782,6 +810,7 @@ function ting_openformat_section_view($volume, $view_mode = 'full', $langcode = 
     $langcode = $GLOBALS['language_content']->language;
   }
   $field_content = _prepare_view('bibdkManifestationSection', $volume, $view_mode, $langcode);
+
   return drupal_render($field_content);
 }
 
@@ -797,6 +826,7 @@ function _prepare_view($entity_type, $object, $view_mode, $langcode) {
   field_attach_prepare_view($entity_type, array($object->id => $object), $view_mode, $langcode);
   entity_prepare_view($entity_type, array($object->id => $object), $langcode);
   $fields = field_attach_view($entity_type, $object, $view_mode, $langcode);
+
   return $fields;
 }
 
@@ -852,6 +882,7 @@ function ting_openformat_ding_facetbrowser() {
   if ($search_result) {
     $results->facets = ($search_result instanceof TingClientSearchResult) ? $search_result->facets : array();
     $results->searchkey = $search_result->search_key;
+
     return $results;
   }
 }
@@ -979,7 +1010,11 @@ function _ting_openformat_fetch_types() {
 
   foreach ($result->facets['facet.type']->terms as $term => $count) {
     if (!isset($types[$term])) {
-      $types[$term] = array("type" => $term, "count" => $count, "weight" => 1000);
+      $types[$term] = array(
+        "type" => $term,
+        "count" => $count,
+        "weight" => 1000
+      );
     }
   }
 
