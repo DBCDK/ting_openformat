@@ -498,15 +498,6 @@ function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langc
   return $sub;
 }
 
-/**
- * TODO mmj write doks
- *
- * @param BibdkCollection $bibdkobject
- * @return string
- */
-function ting_openformat_collection_view($bibdkobject) {
-  return ting_openformat_generate_collection_view($bibdkobject);
-}
 
 /**
  * Generates the collection view with an 'Order any edition' button if view is
@@ -518,7 +509,7 @@ function ting_openformat_collection_view($bibdkobject) {
  * @param BibdkCollection $bibdkobject
  * @return string
  */
-function ting_openformat_generate_collection_view($bibdkobject) {
+function ting_openformat_collection_view($bibdkobject) {
   $all_ids_in_collection = $bibdkobject->getCollectionIds();
   $uid = strtolower(strtr(reset($all_ids_in_collection), array(
     ':' => '',
