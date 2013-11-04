@@ -26,6 +26,15 @@ function ting_openformat_menu() {
     'file path' => drupal_get_path('module', 'ting_openformat') . '/plugins/content_types/',
     'type' => MENU_CALLBACK,
   );
+
+  $items['ting_openformat/full_view'] = array(
+    'title' => 'Full view callback',
+    'description' => 'Callback for full view button',
+    'page callback' => 'ting_openformat_load_full_view',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   $items['ting_openformat/ajax/manifestations'] = array(
     'title' => 'Single work',
     'description' => 'View single work',
@@ -74,6 +83,12 @@ function ting_openformat_menu() {
   );
 
   return $items;
+}
+
+function ting_openformat_load_full_view(){
+  fb($_GET);
+  fb(func_get_args());
+  drupal_goto('');
 }
 
 /** Load manifestations and insert into placeholder via AJAX
@@ -169,7 +184,8 @@ function ting_openformat_single($id) {
 }
 
 /**
- * @param $ids
+ * @param array $ids
+ * @param array $params
  * @return array
  */
 function ting_openformat_get_manifestations($ids, $params = array()) {
@@ -177,17 +193,28 @@ function ting_openformat_get_manifestations($ids, $params = array()) {
   $default_params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
   $default_params['objectId'] = $ids;
   $default_params['includeHoldingsCount'] = TRUE;
-  //$params['relationData'] = 'uri';
   drupal_alter('ting_openformat_getobject_params', $default_params);
   $params += $default_params;
   $result = $client->do_request('object', $params);
+
   if (empty($result->collections)) {
     return array();
+  } else {
+    return ting_openformat_pre_parse_manifestations($result);
   }
+}
 
+/**
+ * @param stdClass $result
+ * @return mixed
+ */
+function ting_openformat_pre_parse_manifestations($result) {
+  $openformat = array();
+  //TODO mmj implement this block on full view
   foreach ($result->collections as $TingClientObjectCollection) {
-    $manifestation = $TingClientObjectCollection->formattedCollection->formattedCollection->manifestation;
-    foreach ($TingClientObjectCollection->objects as $TingClientObject) {
+    /* @var $TingClientObjectCollection TingClientObjectCollection */
+    $manifestation = $TingClientObjectCollection->getFormattedCollection()->getWorkDisplay()->manifestation;
+    foreach ($TingClientObjectCollection->getObjects() as $TingClientObject) {
       $relationsData = isset($TingClientObject->relationsData) ? $TingClientObject->relationsData : FALSE;
     }
     if ($relationsData) {
@@ -196,11 +223,19 @@ function ting_openformat_get_manifestations($ids, $params = array()) {
     $openformat[] = $manifestation;
   }
 
+  return _ting_openformat_get_bibdk_work_entity($openformat);
+}
+
+/**
+ * @param $openformat
+ * @return mixed
+ */
+function _ting_openformat_get_bibdk_work_entity($openformat){
   $original_manifestations = array();
-  $entity_ids = array();
-  _ting_openformat_parse_manifestations($original_manifestations, $entity_ids, $openformat);
-  $conditions['manifestations'] = $original_manifestations;
-  return entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
+    $entity_ids = array();
+    _ting_openformat_parse_manifestations($original_manifestations, $entity_ids, $openformat);
+    $conditions['manifestations'] = $original_manifestations;
+    return entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
 }
 
 /**
@@ -217,7 +252,7 @@ function ting_openformat_get_single($id) {
   $client = new ting_client_class();
   $result = $client->do_request('object', $params);
   if (isset($result->collections) && count($result->collections) > 0) {
-    $openformat[] = $result->collections[0]->formattedCollection->formattedCollection->manifestation;
+    $openformat[] = $result->collections[0]->formattedCollection->formattedCollection->manifestation; //TODO mmj refactor this Probably to be using getFormattedCollection()->getWorkDisplay()->manifestation;
   }
 
   if (empty($openformat)) {
@@ -294,6 +329,7 @@ function ting_openformat_get_cql_language() {
 }
 
 /* * ************ ENTITY *************** */
+//TODO mmj move this to bottom of file
 
 /**
  * Implements hook_entity_info
@@ -529,7 +565,8 @@ function template_preprocess_ting_openformat_subwork_tabs(&$variables) {
   drupal_add_css($path . '/ting_openformat_subwork.css');
 }
 
-/** Creates html view for bibdkWorkEntity
+/**
+ * Creates html view for bibdkWorkEntity
  * @param Manifestation|BibdkWork|BibdkSubwork|BibdkCollection $bibdkWork
  * @param string $view_mode
  * @param null $langcode
@@ -617,17 +654,70 @@ function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langc
 }
 
 /**
+ * TODO mmj write doks
+ *
+ * @param BibdkCollection $bibdkobject
+ * @return string
+ */
+function ting_openformat_collection_view($bibdkobject) {
+  if(isset($_SESSION['search_settings']['full_view']) && $_SESSION['search_settings']['full_view'] == TRUE){
+    return ting_openformat_generate_collection_view_full_view($bibdkobject);
+  } else {
+    return ting_openformat_generate_collection_view_short_view($bibdkobject);
+  }
+}
+
+/**
  * Generates the collection view with an 'Order any edition' button if view is
  * implemented (requires bibdk_reservation module)
  *
  * @param BibdkCollection $bibdkobject
  * @return string
  */
-function ting_openformat_collection_view($bibdkobject) {
+function ting_openformat_generate_collection_view_full_view($bibdkobject){
   $all_ids_in_collection = $bibdkobject->getCollectionIds();
   $uid = strtolower(strtr(reset($all_ids_in_collection), array(':' => '', '-' => '')));
   $trackId = ting_openformat_set_tracking_id();
-  
+
+  #$form = drupal_get_form('ting_openformat_show_info_get_form', $bibdkobject, $uid, $trackId);
+  $actions = _prepare_view('bibdkCollection', $bibdkobject, 'full', NULL);
+  $workType = $bibdkobject->getWorkType();
+  $type = $bibdkobject->getType();
+  $types_classes = _ting_openformat_get_types_list($bibdkobject);
+
+  #$result = new stdClass();
+  #$result->collections = array($bibdkobject);
+
+  $mani = ting_openformat_load_single_full_work($bibdkobject, $all_ids_in_collection, $uid);
+
+  //TODO mmj set show show more info appropriately
+  return theme('ting_openformat_collection_full_view', array(
+    'title' => $bibdkobject->getTitle(),
+    'partOf' => $bibdkobject->getPartOf(),
+    'author' => $bibdkobject->getAuthor(),
+    'work_type' => (!empty($workType)) ? 'type-' . $workType : 'type-undefined',
+    'type' => $type,
+    'ids' => implode(',', $all_ids_in_collection),
+    #'showinfo' => drupal_render($form),
+    'work_one' => $mani,
+    'uid' => $uid,
+    'actions' => (!empty($actions)) ? $actions : array(),
+    'types' => $types_classes,
+  ));
+}
+
+/**
+ * Generates the collection view with an 'Order any edition' button if view is
+ * implemented (requires bibdk_reservation module)
+ *
+ * @param $bibdkobject
+ * @return string
+ */
+function ting_openformat_generate_collection_view_short_view($bibdkobject){
+  $all_ids_in_collection = $bibdkobject->getCollectionIds();
+  $uid = strtolower(strtr(reset($all_ids_in_collection), array(':' => '', '-' => '')));
+  $trackId = ting_openformat_set_tracking_id();
+
   $form = drupal_get_form('ting_openformat_show_info_get_form', $bibdkobject, $uid, $trackId);
   $actions = _prepare_view('bibdkCollection', $bibdkobject, 'full', NULL);
   $workType = $bibdkobject->getWorkType();
@@ -646,19 +736,18 @@ function ting_openformat_collection_view($bibdkobject) {
     'actions' => (!empty($actions)) ? $actions : array(),
     'types' => $types_classes,
   ));
-  
 }
 
 /** set tracking parameter in url. If trackingId is already set
  * append gui specific track. Else create tracking id for webservices.
- * 
- * trackingid := $_GET['ẗrackingId'] . ':' . [number of collection on page]
- * 
- * @TODO add a timestamp? 
  *
- * @staticvar string $trackingId 
+ * trackingid := $_GET['ẗrackingId'] . ':' . [number of collection on page]
+ *
+ * @TODO add a timestamp?
+ *
+ * @staticvar string $trackingId
  * @staticvar int $collectionCount
- * @return string 
+ * @return string
  */
 function ting_openformat_set_tracking_id() {
   static $trackingId;
@@ -678,7 +767,7 @@ function ting_openformat_set_tracking_id() {
   }
   $collectionCount++;
 
-  $trackId = $trackingId; 
+  $trackId = $trackingId;
   if (strlen($trackId) > 1) {
     $trackId .= ':';
   }
@@ -731,7 +820,6 @@ function _ting_openformat_get_types_list($bibdkobject) {
  */
 
 function ting_openformat_show_info_get_form($form, $form_state, $bibdkObject, $uid, $trackId = 0) {
-  //$uid = $form_state['build_info']['args'][1];
   $all_ids_in_collection = $bibdkObject->getCollectionIds();
   $form['info'] = array(
     '#trackId' => $trackId,
@@ -780,12 +868,25 @@ function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
 }
 
 
+/**
+ * @param BibdkCollection $collection
+ * @param $ids
+ * @param $uid
+ * @param int $tracking_id
+ * @return string
+ */
 function ting_openformat_load_single_full_work($collection, $ids, $uid, $tracking_id = 0) {
   module_invoke_all('show_manifestation_info_prerender', $ids, $uid);
+
   foreach ($collection->manifestations as $manifestation) {
     $briefDisplay = new BibdkBriefDisplay($manifestation);
     if (!isset($bibdkWork)) {
-      $bibdkWork = ting_openformat_get_manifestations($briefDisplay->id, array('trackingId' => $tracking_id));
+      if($bibdkWork = $collection->getWorkOne()){
+        $bibdkWork = _ting_openformat_get_bibdk_work_entity(array($bibdkWork));
+      } else {
+        $bibdkWork = ting_openformat_get_manifestations($briefDisplay->id, array('trackingId' => $tracking_id));
+      }
+
       $bibdkWork = current($bibdkWork);
       $bibdkWork->manifestations[$briefDisplay->id]->setBriefDisplayType($briefDisplay->gettype());
       $bibdkWork->manifestations[$briefDisplay->id]->setSubType($briefDisplay->getSubtype());
@@ -794,7 +895,6 @@ function ting_openformat_load_single_full_work($collection, $ids, $uid, $trackin
       $bibdkWork->manifestations[$briefDisplay->id] = $briefDisplay;
     }
   }
-
   return ting_openformat_work_view($bibdkWork);
 }
 
