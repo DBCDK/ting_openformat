@@ -433,6 +433,8 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
     'ding_id' => $ding_id
   ));
 
+  #dpm($tabs);
+
   return theme('ting_openformat_work', array(
     'fields' => $work_fields,
     'subWorks' => $ordered_subworks,
@@ -485,8 +487,7 @@ function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langc
     else {
       // other elements are given a container
       $manifestation_view = array(
-        '#type' => 'html_tag',
-        '#tag' => 'div',
+        '#type' => 'container',
         '#attributes' => array(
           'class' => 'manifestation-container',
           'data-id' => $manifestation->id,
@@ -540,6 +541,7 @@ function ting_openformat_generate_collection_view_full_view($bibdkobject) {
   #$result->collections = array($bibdkobject);
 
   $mani = ting_openformat_load_single_full_work($bibdkobject, $all_ids_in_collection, $uid);
+  #dpm($mani, 'MANI' . "\n");
 
   //TODO mmj set show show more info appropriately
   return theme('ting_openformat_collection_full_view', array(
