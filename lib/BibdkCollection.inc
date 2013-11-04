@@ -75,7 +75,7 @@ class BibdkCollection {
    * @return \stdClass
    */
   public function getWorkOne() {
-    return $this->workOne;
+    return isset($this->workOne) ? $this->workOne : NULL;
   }
 
   public function getAccessType(){
