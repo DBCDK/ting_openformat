@@ -1,10 +1,52 @@
 <?php
+
 $_ting_openformat_test_results = array(
   'ting_openformat_work_abstract' =>
   array(
     'method' => 'getAbstract',
     '_ting_openformat_default_field_view_content' => NULL,
     '_ting_openformat_parse_element' => '',
+  ),
+  'bibdk_mani_system_demand' =>
+  array(
+    'method' => 'getSystemDemands',
+    '_ting_openformat_default_field_view_content' => NULL,
+    '_ting_openformat_parse_element' => NULL,
+  ),
+  'bibdk_dependent_title' =>
+  array(
+    'method' => 'getDependentTitle',
+    '_ting_openformat_default_field_view_content' => array(
+      'title' =>
+      array(
+        0 => NULL,
+      ),
+    ),
+  ),
+    '_ting_openformat_parse_element' => NULL,
+  'bibdk_mani_access_met' =>
+  array(
+    'method' => 'getAccessMethod',
+    '_ting_openformat_default_field_view_content' => NULL,
+    '_ting_openformat_parse_element' => NULL,
+  ),
+  'bibdk_mani_database_ref' =>
+  array(
+    'method' => 'getDatabaseRef',
+    '_ting_openformat_default_field_view_content' => NULL,
+    '_ting_openformat_parse_element' => NULL,
+  ),
+  'bibdk_mani_content_title' =>
+  array(
+    'method' => 'getContentTitle',
+    '_ting_openformat_default_field_view_content' => NULL,
+    '_ting_openformat_parse_element' => NULL,
+  ),
+  'bibdk_mani_title_specific' =>
+  array(
+    'method' => 'getTitleSpecific',
+    '_ting_openformat_default_field_view_content' => 'Rigoletto (Giulini)',
+    '_ting_openformat_parse_element' => 'Rigoletto (Giulini)',
   ),
   'ting_openformat_work_subjects' =>
   array(
@@ -111,8 +153,8 @@ $_ting_openformat_test_results = array(
   'bibdk_mani_distinction' =>
   array(
     'method' => 'getDistinction',
-    '_ting_openformat_default_field_view_content' => 'Giulini',
-    '_ting_openformat_parse_element' => 'Giulini',
+    '_ting_openformat_default_field_view_content' => NULL,
+    '_ting_openformat_parse_element' => NULL,
   ),
   'bibdk_mani_title' =>
   array(

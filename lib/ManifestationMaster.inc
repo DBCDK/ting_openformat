@@ -28,7 +28,14 @@ class ManifestationMaster {
     return $result;
   }
 
-  
+  /* \brief Distinction
+   * zero or more occurence(s)
+   */
+
+  public function getDistinction() {
+    $result = ting_openformat_methods::parseFields($this->work, array('distinction'));
+    return (is_array($result)) ? reset($result) : $result;
+  }
 
   /* \brief original title
    * zero or one occurence
