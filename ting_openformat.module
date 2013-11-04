@@ -350,8 +350,6 @@ function ting_openformat_maniobject_uri() {
   return 'Brønd';
 }
 
-/* * ************** end ENTITY ************** */
-
 /* * *********  panel-pages *************** */
 
 /**
@@ -467,8 +465,9 @@ function ting_openformat_get_ordered_subworks($subWorks) {
   return $ordered_subworks;
 }
 
-/** Creates html view for bibdkSubwork
- * @param $bibdkSubwork
+/**
+ * Creates html view for bibdkSubwork
+ * @param BibdkSubwork $bibdkSubwork
  * @param string $view_mode
  * @param null $langcode
  * @return mixed
@@ -506,74 +505,37 @@ function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langc
  * @return string
  */
 function ting_openformat_collection_view($bibdkobject) {
-  if (isset($_SESSION['search_settings']['full_view']) && $_SESSION['search_settings']['full_view'] == TRUE) {
-    return ting_openformat_generate_collection_view_full_view($bibdkobject);
-  }
-  else {
-    return ting_openformat_generate_collection_view_short_view($bibdkobject);
-  }
+  return ting_openformat_generate_collection_view($bibdkobject);
 }
 
 /**
  * Generates the collection view with an 'Order any edition' button if view is
  * implemented (requires bibdk_reservation module)
+ *
+ * If $_SESSION['search_settings']['full_view'] is TRUE the generated will be a
+ * full view with all information visible.
  *
  * @param BibdkCollection $bibdkobject
  * @return string
  */
-function ting_openformat_generate_collection_view_full_view($bibdkobject) {
+function ting_openformat_generate_collection_view($bibdkobject) {
   $all_ids_in_collection = $bibdkobject->getCollectionIds();
   $uid = strtolower(strtr(reset($all_ids_in_collection), array(
     ':' => '',
     '-' => ''
   )));
+
   $trackId = ting_openformat_set_tracking_id();
 
-  #$form = drupal_get_form('ting_openformat_show_info_get_form', $bibdkobject, $uid, $trackId);
-  $actions = _prepare_view('bibdkCollection', $bibdkobject, 'full', NULL);
-  $workType = $bibdkobject->getWorkType();
-  $type = $bibdkobject->getType();
-  $types_classes = _ting_openformat_get_types_list($bibdkobject);
+  //Setting parameters based on a full or short view was requeseted
+  if (isset($_SESSION['search_settings']['full_view']) && $_SESSION['search_settings']['full_view'] == TRUE) {
+    $showinfoForm = '';
+    $workOne = ting_openformat_load_single_full_work($bibdkobject, $all_ids_in_collection, $uid);
+  } else {
+    $showinfoForm = drupal_render(drupal_get_form('ting_openformat_show_info_get_form', $bibdkobject, $uid, $trackId));
+    $workOne = NULL;
+  }
 
-  #$result = new stdClass();
-  #$result->collections = array($bibdkobject);
-
-  $mani = ting_openformat_load_single_full_work($bibdkobject, $all_ids_in_collection, $uid);
-
-  #dpm($mani, 'MANI' . "\n");
-
-  //TODO mmj set show show more info appropriately
-  return theme('ting_openformat_collection_full_view', array(
-    'title' => $bibdkobject->getTitle(),
-    'partOf' => $bibdkobject->getPartOf(),
-    'author' => $bibdkobject->getAuthor(),
-    'work_type' => (!empty($workType)) ? 'type-' . $workType : 'type-undefined',
-    'type' => $type,
-    'ids' => implode(',', $all_ids_in_collection),
-    #'showinfo' => drupal_render($form),
-    'work_one' => $mani,
-    'uid' => $uid,
-    'actions' => (!empty($actions)) ? $actions : array(),
-    'types' => $types_classes,
-  ));
-}
-
-/**
- * Generates the collection view with an 'Order any edition' button if view is
- * implemented (requires bibdk_reservation module)
- *
- * @param $bibdkobject
- * @return string
- */
-function ting_openformat_generate_collection_view_short_view($bibdkobject) {
-  $all_ids_in_collection = $bibdkobject->getCollectionIds();
-  $uid = strtolower(strtr(reset($all_ids_in_collection), array(
-    ':' => '',
-    '-' => ''
-  )));
-  $trackId = ting_openformat_set_tracking_id();
-
-  $form = drupal_get_form('ting_openformat_show_info_get_form', $bibdkobject, $uid, $trackId);
   $actions = _prepare_view('bibdkCollection', $bibdkobject, 'full', NULL);
   $workType = $bibdkobject->getWorkType();
   $type = $bibdkobject->getType();
@@ -586,7 +548,8 @@ function ting_openformat_generate_collection_view_short_view($bibdkobject) {
     'work_type' => (!empty($workType)) ? 'type-' . $workType : 'type-undefined',
     'type' => $type,
     'ids' => implode(',', $all_ids_in_collection),
-    'showinfo' => drupal_render($form),
+    'showinfo' => $showinfoForm,
+    'work_one' => $workOne,
     'uid' => $uid,
     'actions' => (!empty($actions)) ? $actions : array(),
     'types' => $types_classes,
@@ -668,7 +631,7 @@ function _ting_openformat_get_types_list($bibdkobject) {
  *
  * @param $form
  * @param array $form_state
- * @param $bibdkObject
+ * @param BibdkCollection $bibdkObject
  * @param $uid
  * @param int $trackId
  * @return array
@@ -1172,3 +1135,5 @@ function ting_openformat_entity_info() {
 
   return $return;
 }
+
+/****************** END ENTITY ****************/
