@@ -24,6 +24,14 @@ class Manifestation extends ManifestationMaster {
     return isset($this->manifestation->work) ? $this->manifestation->work : NULL;
   }
 
+  public function getDependentTitle() {
+    $fields = array('dependentTitle');
+    $elements = isset($this->getWork()->title) ? $this->getWork()->title : NULL;
+    $result = ting_openformat_methods::parseFields($elements, $fields);
+
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
   /**
    * @return array|mixed|null
    */
@@ -116,7 +124,7 @@ class Manifestation extends ManifestationMaster {
     }
     return NULL;
   }
-  
+
   /* \brief Distinction
    * zero or more occurence(s)
    */
@@ -154,7 +162,7 @@ class Manifestation extends ManifestationMaster {
   /** get external type
    * @return mixed
    */
-  public function getBriefDisplayType(){
+  public function getBriefDisplayType() {
     return $this->briefDisplayType;
   }
 
@@ -165,10 +173,10 @@ class Manifestation extends ManifestationMaster {
     $this->subType = $type;
   }
 
-
   /* \brief type of manifestation
    * 1 occurence
    */
+
   public function getSubType() {
     $result = isset($this->subType) ? $this->subType : ting_openformat_methods::parseFields($this->manifestation->main, array('type'));
     if (is_array($result['type'])) {
@@ -252,12 +260,12 @@ class Manifestation extends ManifestationMaster {
     return $reviews;
   }
 
-  public function getHostPublicationID(){
+  public function getHostPublicationID() {
     $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('hostPublicationID'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
-  public function getReviewRatings(){
+  public function getReviewRatings() {
     $fields = array('reviewRatings');
     $elements = isset($this->getWork()->description) ? $this->getWork()->description : NULL;
     $result = ting_openformat_methods::parseFields($elements, $fields);

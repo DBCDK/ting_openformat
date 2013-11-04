@@ -16,14 +16,9 @@ $_ting_openformat_test_results = array(
   'bibdk_dependent_title' =>
   array(
     'method' => 'getDependentTitle',
-    '_ting_openformat_default_field_view_content' => array(
-      'title' =>
-      array(
-        0 => NULL,
-      ),
-    ),
-  ),
+    '_ting_openformat_default_field_view_content' => NULL,
     '_ting_openformat_parse_element' => NULL,
+    ),
   'bibdk_mani_access_met' =>
   array(
     'method' => 'getAccessMethod',
