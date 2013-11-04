@@ -213,8 +213,7 @@ function ting_openformat_pre_parse_manifestations($result) {
   //TODO mmj implement this block on full view
   foreach ($result->collections as $TingClientObjectCollection) {
     /* @var $TingClientObjectCollection TingClientObjectCollection */
-    $manifestation = $TingClientObjectCollection->getFormattedCollection()
-      ->getWorkDisplay()->manifestation;
+    $manifestation = $TingClientObjectCollection->getFormattedCollection()->getWorkDisplay()->manifestation;
     foreach ($TingClientObjectCollection->getObjects() as $TingClientObject) {
       $relationsData = isset($TingClientObject->relationsData) ? $TingClientObject->relationsData : FALSE;
     }
@@ -270,6 +269,7 @@ function ting_openformat_get_single($id) {
   $conditions['manifestations'] = $original_manifestations;
 
   $entity = entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
+
   return $entity;
 }
 
@@ -539,6 +539,7 @@ function ting_openformat_generate_collection_view_full_view($bibdkobject) {
   #$result->collections = array($bibdkobject);
 
   $mani = ting_openformat_load_single_full_work($bibdkobject, $all_ids_in_collection, $uid);
+
   #dpm($mani, 'MANI' . "\n");
 
   //TODO mmj set show show more info appropriately
