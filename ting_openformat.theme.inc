@@ -31,6 +31,13 @@ function ting_openformat_theme() {
       'render elements' => 'elements',
     ),
 
+    'ting_openformat_toggle_work' => array(
+      'path' => $path,
+      'variables' => array('uid' => '', 'showinfo' => '', 'full_view' => FALSE),
+      'template' => 'ting_openformat_toggle_work',
+      'render elements' => 'elements',
+    ),
+
     'ting_openformat_work_info' => array(
       'path' => $path,
       'variables' => array('info' => array()),
@@ -40,7 +47,7 @@ function ting_openformat_theme() {
 
     'ting_openformat_collection' => array(
       'path' => $path,
-      'variables' => array('title' => '','author'=> '','ids' => '', 'work_type' => '', 'type' => '', 'show_info' => '', 'work_one' => ''),
+      'variables' => array('title' => '','author'=> '','ids' => '', 'work_type' => '', 'type' => '', 'togglework' => '', 'work_one' => ''),
       'template' => 'ting_openformat_collection',
       'render elements' => 'elements',
     ),
