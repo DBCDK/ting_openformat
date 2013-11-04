@@ -246,13 +246,12 @@ function _ting_openformat_get_bibdk_work_entity($openformat) {
  */
 function ting_openformat_get_single($id) {
   $params = array();
-
   $params['objectId'] = $id;
   $params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
   $params['includeHoldingsCount'] = TRUE;
-  // use getObjectRequest to retrieve a single work
   $client = new ting_client_class();
   $result = $client->do_request('object', $params);
+
   if (isset($result->collections) && count($result->collections) > 0) {
     /* @var $collection TingClientObjectCollection */
     $collection = $result->collections[0];
@@ -265,7 +264,6 @@ function ting_openformat_get_single($id) {
 
   $original_manifestations = array();
   $entity_ids = array();
-
   _ting_openformat_parse_manifestations($original_manifestations, $entity_ids, $openformat);
 
   // conditions array is deprecated in drupal 8.
