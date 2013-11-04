@@ -254,7 +254,9 @@ function ting_openformat_get_single($id) {
   $client = new ting_client_class();
   $result = $client->do_request('object', $params);
   if (isset($result->collections) && count($result->collections) > 0) {
-    $openformat[] = $result->collections[0]->formattedCollection->formattedCollection->manifestation; //TODO mmj refactor this Probably to be using getFormattedCollection()->getWorkDisplay()->manifestation;
+    /* @var $collection TingClientObjectCollection */
+    $collection = $result->collections[0];
+    $openformat[] = $collection->getFormattedCollection()->getWorkDisplay()->manifestation;
   }
 
   if (empty($openformat)) {
@@ -269,7 +271,8 @@ function ting_openformat_get_single($id) {
   // conditions array is deprecated in drupal 8.
   $conditions['manifestations'] = $original_manifestations;
 
-  return entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
+  $entity = entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
+  return $entity;
 }
 
 function _ting_openformat_parse_manifestations(&$original_manifestations, &$entity_ids, $openformat) {
