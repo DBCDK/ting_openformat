@@ -86,6 +86,7 @@ function ting_openformat_menu() {
 }
 
 function ting_openformat_load_full_view() {
+  //TODO mmj needed?
   fb($_GET);
   fb(func_get_args());
   drupal_goto('');
@@ -99,8 +100,6 @@ function ting_openformat_load_full_view() {
 function ting_openformat_ajax_manifestations($type, $json) {
   $commands = array();
   $manifestation_ids = json_decode($json);
-
-  #$commands[] = ajax_command_alert($manifestation_ids);
 
   if (!is_array($manifestation_ids) || count($manifestation_ids) == 0) {
     return FALSE;
