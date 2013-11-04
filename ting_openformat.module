@@ -532,6 +532,12 @@ function ting_openformat_collection_view($bibdkobject) {
   $type = $bibdkobject->getType();
   $types_classes = _ting_openformat_get_types_list($bibdkobject);
 
+  $togglework = theme('ting_openformat_toggle_work', array(
+    'uid' => $uid,
+    'showinfo' => $showinfoForm,
+    'full_view' => !is_null($workOne),
+  ));
+
   return theme('ting_openformat_collection', array(
     'title' => $bibdkobject->getTitle(),
     'partOf' => $bibdkobject->getPartOf(),
@@ -539,7 +545,7 @@ function ting_openformat_collection_view($bibdkobject) {
     'work_type' => (!empty($workType)) ? 'type-' . $workType : 'type-undefined',
     'type' => $type,
     'ids' => implode(',', $all_ids_in_collection),
-    'showinfo' => $showinfoForm,
+    'togglework' => $togglework,
     'work_one' => $workOne,
     'uid' => $uid,
     'actions' => (!empty($actions)) ? $actions : array(),
