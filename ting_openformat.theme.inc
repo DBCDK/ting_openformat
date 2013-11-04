@@ -40,15 +40,8 @@ function ting_openformat_theme() {
 
     'ting_openformat_collection' => array(
       'path' => $path,
-      'variables' => array('title' => '','author'=> '','ids' => '', 'work_type' => '', 'type' => '', 'show_info' => ''),
+      'variables' => array('title' => '','author'=> '','ids' => '', 'work_type' => '', 'type' => '', 'show_info' => '', 'work_one' => ''),
       'template' => 'ting_openformat_collection',
-      'render elements' => 'elements',
-    ),
-
-    'ting_openformat_collection_full_view' => array(
-      'path' => $path,
-      'variables' => array('title' => '','author'=> '','ids' => '', 'work_type' => '', 'type' => '', 'work_one' => ''),
-      'template' => 'ting_openformat_collection_full_view',
       'render elements' => 'elements',
     ),
 
