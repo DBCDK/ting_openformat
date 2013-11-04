@@ -116,6 +116,15 @@ class Manifestation extends ManifestationMaster {
     }
     return NULL;
   }
+  
+  /* \brief Distinction
+   * zero or more occurence(s)
+   */
+
+  public function getDistinction() {
+    $result = ting_openformat_methods::parseFields($this->getWork(), array('distinction'));
+    return (is_array($result)) ? reset($result) : $result;
+  }
 
   /* \brief requestMethod
    * zero or one occurence
