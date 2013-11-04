@@ -136,6 +136,7 @@ function _ting_openformat_create_collection_entities(&$result) {
     if (!empty($entity_id)) {
       $conditions['manifestations'] = $original_manifestations;
       $conditions['workOne'] = $collection->getFormattedCollection()->getWorkOne();
+      /* @var $bibdkEntities BibdkCollection */
       $bibdkEntities = entity_load('bibdkCollection', $entity_id, $conditions, FALSE);
       $bibdkEntities->parseManifestations(); //Temporary as malformed XML is returned from OpenSearch
       $bibdkobjects = $bibdkEntities;
