@@ -34,7 +34,7 @@ class BibdkCollection {
     $result = ting_openformat_methods::parseFields($this->manifestations[0], array('title'));
     $title = (is_array($result)) ? reset($result) : $result;
     $dependent_title = $this->getDependentTitle();
-    return (!empty($dependent_title)) ? $title . " </br> " . implode('. ', $dependent_title) : $title;
+    return (!empty($dependent_title)) ? $title . " <br /> " . implode('. ', $dependent_title) : $title;
   }
 
   public function getDependentTitle() {
