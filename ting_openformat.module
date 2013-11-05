@@ -743,6 +743,33 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
 }
 
 /**
+ * Returns an array with parameters representing the current search
+ *
+ * @return array $query
+ */
+function _ting_openformat_get_search_query(){
+  $query = array();
+  $keys = drupal_static('ting_search_query');
+
+  if (isset($_GET['sort'])) {
+    $query['sort'] = $_GET['sort'];
+  }
+  if (isset($_GET['qe'])) {
+    $query['qe'] = $_GET['qe'];
+  }
+  if (isset($_GET['page_id'])) {
+    $query['page_id'] = $_GET['page_id'];
+  }
+
+  if (isset($_GET['facets'])) {
+    $query['facets'] = $_GET['facets'];
+  }
+
+  $query['keys'] = isset($keys) ? $keys : $_GET['keys'];
+  return $query;
+}
+
+/**
  * Create view for manifestation volume fields
  * @param $volume
  * @param string $view_mode
