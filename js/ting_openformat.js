@@ -117,13 +117,10 @@
           //$('.work-toggle-element').trigger('show-work');
         } else if(!Drupal.settings.ting_openformat.isLoadingFullView) {
           Drupal.settings.ting_openformat.isLoadingFullView = true;
-          var hasClass = $(this).hasClass('ajax-progress');
 
-          if(!hasClass) {
-            $(this).toggleClass('ajax-progress');
-            $(this).append('<span class="throbber">&nbsp;</span>');
+          $(this).toggleClass('ajax-progress');
+          $(this).append('<span class="throbber">&nbsp;</span>');
 
-          }
           var full_view = '&full_view=1';
 
           var search = window.location.search.replace('&full_view=1', '');
