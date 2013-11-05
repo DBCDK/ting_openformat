@@ -25,14 +25,16 @@ function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $c
 
     drupal_add_js(drupal_get_path('module', 'ting_openformat') . '/js/ting_openformat_load_more_results.js', 'file');
     drupal_add_js(array(
-      'ting_openformat_load_more_results' => array(
-        'more' => $more,
-        'start' => $start,
-        'loadingIsActive' => FALSE,
-        'firstLoad' => FALSE,
-        'link' => _ting_openformat_set_load_more_results_link(),
+      'ting_openformat' => array(
+        'load_more_results' => array(
+          'more' => $more,
+          'start' => $start,
+          'loadingIsActive' => FALSE,
+          'firstLoad' => FALSE,
+          'link' => _ting_openformat_set_load_more_results_link(),
+        ),
       )
-        ), 'setting');
+    ), 'setting');
 
     $block->content = l(t('load_more_results', array(), array('context' => 'ting_openformat')), '#', array(
       'attributes' => array(
@@ -41,7 +43,7 @@ function ting_openformat_load_more_results_link($subtype, $conf, $panel_args, $c
         ),
         'class' => array(drupal_html_class('ting_openformat_load_more_results_link')),
       ),
-        ));
+    ));
   }
 
   return $block;
@@ -103,6 +105,7 @@ function ting_openformat_load_more_results_ajax_callback() {
 function _ting_openformat_set_load_more_results_link() {
   $query = _ting_openformat_get_search_query();
   $query['page'] = isset($_GET['page']) ? ((int) $_GET['page']) + 1 : 1;
+
   return url('ajax/load_more_results/', array('query' => $query));
 }
 
@@ -120,6 +123,7 @@ function _ting_openformat_get_search_result_html($results) {
       $html .= $result['snippet'];
     }
   }
+
   return $html;
 }
 
@@ -130,5 +134,6 @@ function ting_openformat_load_more_results_admin_info($subtype, $conf, $contexts
   $block = new stdClass;
   $block->title = t('Openformat Search - \'Load more collections\' link', array(), array('context' => 'ting_openformat'));
   $block->content = t('Link that when clicked loads 10 more collections to append', array(), array('context' => 'ting_openformat'));
+
   return $block;
 }
