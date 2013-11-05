@@ -97,33 +97,6 @@ function ting_openformat_load_more_results_ajax_callback() {
 }
 
 /**
- * Returns an array with parameters representing the current search
- *
- * @return array $query
- */
-function _ting_openformat_get_search_query(){
-  $query = array();
-  $keys = drupal_static('ting_search_query');
-
-  if (isset($_GET['sort'])) {
-    $query['sort'] = $_GET['sort'];
-  }
-  if (isset($_GET['qe'])) {
-    $query['qe'] = $_GET['qe'];
-  }
-  if (isset($_GET['page_id'])) {
-    $query['page_id'] = $_GET['page_id'];
-  }
-
-  if (isset($_GET['facets'])) {
-    $query['facets'] = $_GET['facets'];
-  }
-
-  $query['keys'] = isset($keys) ? $keys : $_GET['keys'];
-  return $query;
-}
-
-/**
  * Returns an URL for the load_more_results button
  * @return string
  */
