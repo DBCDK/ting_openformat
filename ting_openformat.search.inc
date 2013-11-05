@@ -186,6 +186,13 @@ function _ting_openformat_set_search_result($bibdkobject) {
     'date' => '',
     'snippet' => ting_openformat_collection_view($bibdkobject),
   );
+
+  drupal_add_js(array(
+    'ting_openformat' => array(
+      'url' => url('search/work', array('query' => _ting_openformat_get_search_query())),
+    ),
+  ), 'setting');
+
   return $result;
 }
 
@@ -371,7 +378,9 @@ function ting_openformat_conditions_callback($query) {
     $conditions['size'] = (int)$_REQUEST['size'];
   }
 
-  $_SESSION['search_settings']['full_view'] = !empty($_REQUEST['full_view']) ? (bool)$_REQUEST['full_view'] : FALSE;
+  if(isset($_REQUEST['full_view'])){
+    $_SESSION['search_settings']['full_view'] = (bool)$_REQUEST['full_view'];
+  }
 
   // set the sort parameter here - thus it will work when sort parameter is added to url
   if (!empty($_REQUEST['sort'])) {
