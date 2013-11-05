@@ -760,7 +760,6 @@ function _ting_openformat_get_search_query(){
   if (isset($_GET['page_id'])) {
     $query['page_id'] = $_GET['page_id'];
   }
-
   if (isset($_GET['facets'])) {
     $query['facets'] = $_GET['facets'];
   }
