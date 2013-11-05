@@ -106,8 +106,8 @@
   };
 
   TingOpenformat.addFullViewButtonEvent = function(context) {
-
     $('.full-view-links a', context).click(function(e) {
+      e.preventDefault();
       if(!$(this).hasClass('inactive')) {
         $('.full-view-links a').toggleClass('inactive');
       }
@@ -115,23 +115,29 @@
       if($(this).attr('id') === 'ting-openformat-full-view-button-expanded') {
           if(Drupal.settings.ting_openformat_full_view_all_loaded){
               //$('.work-toggle-element').trigger('show-work');      
-          } else {
+          } else if(!Drupal.settings.ting_openformat.isLoadingFullView) {
+            Drupal.settings.ting_openformat.isLoadingFullView = true;
+            var hasClass = $(this).hasClass('ajax-progress');
+            if(!hasClass){
+              $(this).toggleClass('ajax-progress');
+              $(this).append('<span class="throbber">&nbsp;</span>');
 
-              var data = {};
+            }
+              var full_view = '&full_view=1';
 
-              $.post(
-                  Drupal.settings.basePath + 'ting_openformat/full_view',
-                  data
-              );
+            var search = window.location.search.replace('&full_view=1', '');
+            search = search.replace('&full_view=0', '');
 
-              console.log('else -- loading the whole thing...');
-
-              //TODO mmj check if all works are loaded if so just show them itherwise we must do a callback that that does a work1   
+              window.location = window.location.pathname + search + full_view;
           }
       }
       else {
         $('.work-toggle-element').trigger('hide-work');
-          //TODO mmj do callback to drupal and set session full_view = false
+        var request = $.get({
+          url: Drupal.settings.ting_openformat.ajax_callback + '0',
+          sucess: false
+        });
+        console.log(request);
       }
 
     });
