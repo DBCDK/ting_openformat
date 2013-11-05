@@ -473,7 +473,6 @@ function ting_openformat_get_ordered_subworks($subWorks) {
  * @return mixed
  */
 function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langcode = NULL) {
-
   $sub['fields'] = _prepare_view('bibdkSubwork', $bibdkSubwork, $view_mode, $langcode);
   $sub['bibdkSubwork'] = $bibdkSubwork;
   foreach ($bibdkSubwork->getManifestations() as $manifestation) {
@@ -553,7 +552,8 @@ function ting_openformat_collection_view($bibdkobject) {
   ));
 }
 
-/** set tracking parameter in url. If trackingId is already set
+/**
+ * Set tracking parameter in url. If trackingId is already set
  * append gui specific track. Else create tracking id for webservices.
  *
  * trackingid := $_GET['ẗrackingId'] . ':' . [number of collection on page]
@@ -633,7 +633,6 @@ function _ting_openformat_get_types_list($bibdkobject) {
  * @param int $trackId
  * @return array
  */
-
 function ting_openformat_show_info_get_form($form, $form_state, $bibdkObject, $uid, $trackId = 0) {
   $all_ids_in_collection = $bibdkObject->getCollectionIds();
   $form['info'] = array(

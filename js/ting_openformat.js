@@ -55,7 +55,7 @@
         }
       });
     });
-  }
+  };
 
   TingOpenformat.loadManifestationsWithAjax = function(context) {
 
@@ -85,7 +85,7 @@
         TingOpenformat.addAjaxToElement($(this), manifestation_ids);
       }
     });
-  }
+  };
 
   TingOpenformat.addAjaxToElement = function(element, manifestation_ids, event) {
     if(manifestation_ids.length == 0) {
@@ -103,7 +103,7 @@
     element.trigger('load_manifestations');
     element.unbind('load_manifestations');
 
-  }
+  };
 
   TingOpenformat.addFullViewButtonEvent = function(context) {
 
@@ -113,15 +113,30 @@
       }
 
       if($(this).attr('id') === 'ting-openformat-full-view-button-expanded') {
-        $('.work-toggle-element').trigger('show-work');
+          if(Drupal.settings.ting_openformat_full_view_all_loaded){
+              //$('.work-toggle-element').trigger('show-work');      
+          } else {
+
+              var data = {};
+
+              $.post(
+                  Drupal.settings.basePath + 'ting_openformat/full_view',
+                  data
+              );
+
+              console.log('else -- loading the whole thing...');
+
+              //TODO mmj check if all works are loaded if so just show them itherwise we must do a callback that that does a work1   
+          }
       }
       else {
         $('.work-toggle-element').trigger('hide-work');
+          //TODO mmj do callback to drupal and set session full_view = false
       }
 
     });
 
-  }
+  };
 
   TingOpenformat.loadWorkEvent = function(context) {
     $('.work-toggle-element', context).bind('show-work', function(e) {
