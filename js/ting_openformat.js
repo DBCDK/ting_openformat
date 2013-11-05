@@ -113,23 +113,25 @@
       }
 
       if($(this).attr('id') === 'ting-openformat-full-view-button-expanded') {
-          if(Drupal.settings.ting_openformat_full_view_all_loaded){
-              //$('.work-toggle-element').trigger('show-work');      
-          } else if(!Drupal.settings.ting_openformat.isLoadingFullView) {
-            Drupal.settings.ting_openformat.isLoadingFullView = true;
-            var hasClass = $(this).hasClass('ajax-progress');
-            if(!hasClass){
-              $(this).toggleClass('ajax-progress');
-              $(this).append('<span class="throbber">&nbsp;</span>');
+        if(Drupal.settings.ting_openformat_full_view_all_loaded) {
+          //$('.work-toggle-element').trigger('show-work');
+        } else if(!Drupal.settings.ting_openformat.isLoadingFullView) {
+          Drupal.settings.ting_openformat.isLoadingFullView = true;
+          var hasClass = $(this).hasClass('ajax-progress');
 
-            }
-              var full_view = '&full_view=1';
+          if(!hasClass) {
+            $(this).toggleClass('ajax-progress');
+            $(this).append('<span class="throbber">&nbsp;</span>');
 
-            var search = window.location.search.replace('&full_view=1', '');
-            search = search.replace('&full_view=0', '');
-
-              window.location = window.location.pathname + search + full_view;
           }
+          var full_view = '&full_view=1';
+
+          var search = window.location.search.replace('&full_view=1', '');
+          search = search.replace('&full_view=0', '');
+
+          window.location = window.location.pathname + search + full_view;
+          return false;
+        }
       }
       else {
         $('.work-toggle-element').trigger('hide-work');
@@ -137,7 +139,6 @@
           url: Drupal.settings.ting_openformat.ajax_callback + '0',
           sucess: false
         });
-        console.log(request);
       }
 
     });
