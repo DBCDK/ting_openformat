@@ -96,9 +96,15 @@ function ting_openformat_load_more_results_ajax_callback() {
   exit(0);
 }
 
-function _ting_openformat_set_load_more_results_link() {
+/**
+ * Returns an array with parameters representing the current search
+ *
+ * @return array $query
+ */
+function _ting_openformat_get_search_query(){
+  $query = array();
   $keys = drupal_static('ting_search_query');
-  
+
   if (isset($_GET['sort'])) {
     $query['sort'] = $_GET['sort'];
   }
@@ -108,15 +114,21 @@ function _ting_openformat_set_load_more_results_link() {
   if (isset($_GET['page_id'])) {
     $query['page_id'] = $_GET['page_id'];
   }
-  
+
   if (isset($_GET['facets'])) {
     $query['facets'] = $_GET['facets'];
   }
-  
-  
 
   $query['keys'] = isset($keys) ? $keys : $_GET['keys'];
+  return $query;
+}
 
+/**
+ * Returns an URL for the load_more_results button
+ * @return string
+ */
+function _ting_openformat_set_load_more_results_link() {
+  $query = _ting_openformat_get_search_query();
   $query['page'] = isset($_GET['page']) ? ((int) $_GET['page']) + 1 : 1;
   return url('ajax/load_more_results/', array('query' => $query));
 }
