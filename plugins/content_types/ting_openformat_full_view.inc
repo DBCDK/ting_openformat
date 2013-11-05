@@ -26,7 +26,7 @@ function ting_openformat_full_view_button($subtype, $conf, $panel_args, $context
       'external' => TRUE,
       'attributes' => array(
         'id' => 'ting-openformat-full-view-button-closed',
-        'class' => 'inactive',
+        'class' => (!$_SESSION['search_settings']['full_view']) ? 'inactive' : ''
 
       ),
     ),
@@ -41,7 +41,8 @@ function ting_openformat_full_view_button($subtype, $conf, $panel_args, $context
       'fragment' => 'full-view',
       'external' => TRUE,
       'attributes' => array(
-        'id' => 'ting-openformat-full-view-button-expanded'
+        'id' => 'ting-openformat-full-view-button-expanded',
+        'class' => ($_SESSION['search_settings']['full_view']) ? 'inactive' : ''
       ),
     ),
   );
