@@ -386,6 +386,8 @@ function ting_openformat_conditions_callback($query) {
 
   if(isset($_REQUEST['full_view'])){
     $_SESSION['search_settings']['full_view'] = (bool)$_REQUEST['full_view'];
+  } elseif(!isset($_SESSION['search_settings']['full_view'])){
+    $_SESSION['search_settings']['full_view'] = FALSE;
   }
 
   // set the sort parameter here - thus it will work when sort parameter is added to url
