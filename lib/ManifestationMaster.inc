@@ -22,8 +22,8 @@ class ManifestationMaster {
   private function _getPublicationDetails() {
     return isset($this->fields->publicationDetails) ? $this->fields->publicationDetails : NULL;
   }
-  
- 
+
+
 
   /* \brief Distinction
    * zero or more occurence(s)
