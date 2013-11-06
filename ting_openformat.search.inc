@@ -107,11 +107,23 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   pager_default_initialize($total, $params['numResults']);
 
   if (!empty($search_results)) {
+    _ting_openformat_set_js_settings();
     return $search_results;
   }
 
   // .. default; no search results
   return array();
+}
+
+function _ting_openformat_set_js_settings(){
+  drupal_add_js(array(
+    'ting_openformat' => array(
+      'full_view' => $_SESSION['search_settings']['full_view'],
+      'ajax_callback' => url('ting_openformat/full_view/'),
+      'full_view_all_loaded' => $_SESSION['search_settings']['full_view'],
+      'isLoadingFullView' => FALSE,
+    ),
+  ), 'setting');
 }
 
 /**
@@ -186,15 +198,6 @@ function _ting_openformat_set_search_result($bibdkobject) {
     'date' => '',
     'snippet' => ting_openformat_collection_view($bibdkobject),
   );
-
-  drupal_add_js(array(
-    'ting_openformat' => array(
-      'full_view' => $_SESSION['search_settings']['full_view'],
-      'ajax_callback' => url('ting_openformat/full_view/'),
-      'ting_openformat_full_view_all_loaded' => $_SESSION['search_settings']['full_view'],
-      'isLoadingFullView' => FALSE,
-    ),
-  ), 'setting');
 
   return $result;
 }

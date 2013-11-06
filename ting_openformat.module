@@ -212,10 +212,18 @@ function ting_openformat_get_manifestations($ids, $params = array()) {
  */
 function ting_openformat_pre_parse_manifestations($result) {
   $openformat = array();
-  //TODO mmj implement this block on full view
+
+  /* @var $TingClientObjectCollection TingClientObjectCollection */
   foreach ($result->collections as $TingClientObjectCollection) {
-    /* @var $TingClientObjectCollection TingClientObjectCollection */
-    $manifestation = $TingClientObjectCollection->getFormattedCollection()->getWorkDisplay()->manifestation;
+    /* @var $formattedCollection TingClientFormattedCollection */
+    $formattedCollection = $TingClientObjectCollection->getFormattedCollection();
+
+    if(is_a($formattedCollection, 'TingClientFormattedCollection')){
+      $manifestation = $formattedCollection->getWorkDisplay()->manifestation;
+    } else {
+      watchdog('ting_openformat', 'Expected object of type TingClientFormattedCollection - got %type', array('%type' => gettype($formattedCollection)), WATCHDOG_ERROR);
+    }
+
     foreach ($TingClientObjectCollection->getObjects() as $TingClientObject) {
       $relationsData = isset($TingClientObject->relationsData) ? $TingClientObject->relationsData : FALSE;
     }
