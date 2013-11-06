@@ -224,16 +224,18 @@ function ting_openformat_pre_parse_manifestations($result) {
       watchdog('ting_openformat', 'Expected object of type TingClientFormattedCollection - got %type', array('%type' => gettype($formattedCollection)), WATCHDOG_ERROR);
     }
 
+    /* @var $TingClientObject TingClientObject */
     foreach ($TingClientObjectCollection->getObjects() as $TingClientObject) {
-      $relationsData = isset($TingClientObject->relationsData) ? $TingClientObject->relationsData : FALSE;
+      $relationsData = isset($TingClientObject->relationsData) ? $TingClientObject->relationsData : NULL;
     }
-    if ($relationsData) {
+    if (isset($relationsData)) {
       $manifestation->relationsData = $relationsData;
     }
     $openformat[] = $manifestation;
   }
 
-  return _ting_openformat_get_bibdk_work_entity($openformat);
+  $entity = _ting_openformat_get_bibdk_work_entity($openformat);
+  return $entity;
 }
 
 /**
