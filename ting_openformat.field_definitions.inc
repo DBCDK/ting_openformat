@@ -75,21 +75,21 @@ function ting_openformat_bibdk_fields() {
     'bibdk_mani_title' => array(
       'entity_type' => array('bibdkManifestation'),
       'label' => 'Title',
-      'display' => array('reservation', 'full'),
+      'display' => array('reservation', 'full', 'cart'),
       'description' => t('Title of manifestation'),
       'callback method' =>  'getTitle',
     ),
     'bibdk_mani_title_specific' => array(
       'entity_type' => array('bibdkManifestation'),
       'label' => 'Title Specific',
-      'display' => array('reservation', 'full', 'cart'),
+      'display' => array('reservation', 'full'),
       'description' => t('Specific title of manifestation'),
       'callback method' =>  'getTitleSpecific',
     ),
     'bibdk_mani_creators' => array(
       'label' => 'Creators',
       'entity_type' => array('bibdkManifestation'),
-      'display' => array('reservation', 'full'),
+      'display' => array('reservation', 'full', 'cart'),
       'description' => t('creators of manifestation'),
       'callback method' =>  'getCreator',
     ),
@@ -104,7 +104,7 @@ function ting_openformat_bibdk_fields() {
     'bibdk_mani_type' => array(
       'label' => 'Manifestation type',
       'entity_type' => array('bibdkManifestation'),
-      'display' => array('full', 'reservation'),
+      'display' => array('full', 'reservation', 'cart'),
       'description' => t('type of manifestation'),
       'callback method' =>  'getType',
     ),
