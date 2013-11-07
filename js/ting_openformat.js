@@ -116,6 +116,7 @@
         Drupal.settings.ting_openformat.full_view = true;
         if(Drupal.settings.ting_openformat.full_view_all_loaded) {
           $('.work-toggle-element').trigger('show-work');
+          TingOpenformat.setFullViewPref('1');
         } else if(!Drupal.settings.ting_openformat.isLoadingFullView) {
           Drupal.settings.ting_openformat.isLoadingFullView = true;
 
@@ -134,16 +135,19 @@
       else {
         Drupal.settings.ting_openformat.full_view = false;
         $('.work-toggle-element').trigger('hide-work');
-        $.ajax({
-          type: 'GET',
-          url: Drupal.settings.ting_openformat.ajax_callback + '0',
-          success: function(){
-            return false;
-          }
-        });
+        TingOpenformat.setFullViewPref('0');
       }
     });
+  };
 
+  TingOpenformat.setFullViewPref = function(pref){
+    $.ajax({
+      type: 'GET',
+      url: Drupal.settings.ting_openformat.ajax_callback + pref,
+      success: function() {
+        return false;
+      }
+    });
   };
 
   TingOpenformat.loadWorkEvent = function(context) {
