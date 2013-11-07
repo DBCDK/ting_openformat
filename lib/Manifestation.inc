@@ -13,7 +13,9 @@ class Manifestation extends ManifestationMaster {
    */
   public function __construct($manifestation) {
     $this->manifestation = $manifestation;
-    $this->fields = $this->manifestation->main;
+    if(isset($this->manifestation->main)){
+      $this->fields = $this->manifestation->main;
+    }
     $this->getAnalyticContent();
   }
 
