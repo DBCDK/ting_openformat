@@ -172,13 +172,19 @@ function ting_openformat_single($id) {
   $manifestation = reset($bibdkEntity->manifestations);
 
   $host_publication = $manifestation->getHostPublication();
-  $part_of = isset($host_publication) ? drupal_render(_ting_openformat_get_markup_for_field($host_publication)) : NULL;
 
+  $part_of = NULL;
+  if(isset($host_publication)){
+    $markup = _ting_openformat_get_markup_for_field($host_publication);
+    $part_of= drupal_render($markup);
+  }
+
+  $creator = _ting_openformat_get_markup_for_field($bibdkEntity->getCreator());
 
   return theme('ting_openformat_single_work', array(
     'title' => $bibdkEntity->getTitle(),
     'partOf' => $part_of,
-    'author' => drupal_render(_ting_openformat_get_markup_for_field($bibdkEntity->getCreator())),
+    'author' => drupal_render($creator),
     'ids' => $id,
     'work' => ting_openformat_work_view($bibdkEntity),
   ));
