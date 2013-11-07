@@ -64,6 +64,7 @@ function ting_openformat_ting_openformat_search_result_content_type_render($subt
   }
   $output .= "</div>\n";
 
+  $block = new stdClass();
   $block->title = t('Search results');
   $block->content = $output;
 
