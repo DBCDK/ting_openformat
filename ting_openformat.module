@@ -534,7 +534,8 @@ function ting_openformat_collection_view($bibdkobject) {
     $showinfoForm = '';
     $workOne = ting_openformat_load_single_full_work($bibdkobject, $all_ids_in_collection, $uid);
   } else {
-    $showinfoForm = drupal_render(drupal_get_form('ting_openformat_show_info_get_form', $bibdkobject, $uid, $trackId));
+    $form = drupal_get_form('ting_openformat_show_info_get_form', $bibdkobject, $uid, $trackId);
+    $showinfoForm = drupal_render($form);
     $workOne = NULL;
   }
 
