@@ -168,4 +168,12 @@ function ting_openformat_update_7027() {
   ding_entity_modules_enabled(array('ting_openformat'));
 }
 
+/**
+ * Update all field information
+ * */
+function ting_openformat_update_7029() {
+  field_delete_field('bibdk_dependent_title');
+  ding_entity_modules_enabled(array('ting_openformat'));
+}
+
 // 435 lines before refactoring

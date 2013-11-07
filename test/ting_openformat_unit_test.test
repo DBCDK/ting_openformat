@@ -37,7 +37,7 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     foreach ($fields as $field_name => $field) {
       $method = $_ting_openformat_test_results[$field_name]['method'];
       if (!$method) {
-        return;
+        continue;
       }
       $expected = $_ting_openformat_test_results[$field_name]['_ting_openformat_default_field_view_content'];
       $message = "method '$method' returns correct result";
@@ -123,7 +123,7 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     $collection = new BibdkCollection($manifestations);
 
     $result = $collection->getTitle();
-    $expected_result = 'First choice for sjette <br/> Teacher\'s book';
+    $expected_result = 'First choice for sjette <br /> Teacher\'s book';
     $this->assertEqual($result, $expected_result, 'Title parsed correctly');
 
     $result = $collection->getType();
@@ -163,7 +163,7 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
       $expected_result = serialize($expected_result);
       $serial_result = serialize($result);
     }
-
+    
     $this->assertEqual($expected_result, $serial_result, $message);
     return $result;
 

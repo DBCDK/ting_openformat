@@ -1,12 +1,12 @@
 <?php
 
 $plugin = array(
-  'title' => t('Load more collections', array(), array('context' => 'ting_openformat')),
+  'title' => 'Load more collections', 
   'admin info' => 'ting_openformat_load_more_results_admin_info',
   'single' => TRUE,
   'content_types' => array('ting_openformat_load_more'),
   'render callback' => 'ting_openformat_load_more_results_link',
-  'category' => t('Openformat'),
+  'category' => 'Openformat',
   'render last' => TRUE,
 );
 

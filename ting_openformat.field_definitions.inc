@@ -27,12 +27,12 @@ function ting_openformat_bibdk_fields() {
     /********* MANIFESTATION ************/
     'bibdk_dependent_title'  => array(
       'label' => 'DependentTitle',
-      'entity_type' => array('bibdkManifestation','bibdkManifestationVolume'),
+      'entity_type' => array('bibdkManifestation'),
       'display' => array('full'),
       'description' => t('descripton for dependent title'),
       'callback method' =>  'getDependentTitle',
     ),
-    
+
     'bibdk_latest_reprint' => array(
       'label' => 'Latest reprint',
       'entity_type' => array('bibdkManifestation','bibdkManifestationVolume'),
@@ -40,8 +40,8 @@ function ting_openformat_bibdk_fields() {
       'description' => t('descripton for latest reprint'),
       'callback method' =>  'getLatestReprint',
     ),
-    
-    
+
+
     'ting_openformat_mani_abstract' => array(
       'label' => 'Work abstract',
       'entity_type' => 'bibdkManifestation',
@@ -75,21 +75,21 @@ function ting_openformat_bibdk_fields() {
     'bibdk_mani_title' => array(
       'entity_type' => array('bibdkManifestation'),
       'label' => 'Title',
-      'display' => array('reservation', 'full'),
+      'display' => array('reservation', 'full', 'cart'),
       'description' => t('Title of manifestation'),
       'callback method' =>  'getTitle',
     ),
     'bibdk_mani_title_specific' => array(
       'entity_type' => array('bibdkManifestation'),
       'label' => 'Title Specific',
-      'display' => array('reservation', 'full', 'cart'),
+      'display' => array('reservation', 'full'),
       'description' => t('Specific title of manifestation'),
       'callback method' =>  'getTitleSpecific',
     ),
     'bibdk_mani_creators' => array(
       'label' => 'Creators',
       'entity_type' => array('bibdkManifestation'),
-      'display' => array('reservation', 'full'),
+      'display' => array('reservation', 'full', 'cart'),
       'description' => t('creators of manifestation'),
       'callback method' =>  'getCreator',
     ),
@@ -104,7 +104,7 @@ function ting_openformat_bibdk_fields() {
     'bibdk_mani_type' => array(
       'label' => 'Manifestation type',
       'entity_type' => array('bibdkManifestation'),
-      'display' => array('full', 'reservation'),
+      'display' => array('full', 'reservation', 'cart'),
       'description' => t('type of manifestation'),
       'callback method' =>  'getType',
     ),
@@ -298,7 +298,7 @@ function ting_openformat_bibdk_fields() {
       'description' => t('Actor Note of manifestation'),
       'callback method' =>  'getActorNote',
     ),
-    
+
     'bibdk_mani_content_title' => array(
       'label' => 'Content Title',
       'entity_type' => array('bibdkManifestation'),
@@ -306,7 +306,7 @@ function ting_openformat_bibdk_fields() {
       'description' => t('Content Title of manifestation'),
       'callback method' =>  'getContentTitle',
     ),
-    
+
     'bibdk_mani_system_demand' => array(
       'label' => 'System demands',
       'entity_type' => array('bibdkManifestation'),
@@ -314,7 +314,7 @@ function ting_openformat_bibdk_fields() {
       'description' => t('System demands of manifestation'),
       'callback method' =>  'getSystemDemands',
     ),
-    
+
     'bibdk_mani_database_ref' => array(
       'label' => 'Database references',
       'entity_type' => array('bibdkManifestation'),
@@ -322,7 +322,7 @@ function ting_openformat_bibdk_fields() {
       'description' => t('External references to database'),
       'callback method' =>  'getDatabaseRef',
     ),
-    
+
      'bibdk_mani_access_met' => array(
       'label' => 'Access methods',
       'entity_type' => array('bibdkManifestation'),
@@ -330,7 +330,7 @@ function ting_openformat_bibdk_fields() {
       'description' => t('Access to resource'),
       'callback method' =>  'getAccessMethod',
     ),
-    
+
     'bibdk_mani_content_note' => array(
       'label' => 'Content Note',
       'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
