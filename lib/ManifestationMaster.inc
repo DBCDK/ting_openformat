@@ -185,7 +185,7 @@ class ManifestationMaster {
    */
 
   public function getMarkedAudience() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('audienceMarked'));
+    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('audienceMarked' => array('audienceMarkedElement')));
     return (is_array($result)) ? reset($result) : $result;
   }
 
