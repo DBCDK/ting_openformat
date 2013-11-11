@@ -292,11 +292,11 @@ function ting_openformat_get_single($id) {
 }
 
 function _ting_openformat_parse_manifestations(&$original_manifestations, &$entity_ids, $openformat) {
-  if (isset($openformat) && is_array($openformat)) {
+  if (isset($openformat) && is_array($openformat) && !empty($openformat)) {
     foreach ($openformat as $manifestation) {
-      $manifestation_id = $manifestation->adminData->pid->{'$'};
-      $entity_ids[] = $manifestation_id;
-      $original_manifestations[$manifestation_id] = $manifestation;
+        $manifestation_id = isset($manifestation->adminData->pid->{'$'}) ? $manifestation->adminData->pid->{'$'} : NULL;
+        $entity_ids[] = $manifestation_id;
+        $original_manifestations[$manifestation_id] = $manifestation;
     }
   }
 }
@@ -446,8 +446,6 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
     'subWorks' => $ordered_subworks,
     'ding_id' => $ding_id
   ));
-
-  #dpm($tabs);
 
   return theme('ting_openformat_work', array(
     'fields' => $work_fields,
