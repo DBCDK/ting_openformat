@@ -44,7 +44,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   if (!empty($variables)) {
     $params = array_merge($params, $variables);
   }
-  
+
   // selected facets from facetbrowser (in query)
   if ( isset($conditions['facets']) && $conditions['facets'] != NULL ) {
     _ting_openformat_set_facets($params['query'], $conditions['facets']);
@@ -311,6 +311,11 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
       unset($qe['#preprocessed']);
     }
 
+    if ( isset($qe['delimiter']) && !empty($qe['delimiter']) ) {
+      $res[] = $qe['delimiter'];
+      unset($qe['delimiter']);
+    }
+
     $op = ting_openformat_get_cql_commando('OR');
     foreach ( $qe as $term => $group ) {
       foreach ( $group as $key => $val ) {
@@ -349,7 +354,7 @@ function ting_openformat_conditions_callback($query) {
   if (!empty($_REQUEST['trackingId'])) {
     $conditions['trackingId'] = $_REQUEST['trackingId'];
   }
-  
+
   $page_id = array();
   if ( !empty($_REQUEST['page_id']) ) {
     $page_id['page_id'] = $_REQUEST['page_id'];
