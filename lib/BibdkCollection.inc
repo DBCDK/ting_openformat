@@ -36,6 +36,9 @@ class BibdkCollection {
     if(!empty($language) && $language != 'Dansk'){
       $language = '<span> ('. $language.')</span>' ;
     }
+    else{
+      $language = NULL;
+    }
     
     $result = ting_openformat_methods::parseFields($this->manifestations[0], array('title'));
     $title = (is_array($result)) ? reset($result) : $result;
