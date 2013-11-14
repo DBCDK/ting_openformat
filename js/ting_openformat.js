@@ -124,6 +124,9 @@
           $(this).append('<span class="throbber">&nbsp;</span>');
 
           var full_view = '&full_view=1';
+          if(window.location.search.length == 0){
+            full_view = '?full_view=1';
+          }
 
           var search = window.location.search.replace('&full_view=1', '');
           search = search.replace('&full_view=0', '');
