@@ -31,10 +31,28 @@ class BibdkCollection {
   }
 
   public function getTitle() {
+    
+    $language = $this->getLanguage();
+    if(!empty($language) && $language != 'Dansk'){
+      $language = '<span> ('. $language.')</span>' ;
+    }
+    else{
+      $language = NULL;
+    }
+    
     $result = ting_openformat_methods::parseFields($this->manifestations[0], array('title'));
     $title = (is_array($result)) ? reset($result) : $result;
     $dependent_title = $this->getDependentTitle();
-    return (!empty($dependent_title)) ? $title . " <br /> " . implode('. ', $dependent_title) : $title;
+    $ret = (!empty($dependent_title)) ? $title . " <br /> " . implode('. ', $dependent_title) : $title;
+    if (!empty($language)) {
+      $ret .= $language;
+    }
+    return $ret;
+  }
+  
+  public function getLanguage(){
+    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('language'));
+    return (is_array($result)) ? reset($result) : $result;
   }
 
   public function getDependentTitle() {
