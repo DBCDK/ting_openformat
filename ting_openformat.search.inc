@@ -289,9 +289,9 @@ function _ting_openformat_search_get_variables() {
 }
 
 
-/** \brief Set facets for request
- *
- * */
+/**
+ * Set facets for request
+ **/
 function _ting_openformat_set_facets(&$query, $facets) {
   if (isset($facets)) {
     $op = ting_openformat_get_cql_commando('AND');
@@ -388,7 +388,6 @@ function ting_openformat_conditions_callback($query) {
   } elseif(!isset($_SESSION['search_settings']['full_view'])){
     $_SESSION['search_settings']['full_view'] = FALSE;
   }
-
   // set the sort parameter here - thus it will work when sort parameter is added to url
   if (!empty($_REQUEST['sort'])) {
     $conditions['sort'] = check_plain($_REQUEST['sort']);

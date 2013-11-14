@@ -117,22 +117,18 @@
         if(Drupal.settings.ting_openformat.full_view_all_loaded) {
           $('.work-toggle-element').trigger('show-work');
           TingOpenformat.setFullViewPref('1');
-        } else if(!Drupal.settings.ting_openformat.isLoadingFullView) {
+        }
+        else if(!Drupal.settings.ting_openformat.isLoadingFullView) {
           Drupal.settings.ting_openformat.isLoadingFullView = true;
 
           $(this).toggleClass('ajax-progress');
           $(this).append('<span class="throbber">&nbsp;</span>');
 
-          var full_view = '&full_view=1';
-          if(window.location.search.length == 0){
-            full_view = '?full_view=1';
-          }
-
           var search = window.location.search.replace('&full_view=1', '');
           search = search.replace('&full_view=0', '');
 
-          window.location = window.location.pathname + search + full_view;
-          return false;
+          var location = window.location.pathname + search;
+          TingOpenformat.setFullViewPref('1', location);
         }
       }
       else {
@@ -143,12 +139,21 @@
     });
   };
 
-  TingOpenformat.setFullViewPref = function(pref){
+  TingOpenformat.setFullViewPref = function(pref, onSuccess) {
     $.ajax({
-      type: 'GET',
-      url: Drupal.settings.ting_openformat.ajax_callback + pref,
-      success: function() {
+      type: "POST",
+      url: Drupal.settings.ting_openformat.ajax_callback,
+      data: {full_view: pref},
+      success: function(msg) {
+        if(onSuccess) {
+          window.location = onSuccess;
+        }
         return false;
+      },
+      complete: function(object, status) {
+        if(console) {
+          console.log('status:' + status);
+        }
       }
     });
   };

@@ -27,11 +27,10 @@ function ting_openformat_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['ting_openformat/full_view/%'] = array(
+  $items['ting_openformat/full_view'] = array(
     'title' => 'Full view callback',
     'description' => 'Callback for full view button',
     'page callback' => 'ting_openformat_load_full_view',
-    'page arguments' => array(2),
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
@@ -87,11 +86,13 @@ function ting_openformat_menu() {
 }
 
 /**
- * AJAX callback
- * @param $full_view
+ * AJAX callback for full_view.
+ * full_view comes as a POST paramter to avoid the parameter being present in the URL
  */
-function ting_openformat_load_full_view($full_view) {
-  $_SESSION['search_settings']['full_view'] = (bool)$full_view;
+function ting_openformat_load_full_view() {
+  fb($_POST);
+  $_SESSION['search_settings']['full_view'] = isset($_POST['full_view']) ? (bool)$_POST['full_view'] : FALSE;
+  drupal_json_output(drupal_json_encode('success'));
 }
 
 /** Load manifestations and insert into placeholder via AJAX
