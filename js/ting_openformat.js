@@ -151,7 +151,7 @@
         }
       },
       complete: function(object, status) {
-        if(status == 'timeout' && pref == '1'){
+        if(status == 'timeout' && pref == '1') {
           var full_view = (window.location.search.length == 0) ? '?full_view=1' : '&full_view=1';
           window.location = onSuccess + full_view;
         }
