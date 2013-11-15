@@ -144,15 +144,16 @@
       type: "POST",
       url: Drupal.settings.ting_openformat.ajax_callback,
       data: {full_view: pref},
+      timeout: 30000,
       success: function(msg) {
         if(onSuccess) {
           window.location = onSuccess;
         }
-        return false;
       },
       complete: function(object, status) {
-        if(console) {
-          console.log('status:' + status);
+        if(status == 'timeout' && pref == '1'){
+          var full_view = (window.location.search.length == 0) ? '?full_view=1' : '&full_view=1';
+          window.location = onSuccess + full_view;
         }
       }
     });
