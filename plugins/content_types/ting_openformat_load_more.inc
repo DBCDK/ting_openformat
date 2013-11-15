@@ -66,15 +66,7 @@ function ting_openformat_load_more_results_ajax_callback() {
     unset($_GET['keys']);
   }
 
-  $unwanted_keyes = array('page_id', 'page', 'q', 'req');
-
-  foreach ($_GET as $key => $value) {
-    if (!in_array($key, $unwanted_keyes)) {
-      $conditions[$key] = $value;
-    }
-  }
-
-  module_load_include('inc', 'ting_openformat', 'ting_openformat.search');
+  $conditions = ting_openformat_conditions_callback(array());
   $results = ting_openformat_search_execute($keys, $conditions);
 
   $more = isset($results['more']) ? $results['more'] : FALSE;
