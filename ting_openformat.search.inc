@@ -20,7 +20,8 @@ function ting_openformat_search_info() {
   return array(
     'title' => variable_get('search_client_name', 'well'),
     'path' => 'work',
-    'conditions_callback' => 'ting_openformat_conditions_callback',);
+    'conditions_callback' => 'ting_openformat_conditions_callback',
+  );
 }
 
 function _ting_openformat_handle_conditions(&$conditions) {
@@ -44,20 +45,20 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   if (!empty($variables)) {
     $params = array_merge($params, $variables);
   }
-  
+
   // selected facets from facetbrowser (in query)
-  if ( isset($conditions['facets']) && $conditions['facets'] != NULL ) {
+  if (isset($conditions['facets']) && $conditions['facets'] != NULL) {
     _ting_openformat_set_facets($params['query'], $conditions['facets']);
     unset($conditions['facets']);
   }
 
-  if ( isset($conditions['qe']) && $conditions['qe'] != NULL ) {
+  if (isset($conditions['qe']) && $conditions['qe'] != NULL) {
     _ting_openformat_set_query_extended($params['query'], $conditions['qe']);
     unset($conditions['qe']);
   }
 
-  if ( !empty($conditions['qe']) ) {
-    if ( !empty($params['query']) ) {
+  if (!empty($conditions['qe'])) {
+    if (!empty($params['query'])) {
       $params['query'] .= _bibdk_custom_search_get_cql('AND');
     }
     $params['query'] .= $conditions['qe'];
@@ -70,12 +71,12 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
 
   // do the actual search via ting_client_class
   $client = new ting_client_class();
- // $result = $client->do_search($params);
+  // $result = $client->do_search($params);
 
-  if (isset($params['query']) && empty($params['query']) ) {
+  if (isset($params['query']) && empty($params['query'])) {
     return array();
   }
-  $result = $client->do_request('search',$params);
+  $result = $client->do_request('search', $params);
   if (!$result) {
     return array();
   }
@@ -107,6 +108,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
 
   if (!empty($search_results)) {
     _ting_openformat_set_js_settings();
+
     return $search_results;
   }
 
@@ -114,7 +116,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   return array();
 }
 
-function _ting_openformat_set_js_settings(){
+function _ting_openformat_set_js_settings() {
   drupal_add_js(array(
     'ting_openformat' => array(
       'full_view' => $_SESSION['search_settings']['full_view'],
@@ -137,10 +139,10 @@ function _ting_openformat_create_collection_entities(&$result) {
     /* @var $collection TingClientObjectCollection */
     $openformat = isset($collection->getFormattedCollection()->getBriefDisplay()->manifestation) ? $collection->getFormattedCollection()->getBriefDisplay()->manifestation : NULL;
 
-    if( empty($openformat) ) {
+    if (empty($openformat)) {
       $objects = $collection->getObjects();
-      $id = ( isset($objects[0]->id) ) ? $objects[0]->id : '';
-      watchdog('openformat','Formatted collection [id:\'%id\'] is not set',array('%id' => $id),WATCHDOG_ERROR);
+      $id = (isset($objects[0]->id)) ? $objects[0]->id : '';
+      watchdog('openformat', 'Formatted collection [id:\'%id\'] is not set', array('%id' => $id), WATCHDOG_ERROR);
       continue;
     }
     _ting_openformat_parse_collection($original_manifestations, $entity_id, $openformat);
@@ -153,9 +155,9 @@ function _ting_openformat_create_collection_entities(&$result) {
       $bibdkobjects = $bibdkEntities;
       $result->entities[] = $bibdkobjects;
     }
-    else{
+    else {
       // @TODO log errors
-      watchdog('openformat','ID is not set',array(),WATCHDOG_ERROR);
+      watchdog('openformat', 'ID is not set', array(), WATCHDOG_ERROR);
       continue;
     }
   }
@@ -227,7 +229,7 @@ function _ting_openformat_facet_cache($client, $result, $params) {
     $params['objectFormat'] = 'DKABM';
 
     //$facet_result = $client->do_search($params);
-    $facet_result = $client->do_request('search',$params);
+    $facet_result = $client->do_request('search', $params);
     if (isset($facet_result->facets)) {
       $result->facets = $facet_result->facets;
       cache_set($local_cache_key, $facet_result->facets, 'cache', CACHE_TEMPORARY);
@@ -247,6 +249,7 @@ function _ting_openformat_set_default_facets() {
   foreach (variable_get('ding_facetbrowser_facets', array()) as $facet) {
     $facets[] = $facet['name'];
   }
+
   return $facets;
 }
 
@@ -257,11 +260,11 @@ function _ting_openformat_search_get_variables() {
   // results pr. page (opensearch::stepValue) ... in ting-client/lib/request/TingClientSearchRequest.php this is called numResults
   $resultsPerPage = variable_get('ting_search_results_per_page', 10);
   $params['numResults'] = $resultsPerPage;
-  $params['includeHoldingsCount'] = true;
+  $params['includeHoldingsCount'] = TRUE;
 
   // page number (opensearch::start)
   $page = pager_find_page();
-  $params['start'] = ( $page * $resultsPerPage ) + 1; // search results start at position 1
+  $params['start'] = ($page * $resultsPerPage) + 1; // search results start at position 1
 
   // search profile (opensearch::profile)
   $params['profile'] = variable_get('ting_search_profile', FALSE);
@@ -276,7 +279,7 @@ function _ting_openformat_search_get_variables() {
   }
 
 
-  if(isset($_SESSION['search_settings']['full_view']) && $_SESSION['search_settings']['full_view'] == TRUE){
+  if (isset($_SESSION['search_settings']['full_view']) && $_SESSION['search_settings']['full_view'] == TRUE) {
     $params['collectionType'] = 'work-1';
     $params['objectFormat'][] = 'bibliotekdkWorkDisplay';
   }
@@ -285,6 +288,7 @@ function _ting_openformat_search_get_variables() {
 
   //Set queryLanguage
   $params['queryLanguage'] = ting_openformat_get_cql_language();
+
   return $params;
 }
 
@@ -301,9 +305,10 @@ function _ting_openformat_set_facets(&$query, $facets) {
         $facetArray[] = $facet[0] . '="' . rawurldecode($facet[1]) . '"';
       }
     }
-    if ( !empty($query) ) {
+    if (!empty($query)) {
       $query .= $op . implode($op, $facetArray);
-    } else {
+    }
+    else {
       $query .= implode($op, $facetArray);
     }
   }
@@ -316,39 +321,39 @@ function _ting_openformat_set_facets(&$query, $facets) {
 function _ting_openformat_set_query_extended(&$query, $qe) {
   $cql = $preprocessed = array();
 
-  if ( !empty($query) ) {
+  if (!empty($query)) {
     $cql[] = $query;
   }
 
-  if ( !empty($qe) && count($qe) > 0 ) {
+  if (!empty($qe) && count($qe) > 0) {
 
     $res = array();
     $fields = array();
     $qe = module_invoke_all('ting_openformat_qe_preprocess', $qe);
 
-    if ( isset($qe['#preprocessed']) ) {
+    if (isset($qe['#preprocessed'])) {
       $preprocessed = $qe['#preprocessed'];
       unset($qe['#preprocessed']);
     }
 
     $op = ting_openformat_get_cql_commando('OR');
-    foreach ( $qe as $term => $group ) {
-      foreach ( $group as $key => $val ) {
+    foreach ($qe as $term => $group) {
+      foreach ($group as $key => $val) {
         $group[$key] = $term . '=' . $val;
       }
       $fields[] = '(' . implode($op, $group) . ')';
     }
 
     $op = ting_openformat_get_cql_commando('AND');
-    if ( !empty($fields) ) {
+    if (!empty($fields)) {
       $res[] = '(' . implode($op, $fields) . ')';
     }
 
-    foreach ( $preprocessed as $key => $term ) {
+    foreach ($preprocessed as $key => $term) {
       $res[] = $term;
     }
 
-    if ( count($res) > 0 ) {
+    if (count($res) > 0) {
       $cql[] = join($op, $res);
     }
 
@@ -365,27 +370,28 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
 function ting_openformat_conditions_callback($query) {
   $conditions = array();
 
-    // check tracking id
+  // check tracking id
   if (!empty($_REQUEST['trackingId'])) {
     $conditions['trackingId'] = $_REQUEST['trackingId'];
   }
-  
+
   $page_id = array();
-  if ( !empty($_REQUEST['page_id']) ) {
+  if (!empty($_REQUEST['page_id'])) {
     $page_id['page_id'] = $_REQUEST['page_id'];
   }
 
-  if ( !empty($_REQUEST['qe']) ) {
+  if (!empty($_REQUEST['qe'])) {
     $conditions['qe'] = $_REQUEST['qe'];
   }
 
   if (!empty($_REQUEST['size'])) {
-    $conditions['size'] = (int)$_REQUEST['size'];
+    $conditions['size'] = (int) $_REQUEST['size'];
   }
 
-  if(isset($_REQUEST['full_view'])){
-    $_SESSION['search_settings']['full_view'] = (bool)$_REQUEST['full_view'];
-  } elseif(!isset($_SESSION['search_settings']['full_view'])){
+  if (isset($_REQUEST['full_view'])) {
+    $_SESSION['search_settings']['full_view'] = (bool) $_REQUEST['full_view'];
+  }
+  elseif (!isset($_SESSION['search_settings']['full_view'])) {
     $_SESSION['search_settings']['full_view'] = FALSE;
   }
   // set the sort parameter here - thus it will work when sort parameter is added to url
@@ -419,7 +425,7 @@ function ting_openformat_conditions_callback($query) {
       }
     }
     $conditions['facets'] = $_REQUEST['facets'];
-    if ( $redirect === TRUE ) {
+    if ($redirect === TRUE) {
       $facets = array();
       foreach ($conditions['facets'] as $facet) {
         $facets['facets'][] = $facet;
@@ -427,5 +433,6 @@ function ting_openformat_conditions_callback($query) {
       drupal_goto(rawurldecode($_GET['q']), array('query' => $facets + $conditions + $page_id));
     }
   }
+
   return $conditions;
 }
