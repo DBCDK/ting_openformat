@@ -55,7 +55,7 @@
         }
       });
     });
-  }
+  };
 
   TingOpenformat.loadManifestationsWithAjax = function(context) {
 
@@ -85,7 +85,7 @@
         TingOpenformat.addAjaxToElement($(this), manifestation_ids);
       }
     });
-  }
+  };
 
   TingOpenformat.addAjaxToElement = function(element, manifestation_ids, event) {
     if(manifestation_ids.length == 0) {
@@ -103,25 +103,61 @@
     element.trigger('load_manifestations');
     element.unbind('load_manifestations');
 
-  }
+  };
 
   TingOpenformat.addFullViewButtonEvent = function(context) {
-
     $('.full-view-links a', context).click(function(e) {
+      e.preventDefault();
       if(!$(this).hasClass('inactive')) {
         $('.full-view-links a').toggleClass('inactive');
       }
 
       if($(this).attr('id') === 'ting-openformat-full-view-button-expanded') {
-        $('.work-toggle-element').trigger('show-work');
+        Drupal.settings.ting_openformat.full_view = true;
+        if(Drupal.settings.ting_openformat.full_view_all_loaded) {
+          $('.work-toggle-element').trigger('show-work');
+          TingOpenformat.setFullViewPref('1');
+        }
+        else if(!Drupal.settings.ting_openformat.isLoadingFullView) {
+          Drupal.settings.ting_openformat.isLoadingFullView = true;
+
+          $(this).toggleClass('ajax-progress');
+          $(this).append('<span class="throbber">&nbsp;</span>');
+
+          var search = window.location.search.replace('&full_view=1', '');
+          search = search.replace('&full_view=0', '');
+
+          var location = window.location.pathname + search;
+          TingOpenformat.setFullViewPref('1', location);
+        }
       }
       else {
+        Drupal.settings.ting_openformat.full_view = false;
         $('.work-toggle-element').trigger('hide-work');
+        TingOpenformat.setFullViewPref('0');
       }
-
     });
+  };
 
-  }
+  TingOpenformat.setFullViewPref = function(pref, onSuccess) {
+    $.ajax({
+      type: "POST",
+      url: Drupal.settings.ting_openformat.ajax_callback,
+      data: {full_view: pref},
+      timeout: 30000,
+      success: function(msg) {
+        if(onSuccess) {
+          window.location = onSuccess;
+        }
+      },
+      complete: function(object, status) {
+        if(status == 'timeout' && pref == '1') {
+          var full_view = (window.location.search.length == 0) ? '?full_view=1' : '&full_view=1';
+          window.location = onSuccess + full_view;
+        }
+      }
+    });
+  };
 
   TingOpenformat.loadWorkEvent = function(context) {
     $('.work-toggle-element', context).bind('show-work', function(e) {

@@ -26,6 +26,15 @@ function ting_openformat_menu() {
     'file path' => drupal_get_path('module', 'ting_openformat') . '/plugins/content_types/',
     'type' => MENU_CALLBACK,
   );
+
+  $items['ting_openformat/full_view'] = array(
+    'title' => 'Full view callback',
+    'description' => 'Callback for full view button',
+    'page callback' => 'ting_openformat_load_full_view',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   $items['ting_openformat/ajax/manifestations'] = array(
     'title' => 'Single work',
     'description' => 'View single work',
@@ -76,6 +85,15 @@ function ting_openformat_menu() {
   return $items;
 }
 
+/**
+ * AJAX callback for full_view.
+ * full_view comes as a POST paramter to avoid the parameter being present in the URL
+ */
+function ting_openformat_load_full_view() {
+  $_SESSION['search_settings']['full_view'] = isset($_POST['full_view']) ? (bool) $_POST['full_view'] : FALSE;
+  drupal_json_output(drupal_json_encode('success'));
+}
+
 /** Load manifestations and insert into placeholder via AJAX
  * @param $type
  * @param $json json encoded manifestation ids
@@ -85,29 +103,25 @@ function ting_openformat_ajax_manifestations($type, $json) {
   $commands = array();
   $manifestation_ids = json_decode($json);
 
-  #$commands[] = ajax_command_alert($manifestation_ids);
-
   if (!is_array($manifestation_ids) || count($manifestation_ids) == 0) {
-    return false;
+    return FALSE;
   }
 
   $bibdkEntity = ting_openformat_get_manifestations($manifestation_ids);
 
   if (!isset($bibdkEntity) || count($bibdkEntity) == 0) {
-    return false;
+    return FALSE;
   }
 
   $bibdkEntity = reset($bibdkEntity);
   $manifestations = $bibdkEntity->manifestations;
 
   if (!isset($manifestations) || count($manifestations) == 0) {
-    return false;
+    return FALSE;
   }
 
   foreach ($manifestations as $manifestation) {
     $view = drupal_render(ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL));
-    #$commands[] = ajax_command_alert($view);
-    #$commands[] = ajax_command_replace('[data-id='. $manifestation->id.']', $view);
     $commands[] = array(
       'command' => 'add_manifestations',
       'selector' => '[data-id=' . $manifestation->id . ']',
@@ -130,6 +144,7 @@ function ting_openformat_worktabs_items($tabs, $entity) {
     'rendered' => ting_openformat_get_tab_content($entity),
     'weight' => 0,
   );
+
   return $tabs;
 }
 
@@ -140,6 +155,7 @@ function ting_openformat_worktabs_items($tabs, $entity) {
 function ting_openformat_get_tab_content($entity) {
   $subjects = $entity->getSubjects();
   $markup = _ting_openformat_get_markup_for_field($subjects, '; ', FALSE);
+
   return isset($markup) ? drupal_render($markup) : '';
 }
 
@@ -156,20 +172,27 @@ function ting_openformat_single($id) {
   $manifestation = reset($bibdkEntity->manifestations);
 
   $host_publication = $manifestation->getHostPublication();
-  $part_of = isset($host_publication) ? drupal_render(_ting_openformat_get_markup_for_field($host_publication)) : NULL;
 
+  $part_of = NULL;
+  if (isset($host_publication)) {
+    $markup = _ting_openformat_get_markup_for_field($host_publication);
+    $part_of = drupal_render($markup);
+  }
+
+  $creator = _ting_openformat_get_markup_for_field($bibdkEntity->getCreator());
 
   return theme('ting_openformat_single_work', array(
     'title' => $bibdkEntity->getTitle(),
     'partOf' => $part_of,
-    'author' => drupal_render(_ting_openformat_get_markup_for_field($bibdkEntity->getCreator())),
+    'author' => drupal_render($creator),
     'ids' => $id,
     'work' => ting_openformat_work_view($bibdkEntity),
   ));
 }
 
 /**
- * @param $ids
+ * @param array $ids
+ * @param array $params
  * @return array
  */
 function ting_openformat_get_manifestations($ids, $params = array()) {
@@ -177,29 +200,62 @@ function ting_openformat_get_manifestations($ids, $params = array()) {
   $default_params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
   $default_params['objectId'] = $ids;
   $default_params['includeHoldingsCount'] = TRUE;
-  //$params['relationData'] = 'uri';
   drupal_alter('ting_openformat_getobject_params', $default_params);
   $params += $default_params;
   $result = $client->do_request('object', $params);
+
   if (empty($result->collections)) {
     return array();
   }
+  else {
+    return ting_openformat_pre_parse_manifestations($result);
+  }
+}
 
+/**
+ * @param stdClass $result
+ * @return mixed
+ */
+function ting_openformat_pre_parse_manifestations($result) {
+  $openformat = array();
+
+  /* @var $TingClientObjectCollection TingClientObjectCollection */
   foreach ($result->collections as $TingClientObjectCollection) {
-    $manifestation = $TingClientObjectCollection->formattedCollection->formattedCollection->manifestation;
-    foreach ($TingClientObjectCollection->objects as $TingClientObject) {
-      $relationsData = isset($TingClientObject->relationsData) ? $TingClientObject->relationsData : FALSE;
+    /* @var $formattedCollection TingClientFormattedCollection */
+    $formattedCollection = $TingClientObjectCollection->getFormattedCollection();
+
+    if (is_a($formattedCollection, 'TingClientFormattedCollection')) {
+      $manifestation = $formattedCollection->getWorkDisplay()->manifestation;
     }
-    if ($relationsData) {
+    else {
+      watchdog('ting_openformat', 'Expected object of type TingClientFormattedCollection - got %type', array('%type' => gettype($formattedCollection)), WATCHDOG_ERROR);
+    }
+
+    /* @var $TingClientObject TingClientObject */
+    foreach ($TingClientObjectCollection->getObjects() as $TingClientObject) {
+      $relationsData = isset($TingClientObject->relationsData) ? $TingClientObject->relationsData : NULL;
+    }
+    if (isset($relationsData)) {
       $manifestation->relationsData = $relationsData;
     }
     $openformat[] = $manifestation;
   }
 
+  $entity = _ting_openformat_get_bibdk_work_entity($openformat);
+
+  return $entity;
+}
+
+/**
+ * @param $openformat
+ * @return mixed
+ */
+function _ting_openformat_get_bibdk_work_entity($openformat) {
   $original_manifestations = array();
   $entity_ids = array();
   _ting_openformat_parse_manifestations($original_manifestations, $entity_ids, $openformat);
   $conditions['manifestations'] = $original_manifestations;
+
   return entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
 }
 
@@ -209,15 +265,16 @@ function ting_openformat_get_manifestations($ids, $params = array()) {
  */
 function ting_openformat_get_single($id) {
   $params = array();
-
   $params['objectId'] = $id;
   $params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
   $params['includeHoldingsCount'] = TRUE;
-  // use getObjectRequest to retrieve a single work
   $client = new ting_client_class();
   $result = $client->do_request('object', $params);
+
   if (isset($result->collections) && count($result->collections) > 0) {
-    $openformat[] = $result->collections[0]->formattedCollection->formattedCollection->manifestation;
+    /* @var $collection TingClientObjectCollection */
+    $collection = $result->collections[0];
+    $openformat[] = $collection->getFormattedCollection()->getWorkDisplay()->manifestation;
   }
 
   if (empty($openformat)) {
@@ -226,18 +283,20 @@ function ting_openformat_get_single($id) {
 
   $original_manifestations = array();
   $entity_ids = array();
-
   _ting_openformat_parse_manifestations($original_manifestations, $entity_ids, $openformat);
 
   // conditions array is deprecated in drupal 8.
   $conditions['manifestations'] = $original_manifestations;
-  return entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
+
+  $entity = entity_load('bibdkWorkEntity', $entity_ids, $conditions, TRUE);
+
+  return $entity;
 }
 
 function _ting_openformat_parse_manifestations(&$original_manifestations, &$entity_ids, $openformat) {
-  if (isset($openformat) && is_array($openformat)) {
+  if (isset($openformat) && is_array($openformat) && !empty($openformat)) {
     foreach ($openformat as $manifestation) {
-      $manifestation_id = $manifestation->adminData->pid->{'$'};
+      $manifestation_id = isset($manifestation->adminData->pid->{'$'}) ? $manifestation->adminData->pid->{'$'} : NULL;
       $entity_ids[] = $manifestation_id;
       $original_manifestations[$manifestation_id] = $manifestation;
     }
@@ -283,6 +342,7 @@ function ting_openformat_get_cql_commando($cql) {
       $return = ting_openformat_get_cql_language() == 'cqldan' ? ' ELLER ' : ' OR ';
       break;
   }
+
   return $return;
 }
 
@@ -293,180 +353,13 @@ function ting_openformat_get_cql_language() {
   return $language->language == 'da' ? 'cqldan' : 'cqleng';
 }
 
-/* * ************ ENTITY *************** */
-
-/**
- * Implements hook_entity_info
- * for bibdk we need 3 entities: work, subwork and manifestation
- * */
-function ting_openformat_entity_info() {
-  $return = array(
-    'bibdkManifestation' => array(
-      'label' => t('openformat manifestation'),
-      'fieldable' => TRUE,
-      'base table' => 'ting_openformat_manifestation',
-      'ding_entity_type' => 'bibdk_manifestation',
-      /* for clarity. default implementation of load hook */
-      // 'load hook' => 'manifestation_load',
-      'description' => t('openformat fields'),
-      'controller class' => 'ManifestionEntityApiController',
-      'entity keys' => array(
-        'id' => 'ding_entity_id',
-      ),
-      'bundles' => array(
-        'bibdkManifestation' => array(
-          'label' => 'openformat manifestation',
-          'admin' => array(
-            'path' => 'admin/structure/manifestations',
-            'access arguments' => array('administer content types'),
-          ),
-        ),
-      ),
-      'view modes' => array(
-        'full' => array(
-          'label' => t('Full content'),
-          'custom settings' => TRUE,
-        ),
-        'reservation' => array(
-          'label' => t('Reservation'),
-          'custom settings' => TRUE,
-        ),
-      ),
-    ),
-    'bibdkManifestationVolume' => array(
-      'label' => t('Manifestation Volume'),
-      'fieldable' => TRUE,
-      'base table' => 'ting_openformat_manifestation',
-      'ding_entity_type' => 'bibdk_manifestation_volume',
-      'description' => t('Manifestation volume fields'),
-      'controller class' => 'ManifestationVolumeEntityApiController',
-      'entity keys' => array(
-        'id' => 'ding_entity_id',
-      ),
-      'bundles' => array(
-        'bibdkManifestationVolume' => array(
-          'label' => 'Manifestation volume fields',
-          'admin' => array(
-            'path' => 'admin/structure/manifestation/volume',
-            'access arguments' => array('administer content types'),
-          ),
-        ),
-      ),
-    ),
-    'bibdkManifestationSection' => array(
-      'label' => t('Manifestation Section'),
-      'fieldable' => TRUE,
-      'base table' => 'ting_openformat_manifestation',
-      'ding_entity_type' => 'bibdk_manifestation_section',
-      'description' => t('Manifestation section fields'),
-      'controller class' => 'ManifestationSectionEntityApiController',
-      'entity keys' => array(
-        'id' => 'ding_entity_id',
-      ),
-      'bundles' => array(
-        'bibdkManifestationSection' => array(
-          'label' => 'Manifestation section fields',
-          'admin' => array(
-            'path' => 'admin/structure/manifestation/section',
-            'access arguments' => array('administer content types'),
-          ),
-        ),
-      ),
-    ),
-    'bibdkCollection' => array(
-      'label' => t('Bibdk collection'),
-      'fieldable' => TRUE,
-      'base table' => 'ting_openformat_manifestation',
-      'ding_entity_type' => 'bibdk_collection',
-      'description' => t('Bibdk collection'),
-      'controller class' => 'CollectionEntityApiController',
-      'entity keys' => array(
-        'id' => 'ding_entity_id',
-      ),
-      'bundles' => array(
-        'bibdkCollection' => array(
-          'label' => 'openformat collection',
-          'admin' => array(
-            'path' => 'admin/structure/collection',
-            'access arguments' => array('administer content types'),
-          ),
-        ),
-      ),
-      'view modes' => array(
-        'full' => array(
-          'label' => t('Full content'),
-          'custom settings' => TRUE,
-        ),
-      ),
-    ),
-    'bibdkSubwork' => array(
-      'label' => t('Subwork'),
-      'fieldable' => TRUE,
-      'base table' => 'ting_openformat_manifestation',
-      // make this a ding_entity ?
-      'ding_entity_type' => 'bibdk_subwork',
-      //'ding_entity_type' => 'ting_openformat_manifestation',
-      //'ding_entity_menu' => '/manifestation/%ting_manifestation',
-      //'ding_entity_index' => 2,
-
-      /* for clarity. default implementation of load hook */
-      // 'load hook' => 'manifestation_load',
-      'description' => t('Manifestations grouped by type'),
-      'controller class' => 'subWorkEntityAPIController',
-      'entity keys' => array(
-        'id' => 'ding_entity_id',
-      ),
-      'bundles' => array(
-        'bibdkSubwork' => array(
-          'label' => t('Subwork'),
-          'admin' => array(
-            'path' => 'admin/structure/subworks',
-            'access arguments' => array('administer content types'),
-          ),
-        ),
-      ),
-    ),
-    'bibdkWorkEntity' => array(
-      'label' => t('Bibdk entity placeholder for manifestations'),
-      'fieldable' => TRUE,
-      // ?? do we need the base table -- it is not used for anything since controllerclass
-      // only implements DrupalEntityControllerInterface and not DrupalDefaultEntityController
-      'base table' => 'ting_openformat_manifestation',
-      // make this a ding_entity ?
-      'ding_entity_type' => 'bibdk_entity',
-      //'ding_entity_type' => 'ting_openformat_manifestation',
-      //'ding_entity_menu' => '/manifestation/%ting_manifestation',
-      //'ding_entity_index' => 2,
-      //... could an additional argument be used in ding_entity ?? maybe for setting bundels
-      // 'ding_entity_bundle' => 'bibdk_entity',
-      'controller class' => 'bibdkEntityApiController',
-      'load hook' => 'manifestations_load',
-      'entity keys' => array(
-        //'id' => 'tid',
-        //'ding_entity_id' => 'ding_entity_id',
-        'id' => 'ding_entity_id',
-      ),
-      'bundles' => array(
-        'bibdkWorkEntity' => array(
-          'label' => 'bibdkWorkEntity',
-          'admin' => array(
-            'path' => 'admin/structure/bibdkWork',
-            'access arguments' => array('administer content types'),
-          ),
-        ),
-      ),
-    )
-  );
-
-  return $return;
-}
-
 /**
  * Load hook as set in entity_info
  * load hook is not currently used .. maybe later.
  */
 function ting_openformat_manifestations_load($stdObjects) {
   $ret = array();
+
   return $ret;
 }
 
@@ -476,8 +369,6 @@ function ting_openformat_manifestations_load($stdObjects) {
 function ting_openformat_maniobject_uri() {
   return 'Brønd';
 }
-
-/* * ************** end ENTITY ************** */
 
 /* * *********  panel-pages *************** */
 
@@ -514,7 +405,8 @@ function ting_openformat_ding_devel_timers() {
     'search_client_net' => array(
       'title' => 'Search client net time was @time ms.',
       'include in total' => FALSE,
-    ));
+    )
+  );
 }
 
 /* * *********** VIEWS ************* */
@@ -529,7 +421,8 @@ function template_preprocess_ting_openformat_subwork_tabs(&$variables) {
   drupal_add_css($path . '/ting_openformat_subwork.css');
 }
 
-/** Creates html view for bibdkWorkEntity
+/**
+ * Creates html view for bibdkWorkEntity
  * @param Manifestation|BibdkWork|BibdkSubwork|BibdkCollection $bibdkWork
  * @param string $view_mode
  * @param null $langcode
@@ -551,12 +444,17 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   $ordered_subworks = ting_openformat_get_ordered_subworks($subWorks);
 
   $ding_id = preg_replace('/[^a-zA-Z0-9]+/', '', $bibdkWork->id);
-  $tabs = theme('ting_openformat_subwork_tabs', array('subWorks' => $ordered_subworks, 'ding_id' => $ding_id));
+  $tabs = theme('ting_openformat_subwork_tabs', array(
+    'subWorks' => $ordered_subworks,
+    'ding_id' => $ding_id
+  ));
+
   return theme('ting_openformat_work', array(
     'fields' => $work_fields,
     'subWorks' => $ordered_subworks,
     'tabs' => $tabs,
-    'ding_id' => $ding_id));
+    'ding_id' => $ding_id
+  ));
 }
 
 /** Get Subworks ordered by type and subtype
@@ -581,17 +479,18 @@ function ting_openformat_get_ordered_subworks($subWorks) {
       $ordered_subworks[$type_id][$subtype_id]['manifest']['subtype_actions'] = module_invoke_all('ting_openformat_subwork_materialtype_actions', $ordered_subworks, $type_id, $subtype_id, $val['bibdkSubwork']);
     }
   }
+
   return $ordered_subworks;
 }
 
-/** Creates html view for bibdkSubwork
- * @param $bibdkSubwork
+/**
+ * Creates html view for bibdkSubwork
+ * @param BibdkSubwork $bibdkSubwork
  * @param string $view_mode
  * @param null $langcode
  * @return mixed
  */
 function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langcode = NULL) {
-
   $sub['fields'] = _prepare_view('bibdkSubwork', $bibdkSubwork, $view_mode, $langcode);
   $sub['bibdkSubwork'] = $bibdkSubwork;
   foreach ($bibdkSubwork->getManifestations() as $manifestation) {
@@ -602,8 +501,7 @@ function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langc
     else {
       // other elements are given a container
       $manifestation_view = array(
-        '#type' => 'html_tag',
-        '#tag' => 'div',
+        '#type' => 'container',
         '#attributes' => array(
           'class' => 'manifestation-container',
           'data-id' => $manifestation->id,
@@ -613,26 +511,51 @@ function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langc
     }
     $sub['manifestations'][$manifestation->id] = drupal_render($manifestation_view);
   }
+
   return $sub;
 }
+
 
 /**
  * Generates the collection view with an 'Order any edition' button if view is
  * implemented (requires bibdk_reservation module)
+ *
+ * If $_SESSION['search_settings']['full_view'] is TRUE the generated will be a
+ * full view with all information visible.
  *
  * @param BibdkCollection $bibdkobject
  * @return string
  */
 function ting_openformat_collection_view($bibdkobject) {
   $all_ids_in_collection = $bibdkobject->getCollectionIds();
-  $uid = strtolower(strtr(reset($all_ids_in_collection), array(':' => '', '-' => '')));
+  $uid = strtolower(strtr(reset($all_ids_in_collection), array(
+    ':' => '',
+    '-' => ''
+  )));
+
   $trackId = ting_openformat_set_tracking_id();
-  
-  $form = drupal_get_form('ting_openformat_show_info_get_form', $bibdkobject, $uid, $trackId);
+
+  //Setting parameters based on a full or short view was requeseted
+  if (isset($_SESSION['search_settings']['full_view']) && $_SESSION['search_settings']['full_view'] == TRUE) {
+    $showinfoForm = '';
+    $workOne = ting_openformat_load_single_full_work($bibdkobject, $all_ids_in_collection, $uid);
+  }
+  else {
+    $form = drupal_get_form('ting_openformat_show_info_get_form', $bibdkobject, $uid, $trackId);
+    $showinfoForm = drupal_render($form);
+    $workOne = NULL;
+  }
+
   $actions = _prepare_view('bibdkCollection', $bibdkobject, 'full', NULL);
   $workType = $bibdkobject->getWorkType();
   $type = $bibdkobject->getType();
   $types_classes = _ting_openformat_get_types_list($bibdkobject);
+
+  $togglework = theme('ting_openformat_toggle_work', array(
+    'uid' => $uid,
+    'showinfo' => $showinfoForm,
+    'full_view' => !is_null($workOne),
+  ));
 
   return theme('ting_openformat_collection', array(
     'title' => $bibdkobject->getTitle(),
@@ -641,24 +564,25 @@ function ting_openformat_collection_view($bibdkobject) {
     'work_type' => (!empty($workType)) ? 'type-' . $workType : 'type-undefined',
     'type' => $type,
     'ids' => implode(',', $all_ids_in_collection),
-    'showinfo' => drupal_render($form),
+    'togglework' => $togglework,
+    'work_one' => $workOne,
     'uid' => $uid,
     'actions' => (!empty($actions)) ? $actions : array(),
     'types' => $types_classes,
   ));
-  
 }
 
-/** set tracking parameter in url. If trackingId is already set
+/**
+ * Set tracking parameter in url. If trackingId is already set
  * append gui specific track. Else create tracking id for webservices.
- * 
- * trackingid := $_GET['ẗrackingId'] . ':' . [number of collection on page]
- * 
- * @TODO add a timestamp? 
  *
- * @staticvar string $trackingId 
+ * trackingid := $_GET['ẗrackingId'] . ':' . [number of collection on page]
+ *
+ * @TODO add a timestamp?
+ *
+ * @staticvar string $trackingId
  * @staticvar int $collectionCount
- * @return string 
+ * @return string
  */
 function ting_openformat_set_tracking_id() {
   static $trackingId;
@@ -678,12 +602,12 @@ function ting_openformat_set_tracking_id() {
   }
   $collectionCount++;
 
-  $trackId = $trackingId; 
+  $trackId = $trackingId;
   if (strlen($trackId) > 1) {
     $trackId .= ':';
   }
 
-  $trackId .=  'bibdkGui_'.$collectionCount;
+  $trackId .= 'bibdkGui_' . $collectionCount;
 
   return $trackId;
 }
@@ -724,14 +648,12 @@ function _ting_openformat_get_types_list($bibdkobject) {
  *
  * @param $form
  * @param array $form_state
- * @param $bibdkObject
+ * @param BibdkCollection $bibdkObject
  * @param $uid
  * @param int $trackId
  * @return array
  */
-
 function ting_openformat_show_info_get_form($form, $form_state, $bibdkObject, $uid, $trackId = 0) {
-  //$uid = $form_state['build_info']['args'][1];
   $all_ids_in_collection = $bibdkObject->getCollectionIds();
   $form['info'] = array(
     '#trackId' => $trackId,
@@ -751,6 +673,7 @@ function ting_openformat_show_info_get_form($form, $form_state, $bibdkObject, $u
       'event' => 'click',
     ),
   );
+
   return $form;
 }
 
@@ -780,12 +703,26 @@ function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
 }
 
 
+/**
+ * @param BibdkCollection $collection
+ * @param $ids
+ * @param $uid
+ * @param int $tracking_id
+ * @return string
+ */
 function ting_openformat_load_single_full_work($collection, $ids, $uid, $tracking_id = 0) {
   module_invoke_all('show_manifestation_info_prerender', $ids, $uid);
+
   foreach ($collection->manifestations as $manifestation) {
     $briefDisplay = new BibdkBriefDisplay($manifestation);
     if (!isset($bibdkWork)) {
-      $bibdkWork = ting_openformat_get_manifestations($briefDisplay->id, array('trackingId' => $tracking_id));
+      if ($bibdkWork = $collection->getWorkOne()) {
+        $bibdkWork = _ting_openformat_get_bibdk_work_entity(array($bibdkWork));
+      }
+      else {
+        $bibdkWork = ting_openformat_get_manifestations($briefDisplay->id, array('trackingId' => $tracking_id));
+      }
+
       $bibdkWork = current($bibdkWork);
       $bibdkWork->manifestations[$briefDisplay->id]->setBriefDisplayType($briefDisplay->gettype());
       $bibdkWork->manifestations[$briefDisplay->id]->setSubType($briefDisplay->getSubtype());
@@ -821,7 +758,35 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
     '#fields' => $fields,
     '#actions' => $actions,
   );
+
   return $build;
+}
+
+/**
+ * Returns an array with parameters representing the current search
+ *
+ * @return array $query
+ */
+function _ting_openformat_get_search_query() {
+  $query = array();
+  $keys = drupal_static('ting_search_query');
+
+  if (isset($_GET['sort'])) {
+    $query['sort'] = $_GET['sort'];
+  }
+  if (isset($_GET['qe'])) {
+    $query['qe'] = $_GET['qe'];
+  }
+  if (isset($_GET['page_id'])) {
+    $query['page_id'] = $_GET['page_id'];
+  }
+  if (isset($_GET['facets'])) {
+    $query['facets'] = $_GET['facets'];
+  }
+
+  $query['keys'] = isset($keys) ? $keys : $_GET['keys'];
+
+  return $query;
 }
 
 /**
@@ -836,6 +801,7 @@ function ting_openformat_volume_view($volume, $view_mode = 'full', $langcode = N
     $langcode = $GLOBALS['language_content']->language;
   }
   $field_content = _prepare_view('bibdkManifestationVolume', $volume, $view_mode, $langcode);
+
   return drupal_render($field_content);
 }
 
@@ -851,6 +817,7 @@ function ting_openformat_section_view($volume, $view_mode = 'full', $langcode = 
     $langcode = $GLOBALS['language_content']->language;
   }
   $field_content = _prepare_view('bibdkManifestationSection', $volume, $view_mode, $langcode);
+
   return drupal_render($field_content);
 }
 
@@ -866,6 +833,7 @@ function _prepare_view($entity_type, $object, $view_mode, $langcode) {
   field_attach_prepare_view($entity_type, array($object->id => $object), $view_mode, $langcode);
   entity_prepare_view($entity_type, array($object->id => $object), $langcode);
   $fields = field_attach_view($entity_type, $object, $view_mode, $langcode);
+
   return $fields;
 }
 
@@ -921,6 +889,7 @@ function ting_openformat_ding_facetbrowser() {
   if ($search_result) {
     $results->facets = ($search_result instanceof TingClientSearchResult) ? $search_result->facets : array();
     $results->searchkey = $search_result->search_key;
+
     return $results;
   }
 }
@@ -1048,7 +1017,11 @@ function _ting_openformat_fetch_types() {
 
   foreach ($result->facets['facet.type']->terms as $term => $count) {
     if (!isset($types[$term])) {
-      $types[$term] = array("type" => $term, "count" => $count, "weight" => 1000);
+      $types[$term] = array(
+        "type" => $term,
+        "count" => $count,
+        "weight" => 1000
+      );
     }
   }
 
@@ -1058,350 +1031,152 @@ function _ting_openformat_fetch_types() {
   }
 }
 
+/*************** ENTITY *****************/
 /**
- * Translates variables into strings
- *
- * @param $type
- * @param $subtype
- *
- * @deprecated as a test this function is being deprecated and should be removed
- * following US #1172 if accepted
- *
- * @return array
- */
-function _ting_openformat_type_translation($type, $subtype) {
+ * Implements hook_entity_info
+ * for bibdk we need 3 entities: work, subwork and manifestation
+ **/
+function ting_openformat_entity_info() {
+  $return = array(
+    'bibdkManifestation' => array(
+      'label' => t('openformat manifestation'),
+      'fieldable' => TRUE,
+      'base table' => 'ting_openformat_manifestation',
+      'ding_entity_type' => 'bibdk_manifestation',
+      'description' => t('openformat fields'),
+      'controller class' => 'ManifestionEntityApiController',
+      'entity keys' => array(
+        'id' => 'ding_entity_id',
+      ),
+      'bundles' => array(
+        'bibdkManifestation' => array(
+          'label' => 'openformat manifestation',
+          'admin' => array(
+            'path' => 'admin/structure/manifestations',
+            'access arguments' => array('administer content types'),
+          ),
+        ),
+      ),
+      'view modes' => array(
+        'full' => array(
+          'label' => t('Full content'),
+          'custom settings' => TRUE,
+        ),
+        'reservation' => array(
+          'label' => t('Reservation'),
+          'custom settings' => TRUE,
+        ),
+      ),
+    ),
+    'bibdkManifestationVolume' => array(
+      'label' => t('Manifestation Volume'),
+      'fieldable' => TRUE,
+      'base table' => 'ting_openformat_manifestation',
+      'ding_entity_type' => 'bibdk_manifestation_volume',
+      'description' => t('Manifestation volume fields'),
+      'controller class' => 'ManifestationVolumeEntityApiController',
+      'entity keys' => array(
+        'id' => 'ding_entity_id',
+      ),
+      'bundles' => array(
+        'bibdkManifestationVolume' => array(
+          'label' => 'Manifestation volume fields',
+          'admin' => array(
+            'path' => 'admin/structure/manifestation/volume',
+            'access arguments' => array('administer content types'),
+          ),
+        ),
+      ),
+    ),
+    'bibdkManifestationSection' => array(
+      'label' => t('Manifestation Section'),
+      'fieldable' => TRUE,
+      'base table' => 'ting_openformat_manifestation',
+      'ding_entity_type' => 'bibdk_manifestation_section',
+      'description' => t('Manifestation section fields'),
+      'controller class' => 'ManifestationSectionEntityApiController',
+      'entity keys' => array(
+        'id' => 'ding_entity_id',
+      ),
+      'bundles' => array(
+        'bibdkManifestationSection' => array(
+          'label' => 'Manifestation section fields',
+          'admin' => array(
+            'path' => 'admin/structure/manifestation/section',
+            'access arguments' => array('administer content types'),
+          ),
+        ),
+      ),
+    ),
+    'bibdkCollection' => array(
+      'label' => t('Bibdk collection'),
+      'fieldable' => TRUE,
+      'base table' => 'ting_openformat_manifestation',
+      'ding_entity_type' => 'bibdk_collection',
+      'description' => t('Bibdk collection'),
+      'controller class' => 'CollectionEntityApiController',
+      'entity keys' => array(
+        'id' => 'ding_entity_id',
+      ),
+      'bundles' => array(
+        'bibdkCollection' => array(
+          'label' => 'openformat collection',
+          'admin' => array(
+            'path' => 'admin/structure/collection',
+            'access arguments' => array('administer content types'),
+          ),
+        ),
+      ),
+      'view modes' => array(
+        'full' => array(
+          'label' => t('Full content'),
+          'custom settings' => TRUE,
+        ),
+      ),
+    ),
+    'bibdkSubwork' => array(
+      'label' => t('Subwork'),
+      'fieldable' => TRUE,
+      'base table' => 'ting_openformat_manifestation',
+      'ding_entity_type' => 'bibdk_subwork',
+      'description' => t('Manifestations grouped by type'),
+      'controller class' => 'subWorkEntityAPIController',
+      'entity keys' => array(
+        'id' => 'ding_entity_id',
+      ),
+      'bundles' => array(
+        'bibdkSubwork' => array(
+          'label' => t('Subwork'),
+          'admin' => array(
+            'path' => 'admin/structure/subworks',
+            'access arguments' => array('administer content types'),
+          ),
+        ),
+      ),
+    ),
+    'bibdkWorkEntity' => array(
+      'label' => t('Bibdk entity placeholder for manifestations'),
+      'fieldable' => TRUE,
+      'base table' => 'ting_openformat_manifestation',
+      'ding_entity_type' => 'bibdk_entity',
+      'controller class' => 'bibdkEntityApiController',
+      'load hook' => 'manifestations_load',
+      'entity keys' => array(
+        'id' => 'ding_entity_id',
+      ),
+      'bundles' => array(
+        'bibdkWorkEntity' => array(
+          'label' => 'bibdkWorkEntity',
+          'admin' => array(
+            'path' => 'admin/structure/bibdkWork',
+            'access arguments' => array('administer content types'),
+          ),
+        ),
+      ),
+    )
+  );
 
-  switch ($type) {
-    case 'book':
-      $type = t('book_placeholder', array(), array('context' => 'ting_openformat'));
-      break;
-    case 'literature':
-      $type = t('literature');
-      break;
-    case 'movie':
-      $type = t('movie');
-      break;
-    case 'music':
-      $type = t('music');
-      break;
-    case 'game':
-      $type = t('game');
-      break;
-    case 'article':
-      $type = t('article');
-      break;
-    case 'audiobook':
-      $type = t('audiobook');
-      break;
-    case 'sheetmusic':
-      $type = t('sheetmusic_placeholder', array(), array('context' => 'ting_openformat'));
-      break;
-    case 'none':
-      $type = t('none');
-      break;
-    case 'online':
-      $type = t('online');
-      break;
-  }
-
-  switch ($subtype) {
-    case 'Akvarel':
-      $subtype = t('Akvarel');
-      break;
-    case 'Anmeldelse':
-      $subtype = t('Anmeldelse');
-      break;
-    case 'Arkitekturtegning':
-      $subtype = t('Arkitekturtegning');
-      break;
-    case 'Artikel':
-      $subtype = t('Artikel');
-      break;
-    case 'Avis':
-      $subtype = t('Avis');
-      break;
-    case 'Avis (net)':
-      $subtype = t('Avis (net)');
-      break;
-    case 'Avisartikel':
-      $subtype = t('Avisartikel');
-      break;
-    case 'Billedbog':
-      $subtype = t('Billedbog');
-      break;
-    case 'Billedbånd':
-      $subtype = t('Billedbånd');
-      break;
-    case 'Billedkort':
-      $subtype = t('Billedkort');
-      break;
-    case 'Billedtæppe':
-      $subtype = t('Billedtæppe');
-      break;
-    case 'Blu ray':
-      $subtype = t('Blu ray');
-      break;
-    case 'Blu-ray':
-      $subtype = t('blu-ray_placeholder', array(), array('context' => 'ting_openformat'));
-      break;
-    case 'Bog':
-      $subtype = t('Bog');
-      break;
-    case 'bog':
-      $subtype = t('Bog');
-      break;
-    case 'Bånd':
-      $subtype = t('bånd_placeholder', array(), array('context' => 'ting_openformat'));
-      break;
-    case 'Bog stor skrift':
-      $subtype = t('Bog stor skrift');
-      break;
-    case 'CD':
-      $subtype = t('cd_placeholder', array(), array('context' => 'ting_openformat'));
-      break;
-    case 'Cd (musik)':
-      $subtype = t('Cd (musik)');
-      break;
-    case 'CD-I':
-      $subtype = t('CD-I');
-      break;
-    case 'Cd-rom':
-      $subtype = t('cd-rom__placeholder', array(), array('context' => 'ting_openformat'));
-      break;
-    case 'CD-rom':
-      $subtype = t('CD-rom');
-      break;
-    case 'Cd-rom (mp3)':
-      $subtype = t('Cd-rom (mp3)');
-      break;
-    case 'DCC-bånd':
-      $subtype = t('DCC-bånd');
-      break;
-    case 'Dias':
-      $subtype = t('Dias');
-      break;
-    case 'Diskette':
-      $subtype = t('Diskette');
-      break;
-    case 'DTBook':
-      $subtype = t('DTBook');
-      break;
-    case 'Dvd':
-      $subtype = t('dvd_placeholder', array(), array('context' => 'ting_openformat'));
-      break;
-    case 'DVD (film)':
-      $subtype = t('DVD (film)');
-      break;
-    case 'DVD-rom':
-      $subtype = t('DVD-rom');
-      break;
-    case 'Ebog':
-      $subtype = t('Ebog');
-      break;
-    case 'Emnekasse':
-      $subtype = t('Emnekasse');
-      break;
-    case 'Fastplade':
-      $subtype = t('Fastplade');
-      break;
-    case 'Film (net)':
-      $subtype = t('Film (net)');
-      break;
-    case 'Flipover-materiale':
-      $subtype = t('Flipover-materiale');
-      break;
-    case 'Flonellografmateriale':
-      $subtype = t('Flonellografmateriale');
-      break;
-    case 'Foto':
-      $subtype = t('Foto');
-      break;
-    case 'Foto-cd':
-      $subtype = t('Foto-cd');
-      break;
-    case 'Fotoreproduktion':
-      $subtype = t('Fotoreproduktion');
-      break;
-    case 'GameBoy':
-      $subtype = t('GameBoy');
-      break;
-    case 'GameBoy Advance':
-      $subtype = t('GameBoy Advance');
-      break;
-    case 'Graphic novel':
-      $subtype = t('Graphic novel');
-      break;
-    case 'Grafisk blad':
-      $subtype = t('Grafisk blad');
-      break;
-    case 'Grammofonplade':
-      $subtype = t('Grammofonplade');
-      break;
-    case 'Kassettelydbånd':
-      $subtype = t('Kassettelydbånd');
-      break;
-    case 'Kort':
-      $subtype = t('Kort');
-      break;
-    case 'Kunstreproduktion':
-      $subtype = t('Kunstreproduktion');
-      break;
-    case 'Laborativt materiale':
-      $subtype = t('Laborativt materiale');
-      break;
-    case 'Legetøj':
-      $subtype = t('Legetøj');
-      break;
-    case 'Lydbog (bånd)':
-      $subtype = t('Lydbog (bånd)');
-      break;
-    case 'Lydbog (cd)':
-      $subtype = t('Lydbog (cd)');
-      break;
-    case 'Lydbog (net)':
-      $subtype = t('Lydbog (net)');
-      break;
-    case 'Lydbog (cd-mp3)':
-      $subtype = t('Lydbog (cd-mp3)');
-      break;
-    case 'Maleri':
-      $subtype = t('Maleri');
-      break;
-    case 'Materiale til indlæringsapparat':
-      $subtype = t('Materiale til indlæringsapparat');
-      break;
-    case 'Mikroform':
-      $subtype = t('Mikroform');
-      break;
-    case 'Mini disc':
-      $subtype = t('Mini disc');
-      break;
-    case 'Musik (net)':
-      $subtype = t('Musik (net)');
-      break;
-    case 'Måleapparat':
-      $subtype = t('Måleapparat');
-      break;
-    case 'Netdokument':
-      $subtype = t('Netdokument');
-      break;
-    case 'Nintendo DS':
-      $subtype = t('Nintendo DS');
-      break;
-    case 'Node':
-      $subtype = t('Node');
-      break;
-    case 'Pc-spil':
-      $subtype = t('Pc-spil');
-      break;
-    case 'Pc-spil (net)':
-      $subtype = t('Pc-spil (net)');
-      break;
-    case 'Ordkort':
-      $subtype = t('Ordkort');
-      break;
-    case 'Originalkunst':
-      $subtype = t('Originalkunst');
-      break;
-    case 'Periodikum':
-      $subtype = t('Periodikum');
-      break;
-    case 'Periodikum (net)':
-      $subtype = t('Periodikum (net)');
-      break;
-    case 'Plakat':
-      $subtype = t('Plakat');
-      break;
-    case 'Planche':
-      $subtype = t('Planche');
-      break;
-    case 'Playstation':
-      $subtype = t('Playstation');
-      break;
-    case 'Playstation 2':
-      $subtype = t('Playstation 2');
-      break;
-    case 'Playstation 3':
-      $subtype = t('Playstation 3');
-      break;
-    case 'Postkort':
-      $subtype = t('Postkort');
-      break;
-    case 'PSP':
-      $subtype = t('PSP');
-      break;
-    case 'Punktskrift':
-      $subtype = t('Punktskrift');
-      break;
-    case 'Puslespil':
-      $subtype = t('Puslespil');
-      break;
-    case 'Sammensat materiale':
-      $subtype = t('Sammensat materiale');
-      break;
-    case 'Sang':
-      $subtype = t('Sang');
-      break;
-    case 'Serie':
-      $subtype = t('Serie');
-      break;
-    case 'Spil':
-      $subtype = t('Spil');
-      break;
-    case 'Spolelydbånd':
-      $subtype = t('spolelydbånd_placeholder', array(), array('context' => 'ting_openformat'));
-      break;
-    case 'Symbolkort':
-      $subtype = t('Symbolkort');
-      break;
-    case 'Teateropførelse':
-      $subtype = t('Teateropførelse');
-      break;
-    case 'Tegneserie':
-      $subtype = t('Tegneserie');
-      break;
-    case 'Tegning':
-      $subtype = t('Tegning');
-      break;
-    case 'Teknisk tegning':
-      $subtype = t('Teknisk tegning');
-      break;
-    case 'Tidsskrift':
-      $subtype = t('Tidsskrift');
-      break;
-    case 'Tidsskrift (net)':
-      $subtype = t('Tidsskrift (net)');
-      break;
-    case 'Tidsskriftsartikel':
-      $subtype = t('Tidsskriftsartikel');
-      break;
-    case 'Transparent':
-      $subtype = t('Transparent');
-      break;
-    case 'Udstilling':
-      $subtype = t('Udstilling');
-      break;
-    case 'Udstillingsmontage':
-      $subtype = t('Udstillingsmontage');
-      break;
-    case 'Video':
-      $subtype = t('Video');
-      break;
-    case 'Wii':
-      $subtype = t('Wii');
-      break;
-    case 'Xbox':
-      $subtype = t('Xbox');
-      break;
-    case 'Xbox 360':
-      $subtype = t('Xbox 360');
-      break;
-    case 'Øvelsesmodel':
-      $subtype = t('Øvelsesmodel');
-      break;
-    case 'Årbog':
-      $subtype = t('Årbog');
-      break;
-  }
-  return array('type' => $type, 'subtype' => $subtype);
+  return $return;
 }
+
+/****************** END ENTITY ****************/

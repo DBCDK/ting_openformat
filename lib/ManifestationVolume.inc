@@ -29,4 +29,13 @@ class ManifestationVolume extends ManifestationMaster {
     return NULL;
   }
 
+  public function getDependentTitle() {
+    $fields = array('dependentTitle');
+    if (isset($this->fields->dependentTitle)) {
+      $element = $this->fields->dependentTitle;
+      $result = ting_openformat_methods::parseFields($element, $fields);
+      return (is_array($result)) ? reset($result) : $result;
+    }
+    return NULL;
+  }
 }

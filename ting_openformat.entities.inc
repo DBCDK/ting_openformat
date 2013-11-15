@@ -20,10 +20,11 @@ class ting_openformat_methods {
     }
 
     foreach ($stdObjects as $object) {
-      if (isset($object->searchCode) || isset($object->display)){
+      if (isset($object->searchCode) || isset($object->display)) {
         $subject['searchCode'] = isset($object->searchCode) ? self::_getSearchCodeElement($object->searchCode) : NULL;
         $subject['display'] = isset($object->display) ? $object->display->{'$'} : NULL;
-      } elseif (isset($object->{'$'})){
+      }
+      elseif (isset($object->{'$'})) {
         $subject = $object->{'$'};
       }
       $ret[] = $subject;
@@ -66,6 +67,7 @@ class ting_openformat_methods {
           $ret[] = self::parseFields($o, $fields);
         }
       }
+
       return $ret;
     }
 
@@ -89,6 +91,7 @@ class ting_openformat_methods {
         $ret[$value] = $object->$value->{'$'};
       }
     }
+
     return $ret;
   }
 
