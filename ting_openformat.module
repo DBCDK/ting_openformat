@@ -90,7 +90,7 @@ function ting_openformat_menu() {
  * full_view comes as a POST paramter to avoid the parameter being present in the URL
  */
 function ting_openformat_load_full_view() {
-  $_SESSION['search_settings']['full_view'] = isset($_POST['full_view']) ? (bool)$_POST['full_view'] : FALSE;
+  $_SESSION['search_settings']['full_view'] = isset($_POST['full_view']) ? (bool) $_POST['full_view'] : FALSE;
   drupal_json_output(drupal_json_encode('success'));
 }
 
@@ -174,9 +174,9 @@ function ting_openformat_single($id) {
   $host_publication = $manifestation->getHostPublication();
 
   $part_of = NULL;
-  if(isset($host_publication)){
+  if (isset($host_publication)) {
     $markup = _ting_openformat_get_markup_for_field($host_publication);
-    $part_of= drupal_render($markup);
+    $part_of = drupal_render($markup);
   }
 
   $creator = _ting_openformat_get_markup_for_field($bibdkEntity->getCreator());
@@ -224,9 +224,10 @@ function ting_openformat_pre_parse_manifestations($result) {
     /* @var $formattedCollection TingClientFormattedCollection */
     $formattedCollection = $TingClientObjectCollection->getFormattedCollection();
 
-    if(is_a($formattedCollection, 'TingClientFormattedCollection')){
+    if (is_a($formattedCollection, 'TingClientFormattedCollection')) {
       $manifestation = $formattedCollection->getWorkDisplay()->manifestation;
-    } else {
+    }
+    else {
       watchdog('ting_openformat', 'Expected object of type TingClientFormattedCollection - got %type', array('%type' => gettype($formattedCollection)), WATCHDOG_ERROR);
     }
 
@@ -241,6 +242,7 @@ function ting_openformat_pre_parse_manifestations($result) {
   }
 
   $entity = _ting_openformat_get_bibdk_work_entity($openformat);
+
   return $entity;
 }
 
@@ -294,9 +296,9 @@ function ting_openformat_get_single($id) {
 function _ting_openformat_parse_manifestations(&$original_manifestations, &$entity_ids, $openformat) {
   if (isset($openformat) && is_array($openformat) && !empty($openformat)) {
     foreach ($openformat as $manifestation) {
-        $manifestation_id = isset($manifestation->adminData->pid->{'$'}) ? $manifestation->adminData->pid->{'$'} : NULL;
-        $entity_ids[] = $manifestation_id;
-        $original_manifestations[$manifestation_id] = $manifestation;
+      $manifestation_id = isset($manifestation->adminData->pid->{'$'}) ? $manifestation->adminData->pid->{'$'} : NULL;
+      $entity_ids[] = $manifestation_id;
+      $original_manifestations[$manifestation_id] = $manifestation;
     }
   }
 }
@@ -537,7 +539,8 @@ function ting_openformat_collection_view($bibdkobject) {
   if (isset($_SESSION['search_settings']['full_view']) && $_SESSION['search_settings']['full_view'] == TRUE) {
     $showinfoForm = '';
     $workOne = ting_openformat_load_single_full_work($bibdkobject, $all_ids_in_collection, $uid);
-  } else {
+  }
+  else {
     $form = drupal_get_form('ting_openformat_show_info_get_form', $bibdkobject, $uid, $trackId);
     $showinfoForm = drupal_render($form);
     $workOne = NULL;
@@ -764,7 +767,7 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
  *
  * @return array $query
  */
-function _ting_openformat_get_search_query(){
+function _ting_openformat_get_search_query() {
   $query = array();
   $keys = drupal_static('ting_search_query');
 
@@ -782,6 +785,7 @@ function _ting_openformat_get_search_query(){
   }
 
   $query['keys'] = isset($keys) ? $keys : $_GET['keys'];
+
   return $query;
 }
 
