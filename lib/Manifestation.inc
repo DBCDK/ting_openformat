@@ -100,7 +100,7 @@ class Manifestation extends ManifestationMaster {
    */
   public function isReservable() {
     $requestMethod = $this->getRequestMethod();
-    return (!isset($requestMethod)) ? TRUE : FALSE;
+    return (!isset($requestMethod) || $requestMethod == 'newMaterial' || $requestMethod == 'oldMaterial' ) ? TRUE : FALSE;
   }
 
   /**
