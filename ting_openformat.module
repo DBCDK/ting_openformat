@@ -732,7 +732,7 @@ function ting_openformat_load_single_full_work($collection, $ids, $uid, $trackin
        * */
       if (!isset($bibdkWork->manifestations[$briefDisplay->id])){
 
-        drupal_set_message(t('This post could not be generated properly. A message have been send to the site administrators'), 'warning');
+        drupal_set_message(t('This post could not be generated properly. A message have been send to the site administrators', array(), array('context' => 'ting_openformat')), 'warning');
         watchdog('ting_openformat', 'ERROR manifestation with id @id failed generate bibdkWorkDisplay', array('@id' => $briefDisplay->id), WATCHDOG_ERROR);
         return;
       }
