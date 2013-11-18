@@ -34,8 +34,9 @@ function _ting_openformat_handle_conditions(&$conditions) {
 /** implements hook_search_execute */
 function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more = NULL) {
   $params = array();
-
   $params['query'] = $keys;
+
+  $all_params = $conditions;
 
   // save query to show in search_block
   drupal_static('ting_search_query', $keys);
@@ -45,6 +46,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   if (!empty($variables)) {
     $params = array_merge($params, $variables);
   }
+
 
   // selected facets from facetbrowser (in query)
   if (isset($conditions['facets']) && $conditions['facets'] != NULL) {
@@ -95,7 +97,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
     $search_results[] = _ting_openformat_set_search_result($entity);
   }
 
-  module_invoke_all('ting_openformat_search_results', $keys, $result);
+  module_invoke_all('ting_openformat_search_results', $keys, $result, $all_params);
   $search_results['more'] = $result->more;
 
   // Collections may contain more works than $params['numResults'], and we don't want a pager if there's only one page
