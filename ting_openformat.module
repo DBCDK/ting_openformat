@@ -724,6 +724,19 @@ function ting_openformat_load_single_full_work($collection, $ids, $uid, $trackin
       }
 
       $bibdkWork = current($bibdkWork);
+
+      /*
+       * If manifestation with $briefDisplay->id does not exists, the result
+       * from openSearch is not rendered correctly and we send a message to the
+       * user that the object could not be shown, and log it to the watchdog
+       * */
+      if (!isset($bibdkWork->manifestations[$briefDisplay->id])){
+
+        drupal_set_message(t('This post could not be generated properly. A message have been send to the site administrators'), 'warning');
+        watchdog('ting_openformat', 'ERROR manifestation with id @id failed generate bibdkWorkDisplay', array('@id' => $briefDisplay->id), WATCHDOG_ERROR);
+        return;
+      }
+
       $bibdkWork->manifestations[$briefDisplay->id]->setBriefDisplayType($briefDisplay->gettype());
       $bibdkWork->manifestations[$briefDisplay->id]->setSubType($briefDisplay->getSubtype());
     }
