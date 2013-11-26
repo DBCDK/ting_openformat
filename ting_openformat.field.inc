@@ -192,7 +192,6 @@ function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_
  * @return string
  */
 function _ting_openformat_parse_element($elements, $divider = ". ", $use_header = TRUE, $return_link = TRUE, $link_label = NULL) {
-
   if (!isset($elements)) {
     return NULL;
   }
@@ -203,13 +202,7 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
   foreach ($elements as $key => $value) {
     if ($key === 'accessUrl'){
       $label = isset($link_label) ? $link_label : $value;
-      $descriptor = '';
-      if (isset($elements['accessUrlDescriptor'])){
-        $descriptor = ' ' . $elements['accessUrlDescriptor'];
-        unset($elements['accessUrlDescriptor']);
-      }
-
-      $array[] = l($label, $value, array('attributes' => array('target' => '_blank'), 'html' => true)) . $descriptor;
+      $array[] = l($label, $value, array('attributes' => array('target' => '_blank'), 'html' => true));
     }
     else if (is_array($value)) {
       $array[] = _ting_openformat_parse_element($value, $divider, $use_header, $return_link, $link_label);
