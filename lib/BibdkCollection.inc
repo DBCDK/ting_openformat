@@ -34,9 +34,8 @@ class BibdkCollection {
   }
 
   public function getTitle() {
-    
     $language = $this->getLanguage();
-    if(!empty($language) && $language != 'Dansk'){
+    if(!empty($language) && $language != 'Dansk' && $language != 'Sproget kan ikke bestemmes'){
       $language = '<span> ('. $language.')</span>' ;
     }
     else{
