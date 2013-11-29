@@ -13,7 +13,9 @@ class Manifestation extends ManifestationMaster {
    */
   public function __construct($manifestation) {
     $this->manifestation = $manifestation;
-    $this->fields = $this->manifestation->main;
+    if(isset($this->manifestation->main)){
+      $this->fields = $this->manifestation->main;
+    }
     $this->getAnalyticContent();
   }
 
@@ -98,7 +100,7 @@ class Manifestation extends ManifestationMaster {
    */
   public function isReservable() {
     $requestMethod = $this->getRequestMethod();
-    return (!isset($requestMethod)) ? TRUE : FALSE;
+    return (!isset($requestMethod) || $requestMethod == 'newMaterial' || $requestMethod == 'oldMaterial' ) ? TRUE : FALSE;
   }
 
   /**
@@ -179,7 +181,7 @@ class Manifestation extends ManifestationMaster {
 
   public function getSubType() {
     $result = isset($this->subType) ? $this->subType : ting_openformat_methods::parseFields($this->manifestation->main, array('type'));
-    if (is_array($result['type'])) {
+    if (isset($result['type']) && is_array($result['type'])) {
       $result['type'] = implode(' + ', $result['type']);
     }
     return (is_array($result)) ? reset($result) : $result;

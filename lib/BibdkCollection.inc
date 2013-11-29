@@ -3,12 +3,15 @@
 class BibdkCollection {
 
   public $manifestations;
+  /* @var stdClass $workOne */
+  private $workOne;
   public $ding_entity_id;
   private $collectionTypes;
   private $collectionIds;
 
-  function __construct($manifestation) {
-    $this->manifestations = isset($manifestation['manifestations']) ? $manifestation['manifestations'] : NULL;
+  function __construct($conditions) {
+    $this->manifestations = isset($conditions['manifestations']) ? $conditions['manifestations'] : NULL;
+    $this->workOne = isset($conditions['workOne']) ? $conditions['workOne'] : NULL;
   }
 
   //TODO the below method should be reviewed as valid XML is expected from webservices in production
@@ -31,9 +34,8 @@ class BibdkCollection {
   }
 
   public function getTitle() {
-    
     $language = $this->getLanguage();
-    if(!empty($language) && $language != 'Dansk'){
+    if(!empty($language) && $language != 'Dansk' && $language != 'Sproget kan ikke bestemmes'){
       $language = '<span> ('. $language.')</span>' ;
     }
     else{
@@ -82,6 +84,13 @@ class BibdkCollection {
   public function getWorkType() {
     $result = ting_openformat_methods::parseFields($this->manifestations[0], array('workType'));
     return (is_array($result)) ? reset($result) : $result;
+  }
+
+  /**
+   * @return \stdClass
+   */
+  public function getWorkOne() {
+    return isset($this->workOne) ? $this->workOne : NULL;
   }
 
   public function getAccessType(){
