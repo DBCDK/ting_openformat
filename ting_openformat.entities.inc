@@ -47,7 +47,7 @@ class ting_openformat_methods {
   public static function parseFields($object, array $fields) {
     $ret = NULL;
     if (!isset($object)) {
-      return NULL;
+      return $ret;
     }
     if (is_array($object)) {
       foreach ($object as $o) {
