@@ -127,26 +127,6 @@ class TingOpenformatMethodsUnittest extends DrupalUnitTestCase {
   public function testGetSearchCodeElementWordPhrase() {
     $obj = new StdClass();
     $obj->{'@phrase'} = new StdClass();
-    try {
-      $elem = ting_openformat_methods::_getSearchCodeElement($obj);
-      $got_error = FALSE;
-    }
-    catch (Exception $e) {
-      $got_error = TRUE;
-    }
-    $this->assertTrue($got_error, 'Only property @phrase set to emtpy StdClass object throws exception by errorHandler');
-    $obj = new StdClass();
-    $obj->{'@word'} = new StdClass();
-    try {
-      $elem = ting_openformat_methods::_getSearchCodeElement($obj);
-      $got_error = FALSE;
-    }
-    catch(Exception $e) {
-      $got_error = TRUE;
-    }
-    $this->assertTrue($got_error, 'Only property @word set to emtpy StdClass object throws exception by errorHandler');
-    $obj = new StdClass();
-    $obj->{'@phrase'} = new StdClass();
     $obj->{'@phrase'}->{'$'} = 'Some phrase';
     $elem = ting_openformat_methods::_getSearchCodeElement($obj);
     $this->assertIdentical($elem, NULL, 'Only property $ on object referenced by @phrase property');

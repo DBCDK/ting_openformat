@@ -29,20 +29,13 @@ class ting_openformat_methods {
   }
 
   public static function _getSearchCodeElement($stdObject) {
-    $value = (isset($stdObject->{'$'})) ? $stdObject->{'$'} : NULL;
-
-    if (isset($stdObject->{'@phrase'})) {
-      $term = $stdObject->{'@phrase'}->{'$'};
-    }
-    elseif (isset($stdObject->{'@word'})) {
-      $term = $stdObject->{'@word'}->{'$'};
-    }
-
-    if (isset($value) && isset($term)) {
-      return $term . "=" . $value;
-    }
-    else {
-      return;
+    if (isset($stdObject->{'$'})) {
+      if (isset($stdObject->{'@phrase'}) && isset($stdObject->{'@phrase'}->{'$'})) {
+        return $stdObject->{'@phrase'}->{'$'} . '=' . $stdObject->{'$'};
+      }
+      elseif (isset($stdObject->{'@word'}) && isset($stdObject->{'@word'}->{'$'})) {
+        return $stdObject->{'@word'}->{'$'} . '=' . $stdObject->{'$'};
+      }
     }
   }
 
