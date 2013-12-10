@@ -21,11 +21,13 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
   }
 
   public function setUp() {
-    module_load_include('module', 'ting_openformat', 'ting_openformat');
+    module_load_include('inc', 'ting_openformat', 'lib/ManifestationMaster');
+    module_load_include('inc', 'ting_openformat', 'ting_openformat.entities');
+    module_load_include('inc', 'ting_openformat', 'lib/BibdkCollection');
     $this->path = drupal_get_path("module", "ting_openformat");
     $this->_createObjects();
     $this->fields = ting_openformat_bibdk_fields();
-    parent::setUp('ting_openformat');
+    parent::setUp();
   }
 
   public function testManifestationMethods() {
