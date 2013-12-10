@@ -14,7 +14,9 @@ class ting_openformat_methods {
    * @param array of stdObjects
    * return array of form []['display','searchCode']
    */
-  private static function _parseSearchCode($stdObjects) {
+  public static function _parseSearchCode($stdObjects) {
+    $ret = Array();
+
     if (!is_array($stdObjects)) {
       $stdObjects = array($stdObjects);
     }
@@ -23,17 +25,18 @@ class ting_openformat_methods {
       if (isset($object->searchCode) || isset($object->display)) {
         $subject['searchCode'] = isset($object->searchCode) ? self::_getSearchCodeElement($object->searchCode) : NULL;
         $subject['display'] = isset($object->display) ? $object->display->{'$'} : NULL;
+        $ret[] = $subject;
       }
       elseif (isset($object->{'$'})) {
         $subject = $object->{'$'};
+        $ret[] = $subject;
       }
-      $ret[] = $subject;
     }
 
     return $ret;
   }
 
-  private static function _getSearchCodeElement($stdObject) {
+  public static function _getSearchCodeElement($stdObject) {
     $value = (isset($stdObject->{'$'})) ? $stdObject->{'$'} : NULL;
 
     if (isset($stdObject->{'@phrase'})) {

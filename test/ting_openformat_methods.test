@@ -1,0 +1,253 @@
+<?php
+class TingOpenformatMethodsUnittest extends DrupalUnitTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => t('Class ting_openformat_methods unittest'),
+      'description' => t('Tests the methods of the static class'),
+      'group' => t('Ting Openformat'),
+    );
+  }
+
+  public function setUp() {
+    module_load_include('inc', 'ting_openformat', 'ting_openformat.entities');
+    parent::setUp();
+  }
+
+  public function testParseFieldsNULL() {
+    $non_obj = NULL;
+    $ret = ting_openformat_methods::parseFields($non_obj, array());
+    $this->assertIdentical($ret, NULL, 'NULL returns NULL');
+    $non_obj = '';
+    $ret = ting_openformat_methods::parseFields($non_obj, array());
+    $this->assertIdentical($ret, NULL, 'Empty string returns NULL');
+    $obj = new StdClass();
+    $ret = ting_openformat_methods::parseFields($obj, array());
+    $this->assertIdentical($ret, NULL, 'Empty field array returns NULL');
+  }
+
+  public function testParseFieldsObjectArray() {
+    $obj = array(NULL);
+    $ret = ting_openformat_methods::parseFields($obj, array());
+    $this->assertIdentical($ret, NULL, 'Recursion for object array containing NULL');
+    $obj = array(new StdClass());
+    $ret = ting_openformat_methods::parseFields($obj, array());
+    $this->assertIdentical($ret, array(NULL), 'Recursion for object array containing empty object');
+  }
+
+  public function testParseFieldsFieldsIteration() {
+    $obj = new StdClass();
+    $obj->null = '';
+    $fields = array('null' => array());
+    $ret = ting_openformat_methods::parseFields($obj, $fields);
+    $this->assertIdentical($ret, array('null' => array(NULL)), 'Recursion for fields');
+    $obj = new StdClass();
+    $obj->field = '';
+    $fields = array('field' => 'searchCode');
+    $ret = ting_openformat_methods::parseFields($obj, $fields);
+    $this->assertIdentical($ret, array('field' => array(array())), 'Value is searchCode');
+    $obj = new StdClass();
+    $obj->field = new StdClass();
+    $fields = array('field' => 'header');
+    try {
+      $ret = ting_openformat_methods::parseFields($obj, $fields);
+      $got_exception = FALSE;
+    }
+    catch (Exception $e) {
+      $got_exception = TRUE;
+    }
+    $this->assertTrue($got_exception, 'Got no dollar');
+    $obj = new StdClass();
+    $obj->field = new StdClass();
+    $obj->field->{'$'} = 'dollar';
+    $fields = array('field' => 'header');
+    $ret = ting_openformat_methods::parseFields($obj, $fields);
+    $this->assertIdentical($ret, array('header' => 'dollar'), 'Got a dollar?');
+    $obj = new StdClass();
+    $obj->value = array();
+    $fields = array('field' => 'value');
+    $ret = ting_openformat_methods::parseFields($obj, $fields);
+    $this->assertIdentical($ret, NULL, 'Object has array as value property');
+    $obj = new StdClass();
+    $obj->value = array(new StdClass());
+    $fields = array('field' => 'value');
+    try {
+      $ret = ting_openformat_methods::parseFields($obj, $fields);
+      $got_exception = FALSE;
+    }
+    catch (Exception $e) {
+      $got_exception = TRUE;
+    }
+    $this->assertTrue($got_exception, 'Object has array as value property but missing a dollar');
+    $obj = new StdClass();
+    $val_obj = new StdClass();
+    $val_obj->{'$'} = 'dollar';
+    $obj->value = array($val_obj);
+    $fields = array('field' => 'value');
+    $ret = ting_openformat_methods::parseFields($obj, $fields);
+    $this->assertIdentical($ret, array('value' => array('dollar')), 'Object has array as value property and got a dollar');
+    $obj = new StdClass();
+    $val_obj = new StdClass();
+    $obj->value = $val_obj;
+    $fields = array('field' => 'value');
+    try {
+      $ret = ting_openformat_methods::parseFields($obj, $fields);
+      $got_exception = FALSE;
+    }
+    catch (Exception $e) {
+      $got_exception = TRUE;
+    }
+    $this->assertTrue($got_exception, 'Object has object as value property but missing a dollar');
+    $obj = new StdClass();
+    $val_obj = new StdClass();
+    $val_obj->{'$'} = 'dollar';
+    $obj->value = $val_obj;
+    $fields = array('field' => 'value');
+    $ret = ting_openformat_methods::parseFields($obj, $fields);
+    $this->assertIdentical($ret, array('value' => 'dollar'), 'Object has object as value property and got a dollar');
+    $obj = new StdClass();
+    $obj->value = '';
+    $fields = array('field' => 'value');
+    $ret = ting_openformat_methods::parseFields($obj, $fields);
+    $this->assertIdentical($ret, NULL, 'Missing the whole point');
+  }
+
+  public function testGetSearchCodeElementNULL() {
+    $obj = NULL;
+    $elem = ting_openformat_methods::_getSearchCodeElement($obj);
+    $this->assertIdentical($elem, NULL, 'NULL returns NULL');
+    $obj = new StdClass();
+    $elem = ting_openformat_methods::_getSearchCodeElement($obj);
+    $this->assertIdentical($elem, NULL, 'Empty StdClass object returns NULL');
+    $obj = new StdClass();
+    $obj->{'$'} = '';
+    $elem = ting_openformat_methods::_getSearchCodeElement($obj);
+    $this->assertIdentical($elem, NULL, 'Only $ set as property returns NULL');
+  }
+
+  public function testGetSearchCodeElementWordPhrase() {
+    $obj = new StdClass();
+    $obj->{'@phrase'} = new StdClass();
+    try {
+      $elem = ting_openformat_methods::_getSearchCodeElement($obj);
+      $got_error = FALSE;
+    }
+    catch (Exception $e) {
+      $got_error = TRUE;
+    }
+    $this->assertTrue($got_error, 'Only property @phrase set to emtpy StdClass object throws exception by errorHandler');
+    $obj = new StdClass();
+    $obj->{'@word'} = new StdClass();
+    try {
+      $elem = ting_openformat_methods::_getSearchCodeElement($obj);
+      $got_error = FALSE;
+    }
+    catch(Exception $e) {
+      $got_error = TRUE;
+    }
+    $this->assertTrue($got_error, 'Only property @word set to emtpy StdClass object throws exception by errorHandler');
+    $obj = new StdClass();
+    $obj->{'@phrase'} = new StdClass();
+    $obj->{'@phrase'}->{'$'} = 'Some phrase';
+    $elem = ting_openformat_methods::_getSearchCodeElement($obj);
+    $this->assertIdentical($elem, NULL, 'Only property $ on object referenced by @phrase property');
+    $obj = new StdClass();
+    $obj->{'@word'} = new StdClass();
+    $obj->{'@word'}->{'$'} = 'Some word';
+    $elem = ting_openformat_methods::_getSearchCodeElement($obj);
+    $this->assertIdentical($elem, NULL, 'Only property $ on object referenced by @word property');
+  }
+
+  public function testGetSearchCodeElementStringReturned() {
+    $obj = new StdClass();
+    $obj->{'@phrase'} = new StdClass();
+    $obj->{'@phrase'}->{'$'} = 'Some phrase';
+    $obj->{'$'} = 'dollar';
+    $elem = ting_openformat_methods::_getSearchCodeElement($obj);
+    $this->assertEqual($elem, 'Some phrase=dollar', 'Return @phrase=$');
+    $obj = new StdClass();
+    $obj->{'@word'} = new StdClass();
+    $obj->{'@word'}->{'$'} = 'Some word';
+    $obj->{'$'} = 'dollar';
+    $elem = ting_openformat_methods::_getSearchCodeElement($obj);
+    $this->assertEqual($elem, 'Some word=dollar', 'Return @word=$');
+  }
+
+  public function testParseSearchCodeEmpty() {
+    $non_array = NULL;
+    $list = ting_openformat_methods::_parseSearchCode($non_array);
+    $this->assertIdentical($list, array(), 'NULL returns empty array');
+    $non_object = '';
+    $list = ting_openformat_methods::_parseSearchCode($non_object);
+    $this->assertIdentical($list, array(), 'Non-object returns empty array');
+    $obj = new StdClass();
+    $list = ting_openformat_methods::_parseSearchCode($obj);
+    $this->assertIdentical($list, array(), 'Empty object returns empty array');
+  }
+
+  public function testParseSearchCodeSimpleString() {
+    $obj = new StdClass();
+    $obj->{'$'} = 'Something';
+    $list = ting_openformat_methods::_parseSearchCode($obj);
+    $this->assertIdentical($list, array('Something'), 'Property $ set returns value of property in an array');
+  }
+
+  public function testParseSearchCodeFailing() {
+    $obj = new StdClass();
+    $obj->display = new StdClass();
+    try {
+      $list = ting_openformat_methods::_parseSearchCode($obj);
+      $got_error = FALSE;
+    }
+    catch (Exception $e) {
+      $got_error = TRUE;
+    }
+    $this->assertTrue($got_error, 'Property display set to empty object throws exception by errorHandler');
+  }
+
+  public function testParseSearchCodeSearchCodeAndDisplay() {
+    $obj = new StdClass();
+    $obj->searchCode = new StdClass();
+    $list = ting_openformat_methods::_parseSearchCode($obj);
+    $this->assertIdentical($list, array(array('searchCode' => NULL, 'display' => NULL)), 'Property searchCode set to empty object returns array containing array with keys searchCode and display both set to NULL');
+    $obj = new StdClass();
+    $obj->display = new StdClass();
+    $obj->display->{'$'} = '';
+    $list = ting_openformat_methods::_parseSearchCode($obj);
+    $this->assertIdentical($list, array(array('searchCode' => NULL, 'display' => '')), 'Property $ of object referenced by display property returns array containing array with keys searchCode set to NULL and display to value of property');
+  }
+
+  public function testParseSearchCodeIterating() {
+    $obj_list = array(new StdClass(), NULL, new StdClass(), new StdClass());
+    $display = new StdClass();
+    $display->{'$'} = 'D';
+    $obj_list[0]->display = $display;
+    $searchCode = new StdClass();
+    $searchCode->{'$'} = 'SC';
+    $searchCode->{'@phrase'} = new StdClass();
+    $searchCode->{'@phrase'}->{'$'} = 'phrase';
+    $obj_list[2]->searchCode = $searchCode;
+    $obj_list[3]->{'$'} = 'dollar';
+    $list = ting_openformat_methods::_parseSearchCode($obj_list);
+    $expected = array(
+      array(
+        'searchCode' => NULL,
+        'display' => 'D',
+      ),
+      array(
+        'searchCode' => 'phrase=SC',
+        'display' => NULL,
+      ),
+      'dollar',
+    );
+    $this->assertIdentical($list, $expected, 'Iterating over array');
+  }
+
+  public function errorHandler($errorCode, $errorString, $errorFile, $errorLine, $errorContext) {
+    if ($errorCode == E_NOTICE && $errorString == 'Undefined property: stdClass::$$') {
+      throw new Exception();
+    }
+    else {
+      return parent::errorHandler($errorCode, $errorString, $errorFile, $errorLine, $errorContext);
+    }
+  }
+}
