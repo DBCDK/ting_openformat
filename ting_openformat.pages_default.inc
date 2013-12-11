@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * ting_openformat.pages_default.inc
@@ -196,6 +197,24 @@ function ting_openformat_default_page_manager_handlers() {
   $pane->locks = array();
   $display->content['new-6'] = $pane;
   $display->panels['works_controls_top'][1] = 'new-6';
+  $pane = new stdClass();
+  $pane->pid = 'new-7';
+  $pane->panel = 'works_controls_top';
+  $pane->type = 'ting_openformat_feeds';
+  $pane->subtype = 'ting_openformat_feeds';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array();
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 2;
+  $pane->locks = array();
+  $display->content['new-7'] = $pane;
+  $display->panels['works_controls_top'][2] = 'new-7';
   $display->hide_title = PANELS_TITLE_FIXED;
   $display->title_pane = '0';
   $handler->conf['display'] = $display;
