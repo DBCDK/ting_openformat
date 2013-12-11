@@ -16,22 +16,26 @@ function ting_openformat_feeds_link($subtype, $conf, $panel_args, $context) {
   $url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
   //check if request parameters are set
   $params_not_set = strpos($url, '?') === FALSE;
-  
-  if ($params_not_set){
+
+  if ($params_not_set) {
     $url .= '?feed_me=1';
   }
-  else{
+  else {
     $url .= '&feed_me=1';
   }
-  
-  $feeds = drupal_add_feed($url, t('Search feed',array(), array('context'=>'feeds')));
 
+  $feeds = drupal_add_feed($url, t('Search feed', array(), array('context' => 'feeds')));
+
+  $path = drupal_get_path('module', 'ting_openformat');
   $block->content = array(
     '#theme' => 'html_tag',
     '#tag' => 'div',
     '#value' => $feeds[$url],
     '#attributes' => array(
       'class' => 'ting-openformat-feeds'
+    ),
+    '#attached' => array(
+      'js' => array(drupal_get_path('module', 'ting_openformat') . '/js/ting_openformat_feeds.js'),
     ),
   );
   return $block;
