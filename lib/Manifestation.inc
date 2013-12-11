@@ -275,4 +275,24 @@ class Manifestation extends ManifestationMaster {
     return (is_array($result)) ? reset($result) : $result;
   }
 
+
+  /**
+   * Return the first AccessUrl element in the AccessInformation Array
+   * @return array|null
+   */
+  public function getSingleAccessUrl() {
+    $urls = ting_openformat_methods::parseFields($this->manifestation->volume->details->accessInformation, array('accessUrl'));
+    while ( is_array($urls) ) {
+      if ( isset($urls['accessUrl']) ) {
+        return $urls;
+      }
+      else {
+        return reset($urls);
+      }
+    }
+    return NULL;
+  }
+
+
+
 }
