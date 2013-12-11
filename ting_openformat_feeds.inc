@@ -1,10 +1,4 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /** Output header + rss feed and exit
  *
  * @param string $result; xml from the search defining the feed

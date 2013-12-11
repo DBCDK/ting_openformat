@@ -32,7 +32,7 @@ function _ting_openformat_handle_conditions(&$conditions) {
 }
 
 /** implements hook_search_execute */
-function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more = NULL, $feed_me = NULL) {
+function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more = NULL) {
   $params = array();
 
   $params['query'] = $keys;
@@ -87,7 +87,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   }
 
   if (isset($_GET['feed_me'])) {
-    ting_openformat_feeds_redirect($result,$params['query']);
+    ting_openformat_feeds_redirect($result, $params['query']);
   }
 
   // set facets for result
@@ -135,9 +135,9 @@ function _ting_openformat_set_js_settings() {
       'full_view' => $_SESSION['search_settings']['full_view'],
       'ajax_callback' => url('ting_openformat/full_view/'),
       'full_view_all_loaded' => $_SESSION['search_settings']['full_view'],
-      'isLoadingFullView' => FALSE,
-    ),
-      ), 'setting');
+      'isLoadingFullView' => FALSE,),
+      ), 'setting'
+  );
 }
 
 /**
