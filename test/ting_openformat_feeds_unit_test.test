@@ -1,0 +1,52 @@
+<?php
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+class TingOpenFormatFeedsUnitTestCase extends DrupalUnitTestCase {
+  
+  private $path;
+  /**
+   * @return array
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Ting OpenFormat Feeds Unittest'),
+      'description' => t('Tests the methods ting_openformat_feeds.inc'),
+      'group' => t('Ting Openformat'),
+    );
+  }
+
+  public function setUp() {
+    module_load_include('inc', 'ting_openformat', 'ting_openformat_feeds');
+    $this->path = drupal_get_path("module", "ting_openformat");
+    parent::setUp('ting_openformat');
+  }
+  
+  public function testting_openformat_feeds_get_xpath() {
+    $path = $this->path.'/test/mockup/search_result_for_feed.xml';
+    $xml = file_get_contents($path);
+    $xpath = ting_openformat_feeds_get_xpath($xml);
+    $this->assertTrue(is_object($xpath),'xpath object created from valid xml');
+    
+    $xml = 'TESTHEST';
+    $xpath = ting_openformat_feeds_get_xpath($xml);
+    $this->assertTrue(is_null($xpath),'ting_openformat_feeds_get_xpath returns NULL for invalid xml');
+  }
+  
+  public function testParamsSetCorrect(){
+    $params = array();
+    ting_openformat_feeds_set_params($params);
+    $this->assertTrue($params['outputType'] == 'xml', 'outputtype set to xml');
+    $this->assertTrue($params['objectFormat'] == 'dkabm','objectformat set to dkabm');
+    $this->assertTrue($params['collectionType'] == 'manifestation','collectionType set to manifestation');
+  }
+  
+  public function testNodeParsing(){
+    $path = $this->path.'/test/mockup/search_result_for_feed.xml';
+    $xml = file_get_contents($path);
+    $items = ting_openformat_feed_parse_result($xml);
+    $this->assertTrue(count($items)==4, 'correct number of items retrieved');
+  }
+}

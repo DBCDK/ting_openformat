@@ -94,5 +94,12 @@ function ting_openformat_theme() {
       'template' => 'ting_openformat_more_info',
       'render elements' => 'elements',
     ),
+    
+    'ting_openformat_rss_feed' => array(
+      'path' => $path,
+      'varriables' => array('item'=>array(), 'title' => '', 'description' => '', 'link' => ''),
+      'template' => 'ting_openformat_rss_feed',
+      'render elements' => 'elements',
+    )
   );
 }
