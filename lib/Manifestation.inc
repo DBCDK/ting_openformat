@@ -239,7 +239,7 @@ class Manifestation extends ManifestationMaster {
     }
     $reviews = array();
     foreach ($this->manifestation->relationsData as $relation) {
-      if ($relation->relationType == 'dbcaddi:hasReview' && ((strpos($relation->relationUri, '870976') === false))){ 
+      if ($relation->relationType == 'dbcaddi:hasReview' && ((strpos($relation->relationUri, '870976') === false))){
         $reviews[$relation->relationUri] = $relation->relationUri;
       }
     }
@@ -281,7 +281,11 @@ class Manifestation extends ManifestationMaster {
    * @return array|null
    */
   public function getSingleAccessUrl() {
-    $urls = ting_openformat_methods::parseFields($this->manifestation->volume->details->accessInformation, array('accessUrl'));
+    if ( is_object($this->manifestation->volume) ) {
+      $urls = ting_openformat_methods::parseFields($this->manifestation->volume->details->accessInformation, array('accessUrl'));
+    } else {
+      $urls = ting_openformat_methods::parseFields($this->manifestation->main->details->accessInformation, array('accessUrl'));
+    }
     while ( is_array($urls) ) {
       if ( isset($urls['accessUrl']) ) {
         return $urls;
