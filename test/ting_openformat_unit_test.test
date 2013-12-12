@@ -22,23 +22,19 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     module_load_include('inc', 'ting_openformat', 'lib/ManifestationMaster');
     module_load_include('inc', 'ting_openformat', 'ting_openformat.entities');
     module_load_include('inc', 'ting_openformat', 'lib/BibdkCollection');
+    module_load_include('php', 'ting_openformat', 'test/test_results');
     $this->_createObjects();
     parent::setUp();
   }
 
   public function testManifestationMethods() {
     $fields = ting_openformat_bibdk_fields();
-
-    // test_results.php includes expected results for all fields in the variable $_ting_openformat_test_results
-    module_load_include('php', 'ting_openformat', 'test/test_results');
     $_ting_openformat_test_results = ting_openformat_test_results();
 
-    foreach ($fields as $field_name => $field) {
-      $method = $_ting_openformat_test_results[$field_name]['method'];
-      if (!$method) {
-        continue;
-      }
-      $expected = $_ting_openformat_test_results[$field_name]['_ting_openformat_default_field_view_content'];
+    foreach ($_ting_openformat_test_results as $field_name => $field) {
+      $method = $field['method'];
+      $this->assertTrue($fields[$field_name]['callback method'] === $method, $method . ' not implemented.');
+      $expected = $field['_ting_openformat_default_field_view_content'];
       $message = "method '$method' returns correct result";
       $this->_testGetmethods($method, $expected, $message);
     }
