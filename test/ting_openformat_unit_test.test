@@ -32,11 +32,21 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     $_ting_openformat_test_results = ting_openformat_test_results();
 
     foreach ($_ting_openformat_test_results as $field_name => $field) {
+      $this->assertTrue(isset($fields[$field_name]), $field_name . ' is present in field definitions.');
+      $this->assertTrue(isset($fields[$field_name]['callback method']), 'Callback method is present in field definition: ' . $field_name);
       $method = $field['method'];
-      $this->assertTrue($fields[$field_name]['callback method'] === $method, $method . ' not implemented.');
+      $this->assertTrue($fields[$field_name]['callback method'] === $method, $method . ' is implemented.');
       $expected = $field['_ting_openformat_default_field_view_content'];
       $message = "method '$method' returns correct result";
-      $this->_testGetmethods($method, $expected, $message);
+      $manifestation = $this->manifestation;
+      $serial_result = $result = $manifestation->$method();
+
+      if (is_array($expected)) {
+        $expected = serialize($expected);
+        $serial_result = serialize($result);
+      }
+
+      $this->assertEqual($expected, $serial_result, $message);
     }
   }
   
@@ -150,26 +160,6 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     $result = $collection->getWorkOne();
     $expected_result = NULL;
     $this->assertEqual($result, $expected_result, 'Empty workOne parsed correctly');
-  }
-
-  /**
-   * @param $method
-   * @param $expected_result
-   * @param $message
-   * @return
-   */
-  private function _testGetmethods($method, $expected_result, $message) {
-    $manifestation = $this->manifestation;
-    $serial_result = $result = $manifestation->$method();
-
-    if (is_array($expected_result)) {
-      $expected_result = serialize($expected_result);
-      $serial_result = serialize($result);
-    }
-    
-    $this->assertEqual($expected_result, $serial_result, $message);
-    return $result;
-
   }
 
   private function _createObjects() {
