@@ -181,7 +181,8 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     * test_results.php includes expected results for all fields in the variable
     * $_ting_openformat_test_results.
      */
-    require(drupal_get_path('module', 'ting_openformat') . '/test/test_results.php');
+    module_load_include('php', 'ting_openformat', 'test/test_results');
+    $_ting_openformat_test_results = ting_openformat_test_results();
 
     foreach ($fields as $field_name => $field) {
 
