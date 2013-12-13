@@ -460,7 +460,10 @@ function ting_openformat_bibdk_fields() {
     ),
   );
 
-  module_invoke_all('ting_openformat_field', $fields);
+  $hooks = module_implements('ting_openformat_fields');
+  if (!empty($hooks)) {
+    $fields = module_invoke_all('ting_openformat_fields', $fields);
+  }
 
   return $fields;
 }
