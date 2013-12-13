@@ -34,8 +34,9 @@ function _ting_openformat_handle_conditions(&$conditions) {
 /** implements hook_search_execute */
 function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more = NULL) {
   $params = array();
-
   $params['query'] = $keys;
+
+  $all_params = $conditions;
 
   // save query to show in search_block
   drupal_static('ting_search_query', $keys);
@@ -45,6 +46,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   if (!empty($variables)) {
     $params = array_merge($params, $variables);
   }
+
 
   // selected facets from facetbrowser (in query)
   if (isset($conditions['facets']) && $conditions['facets'] != NULL) {
@@ -76,9 +78,18 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   if (isset($params['query']) && empty($params['query'])) {
     return array();
   }
+
+  if (isset($_GET['feed_me'])) {
+    ting_openformat_feeds_set_params($params);
+  }
+
   $result = $client->do_request('search', $params);
   if (!$result) {
     return array();
+  }
+
+  if (isset($_GET['feed_me'])) {
+    ting_openformat_feeds_redirect($result, $params['query']);
   }
 
   // set facets for result
@@ -95,7 +106,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
     $search_results[] = _ting_openformat_set_search_result($entity);
   }
 
-  module_invoke_all('ting_openformat_search_results', $keys, $result);
+  module_invoke_all('ting_openformat_search_results', $keys, $result, $all_params);
   $search_results['more'] = $result->more;
 
   // Collections may contain more works than $params['numResults'], and we don't want a pager if there's only one page
@@ -109,8 +120,12 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   if (!empty($search_results)) {
     _ting_openformat_set_js_settings();
 
+
+
+
     return $search_results;
   }
+
 
   // .. default; no search results
   return array();
@@ -122,14 +137,14 @@ function _ting_openformat_set_js_settings() {
       'full_view' => $_SESSION['search_settings']['full_view'],
       'ajax_callback' => url('ting_openformat/full_view/'),
       'full_view_all_loaded' => $_SESSION['search_settings']['full_view'],
-      'isLoadingFullView' => FALSE,
-    ),
-  ), 'setting');
+      'isLoadingFullView' => FALSE,),
+      ), 'setting'
+  );
 }
 
 /**
  * Set collection entities
- **/
+ * */
 function _ting_openformat_create_collection_entities(&$result) {
   $result->entities = array();
   foreach ($result->collections as $collection) {
@@ -210,7 +225,7 @@ function _ting_openformat_set_search_result($bibdkobject) {
  * @param $client - search_client
  * @param $params - parameters for searchrequest
  * @param $result - search result
- **/
+ * */
 function _ting_openformat_facet_cache($client, $result, $params) {
   // check facets; get from cache if set - else do zero search to get facets
   $local_cache_key = 'facets-' . $result->cacheKey;
@@ -262,10 +277,9 @@ function _ting_openformat_search_get_variables() {
   $params['numResults'] = $resultsPerPage;
   $params['includeHoldingsCount'] = TRUE;
 
-  // page number (opensearch::start)
+  global $base_root;  // page number (opensearch::start)
   $page = pager_find_page();
   $params['start'] = ($page * $resultsPerPage) + 1; // search results start at position 1
-
   // search profile (opensearch::profile)
   $params['profile'] = variable_get('ting_search_profile', FALSE);
   if (!($params['profile'])) {
@@ -292,10 +306,9 @@ function _ting_openformat_search_get_variables() {
   return $params;
 }
 
-
 /**
  * Set facets for request
- **/
+ * */
 function _ting_openformat_set_facets(&$query, $facets) {
   if (isset($facets)) {
     $op = ting_openformat_get_cql_commando('AND');
@@ -313,7 +326,6 @@ function _ting_openformat_set_facets(&$query, $facets) {
     }
   }
 }
-
 
 /** \brief Set facets for extended query
  *
@@ -336,7 +348,7 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
       unset($qe['#preprocessed']);
     }
 
-    if ( isset($qe['delimiter']) && !empty($qe['delimiter']) ) {
+    if (isset($qe['delimiter']) && !empty($qe['delimiter'])) {
       $res[] = $qe['delimiter'];
       unset($qe['delimiter']);
     }
@@ -361,13 +373,10 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
     if (count($res) > 0) {
       $cql[] = join($op, $res);
     }
-
   }
 
   $query = join($op, $cql);
-
 }
-
 
 /**
  * Search conditions callback.

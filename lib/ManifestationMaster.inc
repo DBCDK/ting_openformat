@@ -357,6 +357,7 @@ class ManifestationMaster {
    * @return array|null
    */
   public function getAccessInformation() {
+
     $fields = array('accessInformation' => array(
         'accessUrl',
         'accessUrlDescriptor',
@@ -372,22 +373,12 @@ class ManifestationMaster {
    * @return array|null
    */
   public function getSingleAccessUrl() {
-    $urls = $this->getAccessInformation();
-
-    while (is_array($urls)) {
-      if (isset($urls['accessUrl']))
-        return $urls;
-      else
-        $urls = reset($urls);
-    }
-
-    return NULL;
+    // moved to Manifestation.inc
   }
 
   /* \brief publisher
    * zero or more occurences
    */
-
   public function getPublisher() {
     $fields = array('publisher');
     $result = ting_openformat_methods::parseFields($this->_getPublicationDetails(), $fields);
@@ -397,7 +388,6 @@ class ManifestationMaster {
   /* \brief publicationYear
    * zero or more occurences
    */
-
   public function getPublicationYear() {
     $fields = array('publicationYear');
     $result = ting_openformat_methods::parseFields($this->_getPublicationDetails(), $fields);
@@ -407,7 +397,6 @@ class ManifestationMaster {
   /* \brief edition
    * zero or more occurences
    */
-
   public function getEdition() {
     $fields = array('edition');
     $result = ting_openformat_methods::parseFields($this->_getPublicationDetails(), $fields);
