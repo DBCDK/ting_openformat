@@ -9,7 +9,7 @@ function ting_openformat_bibdk_fields() {
   $fields = array(
     'ting_openformat_work_abstract' => array(
       'label' => 'Work abstract',
-      'entity_type' => 'bibdkWorkEntity',
+      'entity_type' => array('bibdkWorkEntity'),
       'display' => array('full'),
       'description' => t('Description of work'),
       'callback method' =>  'getAbstract',
@@ -17,7 +17,7 @@ function ting_openformat_bibdk_fields() {
     ),
     'ting_openformat_work_subjects' => array(
       'label' => 'Work subjects',
-      'entity_type' => 'bibdkWorkEntity',
+      'entity_type' => array('bibdkWorkEntity'),
       'display' => array('full'),
       'description' => t('Subjects of work'),
       'callback method' =>  'getSubjects',
@@ -44,14 +44,14 @@ function ting_openformat_bibdk_fields() {
 
     'ting_openformat_mani_abstract' => array(
       'label' => 'Work abstract',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation'),
       'display' => array('full'),
       'description' => t('Description of work'),
       'callback method' =>  'getAbstract',
     ),
     'ting_openformat_mani_subjects' => array(
       'label' => 'Work subjects',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation'),
       'display' => array('full'),
       'description' => t('Subjects of work'),
       'callback method' =>  'getSubjects',

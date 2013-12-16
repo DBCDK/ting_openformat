@@ -33,6 +33,12 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
 
     foreach ($_ting_openformat_test_results as $field_name => $field) {
       $this->assertTrue(isset($fields[$field_name]), $field_name . ' is present in field definitions.');
+      $this->assertTrue(isset($fields[$field_name]['label']), $field_name . ' has label in field definitions.');
+      $this->assertTrue(isset($fields[$field_name]['entity_type']) && is_array($fields[$field_name]['entity_type']), $field_name . ' has entity_type of type array in field definitions.');
+      $display = isset($fields[$field_name]['display']) && is_array($fields[$field_name]['display']);
+      $custom_display = isset($fields[$field_name]['custom_display']) && is_array($fields[$field_name]['custom_display']);
+      $this->assertTrue($display || $custom_display, $field_name . ' has display or custom_display of type array in field definitions.');
+      $this->assertTrue(isset($fields[$field_name]['description']), $field_name . ' has description of type array in field definitions.');
       $this->assertTrue(isset($fields[$field_name]['callback method']), 'Callback method is present in field definition: ' . $field_name);
       $method = $field['method'];
       $this->assertTrue($fields[$field_name]['callback method'] === $method, $method . ' is implemented.');
