@@ -4,9 +4,6 @@
  * Test class for ting_openformat
  */
 class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
-
-  private $manifestation;
-
   /**
    * @return array
    */
@@ -23,7 +20,7 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     module_load_include('inc', 'ting_openformat', 'ting_openformat.entities');
     module_load_include('inc', 'ting_openformat', 'lib/BibdkCollection');
     module_load_include('php', 'ting_openformat', 'test/test_results');
-    $this->_createObjects();
+    module_load_include('inc', 'ting_openformat', 'ting_openformat.field_definitions');
     parent::setUp();
   }
 
@@ -43,16 +40,9 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
       $method = $field['method'];
       $this->assertTrue($fields[$field_name]['callback method'] === $method, $method . ' is implemented.');
       $expected = $field['_ting_openformat_default_field_view_content'];
-      $message = "method '$method' returns correct result";
-      $manifestation = $this->manifestation;
-      $serial_result = $result = $manifestation->$method();
-
-      if (is_array($expected)) {
-        $expected = serialize($expected);
-        $serial_result = serialize($result);
-      }
-
-      $this->assertEqual($expected, $serial_result, $message);
+      $manifestation = $this->_createObjects();
+      $result = $manifestation->$method();
+      $this->assertEqual($expected, $result, $method . '() returns expected result for definition: '. $field_name);
     }
   }
   
@@ -175,7 +165,7 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     $result = json_decode($file);
 
     $manifestation_object = $result->searchResponse->result->searchResult[0]->formattedCollection->workDisplay->manifestation;
-    $this->manifestation = new Manifestation($manifestation_object); //entity_load('bibdkManifestation', $manifestation_object->adminData->pid->{'$'}, $manifestation_object);
+    return new Manifestation($manifestation_object);
   }
 
   public function testGetAccessInformationExtended(){
