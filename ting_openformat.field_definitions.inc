@@ -288,6 +288,13 @@ function ting_openformat_bibdk_fields() {
       'description' => t('Description Note of manifestation'),
       'callback method' =>  'getDescriptionNote',
     ),
+    'bibdk_mani_common_contributors' => array(
+      'label' => 'Common contributors',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationSection', 'bibdkManifestationVolume'),
+      'display' => array('full'),
+      'description' => t('Common contributors of manifestation'),
+      'callback method' =>  'getCommonContributors',
+    ),
     'bibdk_mani_actor_note' => array(
       'label' => 'Actor Note',
       'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),

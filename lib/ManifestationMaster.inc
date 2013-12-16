@@ -486,4 +486,11 @@ class ManifestationMaster {
     return $result;
   }
 
+  public function getCommonContributors() {
+    $fields = array(
+      'commonContributors'
+    );
+    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
+    return (is_array($result)) ? reset($result) : $result;
+  }
 }

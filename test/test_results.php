@@ -558,5 +558,11 @@ function ting_openformat_test_results() {
       '_ting_openformat_default_field_view_content' => NULL,
       '_ting_openformat_parse_element' => NULL,
     ),
+    'bibdk_mani_common_contributors' =>
+    array(
+      'method' => 'getCommonContributors',
+      '_ting_openformat_default_field_view_content' => 'The Muppets ; Kermit ; Miss Piggy',
+      '_ting_openformat_parse_element' => 'The Muppets ; Kermit ; Miss Piggy',
+    ),
   );
 }

@@ -176,4 +176,9 @@ function ting_openformat_update_7029() {
   ding_entity_modules_enabled(array('ting_openformat'));
 }
 
-// 435 lines before refactoring
+/**
+ * Update all field information
+ * */
+function ting_openformat_update_7030() {
+  ding_entity_modules_enabled(array('ting_openformat'));
+}
