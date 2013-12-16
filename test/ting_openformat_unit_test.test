@@ -38,11 +38,15 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
       $this->assertTrue(isset($fields[$field_name]['description']), $field_name . ' has description of type array in field definitions.');
       $this->assertTrue(isset($fields[$field_name]['callback method']), 'Callback method is present in field definition: ' . $field_name);
       $method = $field['method'];
-      $this->assertTrue($fields[$field_name]['callback method'] === $method, $method . ' is implemented.');
+      $this->assertTrue($fields[$field_name]['callback method'] === $method, 'Got expected method named: ' . $method);
       $expected = $field['_ting_openformat_default_field_view_content'];
       $manifestation = $this->_createObjects();
-      $result = $manifestation->$method();
-      $this->assertEqual($expected, $result, $method . '() returns expected result for definition: '. $field_name);
+      $known_method = method_exists($manifestation, $method);
+      $this->assertTrue($known_method, $method . ' is implemented.');
+      if ($known_method) {
+        $result = $manifestation->$method();
+        $this->assertEqual($expected, $result, $method . '() returns expected result for definition: '. $field_name);
+      }
     }
   }
   
