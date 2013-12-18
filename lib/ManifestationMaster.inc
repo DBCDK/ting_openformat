@@ -368,14 +368,6 @@ class ManifestationMaster {
     return $result;
   }
 
-  /**
-   * Return the first AccessUrl element in the AccessInformation Array
-   * @return array|null
-   */
-  public function getSingleAccessUrl() {
-    // moved to Manifestation.inc
-  }
-
   /* \brief publisher
    * zero or more occurences
    */
