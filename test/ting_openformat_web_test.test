@@ -34,7 +34,6 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     $this->_testSearchDefaultVariables();
     $this->_testEmptySearch();
     $this->_testHookActions();
-    $this->_testDefaultFieldRendering();
     $this->_test_ting_openformat_parse_urls();
   }
 
@@ -168,39 +167,6 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     $this->assertTrue(strpos($html, 'Giuseppe Verdi') !== FALSE, t('Found first part of analytic content'));
     $this->assertTrue(strpos($html, 'Rigoletto (uddrag)') !== FALSE, t('Found second part of analytic content'));
     $this->assertTrue(strpos($html, '/ Jussi Björling, tenor ; Leonard Warren, baryton ; orkester ; dirigent: Cesare Sordero') !== FALSE, t('Found third part of analytic content'));
-  }
-
-
-  private function _testDefaultFieldRendering() {
-    debug('Test field rendering');
-
-    $manifestation = $this->_createObjects();
-    $fields = ting_openformat_bibdk_fields();
-
-    /**
-    * test_results.php includes expected results for all fields in the variable
-    * $_ting_openformat_test_results.
-     */
-    module_load_include('php', 'ting_openformat', 'test/test_results');
-    $_ting_openformat_test_results = ting_openformat_test_results();
-
-    foreach ($fields as $field_name => $field) {
-
-      // Test _ting_openformat_default_field_view_content
-      $result = _ting_openformat_default_field_view_content($field_name, $manifestation);
-      $expected = $_ting_openformat_test_results[$field_name]['_ting_openformat_default_field_view_content'];
-      $this->assertEqual($result, $expected, format_string('field "@field" correctly parsed by _ting_openformat_default_field_view_content', array(
-        '@field' => $field_name,
-      )));
-
-      // Test _ting_openformat_parse_element
-      $result = _ting_openformat_parse_element($result);
-      $expected = $_ting_openformat_test_results[$field_name]['_ting_openformat_parse_element'];
-      $expected = str_replace('[base_path]', base_path(), $expected);
-      $this->assertEqual($result, $expected, format_string('field "@field" correctly parsed by _ting_openformat_parse_element', array(
-        '@field' => $field_name,
-      )));
-    }
   }
 
   /**
