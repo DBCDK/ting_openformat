@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Danger, Will Robinson!
+ *
+ * You can't test parsing of elements by expecting NULL or the empty string!
+ * So don't even try, that even includes copy/pasting.
+ *
+ * Two thirds of the test results below are bogus.
+ */
 function ting_openformat_test_results() {
   return array(
     'ting_openformat_work_abstract' =>
