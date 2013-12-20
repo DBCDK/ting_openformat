@@ -65,7 +65,9 @@ function ting_openformat_webservice_mockup_request() {
   $object_request_re = '/' . $recid_re . '/';
 
   if (preg_match($search_recid_re, $query, $match) || preg_match($object_request_re, (current($request->getObjectRequest->identifier)), $match)) {
-    $got_recid = $path . '/rec.id/' . $match[1] . '.json';
+    $type = current($request->children())->getName();
+    $objectFormat = isset($request->$type->objectFormat) ? $request->$type->objectFormat : 'bibliotekdkWorkDisplay';
+    $got_recid = $path . '/' . $objectFormat . '/rec.id/' . $match[1] . '.json';
 
     if (file_exists($got_recid)) {
       $file = $got_recid;
