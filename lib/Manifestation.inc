@@ -281,7 +281,7 @@ class Manifestation extends ManifestationMaster {
    * @return array|null
    */
   public function getSingleAccessUrl() {
-    if ( is_object($this->manifestation->volume) ) {
+    if (isset($this->manifestation->volume) && is_object($this->manifestation->volume) ) {
       $urls = ting_openformat_methods::parseFields($this->manifestation->volume->details->accessInformation, array('accessUrl'));
     } else {
       $urls = ting_openformat_methods::parseFields($this->manifestation->main->details->accessInformation, array('accessUrl'));
