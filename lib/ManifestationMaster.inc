@@ -368,14 +368,6 @@ class ManifestationMaster {
     return $result;
   }
 
-  /**
-   * Return the first AccessUrl element in the AccessInformation Array
-   * @return array|null
-   */
-  public function getSingleAccessUrl() {
-    // moved to Manifestation.inc
-  }
-
   /* \brief publisher
    * zero or more occurences
    */
@@ -494,4 +486,11 @@ class ManifestationMaster {
     return $result;
   }
 
+  public function getCommonContributors() {
+    $fields = array(
+      'commonContributors'
+    );
+    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
+    return (is_array($result)) ? reset($result) : $result;
+  }
 }

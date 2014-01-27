@@ -4,11 +4,6 @@
  * Test class for ting_openformat
  */
 class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
-
-  private $manifestation;
-  private $fields;
-  private $path;
-
   /**
    * @return array
    */
@@ -21,27 +16,37 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
   }
 
   public function setUp() {
-    module_load_include('module', 'ting_openformat', 'ting_openformat');
-    $this->path = drupal_get_path("module", "ting_openformat");
-    $this->_createObjects();
-    $this->fields = ting_openformat_bibdk_fields();
-    parent::setUp('ting_openformat');
+    module_load_include('inc', 'ting_openformat', 'lib/ManifestationMaster');
+    module_load_include('inc', 'ting_openformat', 'ting_openformat.entities');
+    module_load_include('inc', 'ting_openformat', 'lib/BibdkCollection');
+    module_load_include('php', 'ting_openformat', 'test/test_results');
+    module_load_include('inc', 'ting_openformat', 'ting_openformat.field_definitions');
+    parent::setUp();
   }
 
   public function testManifestationMethods() {
-    $fields = $this->fields;
+    $fields = ting_openformat_bibdk_fields();
+    $_ting_openformat_test_results = ting_openformat_test_results();
 
-    // test_results.php includes expected results for all fields in the variable $_ting_openformat_test_results
-    include_once $this->path . '/test/test_results.php';
-
-    foreach ($fields as $field_name => $field) {
-      $method = $_ting_openformat_test_results[$field_name]['method'];
-      if (!$method) {
-        continue;
+    foreach ($_ting_openformat_test_results as $field_name => $field) {
+      $this->assertTrue(isset($fields[$field_name]), $field_name . ' is present in field definitions.');
+      $this->assertTrue(isset($fields[$field_name]['label']), $field_name . ' has label in field definitions.');
+      $this->assertTrue(isset($fields[$field_name]['entity_type']) && is_array($fields[$field_name]['entity_type']), $field_name . ' has entity_type of type array in field definitions.');
+      $display = isset($fields[$field_name]['display']) && is_array($fields[$field_name]['display']);
+      $custom_display = isset($fields[$field_name]['custom_display']) && is_array($fields[$field_name]['custom_display']);
+      $this->assertTrue($display || $custom_display, $field_name . ' has display or custom_display of type array in field definitions.');
+      $this->assertTrue(isset($fields[$field_name]['description']), $field_name . ' has description of type array in field definitions.');
+      $this->assertTrue(isset($fields[$field_name]['callback method']), 'Callback method is present in field definition: ' . $field_name);
+      $method = $field['method'];
+      $this->assertTrue($fields[$field_name]['callback method'] === $method, 'Got expected method named: ' . $method);
+      $expected = $field['_ting_openformat_default_field_view_content'];
+      $manifestation = $this->_createObjects();
+      $known_method = method_exists($manifestation, $method);
+      $this->assertTrue($known_method, $method . ' is implemented.');
+      if ($known_method) {
+        $result = $manifestation->$method();
+        $this->assertEqual($expected, $result, $method . '() returns expected result for definition: '. $field_name);
       }
-      $expected = $_ting_openformat_test_results[$field_name]['_ting_openformat_default_field_view_content'];
-      $message = "method '$method' returns correct result";
-      $this->_testGetmethods($method, $expected, $message);
     }
   }
   
@@ -157,26 +162,6 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     $this->assertEqual($result, $expected_result, 'Empty workOne parsed correctly');
   }
 
-  /**
-   * @param $method
-   * @param $expected_result
-   * @param $message
-   * @return
-   */
-  private function _testGetmethods($method, $expected_result, $message) {
-    $manifestation = $this->manifestation;
-    $serial_result = $result = $manifestation->$method();
-
-    if (is_array($expected_result)) {
-      $expected_result = serialize($expected_result);
-      $serial_result = serialize($result);
-    }
-    
-    $this->assertEqual($expected_result, $serial_result, $message);
-    return $result;
-
-  }
-
   private function _createObjects() {
     module_load_include('module', 'ting_openformat', 'ting_openformat');
     module_load_include('inc', 'ting_openformat', 'lib/Manifestation');
@@ -184,7 +169,7 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     $result = json_decode($file);
 
     $manifestation_object = $result->searchResponse->result->searchResult[0]->formattedCollection->workDisplay->manifestation;
-    $this->manifestation = new Manifestation($manifestation_object); //entity_load('bibdkManifestation', $manifestation_object->adminData->pid->{'$'}, $manifestation_object);
+    return new Manifestation($manifestation_object);
   }
 
   public function testGetAccessInformationExtended(){

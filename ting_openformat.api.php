@@ -10,17 +10,21 @@
  * @{
  */
 
-/** Add fields to ting_openformat entitites
+/**
+ * Add fields to ting_openformat entitites
+ *
+ * @param $fields
+ *   Array of field definitions. Each definition is an associative array with
+ *   at least the following keys:
+ *     'label' : label on the administration pages. Should not be wrapped in t()
+ *     'entity_type' : It is possible to define more than one entity type with an array
+ *     'display' : the different display types are defined in ting_openformat.install
+ *     'description' : description for the field_ui
+ *     'callback method' : method to get content from the field entity.
  * @return array
- * You can add the following parameters to the array:
- * label : label on the administration pages. Should not be wrapped in t()
- * entity_type : It is possible to define more than one entity type with an array
- * display : the different display types are defined in ting_openformat.install
- * description : description for the field_ui
- * callback method : method to get content from the field entity.
+ *   Array of field descriptions.
  */
-function hook_ting_openformat_fields() {
-
+function hook_ting_openformat_fields($fields) {
   $fields = array(
     'ting_openformat_work_abstract' => array(
       'label' => 'Work abstract',
@@ -28,12 +32,10 @@ function hook_ting_openformat_fields() {
       'display' => array('full'),
       'description' => t('Description of work'),
       'callback method' =>  'getAbstract',
-
     ),
   );
 
   return $fields;
-
 }
 
 

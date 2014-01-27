@@ -1,0 +1,363 @@
+{
+  "searchResponse": {
+    "result": {
+      "hitCount": {
+        "$": "1"
+      },
+      "collectionCount": {
+        "$": "1"
+      },
+      "more": {
+        "$": "false"
+      },
+      "searchResult": [
+        {
+          "collection": {
+            "resultPosition": {
+              "$": "1"
+            },
+            "numberOfObjects": {
+              "$": "1"
+            },
+            "object": [
+              {
+                "identifier": {
+                  "$": "870970-basis:45483932"
+                },
+                "creationDate": {
+                  "$": "2013-11-15"
+                },
+                "formatsAvailable": {
+                  "format": [
+                    {
+                      "$": "dkabm"
+                    },
+                    {
+                      "$": "marcxchange"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "formattedCollection": {
+            "workDisplay": {
+              "manifestation": {
+                "work": {
+                  "title": {
+                    "titleFull": {
+                      "$": "Harry Potter & the deathly hallows"
+                    },
+                    "titleSpecific": {
+                      "$": "Harry Potter & the deathly hallows"
+                    }
+                  },
+                  "creators": {
+                    "creator": {
+                      "searchCode": {
+                        "$": "\"Joanne K. Rowling\"",
+                        "@phrase": {
+                          "$": "phrase.creator"
+                        }
+                      },
+                      "display": {
+                        "$": "Joanne K. Rowling"
+                      },
+                      "@className": {
+                        "$": "link"
+                      }
+                    }
+                  },
+                  "description": {
+                    "language": {
+                      "languageElement": {
+                        "$": "Engelsk"
+                      }
+                    },
+                    "subjects": {
+                      "subject": [
+                        {
+                          "searchCode": {
+                            "$": "\"fantasy\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "fantasy"
+                          },
+                          "@className": {
+                            "$": "link"
+                          },
+                          "@punctuation": {
+                            "$": " ; "
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"troldmænd\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "troldmænd"
+                          },
+                          "@className": {
+                            "$": "link"
+                          },
+                          "@punctuation": {
+                            "$": " ; "
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"magi\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "magi"
+                          },
+                          "@className": {
+                            "$": "link"
+                          },
+                          "@punctuation": {
+                            "$": " ; "
+                          }
+                        }
+                      ]
+                    },
+                    "abstract": {
+                      "abstractElement": {
+                        "$": "Fantasy. Harry Potter er sammen med sine gode venner Ron og Hermione taget ud på en farlig færd. De skal finde den onde troldmand Voldemorts Horcruxer og ødelægge dem. Deres søgen bringer dem mange steder hen og ofte er de i livsfare. Men Voldemort og hans kumpaner er også på jagt efter de forsvundne Horcruxer"
+                      }
+                    },
+                    "furtherSearches": {
+                      "furtherSearchElement": [
+                        {
+                          "searchCode": {
+                            "$": "\"fantasy\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "fantasy"
+                          },
+                          "@className": {
+                            "$": "link"
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"troldmænd\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "troldmænd"
+                          },
+                          "@className": {
+                            "$": "link"
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"magi\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "magi"
+                          },
+                          "@className": {
+                            "$": "link"
+                          }
+                        }
+                      ],
+                      "furtherSearchType": {
+                        "searchCode": {
+                          "$": "\"Bog\"",
+                          "@phrase": {
+                            "$": "facet.type"
+                          }
+                        },
+                        "display": {
+                          "$": "Bog"
+                        },
+                        "@className": {
+                          "$": "link"
+                        }
+                      }
+                    },
+                    "aboutAuthor": {
+                      "aboutAuthorElement": {
+                        "searchCode": {
+                          "$": "\"Rowling Joanne K.\"",
+                          "@phrase": {
+                            "$": "dkcclphrase.lem"
+                          }
+                        },
+                        "display": {
+                          "$": "Rowling, Joanne K."
+                        },
+                        "@className": {
+                          "$": "link"
+                        }
+                      }
+                    }
+                  }
+                },
+                "adminData": {
+                  "pid": {
+                    "$": "870970-basis:45483932"
+                  },
+                  "typeGroup": {
+                    "$": "literature"
+                  },
+                  "orsOrderMaterialType": {
+                    "$": "monograph"
+                  }
+                },
+                "main": {
+                  "details": {
+                    "abstract": {
+                      "abstractElement": {
+                        "$": "Fantasy. Harry Potter er sammen med sine gode venner Ron og Hermione taget ud på en farlig færd. De skal finde den onde troldmand Voldemorts Horcruxer og ødelægge dem. Deres søgen bringer dem mange steder hen og ofte er de i livsfare. Men Voldemort og hans kumpaner er også på jagt efter de forsvundne Horcruxer"
+                      }
+                    },
+                    "contributors": {
+                      "$": "tekst: Joanne K. Rowling"
+                    },
+                    "format": {
+                      "$": "607 sider",
+                      "@punctuation": {
+                        "$": " ; "
+                      }
+                    },
+                    "relatedSeriesTitles": {
+                      "relatedSeriesTitle": {
+                        "relatedSeriesDescription": {
+                          "$": "7. del af:"
+                        },
+                        "relatedSeries": {
+                          "searchCode": {
+                            "$": "\"Harry Potter and the philosopher's stone\"",
+                            "@phrase": {
+                              "$": "phrase.titleSeries"
+                            }
+                          },
+                          "display": {
+                            "$": "Harry Potter and the philosopher's stone"
+                          },
+                          "@className": {
+                            "$": "link"
+                          },
+                          "@punctuation": {
+                            "$": " ; "
+                          }
+                        }
+                      }
+                    },
+                    "shelf": {
+                      "shelfClassification": {
+                        "searchCode": {
+                          "$": "83",
+                          "@word": {
+                            "$": "dkcclterm.dk"
+                          }
+                        },
+                        "display": {
+                          "$": "83"
+                        },
+                        "@className": {
+                          "$": "link"
+                        }
+                      }
+                    },
+                    "originals": {
+                      "$": "Originaludgave: 2007"
+                    },
+                    "identifiersISBN": {
+                      "identifier": {
+                        "$": "978-1-4088-3502-9"
+                      }
+                    },
+                    "language": {
+                      "languageElement": {
+                        "$": "Engelsk"
+                      }
+                    }
+                  },
+                  "publicationDetails": {
+                    "edition": {
+                      "$": "Paperback edition",
+                      "@punctuation": {
+                        "$": ", "
+                      }
+                    },
+                    "publisher": {
+                      "$": "Bloomsbury",
+                      "@punctuation": {
+                        "$": ", "
+                      }
+                    },
+                    "publicationYear": {
+                      "$": "2013"
+                    }
+                  },
+                  "type": {
+                    "$": "Bog",
+                    "@punctuation": {
+                      "$": " + "
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "@": "of"
+        }
+      ],
+      "facetResult": null,
+      "queryDebugResult": null,
+      "statInfo": {
+        "fedoraRecordsCached": {
+          "$": "3"
+        },
+        "fedoraRecordsRead": {
+          "$": "0"
+        },
+        "time": {
+          "$": "0.706261"
+        },
+        "trackingId": {
+          "$": "os:2013-12-20T11:25:39:019086:8683"
+        }
+      }
+    }
+  },
+  "@namespaces": {
+    "ac": "http://biblstandard.dk/ac/namespace/",
+    "dbcaddi": "http://oss.dbc.dk/rdf/dbcaddi#",
+    "dbcbib": "http://oss.dbc.dk/rdf/dbcbib#",
+    "dc": "http://purl.org/dc/elements/1.1/",
+    "dcmitype": "http://purl.org/dc/dcmitype/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "dkabm": "http://biblstandard.dk/abm/namespace/dkabm/",
+    "dkdcplus": "http://biblstandard.dk/abm/namespace/dkdcplus/",
+    "docbook": "http://docbook.org/ns/docbook",
+    "kml": "http://www.opengis.net/kml/2.2",
+    "marcx": "info:lc/xmlns/marcxchange-v1",
+    "of": "http://oss.dbc.dk/ns/openformat",
+    "ofo": "http://oss.dbc.dk/ns/openformatoutput",
+    "oso": "http://oss.dbc.dk/ns/opensearchobjects",
+    "oss": "http://oss.dbc.dk/ns/osstypes",
+    "xs": "http://www.w3.org/2001/XMLSchema",
+    "xsi": "http://www.w3.org/2001/XMLSchema-instance"
+  }
+}

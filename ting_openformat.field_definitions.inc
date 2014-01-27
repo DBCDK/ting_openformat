@@ -9,7 +9,7 @@ function ting_openformat_bibdk_fields() {
   $fields = array(
     'ting_openformat_work_abstract' => array(
       'label' => 'Work abstract',
-      'entity_type' => 'bibdkWorkEntity',
+      'entity_type' => array('bibdkWorkEntity'),
       'display' => array('full'),
       'description' => t('Description of work'),
       'callback method' =>  'getAbstract',
@@ -17,11 +17,10 @@ function ting_openformat_bibdk_fields() {
     ),
     'ting_openformat_work_subjects' => array(
       'label' => 'Work subjects',
-      'entity_type' => 'bibdkWorkEntity',
+      'entity_type' => array('bibdkWorkEntity'),
       'display' => array('full'),
       'description' => t('Subjects of work'),
       'callback method' =>  'getSubjects',
-      'callback options' => array('delimiter' => '; ', 'header' => FALSE)
 
     ),
     /********* MANIFESTATION ************/
@@ -44,14 +43,14 @@ function ting_openformat_bibdk_fields() {
 
     'ting_openformat_mani_abstract' => array(
       'label' => 'Work abstract',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation'),
       'display' => array('full'),
       'description' => t('Description of work'),
       'callback method' =>  'getAbstract',
     ),
     'ting_openformat_mani_subjects' => array(
       'label' => 'Work subjects',
-      'entity_type' => 'bibdkManifestation',
+      'entity_type' => array('bibdkManifestation'),
       'display' => array('full'),
       'description' => t('Subjects of work'),
       'callback method' =>  'getSubjects',
@@ -62,7 +61,6 @@ function ting_openformat_bibdk_fields() {
       'display' => array('full'),
       'description' => t('Info text for manifestation'),
       'callback method' =>  'getInfotext',
-      'callback function' =>  '_ting_openformat_parse_bibdk_mani_infotext',
 
     ),
     'bibdk_mani_distinction' => array(
@@ -268,7 +266,6 @@ function ting_openformat_bibdk_fields() {
       'display' => array('full'),
       'description' => t('Used Language of manifestation'),
       'callback method' =>  'getUsedLanguage',
-      'callback options' => array('delimiter' => '. ')
     ),
     'bibdk_mani_orig_title' => array(
       'label' => 'Original title',
@@ -290,6 +287,13 @@ function ting_openformat_bibdk_fields() {
       'display' => array('full'),
       'description' => t('Description Note of manifestation'),
       'callback method' =>  'getDescriptionNote',
+    ),
+    'bibdk_mani_common_contributors' => array(
+      'label' => 'Common contributors',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationSection', 'bibdkManifestationVolume'),
+      'display' => array('full'),
+      'description' => t('Common contributors of manifestation'),
+      'callback method' =>  'getCommonContributors',
     ),
     'bibdk_mani_actor_note' => array(
       'label' => 'Actor Note',
@@ -344,7 +348,6 @@ function ting_openformat_bibdk_fields() {
       'display' => array('full'),
       'description' => t('Content Note of manifestation'),
       'callback method' =>  'getContentPartialNote',
-      'callback options' => array('delimiter' => '<br />')
     ),
     'bibdk_mani_analytic_content' => array(
       'label' => 'Analytic Content',
@@ -352,7 +355,6 @@ function ting_openformat_bibdk_fields() {
       'display' => array('full'),
       'description' => t('Analytic content of manifestation'),
       'callback method' =>  'getAnalyticContent',
-      'callback function' =>  '_ting_openformat_parse_analytic_content',
     ),
     'bibdk_mani_originals' => array(
       'label' => 'Originals',
@@ -460,7 +462,10 @@ function ting_openformat_bibdk_fields() {
     ),
   );
 
-  module_invoke_all('ting_openformat_field', $fields);
+  $hooks = module_implements('ting_openformat_fields');
+  if (!empty($hooks)) {
+    $fields = module_invoke_all('ting_openformat_fields', $fields);
+  }
 
   return $fields;
 }

@@ -1,0 +1,98 @@
+<?php
+
+class BibdkBriefDisplayTestCase extends DrupalUnitTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => t('BibdkBriefDisplay Unittest'),
+      'description' => t('Test of BibdkBriefDisplay class'),
+      'group' => t('Ting Openformat'),
+    );
+  }
+
+  public function setUp() {
+    module_load_include('inc', 'ting_openformat', 'lib/BibdkBriefDisplay');
+    parent::setUp();
+  }
+
+  public function testConstructor() {
+    $m = new ManifestationMock(array(
+        'identifier' => '1',
+        'accessType' => 'access',
+        'workType' => 'work',
+        'type' => 'hype',
+      )
+    );
+    $obj = new BibdkBriefDisplay($m);
+    $this->assertEqual($obj->id, 1, 'Id is public accessible and has value 1.');
+    $this->assert($obj->manifestation === $m, 'Manifestation is identical.');
+  }
+
+  public function testGetType() {
+    $m = new ManifestationMock(array(
+        'identifier' => '1',
+        'accessType' => 'access',
+        'workType' => 'work',
+        'type' => 'hype',
+      )
+    );
+    $obj = new BibdkBriefDisplay($m);
+    $this->assertEqual($obj->getType(), array('work'), 'getType returns array containing one element "work"');
+
+    $m->accessType->{'$'} = 'online';
+    $this->assertEqual($obj->getType(), array('online', 'work'), 'getType returns array containing two elements "online" and "work"');
+  }
+
+  public function testGetBriefDisplayType() {
+    $m = new ManifestationMock(array(
+        'identifier' => '1',
+        'accessType' => 'access',
+        'workType' => 'work',
+        'type' => 'hype',
+      )
+    );
+    $obj = new BibdkBriefDisplay($m);
+    $this->assertEqual($obj->getBriefDisplayType(), $obj->getType(), 'getBriefDisplayType return the same as getType');
+  }
+
+  public function testGetSubtype() {
+    $m = new ManifestationMock(array(
+        'identifier' => '1',
+        'accessType' => 'access',
+        'workType' => 'work',
+        'type' => 'hype',
+      )
+    );
+    $obj = new BibdkBriefDisplay($m);
+    $this->assertEqual($obj->getSubtype(), 'hype', 'Returns string "hype"');
+  }
+
+  public function testGetHostPublicationID() {
+    $m = new ManifestationMock(array(
+        'identifier' => '1',
+        'accessType' => 'access',
+        'workType' => 'work',
+        'type' => 'hype',
+      )
+    );
+    $obj = new BibdkBriefDisplay($m);
+    $this->assertEqual($obj->getHostPublicationID(), 1, 'Returns integer 1');
+  }
+}
+
+class ManifestationMock {
+  public $identifier;
+  public $accessType;
+  public $workType;
+  public $type;
+
+  public function __construct($args) {
+    $this->identifier = new StdClass;
+    $this->accessType = new StdClass;
+    $this->workType = new StdClass;
+    $this->type = new StdClass;
+    $this->identifier->{'$'} = $args['identifier'];
+    $this->accessType->{'$'} = $args['accessType'];
+    $this->workType->{'$'} = $args['workType'];
+    $this->type->{'$'} = $args['type'];
+  }
+}

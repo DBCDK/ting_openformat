@@ -1,20 +1,14 @@
 <?php
 
-module_load_include('inc', 'ting_openformat', 'lib/BibdkCollection');
-module_load_include('inc', 'ting_openformat', 'lib/BibdkSubwork');
-module_load_include('inc', 'ting_openformat', 'lib/BibdkWork');
-module_load_include('inc', 'ting_openformat', 'lib/ManifestationMaster');
-module_load_include('inc', 'ting_openformat', 'lib/Manifestation');
-module_load_include('inc', 'ting_openformat', 'lib/ManifestationSection');
-module_load_include('inc', 'ting_openformat', 'lib/ManifestationVolume');
-
 class ting_openformat_methods {
 
   /* \brief parse searchCode,display elements
    * @param array of stdObjects
    * return array of form []['display','searchCode']
    */
-  private static function _parseSearchCode($stdObjects) {
+  public static function _parseSearchCode($stdObjects) {
+    $ret = Array();
+
     if (!is_array($stdObjects)) {
       $stdObjects = array($stdObjects);
     }
@@ -23,31 +17,25 @@ class ting_openformat_methods {
       if (isset($object->searchCode) || isset($object->display)) {
         $subject['searchCode'] = isset($object->searchCode) ? self::_getSearchCodeElement($object->searchCode) : NULL;
         $subject['display'] = isset($object->display) ? $object->display->{'$'} : NULL;
+        $ret[] = $subject;
       }
       elseif (isset($object->{'$'})) {
         $subject = $object->{'$'};
+        $ret[] = $subject;
       }
-      $ret[] = $subject;
     }
 
     return $ret;
   }
 
-  private static function _getSearchCodeElement($stdObject) {
-    $value = (isset($stdObject->{'$'})) ? $stdObject->{'$'} : NULL;
-
-    if (isset($stdObject->{'@phrase'})) {
-      $term = $stdObject->{'@phrase'}->{'$'};
-    }
-    elseif (isset($stdObject->{'@word'})) {
-      $term = $stdObject->{'@word'}->{'$'};
-    }
-
-    if (isset($value) && isset($term)) {
-      return $term . "=" . $value;
-    }
-    else {
-      return;
+  public static function _getSearchCodeElement($stdObject) {
+    if (isset($stdObject->{'$'})) {
+      if (isset($stdObject->{'@phrase'}) && isset($stdObject->{'@phrase'}->{'$'})) {
+        return $stdObject->{'@phrase'}->{'$'} . '=' . $stdObject->{'$'};
+      }
+      elseif (isset($stdObject->{'@word'}) && isset($stdObject->{'@word'}->{'$'})) {
+        return $stdObject->{'@word'}->{'$'} . '=' . $stdObject->{'$'};
+      }
     }
   }
 
@@ -59,7 +47,7 @@ class ting_openformat_methods {
   public static function parseFields($object, array $fields) {
     $ret = NULL;
     if (!isset($object)) {
-      return NULL;
+      return $ret;
     }
     if (is_array($object)) {
       foreach ($object as $o) {
