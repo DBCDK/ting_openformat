@@ -387,6 +387,8 @@ function ting_openformat_conditions_callback($query) {
   // check tracking id
   if (!empty($_REQUEST['trackingId'])) {
     $conditions['trackingId'] = $_REQUEST['trackingId'];
+  } else {
+    $conditions['trackingId'] = date('Y-m-d\TH:i:s:') . substr((string)microtime(), 2, 6) . ':' . getmypid();
   }
 
   $page_id = array();

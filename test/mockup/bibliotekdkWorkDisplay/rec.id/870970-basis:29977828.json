@@ -1,0 +1,758 @@
+{
+  "searchResponse": {
+    "result": {
+      "hitCount": {
+        "$": "1"
+      },
+      "collectionCount": {
+        "$": "1"
+      },
+      "more": {
+        "$": "false"
+      },
+      "searchResult": [
+        {
+          "collection": {
+            "resultPosition": {
+              "$": "1"
+            },
+            "numberOfObjects": {
+              "$": "1"
+            },
+            "object": [
+              {
+                "identifier": {
+                  "$": "870970-basis:29977828"
+                },
+                "creationDate": {
+                  "$": "2013-05-21"
+                },
+                "holdingsCount": {
+                  "$": "23"
+                },
+                "lendingLibraries": {
+                  "$": "23"
+                },
+                "relations": {
+                  "relation": [
+                    {
+                      "relationType": {
+                        "$": "dbcaddi:hasReview"
+                      },
+                      "relationUri": {
+                        "$": "870973-anmeld:50629813"
+                      }
+                    },
+                    {
+                      "relationType": {
+                        "$": "dbcaddi:hasReview"
+                      },
+                      "relationUri": {
+                        "$": "870973-anmeld:50676064"
+                      }
+                    },
+                    {
+                      "relationType": {
+                        "$": "dbcaddi:hasReview"
+                      },
+                      "relationUri": {
+                        "$": "870973-anmeld:50635120"
+                      }
+                    },
+                    {
+                      "relationType": {
+                        "$": "dbcaddi:hasReview"
+                      },
+                      "relationUri": {
+                        "$": "870973-anmeld:50752410"
+                      }
+                    }
+                  ]
+                },
+                "formatsAvailable": {
+                  "format": [
+                    {
+                      "$": "dkabm"
+                    },
+                    {
+                      "$": "marcxchange"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "formattedCollection": {
+            "workDisplay": {
+              "manifestation": {
+                "work": {
+                  "title": {
+                    "titleFull": {
+                      "$": "Prometheus"
+                    },
+                    "titleSpecific": {
+                      "$": "Prometheus (Dausgaard)"
+                    }
+                  },
+                  "creators": {
+                    "creator": [
+                      {
+                        "searchCode": {
+                          "$": "\"Ludwig van Beethoven\"",
+                          "@phrase": {
+                            "$": "phrase.creator"
+                          }
+                        },
+                        "display": {
+                          "$": "Ludwig van Beethoven"
+                        },
+                        "@className": {
+                          "$": "link"
+                        }
+                      },
+                      {
+                        "searchCode": {
+                          "$": "\"Thomas Dausgaard\"",
+                          "@phrase": {
+                            "$": "phrase.creator"
+                          }
+                        },
+                        "display": {
+                          "$": "Thomas Dausgaard"
+                        },
+                        "@className": {
+                          "$": "link"
+                        }
+                      },
+                      {
+                        "searchCode": {
+                          "$": "\"Det Svenske Kammerorkester\"",
+                          "@phrase": {
+                            "$": "phrase.creator"
+                          }
+                        },
+                        "display": {
+                          "$": "Det Svenske Kammerorkester"
+                        },
+                        "@className": {
+                          "$": "link"
+                        }
+                      }
+                    ]
+                  },
+                  "description": {
+                    "subjects": {
+                      "subject": [
+                        {
+                          "searchCode": {
+                            "$": "\"klassik\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "klassik"
+                          },
+                          "@className": {
+                            "$": "link"
+                          },
+                          "@punctuation": {
+                            "$": " ; "
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"wienerklassik\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "wienerklassik"
+                          },
+                          "@className": {
+                            "$": "link"
+                          },
+                          "@punctuation": {
+                            "$": " ; "
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"balletmusik\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "balletmusik"
+                          },
+                          "@className": {
+                            "$": "link"
+                          },
+                          "@punctuation": {
+                            "$": " ; "
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"instrumental\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "instrumental"
+                          },
+                          "@className": {
+                            "$": "link"
+                          },
+                          "@punctuation": {
+                            "$": " ; "
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"orkester\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "orkester"
+                          },
+                          "@className": {
+                            "$": "link"
+                          },
+                          "@punctuation": {
+                            "$": " ; "
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"1790-1799\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "1790-1799"
+                          },
+                          "@className": {
+                            "$": "link"
+                          },
+                          "@punctuation": {
+                            "$": " ; "
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"1800-1809\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "1800-1809"
+                          },
+                          "@className": {
+                            "$": "link"
+                          },
+                          "@punctuation": {
+                            "$": " ; "
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"Tyskland\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "Tyskland"
+                          },
+                          "@className": {
+                            "$": "link"
+                          },
+                          "@punctuation": {
+                            "$": " ; "
+                          }
+                        }
+                      ]
+                    },
+                    "furtherSearches": {
+                      "furtherSearchElement": [
+                        {
+                          "searchCode": {
+                            "$": "\"klassik\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "klassik"
+                          },
+                          "@className": {
+                            "$": "link"
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"wienerklassik\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "wienerklassik"
+                          },
+                          "@className": {
+                            "$": "link"
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"balletmusik\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "balletmusik"
+                          },
+                          "@className": {
+                            "$": "link"
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"instrumental\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "instrumental"
+                          },
+                          "@className": {
+                            "$": "link"
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"orkester\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "orkester"
+                          },
+                          "@className": {
+                            "$": "link"
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"1790-1799\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "1790-1799"
+                          },
+                          "@className": {
+                            "$": "link"
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"1800-1809\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "1800-1809"
+                          },
+                          "@className": {
+                            "$": "link"
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"Tyskland\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "Tyskland"
+                          },
+                          "@className": {
+                            "$": "link"
+                          }
+                        }
+                      ],
+                      "furtherSearchType": {
+                        "searchCode": {
+                          "$": "\"Cd (musik)\"",
+                          "@phrase": {
+                            "$": "facet.type"
+                          }
+                        },
+                        "display": {
+                          "$": "Cd (musik)"
+                        },
+                        "@className": {
+                          "$": "link"
+                        }
+                      }
+                    },
+                    "aboutAuthor": {
+                      "aboutAuthorElement": [
+                        {
+                          "searchCode": {
+                            "$": "\"Beethoven Ludwig van\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "Beethoven, Ludwig van"
+                          },
+                          "@className": {
+                            "$": "link"
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"Dausgaard Thomas\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "Dausgaard, Thomas"
+                          },
+                          "@className": {
+                            "$": "link"
+                          }
+                        },
+                        {
+                          "searchCode": {
+                            "$": "\"Det Svenske Kammerorkester\"",
+                            "@phrase": {
+                              "$": "dkcclphrase.lem"
+                            }
+                          },
+                          "display": {
+                            "$": "Det Svenske Kammerorkester"
+                          },
+                          "@className": {
+                            "$": "link"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                "adminData": {
+                  "pid": {
+                    "$": "870970-basis:29977828"
+                  },
+                  "typeGroup": {
+                    "$": "music"
+                  },
+                  "orsOrderMaterialType": {
+                    "$": "music"
+                  }
+                },
+                "main": {
+                  "content": {
+                    "analyticContent": [
+                      {
+                        "analyticContributor": {
+                          "searchCode": {
+                            "$": "\"Ludwig van Beethoven\"",
+                            "@phrase": {
+                              "$": "phrase.creator"
+                            }
+                          },
+                          "display": {
+                            "$": "Ludwig van Beethoven"
+                          },
+                          "@className": {
+                            "$": "link"
+                          }
+                        },
+                        "analyticTitle": [
+                          {
+                            "analyticTitleMain": {
+                              "$": "Menuetter for orkester, WoO 7 ("
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Menuet for orkester, D-dur, WoO 7:1 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Menuet for orkester, B-dur, WoO 7:2 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Menuet for orkester, G-dur, WoO 7:3 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Menuet for orkester, Es-dur, WoO 7:4 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Menuet for orkester, C-dur, WoO 7:5 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Menuet for orkester, A-dur, WoO 7:6 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Menuet for orkester, D-dur, WoO 7:7 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Menuet for orkester, B-dur, WoO 7:8 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Menuet for orkester, G-dur, WoO 7:9 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Menuet for orkester, Es-dur, WoO 7:10 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Menuet for orkester, C-dur, WoO 7:11 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Menuet for orkester, F-dur, WoO 7:12)"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "analyticContributor": {
+                          "searchCode": {
+                            "$": "\"Ludwig van Beethoven\"",
+                            "@phrase": {
+                              "$": "phrase.creator"
+                            }
+                          },
+                          "display": {
+                            "$": "Ludwig van Beethoven"
+                          },
+                          "@className": {
+                            "$": "link"
+                          }
+                        },
+                        "analyticTitle": [
+                          {
+                            "analyticTitleMain": {
+                              "$": "Tyske danse, WoO 8 ("
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Tysk dans, C-dur, WoO 8:1 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Tysk dans, A-dur, WoO 8:2 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Tysk dans, F-dur, WoO 8:3 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Tysk dans, B-dur, WoO 8:4 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Tysk dans, Es-dur, WoO 8:5 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Tysk dans, G-dur, WoO 8:6 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Tysk dans, C-dur, WoO 8:7 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Tysk dans, A-dur, WoO 8:8 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Tysk dans, F-dur, WoO 8:9 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Tysk dans, D-dur, WoO 8:10 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Tysk dans, G-dur, WoO 8:11 ;"
+                            }
+                          },
+                          {
+                            "analyticTitleMain": {
+                              "$": "Tysk dans, C-dur, WoO 8:12"
+                            },
+                            "analyticRestOfTitle": {
+                              "$": ": med coda)"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "details": {
+                    "format": {
+                      "$": "2 cd'er + 1 kommentarbilag",
+                      "@punctuation": {
+                        "$": " ; "
+                      }
+                    },
+                    "seriesTitle": {
+                      "series": {
+                        "searchCode": {
+                          "$": "\"The complete orchestral works of Ludwig van Beethoven\"",
+                          "@phrase": {
+                            "$": "phrase.titleSeries"
+                          }
+                        },
+                        "display": {
+                          "$": "The complete orchestral works of Ludwig van Beethoven"
+                        },
+                        "@className": {
+                          "$": "link"
+                        },
+                        "@punctuation": {
+                          "$": " ; "
+                        }
+                      },
+                      "seriesNumber": {
+                        "$": "volume 11"
+                      }
+                    },
+                    "shelf": {
+                      "shelfMusic": {
+                        "$": "Orkestermusik"
+                      }
+                    },
+                    "descriptionNote": {
+                      "$": "Indspillet i Örebros Koncertsal, Sverige 19.-24. januar 2009"
+                    },
+                    "identifiers": {
+                      "identifier": {
+                        "$": "Simax Classics PSC 1284"
+                      }
+                    },
+                    "commonContributors": {
+                      "$": "Swedish Chamber Orchestra Örebro ; dirigent: Thomas Dausgaard"
+                    }
+                  },
+                  "publicationDetails": {
+                    "publisher": {
+                      "$": "Simax",
+                      "@punctuation": {
+                        "$": ", "
+                      }
+                    },
+                    "publicationYear": {
+                      "$": "p 2013"
+                    }
+                  },
+                  "type": {
+                    "$": "Cd (musik)",
+                    "@punctuation": {
+                      "$": " + "
+                    }
+                  },
+                  "distinction": {
+                    "$": "Dausgaard"
+                  }
+                }
+              }
+            }
+          },
+          "@": "of"
+        }
+      ],
+      "facetResult": {
+        "$": ""
+      },
+      "statInfo": {
+        "fedoraRecordsCached": {
+          "$": "5"
+        },
+        "fedoraRecordsRead": {
+          "$": "9"
+        },
+        "time": {
+          "$": "0.52478"
+        },
+        "trackingId": {
+          "$": "os:2013-12-19T14:13:40:129853:13679<bibdkGui_1"
+        }
+      }
+    }
+  },
+  "@namespaces": {
+    "ac": "http://biblstandard.dk/ac/namespace/",
+    "dbcaddi": "http://oss.dbc.dk/rdf/dbcaddi#",
+    "dbcbib": "http://oss.dbc.dk/rdf/dbcbib#",
+    "dc": "http://purl.org/dc/elements/1.1/",
+    "dcmitype": "http://purl.org/dc/dcmitype/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "dkabm": "http://biblstandard.dk/abm/namespace/dkabm/",
+    "dkdcplus": "http://biblstandard.dk/abm/namespace/dkdcplus/",
+    "docbook": "http://docbook.org/ns/docbook",
+    "kml": "http://www.opengis.net/kml/2.2",
+    "marcx": "info:lc/xmlns/marcxchange-v1",
+    "of": "http://oss.dbc.dk/ns/openformat",
+    "ofo": "http://oss.dbc.dk/ns/openformatoutput",
+    "oso": "http://oss.dbc.dk/ns/opensearchobjects",
+    "oss": "http://oss.dbc.dk/ns/osstypes",
+    "xs": "http://www.w3.org/2001/XMLSchema",
+    "xsi": "http://www.w3.org/2001/XMLSchema-instance"
+  }
+}

@@ -1,0 +1,41 @@
+<?php
+
+class TingOpenFormatFieldShownTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Ting OpenFormat Field tests',
+      'description' => 'Test that fields get shown for material that has this information',
+      'group' => 'Ting Openformat',
+    );
+  }
+
+  public function setUp() {
+    $search_url = $this->getAbsoluteUrl('ting_openformat_webservice');
+    $module_list = array(
+      'ting_openformat',
+      'ting_openformat_webservice_mockup',
+    );
+    parent::setUp($module_list);
+    variable_set('search_active_modules', array('ting_openformat' => 'ting_openformat'));
+    variable_set('search_default_module', 'ting_openformat');
+    variable_set('ting_search_url', $search_url);
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content', 'search content'));
+  }
+
+  public function testRunner() {
+    $this->testCommonContributors();
+  }
+
+  private function testCommonContributors() {
+    $this->drupalGet('work/870970-basis:29977828');
+    $this->assertText('Prometheus', 'Got the work Prometheus');
+    $this->assertText('Ludwig van Beethoven, Thomas Dausgaard, Det Svenske Kammerorkester', 'Has expected three creators.');
+    $this->assertText('Common contributors', 'Found field label \'Common Contributors\'.');
+    $this->assertText('Swedish Chamber Orchestra Örebro ; dirigent: Thomas Dausgaard');
+    $this->drupalGet('work/870970-basis:45483932');
+    $this->assertText('Harry Potter', 'Harry.');
+    $this->assertText('Harry Potter &amp; the deathly hallows', 'You can\'t hide under your cloak, Harry.');
+    $this->assertNoText('Common contributors', 'Didn\'t find field label \'Common Contributors\'.');
+  }
+}

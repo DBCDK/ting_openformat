@@ -33,7 +33,7 @@ function ting_openformat_webservice_mockup_ting_openformat_actions($type, $entit
 }
 
 function ting_openformat_webservice_test() {
-  return '<form name="test" action="ting_openformat_webservice" method="POST" target="_blank"><textarea name="xml"></textarea><input type="submit" name="sub" value="submit"/></form>';
+  return '<form name="test" action="../ting_openformat_webservice" method="POST" target="_blank"><textarea name="xml"></textarea><input type="submit" name="sub" value="submit"/></form>';
 }
 
 
@@ -57,20 +57,30 @@ function ting_openformat_webservice_mockup_request() {
     return;
   }
   $request = $envelope->Body;
+  $query = trim($request->searchRequest->query);
+  $file = $path . '/no-results.json';
   drupal_add_http_header('Content-Type', 'application/json');
-  if( $request->searchRequest->query == 'harry potter' && $request->searchRequest->start == '1') {
-    $resp = file_get_contents($path.'/results-page2.json');
+  $recid_re = '(\d+-(basis|katalog):\d+)';
+  $search_recid_re = '/\brec.id=' . $recid_re . '\b/';
+  $object_request_re = '/' . $recid_re . '/';
+
+  if (preg_match($search_recid_re, $query, $match) || preg_match($object_request_re, (current($request->getObjectRequest->identifier)), $match)) {
+    $type = current($request->children())->getName();
+    $objectFormat = isset($request->$type->objectFormat) ? $request->$type->objectFormat : 'bibliotekdkWorkDisplay';
+    $got_recid = $path . '/' . $objectFormat . '/rec.id/' . $match[1] . '.json';
+
+    if (file_exists($got_recid)) {
+      $file = $got_recid;
+    }
   }
-  else if( $request->searchRequest->query == 'harry potter' ) {
-    $resp = file_get_contents($path.'/results.json');
+  elseif ($query == 'harry potter' && $request->searchRequest->start == '1') {
+    $file = $path . '/results-page2.json';
   }
-  else if(current($request->getObjectRequest->identifier) == '870970-basis:26863287'){
-    $resp = file_get_contents($path.'/single-manifestation.json');
+  elseif ($query == 'harry potter') {
+    $file = $path . '/results.json';
   }
-  else{
-    $resp = file_get_contents($path.'/no-results.json');
-  }
-  print $resp;
+
+  print file_get_contents($file);;
 }
 
 /**

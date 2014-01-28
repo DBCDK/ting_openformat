@@ -169,4 +169,41 @@ class BibdkWork {
     }
     return $ret;
   }
+
+
+  /**
+   * @return array|mixed|null
+   */
+  public function getAboutAuthor() {
+    $fields = array('aboutAuthorElement' => 'searchCode');
+    $manifestations = $this->getManifestations();
+
+    $elements = array();
+    foreach ( $manifestations as $manifestation ) {
+      if ( isset($manifestation->manifestation->work->description->aboutAuthor) ) {
+        $elements[] = $manifestation->manifestation->work->description->aboutAuthor;
+      }
+    }
+
+    $parsedFields = ting_openformat_methods::parseFields($elements, $fields);
+    return (!empty($parsedFields)) ? $this->_parseAboutAuthor($parsedFields) : array();
+  }
+
+  /**
+   * @param $parsedFields
+   * @return array
+   */
+  private function _parseAboutAuthor($parsedFields) {
+    $ret = array();
+    foreach ($parsedFields as $furtherSearches) {
+      foreach ($furtherSearches as $key => $value) {
+        foreach ($value[0] as $elemnt) {
+          $ret[$key][$elemnt['display']]['searchCode'] = $elemnt['searchCode'];
+          $ret[$key][$elemnt['display']]['display'] = $elemnt['display'];
+        }
+      }
+    }
+    return $ret;
+  }
+
 }
