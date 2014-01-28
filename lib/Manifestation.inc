@@ -192,6 +192,11 @@ class Manifestation extends ManifestationMaster {
     return (is_array($result)) ? reset($result) : $result;
   }
 
+  public function getWebArchive() {
+    $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('webArchive'));
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
   /**
    * Gets 'typeGroup'. If you need 'type' see: getSubType()
    * @return array|mixed|null
