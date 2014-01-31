@@ -162,9 +162,7 @@ function _ting_openformat_create_collection_entities(&$result) {
     }
     _ting_openformat_parse_collection($original_manifestations, $entity_id, $openformat);
     if (!empty($entity_id)) {
-      $work_one = $collection->getFormattedCollection()->getWorkOne();
-      _ting_openformat_add_relations_to_element($work_one, $collection);
-      $conditions['workOne'] = $work_one;
+      $conditions['workOne'] = $collection->getFormattedCollection()->getWorkOne();
       $conditions['manifestations'] = $original_manifestations;
       /* @var $bibdkEntities BibdkCollection */
       $bibdkEntities = entity_load('bibdkCollection', $entity_id, $conditions, FALSE);
@@ -181,21 +179,6 @@ function _ting_openformat_create_collection_entities(&$result) {
   unset($result->collections);
   $_SESSION['search_result'][$result->search_key] = $result;
 }
-
-/**
- * Add relation data to the work one manifestation
- *
-*@param $element
- * @param $collection
- */
-function _ting_openformat_add_relations_to_element(&$element, $collection){
-
-  $object = current($collection->getObjects());
-  if (isset($object->relationsData)) {
-    $element->relationsData = $object->relationsData;
-  }
-}
-
 
 function _ting_openformat_parse_collection(&$original_manifestations, &$entity_id, $openformat) {
   if (isset($openformat) && is_array($openformat)) {
