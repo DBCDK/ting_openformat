@@ -22,7 +22,9 @@ class BibdkWork {
 
   public function getISBN() {
     foreach ($this->manifestations as $manifestation) {
-      $isbn = $manifestation->getIdentifiersISBN();
+      if (get_class($manifestation) == 'Manifestation') {
+        $isbn = $manifestation->getIdentifiersISBN();
+      }
       if (isset($isbn['identifiersISBN'][0]['identifier'])) {
         return $isbn['identifiersISBN'][0]['identifier'];
         break;
