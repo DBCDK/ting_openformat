@@ -473,6 +473,8 @@ function ting_openformat_get_ordered_subworks($subWorks) {
   foreach ($sub as $type => $value) {
     foreach ($value as $subtype => $val) {
       $subtype_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $subtype));
+      // Context is added for subtype to reuse translations.
+      //There is no context on type because this would clear existing translations
       $trans = array('type' => t($type), 'subtype' => t($subtype, array(), array('context' => 'material_type')));
 
       $type_id = $trans['type'];
