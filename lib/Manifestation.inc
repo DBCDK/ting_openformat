@@ -215,12 +215,11 @@ class Manifestation extends ManifestationMaster {
   }
 
   /**
-   * @return array|mixed|null
+   * @return bool
    */
   public function getSpecifyArticleData() {
     $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('specifyArticleData'));
-
-    return (bool) reset($result);
+    return filter_var(reset($result), FILTER_VALIDATE_BOOLEAN);
   }
 
   public function getVolume() {
