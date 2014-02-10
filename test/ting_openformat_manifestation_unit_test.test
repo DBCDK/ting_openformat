@@ -1,0 +1,34 @@
+<?php
+
+class TingOpenformatManifestationObjectTest extends DrupalUnitTestCase {
+
+  /**
+   * @return array
+   */
+  public static function getInfo(){
+    return array(
+      'name' => t('Ting OpenFormat Manifestation unittest'),
+      'description' => t('Testing methods on the Manifestation object'),
+      'group' => t('Ting Openformat'),
+    );
+  }
+
+  public function setUp() {
+    module_load_include('module', 'ting_openformat', 'ting_openformat');
+    parent::setUp('ting_openformat');
+  }
+
+  public function testSpecifyArticleData(){
+    $manifestation = new stdClass();
+    $manifestation->adminData->specifyArticleData->{'$'} = 'false';
+
+    $mani = new Manifestation($manifestation);
+    $this->assertFalse($mani->getSpecifyArticleData(), 'got false as expected');
+
+    $mani->manifestation->adminData->specifyArticleData->{'$'} = NULL;
+    $this->assertFalse($mani->getSpecifyArticleData(), 'got false as expected');
+
+    $mani->manifestation->adminData->specifyArticleData->{'$'} = 'true';
+    $this->assertTrue($mani->getSpecifyArticleData(), 'got true as expected');
+  }
+}
