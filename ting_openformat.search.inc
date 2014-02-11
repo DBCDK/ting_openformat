@@ -119,10 +119,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
 
   if (!empty($search_results)) {
     _ting_openformat_set_js_settings();
-
-
-
-
+    drupal_get_messages('warning');
     return $search_results;
   }
 
