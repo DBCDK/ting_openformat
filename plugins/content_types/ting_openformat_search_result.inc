@@ -60,7 +60,6 @@ function ting_openformat_ting_openformat_search_result_content_type_render($subt
   }
   else {
     $msg = t('Your search yielded no results');
-    $msg .= search_help('search#noresults', drupal_help_arg());
     drupal_set_message($msg, 'warning', FALSE);
   }
   $output .= "</div>\n";
