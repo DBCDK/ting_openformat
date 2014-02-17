@@ -35,7 +35,7 @@ class Manifestation extends ManifestationMaster {
   }
 
   /**
-   * @return array|mixed|null
+   * @return string|null
    */
   public function getTitle() {
     $fields = array('titleFull');
@@ -46,7 +46,7 @@ class Manifestation extends ManifestationMaster {
   }
 
   /**
-   * @return array|mixed|null
+   * @return string|null
    */
   public function getTitleSpecific() {
     $fields = array('titleSpecific');

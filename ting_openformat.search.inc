@@ -162,8 +162,8 @@ function _ting_openformat_create_collection_entities(&$result) {
     }
     _ting_openformat_parse_collection($original_manifestations, $entity_id, $openformat);
     if (!empty($entity_id)) {
-      $conditions['manifestations'] = $original_manifestations;
       $conditions['workOne'] = $collection->getFormattedCollection()->getWorkOne();
+      $conditions['manifestations'] = $original_manifestations;
       /* @var $bibdkEntities BibdkCollection */
       $bibdkEntities = entity_load('bibdkCollection', $entity_id, $conditions, FALSE);
       $bibdkEntities->parseManifestations(); //Temporary as malformed XML is returned from OpenSearch
@@ -296,6 +296,7 @@ function _ting_openformat_search_get_variables() {
   if (isset($_SESSION['search_settings']['full_view']) && $_SESSION['search_settings']['full_view'] == TRUE) {
     $params['collectionType'] = 'work-1';
     $params['objectFormat'][] = 'bibliotekdkWorkDisplay';
+    $params['relationData'][] = 'uri';
   }
 
   $params['objectFormat'][] = variable_get('objectFormat', 'briefDisplay');
