@@ -13,7 +13,7 @@ class Manifestation extends ManifestationMaster {
    */
   public function __construct($manifestation) {
     $this->manifestation = $manifestation;
-    if(isset($this->manifestation->main)){
+    if (isset($this->manifestation->main)) {
       $this->fields = $this->manifestation->main;
     }
     $this->getAnalyticContent();
@@ -63,6 +63,7 @@ class Manifestation extends ManifestationMaster {
     $fields = array('creators' => array('creator' => 'searchCode'));
     $elements = $this->getWork();
     $result = ting_openformat_methods::parseFields($elements, $fields);
+
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -73,6 +74,7 @@ class Manifestation extends ManifestationMaster {
     $fields = array('subjects' => array('subjectHeader' => 'header', 'subject' => 'searchCode'));
     $elements = isset($this->getWork()->description) ? $this->getWork()->description : NULL;
     $result = ting_openformat_methods::parseFields($elements, $fields);
+
     return $result;
   }
 
@@ -81,6 +83,7 @@ class Manifestation extends ManifestationMaster {
 
     $elements = isset($this->getWork()->description) ? $this->getWork()->description : NULL;
     $result = ting_openformat_methods::parseFields($elements, $fields);
+
     return $result;
   }
 
@@ -100,7 +103,8 @@ class Manifestation extends ManifestationMaster {
    */
   public function isReservable() {
     $requestMethod = $this->getRequestMethod();
-    return (!isset($requestMethod) || $requestMethod == 'newMaterial' || $requestMethod == 'oldMaterial' ) ? TRUE : FALSE;
+
+    return (!isset($requestMethod) || $requestMethod == 'newMaterial' || $requestMethod == 'oldMaterial') ? TRUE : FALSE;
   }
 
   /**
@@ -110,6 +114,7 @@ class Manifestation extends ManifestationMaster {
    */
   public function isLink() {
     $requestMethod = $this->getRequestMethod();
+
     return ($requestMethod == 'link') ? TRUE : FALSE;
   }
 
@@ -124,6 +129,7 @@ class Manifestation extends ManifestationMaster {
     elseif (isset($requestMethod) && $requestMethod != 'none' && $requestMethod != 'Old') {
       return $requestMethod;
     }
+
     return NULL;
   }
 
@@ -133,6 +139,7 @@ class Manifestation extends ManifestationMaster {
 
   public function getDistinction() {
     $result = ting_openformat_methods::parseFields($this->getWork(), array('distinction'));
+
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -142,6 +149,7 @@ class Manifestation extends ManifestationMaster {
 
   public function getRequestMethod() {
     $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('requestMethod'));
+
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -151,6 +159,7 @@ class Manifestation extends ManifestationMaster {
 
   public function getRestrictedUse() {
     $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('restrictedUse'));
+
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -184,11 +193,13 @@ class Manifestation extends ManifestationMaster {
     if (isset($result['type']) && is_array($result['type'])) {
       $result['type'] = implode(' + ', $result['type']);
     }
+
     return (is_array($result)) ? reset($result) : $result;
   }
 
   public function getOrsOrderMaterialType() {
     $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('orsOrderMaterialType'));
+
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -204,7 +215,16 @@ class Manifestation extends ManifestationMaster {
    */
   public function getType() {
     $result = (isset($this->type)) ? array($this->type) : ting_openformat_methods::parseFields($this->manifestation->adminData, array('typeGroup'));
+
     return (is_array($result)) ? reset($result) : $result;
+  }
+
+  /**
+   * @return bool
+   */
+  public function getSpecifyArticleData() {
+    $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('specifyArticleData'));
+    return filter_var(reset($result), FILTER_VALIDATE_BOOLEAN);
   }
 
   public function getVolume() {
@@ -231,10 +251,11 @@ class Manifestation extends ManifestationMaster {
     }
 
     foreach ($this->manifestation->relationsData as $relation) {
-      if ($relation->relationType == 'dbcaddi:hasOnlineAccess' && strpos($relation->relationUri, 'useraccessinfomedia') !== false) {
+      if ($relation->relationType == 'dbcaddi:hasOnlineAccess' && strpos($relation->relationUri, 'useraccessinfomedia') !== FALSE) {
         return $relation->relationUri;
       }
     }
+
     return FALSE;
   }
 
@@ -244,7 +265,7 @@ class Manifestation extends ManifestationMaster {
     }
     $reviews = array();
     foreach ($this->manifestation->relationsData as $relation) {
-      if ($relation->relationType == 'dbcaddi:hasReview' && ((strpos($relation->relationUri, '870976') === false))){
+      if ($relation->relationType == 'dbcaddi:hasReview' && ((strpos($relation->relationUri, '870976') === FALSE))) {
         $reviews[$relation->relationUri] = $relation->relationUri;
       }
     }
@@ -259,7 +280,7 @@ class Manifestation extends ManifestationMaster {
     }
     $reviews = array();
     foreach ($this->manifestation->relationsData as $relation) {
-      if ($relation->relationType == 'dbcaddi:hasReview' && strpos($relation->relationUri, '870976-anmeld') !== false) {
+      if ($relation->relationType == 'dbcaddi:hasReview' && strpos($relation->relationUri, '870976-anmeld') !== FALSE) {
         $reviews[] = $relation->relationUri;
       }
     }
@@ -269,6 +290,7 @@ class Manifestation extends ManifestationMaster {
 
   public function getHostPublicationID() {
     $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('hostPublicationID'));
+
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -286,22 +308,22 @@ class Manifestation extends ManifestationMaster {
    * @return array|null
    */
   public function getSingleAccessUrl() {
-    if (isset($this->manifestation->volume) && is_object($this->manifestation->volume) ) {
+    if (isset($this->manifestation->volume) && is_object($this->manifestation->volume)) {
       $urls = ting_openformat_methods::parseFields($this->manifestation->volume->details->accessInformation, array('accessUrl'));
-    } else {
+    }
+    else {
       $urls = ting_openformat_methods::parseFields($this->manifestation->main->details->accessInformation, array('accessUrl'));
     }
-    while ( is_array($urls) ) {
-      if ( isset($urls['accessUrl']) ) {
+    while (is_array($urls)) {
+      if (isset($urls['accessUrl'])) {
         return $urls;
       }
       else {
         return reset($urls);
       }
     }
+
     return NULL;
   }
-
-
 
 }
