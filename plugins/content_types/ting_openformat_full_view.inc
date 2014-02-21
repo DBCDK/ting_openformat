@@ -15,10 +15,9 @@ function ting_openformat_full_view_button($subtype, $conf, $panel_args, $context
 
   $block = new stdClass();
 
-
   $content['short'] = array(
     '#theme' => 'link',
-    '#text' => ' <span class="icon full-view closed"> </span> ' . t('short view', array(), array('context' => 'ting_openformat')),
+    '#text' => t('short view', array(), array('context' => 'ting_openformat')),
     '#path' => NULL,
     '#options' => array(
       'html' => TRUE,
@@ -34,7 +33,7 @@ function ting_openformat_full_view_button($subtype, $conf, $panel_args, $context
 
   $content['full'] = array(
     '#theme' => 'link',
-    '#text' => '<span class="icon full-view expanded"> </span> ' . t('full view', array(), array('context' => 'ting_openformat')),
+    '#text' => t('full view', array(), array('context' => 'ting_openformat')),
     '#path' => NULL,
     '#options' => array(
       'html' => TRUE,
