@@ -24,7 +24,6 @@ class ManifestationMaster {
   }
 
 
-
   /* \brief Distinction
    * zero or more occurence(s)
    */
@@ -408,9 +407,13 @@ class ManifestationMaster {
   /* \brief hostPublication
    * zero or more occurences
    */
-
   public function getHostPublication() {
-    $fields = array('hostPublication');
+    $fields = array(
+      'hostPublicationLink' => array(
+        'hostPublicationSeries' => 'searchCode',
+        'hostPublicationElement',
+      ),
+    );
     $result = ting_openformat_methods::parseFields($this->_getPublicationDetails(), $fields);
     return (is_array($result)) ? reset($result) : $result;
   }

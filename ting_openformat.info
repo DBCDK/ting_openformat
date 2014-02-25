@@ -1,7 +1,7 @@
 name = Search client
 description = Searching for bibdk.
 package = Bibliotek.dk
-version = 7.x-0.40
+version = 7.x-0.41
 core = 7.x
 
 ;configure link from module list
@@ -20,9 +20,12 @@ files[] = test/ting_openformat_unit_test.test
 files[] = test/ting_openformat_web_test.test
 files[] = test/ting_openformat_load_more_results_test.test
 files[] = test/ting_openformat_feeds_unit_test.test
+
 files[] = test/BibdkBriefDisplay.test
 files[] = test/ting_openformat_methods.test
 files[] = test/ting_openformat_field_shown.test
+files[] = test/ting_openformat_manifestation_unit_test.test
+
 
 files[] = lib/BibdkCollection.inc
 files[] = lib/BibdkSubwork.inc
