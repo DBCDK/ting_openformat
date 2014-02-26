@@ -138,7 +138,7 @@ class Manifestation extends ManifestationMaster {
    */
 
   public function getDistinction() {
-    $result = ting_openformat_methods::parseFields($this->getWork(), array('distinction'));
+    $result = ting_openformat_methods::parseFields($this->fields, array('distinction'));
 
     return (is_array($result)) ? reset($result) : $result;
   }
