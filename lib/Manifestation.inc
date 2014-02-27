@@ -121,8 +121,10 @@ class Manifestation extends ManifestationMaster {
   public function getInfotext() {
     $restrictedUse = $this->getRestrictedUse();
     $restrictedUse = (is_array($restrictedUse)) ? reset($restrictedUse) : $restrictedUse;
+
     $requestMethod = $this->getRequestMethod();
     $requestMethod = (is_array($requestMethod)) ? reset($requestMethod) : $requestMethod;
+
     if (isset($restrictedUse)) {
       return $restrictedUse;
     }
@@ -133,20 +135,25 @@ class Manifestation extends ManifestationMaster {
     return NULL;
   }
 
-  /* \brief Distinction
+  public function getMessageCategory(){
+    $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('messageCategory'));
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
+  /**
+   * Distinction
    * zero or more occurence(s)
    */
-
   public function getDistinction() {
     $result = ting_openformat_methods::parseFields($this->fields, array('distinction'));
 
     return (is_array($result)) ? reset($result) : $result;
   }
 
-  /* \brief requestMethod
+  /**
+   * requestMethod
    * zero or one occurence
    */
-
   public function getRequestMethod() {
     $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('requestMethod'));
 
