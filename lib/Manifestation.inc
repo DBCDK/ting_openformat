@@ -138,7 +138,6 @@ class Manifestation extends ManifestationMaster {
     return NULL;
   }
 
-  //TODO mmj write test
   /**
    * @return array|mixed|null
    */
