@@ -85,6 +85,10 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $subjects = $entity->getSubjects();
         $value = _ting_openformat_get_markup_for_field($subjects, '; ', FALSE);
         break;
+      case 'bibdk_mani_creators':
+        $content = _ting_openformat_default_field_view_content($field['field_name'], $entity);
+        $value = _ting_openformat_get_markup_for_field($content, "<br />");
+        break;      
       case 'bibdk_mani_volume':
         $volume = $entity->getVolume();
         if (isset($volume)) {
