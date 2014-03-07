@@ -534,7 +534,8 @@ function ting_openformat_collection_view($bibdkobject) {
   $all_ids_in_collection = $bibdkobject->getCollectionIds();
   $uid = strtolower(strtr(reset($all_ids_in_collection), array(
     ':' => '',
-    '-' => ''
+    '-' => '',
+    '_' => ''
   )));
 
   $trackId = ting_openformat_set_tracking_id();
