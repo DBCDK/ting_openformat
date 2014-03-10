@@ -118,11 +118,16 @@ class Manifestation extends ManifestationMaster {
     return ($requestMethod == 'link') ? TRUE : FALSE;
   }
 
+  /**
+   * @return array|mixed|null
+   */
   public function getInfotext() {
     $restrictedUse = $this->getRestrictedUse();
     $restrictedUse = (is_array($restrictedUse)) ? reset($restrictedUse) : $restrictedUse;
+
     $requestMethod = $this->getRequestMethod();
     $requestMethod = (is_array($requestMethod)) ? reset($requestMethod) : $requestMethod;
+
     if (isset($restrictedUse)) {
       return $restrictedUse;
     }
@@ -133,38 +138,47 @@ class Manifestation extends ManifestationMaster {
     return NULL;
   }
 
-  /* \brief Distinction
+  /**
+   * @return array|mixed|null
+   */
+  public function getMessageCategory(){
+    $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('messageCategory'));
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
+  /**
+   * Distinction
    * zero or more occurence(s)
    */
-
   public function getDistinction() {
-    $result = ting_openformat_methods::parseFields($this->getWork(), array('distinction'));
+    $result = ting_openformat_methods::parseFields($this->fields, array('distinction'));
 
     return (is_array($result)) ? reset($result) : $result;
   }
 
-  /* \brief requestMethod
+  /**
+   * requestMethod
    * zero or one occurence
    */
-
   public function getRequestMethod() {
     $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('requestMethod'));
 
     return (is_array($result)) ? reset($result) : $result;
   }
 
-  /* \brief restrictedUse
+  /**
+   * restrictedUse
    * zero or one occurence
    */
-
   public function getRestrictedUse() {
     $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('restrictedUse'));
 
     return (is_array($result)) ? reset($result) : $result;
   }
 
-  /** Set eksternal type. Typically from briefdisplay
-   * @param $subtype string|array
+  /**
+   * Set eksternal type. Typically from briefdisplay
+   * @param $type
    */
   public function setBriefDisplayType($type) {
     $this->briefDisplayType = $type;
@@ -177,17 +191,18 @@ class Manifestation extends ManifestationMaster {
     return $this->briefDisplayType;
   }
 
-  /** Set eksternal type. Typically from briefdisplay
-   * @param $subtype string|array
+  /**
+   * Set eksternal type. Typically from briefdisplay
+   * @param $type
    */
   public function setSubType($type) {
     $this->subType = $type;
   }
 
-  /* \brief type of manifestation
+  /**
+   * type of manifestation
    * 1 occurence
    */
-
   public function getSubType() {
     $result = isset($this->subType) ? $this->subType : ting_openformat_methods::parseFields($this->manifestation->main, array('type'));
     if (isset($result['type']) && is_array($result['type'])) {
@@ -227,6 +242,9 @@ class Manifestation extends ManifestationMaster {
     return filter_var(reset($result), FILTER_VALIDATE_BOOLEAN);
   }
 
+  /**
+   * @return null|array
+   */
   public function getVolume() {
     if (!isset($this->manifestation->volume)) {
       return NULL;
@@ -236,6 +254,9 @@ class Manifestation extends ManifestationMaster {
     }
   }
 
+  /**
+   * @return null|array
+   */
   public function getSection() {
     if (!isset($this->manifestation->section)) {
       return NULL;
@@ -245,6 +266,9 @@ class Manifestation extends ManifestationMaster {
     }
   }
 
+  /**
+   * @return bool
+   */
   public function getInfomediaLink() {
     if (!isset($this->manifestation->relationsData)) {
       return FALSE;
@@ -259,6 +283,9 @@ class Manifestation extends ManifestationMaster {
     return FALSE;
   }
 
+  /**
+   * @return array
+   */
   public function getNewsPaperReviews() {
     if (!isset($this->manifestation->relationsData)) {
       return array();
@@ -273,6 +300,9 @@ class Manifestation extends ManifestationMaster {
     return $reviews;
   }
 
+  /**
+   * @return array
+   */
   public function getMaterialReview() {
 
     if (!isset($this->manifestation->relationsData)) {
@@ -288,12 +318,18 @@ class Manifestation extends ManifestationMaster {
     return $reviews;
   }
 
+  /**
+   * @return array|mixed|null
+   */
   public function getHostPublicationID() {
     $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('hostPublicationID'));
 
     return (is_array($result)) ? reset($result) : $result;
   }
 
+  /**
+   * @return array|mixed|null
+   */
   public function getReviewRatings() {
     $fields = array('reviewRatings');
     $elements = isset($this->getWork()->description) ? $this->getWork()->description : NULL;

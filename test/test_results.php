@@ -157,7 +157,7 @@ function ting_openformat_test_results() {
     'bibdk_mani_distinction' =>
     array(
       'method' => 'getDistinction',
-      '_ting_openformat_default_field_view_content' => NULL,
+      '_ting_openformat_default_field_view_content' => 'Giulini',
       '_ting_openformat_parse_element' => NULL,
     ),
     'bibdk_mani_title' =>
