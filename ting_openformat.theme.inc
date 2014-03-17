@@ -12,71 +12,104 @@ function ting_openformat_theme() {
   return array(
     'ting_openformat_search_results' => array(
       'path' => $path,
-      'variables' => array('content'=>array(),'work'=>array(), 'manifestations'=>array()),
+      'variables' => array(
+        'content' => array(),
+        'work' => array(),
+        'manifestations' => array()
+      ),
       //'file'      => 'ting_openformat.search_pages.inc',
       'template'  => 'ting_openformat_search_results',
-      'render element' => 'elements',
     ),
     'ting_openformat_manifestation' => array(
       'path' => $path,
-      'variables' => array('fields'=> array(), 'view_mode' => 'full', 'id'=>0, 'actions' => array()),
+      'variables' => array(
+        'fields' => array(),
+        'view_mode' => 'full',
+        'id' => 0,
+        'actions' => array()
+      ),
       'template' => 'ting_openformat_manifestation',
-      'render element' => 'elements',
     ),
 
     'ting_openformat_work' => array(
       'path' => $path,
-      'variables' => array('fields' => array(),'cover' => '', 'work_tabs' => '', 'subWorks'=>array(),'ding_id' => 0,),
+      'variables' => array(
+        'fields' => array(),
+        'cover' => '',
+        'work_tabs' => '',
+        'tabs' => '',
+        'subWorks' => array(),
+        'ding_id' => 0,
+      ),
       'template' => 'ting_openformat_work',
-      'render elements' => 'elements',
     ),
 
     'ting_openformat_toggle_work' => array(
       'path' => $path,
-      'variables' => array('uid' => '', 'showinfo' => '', 'full_view' => FALSE),
+      'variables' => array(
+        'uid' => '',
+        'showinfo' => '',
+        'full_view' => FALSE,
+      ),
       'template' => 'ting_openformat_toggle_work',
-      'render elements' => 'elements',
     ),
 
     'ting_openformat_work_info' => array(
       'path' => $path,
-      'variables' => array('info' => array()),
+      'variables' => array(
+        'info' => array(),
+      ),
       'template' => 'ting_openformat_work_info',
-      'render elements' => 'elements',
     ),
 
     'ting_openformat_collection' => array(
       'path' => $path,
-      'variables' => array('title' => '','author'=> '','ids' => '', 'work_type' => '', 'type' => '', 'togglework' => '', 'work_one' => ''),
+      'variables' => array(
+        'title' => '',
+        'author' => '',
+        'ids' => '',
+        'work_type' => '',
+        'type' => '',
+        'togglework' => '',
+        'work_one' => '',
+      ),
       'template' => 'ting_openformat_collection',
-      'render elements' => 'elements',
     ),
 
     'ting_openformat_collection_actions' => array(
       'path' => $path,
-      'variables' => array('types' => array()),
+      'variables' => array(
+        'types' => array(),
+      ),
       'template' => 'ting_openformat_collection_actions',
-      'render elements' => 'elements',
     ),
 
     'ting_openformat_subwork' => array(
       'path' => $path,
-      'variables' => array('manifestations' => array(),'id'=>0),
+      'variables' => array(
+        'manifestations' => array(),
+        'id' => 0,
+      ),
       'template' => 'ting_openformat_subwork',
-      'render elements' => 'elements',
     ),
 
     'ting_openformat_subwork_tabs' => array(
       'path' => $path,
-      'variables' => array('subWorks' => array()),
+      'variables' => array(
+        'subWorks' => array(),
+      ),
       'template' => 'ting_openformat_subwork_tabs',
-      'render elements' => 'elements',
     ),
     'ting_openformat_single_work' => array(
       'path' => $path,
-      'variables' => array('title' => '','author'=> '','ids' => '', 'work' => '', 'uid' => ''),
+      'variables' => array(
+        'title' => '',
+        'author' => '',
+        'ids' => '',
+        'work' => '',
+        'uid' => '',
+      ),
       'template' => 'ting_openformat_single_work',
-      'render elements' => 'elements',
     ),
     'ting_openformat_type_order_form' => array(
       'render element' => 'form',
@@ -90,16 +123,21 @@ function ting_openformat_theme() {
 
     'ting_openformat_more_info' => array(
       'path' => $path,
-      'variables' => array('showinfoform' => ''),
+      'variables' => array(
+        'showinfoform' => '',
+      ),
       'template' => 'ting_openformat_more_info',
-      'render elements' => 'elements',
     ),
     
     'ting_openformat_rss_feed' => array(
       'path' => $path,
-      'varriables' => array('item'=>array(), 'title' => '', 'description' => '', 'link' => ''),
+      'varriables' => array(
+        'item' => array(),
+        'title' => '',
+        'description' => '',
+        'link' => '',
+      ),
       'template' => 'ting_openformat_rss_feed',
-      'render elements' => 'elements',
     )
   );
 }
