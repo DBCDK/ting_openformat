@@ -447,17 +447,21 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   $ordered_subworks = ting_openformat_get_ordered_subworks($subWorks);
 
   $ding_id = preg_replace('/[^a-zA-Z0-9]+/', '', $bibdkWork->id);
-  $tabs = theme('ting_openformat_subwork_tabs', array(
-    'subWorks' => $ordered_subworks,
-    'ding_id' => $ding_id
-  ));
+  $render_tabs = array(
+    '#theme' => 'ting_openformat_subwork_tabs',
+    '#subWorks' => $ordered_subworks,
+    '#ding_id' => $ding_id,
+  );
+  $tabs = drupal_render($render_tabs);
 
-  return theme('ting_openformat_work', array(
-    'fields' => $work_fields,
-    'subWorks' => $ordered_subworks,
-    'tabs' => $tabs,
-    'ding_id' => $ding_id
-  ));
+  $render = array(
+    '#theme' => 'ting_openformat_work',
+    '#fields' => $work_fields,
+    '#subWorks' => $ordered_subworks,
+    '#tabs' => $tabs,
+    '#ding_id' => $ding_id
+  );
+  return drupal_render($render);
 }
 
 /** Get Subworks ordered by type and subtype
