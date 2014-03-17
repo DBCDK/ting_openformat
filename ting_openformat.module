@@ -140,9 +140,9 @@ function ting_openformat_ajax_manifestations($type, $json) {
  */
 function ting_openformat_worktabs_items($tabs, $entity) {
   $tabs['subjects']['subjects'] = array(
-    'title' => t('subjects', array(), array('context' => 'ting_openformat')),
-    'btn_txt_closed' => t('view_more', array(), array('context' => 'ting_openformat')),
-    'rendered' => ting_openformat_get_tab_content($entity),
+    '#title' => t('subjects', array(), array('context' => 'ting_openformat')),
+    '#btn_txt_closed' => t('view_more', array(), array('context' => 'ting_openformat')),
+    '#content' => ting_openformat_get_tab_content($entity),
     'weight' => 0,
   );
 
