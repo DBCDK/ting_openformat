@@ -182,13 +182,15 @@ function ting_openformat_single($id) {
 
   $creator = _ting_openformat_get_markup_for_field($bibdkEntity->getCreator());
 
-  return theme('ting_openformat_single_work', array(
-    'title' => $bibdkEntity->getTitle(),
-    'partOf' => $part_of,
-    'author' => drupal_render($creator),
-    'ids' => $id,
-    'work' => ting_openformat_work_view($bibdkEntity),
-  ));
+  $render = array(
+    '#theme' => 'ting_openformat_single_work',
+    '#title' => $bibdkEntity->getTitle(),
+    '#partOf' => $part_of,
+    '#author' => drupal_render($creator),
+    '#ids' => $id,
+    '#work' => ting_openformat_work_view($bibdkEntity),
+  );
+  return drupal_render($render);
 }
 
 /**
