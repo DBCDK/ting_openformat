@@ -44,10 +44,24 @@ class BibdkSubwork {
         if ($manifestation->isReservable()) {
           $this->isReservable = TRUE;
           break;
+
         }
       }
     }
     return $this->isReservable;
+  }
+
+  public function showLocalizationLink(){
+    foreach($this->getManifestations() as $manifestation){
+      if( get_class($manifestation) == 'Manifestation'){
+        $method = $manifestation->getRequestMethod();
+        $use = $manifestation->getRestrictedUse();
+        if ($method != 'oldMaterial' && $method != 'newMaterial'  && $use != 'oldSBTB'){
+          return TRUE;
+        }
+      }
+    }
+    return FALSE;
   }
 
   public function isLink() {
