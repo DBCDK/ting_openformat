@@ -134,11 +134,11 @@ function ting_openformat_ajax_manifestations($type, $json) {
 
 /**
  * Implements hook_worktabs_items().
- * @param array $tabs
  * @param BibdkWork $entity
  * @return array
  */
-function ting_openformat_worktabs_items($tabs, $entity) {
+function ting_openformat_worktabs_items($entity) {
+  $tabs = array();
   $tabs['subjects']['subjects'] = array(
     '#title' => t('subjects', array(), array('context' => 'ting_openformat')),
     '#btn_txt_closed' => t('view_more', array(), array('context' => 'ting_openformat')),
