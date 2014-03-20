@@ -102,9 +102,11 @@ class Manifestation extends ManifestationMaster {
    * @return Boolean
    */
   public function isReservable() {
+    return $requestMethod = $this->getRequestButton();
+    /* do we need the old method as a fallback?
     $requestMethod = $this->getRequestMethod();
-
     return (!isset($requestMethod) || $requestMethod == 'newMaterial' || $requestMethod == 'oldMaterial') ? TRUE : FALSE;
+    */
   }
 
   /**
@@ -152,6 +154,16 @@ class Manifestation extends ManifestationMaster {
    */
   public function getDistinction() {
     $result = ting_openformat_methods::parseFields($this->fields, array('distinction'));
+
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
+  /**
+   * requestButton
+   * zero or one occurence
+   */
+  public function getRequestButton() {
+    $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('requestButton'));
 
     return (is_array($result)) ? reset($result) : $result;
   }
