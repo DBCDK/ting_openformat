@@ -20,6 +20,7 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     module_load_include('inc', 'ting_openformat', 'ting_openformat.entities');
     module_load_include('inc', 'ting_openformat', 'lib/BibdkCollection');
     module_load_include('php', 'ting_openformat', 'test/test_results');
+    module_load_include('inc', 'ting_openformat', 'lib/BibdkSubwork');
     module_load_include('inc', 'ting_openformat', 'ting_openformat.field_definitions');
     parent::setUp();
 
@@ -53,6 +54,16 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
       }
     }
 
+  }
+
+
+  function testShowLocalizationLink(){
+    $path = drupal_get_path('module', 'ting_openformat');
+    $file = $path.'/test/mockup/no_localizations.json';
+    $manifestations = json_decode(file_get_contents($file));
+    $subwork = new BibdkSubwork('hest', $manifestations);
+    $show = $subwork->showLocalizationLink();
+    $this->assertFalse($show, 'Do not show link when no localizations');
   }
 
   /** Test that trackingId is set properly
