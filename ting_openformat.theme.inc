@@ -97,6 +97,7 @@ function ting_openformat_theme() {
       'path' => $path,
       'variables' => array(
         'subWorks' => array(),
+        'ding_id' => '',
       ),
       'template' => 'ting_openformat_subwork_tabs',
     ),
