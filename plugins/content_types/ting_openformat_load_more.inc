@@ -87,7 +87,7 @@ function ting_openformat_load_more_results_ajax_callback() {
   );
 
   ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
-  exit(0);
+  drupal_exit();
 }
 
 /**
