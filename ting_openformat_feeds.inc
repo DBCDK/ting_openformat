@@ -11,7 +11,7 @@ function ting_openformat_feeds_redirect($result,$query) {
       if (!empty($feed)) {
         header('Content-Type: application/rss+xml; charset=utf-8');
         echo $feed;
-        exit;
+        drupal_exit();
       }
     }
   }
