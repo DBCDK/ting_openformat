@@ -36,7 +36,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
 
   // quickfix to get main query
   // TODO: move to more relevant method
-  $keys = $_GET['search_block_form'];
+  $keys = $_REQUEST['search_block_form'];
 
   $params = array();
   $params['query'] = $keys;
@@ -385,7 +385,7 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
  * Search conditions callback.
  */
 function ting_openformat_conditions_callback($query) {
-  $_REQUEST += bibdk_custom_search_get_submitted_searchcodes($_GET);
+  $_REQUEST += bibdk_custom_search_get_submitted_searchcodes($_REQUEST);
 
   $conditions = array();
 
