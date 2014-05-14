@@ -34,10 +34,6 @@ function _ting_openformat_handle_conditions(&$conditions) {
 /** implements hook_search_execute */
 function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more = NULL) {
 
-  // quickfix to get main query
-  // TODO: move to more relevant method
-  $keys = $_REQUEST['search_block_form'];
-
   $params = array();
   $params['query'] = $keys;
 
@@ -385,9 +381,8 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
  * Search conditions callback.
  */
 function ting_openformat_conditions_callback($query) {
-  $_REQUEST += bibdk_custom_search_get_submitted_searchcodes($_REQUEST);
-
-  $conditions = array();
+   $_REQUEST += module_invoke_all('ting_openformat_conditions', $query);
+   $conditions = array();
 
   // check tracking id
   if (!empty($_REQUEST['trackingId'])) {

@@ -99,5 +99,15 @@ function hook_ting_openformat_qe_preprocess($extended_query_elements) {
 
 
 /**
+ * Lets other modules add conditions to a search query
+ * @param $query
+ * @return array
+ */
+function hook_ting_openformat_conditions($query) {
+
+}
+
+
+/**
  * @} End of "addtogroup hooks".
  */
