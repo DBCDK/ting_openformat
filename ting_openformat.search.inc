@@ -92,8 +92,11 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
     ting_openformat_feeds_redirect($result, $params['query']);
   }
 
-  // set facets for result
+  // set facets for result .. if not by ajax
+  $by_ajax = variable_get('ding_facetbrowser_by_ajax', FALSE);
+  if(!$by_ajax){
   _ting_openformat_facet_cache($client, $result, $params);
+  }
 
   if (isset($result->collections)) {
     $result->search_key = $keys;
@@ -116,6 +119,11 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
     $total = $params['start'] + $result->numTotalCollections;
   }
   pager_default_initialize($total, $params['numResults']);
+
+
+  $_SESSION['latest_search']['params'] = $params;
+  $_SESSION['latest_search']['cache_key'] = $result->cacheKey;
+  $_SESSION['latest_search']['search_key'] = $result->search_key;
 
   if (!empty($search_results)) {
     _ting_openformat_set_js_settings();
@@ -245,11 +253,13 @@ function _ting_openformat_facet_cache($client, $result, $params) {
     if (isset($facet_result->facets)) {
       $result->facets = $facet_result->facets;
       cache_set($local_cache_key, $facet_result->facets, 'cache', CACHE_TEMPORARY);
+      drupal_static('ting_search_results', $result);
     }
   }
   // facets was found in cache
   else {
     $result->facets = cache_get($local_cache_key)->data;
+    drupal_static('ting_search_results', $result);
   }
 }
 
