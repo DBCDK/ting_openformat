@@ -120,10 +120,10 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   }
   pager_default_initialize($total, $params['numResults']);
 
-
   $_SESSION['latest_search']['params'] = $params;
   $_SESSION['latest_search']['cache_key'] = $result->cacheKey;
   $_SESSION['latest_search']['search_key'] = $result->search_key;
+  $_SESSION['latest_search']['request_uri'] = request_uri();
 
   if (!empty($search_results)) {
     _ting_openformat_set_js_settings();
@@ -246,6 +246,7 @@ function _ting_openformat_facet_cache($client, $result, $params) {
 
     // do a zero search to get the facets
     $params['numResults'] = 0;
+    // use DKABM .. it is fastest
     $params['objectFormat'] = 'DKABM';
 
     //$facet_result = $client->do_search($params);
