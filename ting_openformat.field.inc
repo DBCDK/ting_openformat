@@ -202,11 +202,11 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
   if (!is_array($elements)) {
     $elements = array($elements);
   }
-
   foreach ($elements as $key => $value) {
-    if ($key === 'accessUrl'){
-      $label = isset($link_label) ? $link_label : $value;
-      $array[] = l($label, $value, array('attributes' => array('target' => '_blank'), 'html' => true));
+    if ( is_array($value) && array_key_exists('accessUrl', $value ) ) {
+      $url = $value['accessUrl'];
+      $label = ( !empty($value['accessUrlDisplay']) ) ? $value['accessUrlDisplay'] : $url;
+      $array[] = l($label, $url, array('attributes' => array('target' => '_blank'), 'html' => true));
     }
     else if (is_array($value)) {
       $array[] = _ting_openformat_parse_element($value, $divider, $use_header, $return_link, $link_label);
