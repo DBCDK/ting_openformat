@@ -33,6 +33,7 @@ function _ting_openformat_handle_conditions(&$conditions) {
 
 /** implements hook_search_execute */
 function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more = NULL) {
+
   $params = array();
   $params['query'] = $keys;
 
@@ -380,7 +381,8 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
  * Search conditions callback.
  */
 function ting_openformat_conditions_callback($query) {
-  $conditions = array();
+   $_REQUEST += module_invoke_all('ting_openformat_conditions', $query);
+   $conditions = array();
 
   // check tracking id
   if (!empty($_REQUEST['trackingId'])) {
