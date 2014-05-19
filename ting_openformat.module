@@ -826,6 +826,9 @@ function _ting_openformat_get_search_query() {
   if (isset($_GET['qe'])) {
     $query['qe'] = $_GET['qe'];
   }
+  if (isset($_GET['search_block_form'])) {
+    $query['search_block_form'] = $_GET['search_block_form'];
+  }
   if (isset($_GET['page_id'])) {
     $query['page_id'] = $_GET['page_id'];
   }
