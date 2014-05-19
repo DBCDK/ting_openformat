@@ -595,6 +595,7 @@ function ting_openformat_collection_view($bibdkobject) {
 
   return theme('ting_openformat_collection', array(
     'title' => $bibdkobject->getTitle(),
+    'title_full' => $bibdkobject->getTitleFull(),
     'partOf' => $bibdkobject->getPartOf(),
     'author' => $bibdkobject->getAuthor(),
     'work_type' => (!empty($workType)) ? 'type-' . $workType : 'type-undefined',

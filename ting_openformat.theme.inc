@@ -66,6 +66,7 @@ function ting_openformat_theme() {
       'path' => $path,
       'variables' => array(
         'title' => '',
+        'title_full' => '',
         'author' => '',
         'ids' => '',
         'work_type' => '',

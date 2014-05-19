@@ -1,5 +1,5 @@
 <div class="wrapper <?php print $work_type; ?>">
-  <div><?php print $title; ?></div>
+  <div><?php print ( !empty($title_full)) ? $title_full : $title; ?></div>
   <div><?php print $author; ?></div>
   <div><?php print $ids; ?></div>
   <div class="show-info"><?php isset($showinfo) ? print $showinfo : ''; ?></div>
