@@ -205,7 +205,7 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
   foreach ($elements as $key => $value) {
     if ( is_array($value) && array_key_exists('accessUrl', $value ) ) {
       $url = $value['accessUrl'];
-      $label = ( !empty($value['accessUrlDisplay']) ) ? $value['accessUrlDisplay'] : $url;
+      $label = ( !empty($value['accessUrlDisplay']) ) ? t($value['accessUrlDisplay'], array(), array('context' => 'bibdk_openformat')) : $url;
       $array[] = l($label, $url, array('attributes' => array('target' => '_blank'), 'html' => true));
     }
     else if (is_array($value)) {
