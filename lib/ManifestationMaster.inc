@@ -356,14 +356,14 @@ class ManifestationMaster {
    * @return array|null
    */
   public function getAccessInformation() {
-
-    $fields = array('accessInformation' => array(
+    $fields = array(
+      'accessInformation' => array(
         'accessUrl',
         'accessUrlDescriptor',
-        ));
-
+        'accessUrlDisplay',
+      )
+    );
     $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
-
     return $result;
   }
 

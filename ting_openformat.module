@@ -83,7 +83,32 @@ function ting_openformat_menu() {
     'file' => 'ting_openformat.admin.inc'
   );
 
+  $items['ting_openformat/ajax/facets'] = array(
+    'title' => 'facets',
+    'description' => 'Get facets by ajax',
+    'page callback' => 'ting_openformat_facets_by_ajax',
+    'access arguments' => array('access content'),
+  );
+
   return $items;
+}
+
+function ting_openformat_facets_by_ajax(){
+  $by_ajax = variable_get('ding_facetbrowser_by_ajax', FALSE);
+  if($by_ajax){
+    $client = new ting_client_class();
+    $params = $_SESSION['latest_search']['params'];
+    $results->search_key = $_SESSION['latest_search']['search_key'];
+    $results->cacheKey = $_SESSION['latest_search']['cache_key'];
+    _ting_openformat_facet_cache($client, $results, $params);
+
+  }
+  $markup = theme('facetbrowser', array($results->facets, (!empty($results->searchkey) ? $results->searchkey : NULL)));
+
+
+
+  drupal_json_output(array('markup'=>$markup));
+  drupal_exit();
 }
 
 /**
@@ -801,6 +826,9 @@ function _ting_openformat_get_search_query() {
   if (isset($_GET['qe'])) {
     $query['qe'] = $_GET['qe'];
   }
+  if (isset($_GET['search_block_form'])) {
+    $query['search_block_form'] = $_GET['search_block_form'];
+  }
   if (isset($_GET['page_id'])) {
     $query['page_id'] = $_GET['page_id'];
   }
@@ -910,6 +938,8 @@ function ting_openformat_ding_facetbrowser() {
   $results = new stdClass();
   $results->show_empty = FALSE;
   $search_result = drupal_static('ting_search_results');
+
+
   if ($search_result) {
     $results->facets = ($search_result instanceof TingClientSearchResult) ? $search_result->facets : array();
     $results->searchkey = $search_result->search_key;
