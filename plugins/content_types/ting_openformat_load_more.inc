@@ -95,7 +95,10 @@ function ting_openformat_load_more_results_ajax_callback() {
  * @return string
  */
 function _ting_openformat_set_load_more_results_link() {
-  $query = _ting_openformat_get_search_query();
+  $query = $_GET;
+  if($query['q']) {
+    unset($query['q']);
+  }
   $query['page'] = isset($_GET['page']) ? ((int) $_GET['page']) + 1 : 1;
 
   return url('ajax/load_more_results/', array('query' => $query));
