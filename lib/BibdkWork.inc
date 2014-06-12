@@ -127,6 +127,21 @@ class BibdkWork {
     return (is_array($result)) ? reset($result) : $result;
   }
 
+  /**
+   * Returns the creator display as a string
+   */
+  public function getCreatorDisplay() {
+    $creator = $this->getCreator();
+
+    if (isset($creator[0]['creator'][0][0]['display'])){
+      return $creator[0]['creator'][0][0]['display'];
+    }
+    else {
+      return '';
+    }
+
+  }
+
   /** \brief subject(s) of work
    * zero or more occurences
    */
