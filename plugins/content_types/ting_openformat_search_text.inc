@@ -14,11 +14,13 @@ $plugin = array(
  * Render the ting search results amount block.
  */
 function ting_openformat_search_content_type_render($subtype, $conf, $panel_args, $context) {
+  $results = drupal_static('ting_search_results');
+
+  pager_default_initialize($results->numTotalObjects, 10);
   global $pager_page_array, $pager_total;
   $block = new stdClass();
 
   if ($pager_total[0] == TRUE) {
-    $results = drupal_static('ting_search_results');
     $total = $results->numTotalObjects;
     $block->title = t('Search results text');
     $block->content = '<div class="ting-openformat-search-amount-block">' . format_plural(

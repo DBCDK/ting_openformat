@@ -89,17 +89,14 @@ function ting_openformat_default_page_manager_handlers() {
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-    'override_title' => 1,
-    'override_title_text' => 'label_header_facets',
+    'override_title' => 0,
+    'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
     'settings' => NULL,
   );
-  $pane->css = array(
-    'css_id' => '',
-    'css_class' => 'sidebar-nav',
-  );
+  $pane->css = array();
   $pane->extras = array();
   $pane->position = 1;
   $pane->locks = array();
@@ -142,9 +139,9 @@ function ting_openformat_default_page_manager_handlers() {
   $display->panels['works'][0] = 'new-3';
   $pane = new stdClass();
   $pane->pid = 'new-4';
-  $pane->panel = 'works';
-  $pane->type = 'ting_openformat_load_more';
-  $pane->subtype = 'ting_openformat_load_more';
+  $pane->panel = 'works_controls_bottom';
+  $pane->type = 'ting_openformat_pager';
+  $pane->subtype = 'ting_openformat_pager';
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array();
@@ -154,10 +151,10 @@ function ting_openformat_default_page_manager_handlers() {
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 1;
+  $pane->position = 0;
   $pane->locks = array();
   $display->content['new-4'] = $pane;
-  $display->panels['works'][1] = 'new-4';
+  $display->panels['works_controls_bottom'][0] = 'new-4';
   $pane = new stdClass();
   $pane->pid = 'new-5';
   $pane->panel = 'works_controls_top';
@@ -215,6 +212,24 @@ function ting_openformat_default_page_manager_handlers() {
   $pane->locks = array();
   $display->content['new-7'] = $pane;
   $display->panels['works_controls_top'][2] = 'new-7';
+  $pane = new stdClass();
+  $pane->pid = 'new-8';
+  $pane->panel = 'works_controls_top';
+  $pane->type = 'ting_openformat_pager';
+  $pane->subtype = 'ting_openformat_pager';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array();
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 3;
+  $pane->locks = array();
+  $display->content['new-8'] = $pane;
+  $display->panels['works_controls_top'][3] = 'new-8';
   $display->hide_title = PANELS_TITLE_FIXED;
   $display->title_pane = '0';
   $handler->conf['display'] = $display;

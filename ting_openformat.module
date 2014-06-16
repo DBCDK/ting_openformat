@@ -207,6 +207,23 @@ function ting_openformat_single($id) {
 
   $creator = _ting_openformat_get_markup_for_field($bibdkEntity->getCreator());
 
+  $creatorDisplay = $bibdkEntity->getCreatorDisplay();
+  $title = !empty($creatorDisplay) ? $bibdkEntity->getTitle() . ' - ' . $creatorDisplay : $bibdkEntity->getTitle();
+
+  drupal_set_title($title);
+
+  $abstract = _ting_openformat_parse_element($bibdkEntity->getAbstract());
+
+  $meta_description = array(
+      '#type' => 'html_tag',
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'name' => 'description',
+        'content' => $abstract,
+    )
+  );
+  drupal_add_html_head( $meta_description, 'meta_description' );
+
   $render = array(
     '#theme' => 'ting_openformat_single_work',
     '#title' => $bibdkEntity->getTitle(),
@@ -216,6 +233,15 @@ function ting_openformat_single($id) {
     '#work' => ting_openformat_work_view($bibdkEntity),
   );
   return drupal_render($render);
+}
+
+/**
+ * Remove H1 title from work pages
+ */
+function ting_openformat_preprocess_page(&$variables) {
+  if ($variables['theme_hook_suggestions'][0] == 'page__work') {
+    $variables['title'] = FALSE;
+  }
 }
 
 /**
@@ -595,6 +621,7 @@ function ting_openformat_collection_view($bibdkobject) {
 
   return theme('ting_openformat_collection', array(
     'title' => $bibdkobject->getTitle(),
+    'title_full' => $bibdkobject->getTitleFull(),
     'partOf' => $bibdkobject->getPartOf(),
     'author' => $bibdkobject->getAuthor(),
     'work_type' => (!empty($workType)) ? 'type-' . $workType : 'type-undefined',

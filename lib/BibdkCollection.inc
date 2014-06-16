@@ -38,10 +38,10 @@ class BibdkCollection {
     if(!empty($language) && $language != 'Dansk' && $language != 'Sproget kan ikke bestemmes'){
       $language = '<span> ('. $language.')</span>' ;
     }
-    else{
+    else {
       $language = NULL;
     }
-    
+
     $result = ting_openformat_methods::parseFields($this->manifestations[0], array('title'));
     $title = (is_array($result)) ? reset($result) : $result;
     $dependent_title = $this->getDependentTitle();
@@ -51,7 +51,26 @@ class BibdkCollection {
     }
     return $ret;
   }
-  
+
+  public function getTitleFull() {
+    $language = $this->getLanguage();
+    if(!empty($language) && $language != 'Dansk' && $language != 'Sproget kan ikke bestemmes'){
+      $language = '<span> ('. $language.')</span>' ;
+    }
+    else {
+      $language = NULL;
+    }
+
+    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('titleFull'));
+    $title = ( is_array($result) ) ? reset($result) : $result;
+    $dependent_title = $this->getDependentTitle();
+    $ret = ( !empty($dependent_title) ) ? $title . " <br /> " . implode('. ', $dependent_title) : $title;
+    if (!empty($language)) {
+      $ret .= $language;
+    }
+    return $ret;
+  }
+
   public function getLanguage(){
     $result = ting_openformat_methods::parseFields($this->manifestations[0], array('language'));
     return (is_array($result)) ? reset($result) : $result;
