@@ -52,7 +52,7 @@ class BibdkCollection {
     return $ret;
   }
 
-  public function getTitleFull() {
+  public function getTitleFullFormatted() {
     $language = $this->getLanguage();
     if(!empty($language) && $language != 'Dansk' && $language != 'Sproget kan ikke bestemmes'){
       $language = '<span> ('. $language.')</span>' ;
@@ -69,6 +69,11 @@ class BibdkCollection {
       $ret .= $language;
     }
     return $ret;
+  }
+
+  public function getTitleFull() {
+    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('titleFull'));
+    return ( is_array($result) ) ? reset($result) : $result;
   }
 
   public function getLanguage(){
