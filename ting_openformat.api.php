@@ -107,6 +107,21 @@ function hook_ting_openformat_conditions($query) {
 
 }
 
+/**
+ * hook for filtering search requests
+ *
+ * * @return array
+ */
+function hook_ting_openformat_query_filter() {
+
+  return array(
+    'books' => 'term.workType=literature',
+    'articles' => '(term.type=artikel ELLER term.workType=article)'
+  );
+
+}
+
+
 
 /**
  * @} End of "addtogroup hooks".

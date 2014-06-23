@@ -373,7 +373,14 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
       $fields[] = '(' . implode($op, $group) . ')';
     }
 
-    $op = ting_openformat_get_cql_commando('AND');
+    // Remove filter elements
+    $filters = module_invoke_all('ting_openformat_query_filter');
+    $not = ting_openformat_get_cql_commando('NOT');
+    if (!empty($filters)) {
+      $remove = "$not(" . implode($op, $filters) . ")";
+    }
+
+      $op = ting_openformat_get_cql_commando('AND');
     if (!empty($fields)) {
       $res[] = '(' . implode($op, $fields) . ')';
     }
@@ -388,6 +395,9 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
   }
 
   $query = join($op, $cql);
+
+  if (isset($remove))
+    $query .= $remove;
 }
 
 /**
