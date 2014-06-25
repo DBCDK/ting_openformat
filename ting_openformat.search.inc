@@ -377,6 +377,8 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
     $filters = module_invoke_all('ting_openformat_query_filter');
     $not = ting_openformat_get_cql_commando('NOT');
     if (!empty($filters)) {
+      $labels = array_keys($filters);
+      drupal_set_message(t('This search filters %filters', array('%filters' => implode(', ', $labels))));
       $remove = "$not(" . implode($op, $filters) . ")";
     }
 
