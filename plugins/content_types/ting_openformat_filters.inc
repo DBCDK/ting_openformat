@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @file Panels block, that shows what content is filtered out.
+ */
 
 $plugin = array(
   'title' => t('Openformat Search - \'filter\' block', array(), array('context' => 'ting_openformat')),
@@ -11,6 +13,13 @@ $plugin = array(
   'render last' => TRUE,
 );
 
+/** Create block with filters
+ * @param $subtype
+ * @param $conf
+ * @param $panel_args
+ * @param $context
+ * @return null|stdClass
+ */
 function ting_openformat_filter_block($subtype, $conf, $panel_args, $context) {
 
 
@@ -21,13 +30,17 @@ function ting_openformat_filter_block($subtype, $conf, $panel_args, $context) {
     return null;
   }
 
-  $labels = array_keys($filters);
-
+  foreach($filters as $key => $search_kode) {
+    $labels[] = "<span data-search-code='$search_kode'>$key</span>";
+  }
 
   $content['list'] = array(
     '#theme' => 'item_list',
     '#title' => t('This search filters out:') . '',
     '#items' => $labels,
+    '#attributes' => array(
+      'class' => array('ting_openformat_filter_list'),
+    ),
   );
 
   global $user;

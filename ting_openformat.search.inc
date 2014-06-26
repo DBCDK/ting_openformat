@@ -373,15 +373,6 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
       $fields[] = '(' . implode($op, $group) . ')';
     }
 
-    // Remove filter elements
-    $filters = module_invoke_all('ting_openformat_query_filter');
-    $not = ting_openformat_get_cql_commando('NOT');
-    if (!empty($filters)) {
-      $labels = array_keys($filters);
-      drupal_set_message(t('This search filters %filters', array('%filters' => implode(', ', $labels))));
-      $remove = "$not(" . implode($op, $filters) . ")";
-    }
-
       $op = ting_openformat_get_cql_commando('AND');
     if (!empty($fields)) {
       $res[] = '(' . implode($op, $fields) . ')';
@@ -398,8 +389,25 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
 
   $query = join($op, $cql);
 
-  if (isset($remove))
-    $query .= $remove;
+  $filters = ting_openformat_filters();
+  if (isset($filters))
+    $query .= $filters;
+}
+
+/** Returns cql parsed filters invoked by hook_ting_openformat_query_filter
+ * @return null|string
+ */
+function ting_openformat_filters() {
+  $op = ting_openformat_get_cql_commando('OR');
+
+  $filters = module_invoke_all('ting_openformat_query_filter');
+  $not = ting_openformat_get_cql_commando('NOT');
+  if (!empty($filters)) {
+    $labels = array_keys($filters);
+    drupal_set_message(t('This search filters %filters', array('%filters' => implode(', ', $labels))));
+    return "$not(" . implode($op, $filters) . ")";
+  }
+  return null;
 }
 
 /**
