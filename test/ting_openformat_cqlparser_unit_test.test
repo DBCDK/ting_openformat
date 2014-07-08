@@ -1,0 +1,83 @@
+<?php
+
+/**
+ * Test class for ting_openformat
+ */
+class TingOpenFormatCQLParserUnitTestCase extends DrupalUnitTestCase {
+  /**
+   * @return array
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Ting OpenFormat CQL Parser Unittest'),
+      'description' => t('Tests CQL parser'),
+      'group' => t('Ting Openformat'),
+    );
+  }
+
+  public function setUp() {
+    module_load_include('inc', 'ting_openformat', 'lib/cql_parser');
+    parent::setUp();
+
+  }
+
+  public function testParsingMethods() {
+    // term.genre=politik og politikere
+    $expression = "term.genre=politik og politikere";
+    $expected_result = "term.genre='politik og politikere'";
+    $result = parse_expression($expression);
+    $this->assertEqual($expected_result, $result);
+    $result = parse_operation($expression);
+    $this->assertEqual($expected_result, $result);
+    $result = parse_suboperation($expression);
+    $this->assertEqual($expected_result, $result);
+
+    // dkcclterm.df=metafysik ELLER dkcclterm.ti=metafysi*
+    $expression = "dkcclterm.df=metafysik ELLER dkcclterm.ti=metafysi*";
+    $expected_result = "dkcclterm.df='metafysik' or dkcclterm.ti='metafysi*'";
+    $result = parse_operation($expression);
+    $this->assertEqual($expected_result, $result);
+    $result = parse_suboperation($expression);
+    $this->assertEqual($expected_result, $result);
+
+    // dkcclterm.dk=12 OG (dkcclterm.df=metafysik ELLER dkcclterm.ti=metafysi*)
+    $expression = "dkcclterm.dk=12 OG (dkcclterm.df=metafysik ELLER dkcclterm.ti=metafysi*) ELLER (hest)";
+    $expected_result = "dkcclterm.dk='12' and (dkcclterm.df='metafysik' or dkcclterm.ti='metafysi*') or (hest)";
+    $result = parse_suboperation($expression);
+    $this->assertEqual($expected_result, $result);
+
+    //dkcclterm.df=(unge ELLER teenagere) OG dkcclterm.df=(rusmidler ELLER narkotika ELLER stofmisbrug)
+    $expression = "dkcclterm.df=(unge ELLER teenagere) OG dkcclterm.df=(rusmidler ELLER narkotika ELLER stofmisbrug)";
+    $expected_result = "dkcclterm.df=(unge or teenagere) and dkcclterm.df=(rusmidler or narkotika or stofmisbrug)";
+    $result = parse_suboperation($expression);
+    $this->assertEqual($expected_result, $result);
+
+
+    //dkcclterm.dk=30.175* OG dkcclterm.em=(stedfamilier ELLER sammenbragte familier)
+    $expression = "dkcclterm.dk=30.175* OG dkcclterm.em=(stedfamilier ELLER sammenbragte familier)";
+    $expected_result = "dkcclterm.dk='30.175*' and dkcclterm.em=(stedfamilier or 'sammenbragte familier')";
+    $result = parse_suboperation($expression);
+    $this->assertEqual($expected_result, $result);
+
+    $tests = array(
+      "dkcclterm.em=*vilkår OG (dkcclterm.dk=30.1662 ELLER (dkcclterm.dk=30.1664 OG dkcclterm.em=børn*) ELLER dkcclterm.dk=37.2) IKKE (dkcclterm.em=børneopdragelse ELLER dkcclterm.em=børns udvikling)" =>
+      "dkcclterm.em='*vilkår' and (dkcclterm.dk='30.1662' or (dkcclterm.dk='30.1664' and dkcclterm.em='børn*') or dkcclterm.dk='37.2') not (dkcclterm.em='børneopdragelse' or dkcclterm.em='børns udvikling')",
+      "dkcclterm.em=(socialt arbejde ELLER dkcclterm.em=socialrådgivning) OG (dkcclterm.dk=38.4 ELLER dkcclterm.dk=38.42 ELLER dkcclterm.dk=38.43)" => "dkcclterm.em=('socialt arbejde' or dkcclterm.em='socialrådgivning') and (dkcclterm.dk='38.4' or dkcclterm.dk='38.42' or dkcclterm.dk='38.43')"
+    );
+
+
+    foreach($tests as $old => $strict) {
+      $result = parse_suboperation($old);
+      $this->assertEqual($strict, $result);
+    }
+
+
+    //dkcclterm.df=''(unge or teenagere) and dkcclterm.df=''''(rusmidler or narkotika or stofmisbrug)
+
+
+
+
+
+  }
+
+}

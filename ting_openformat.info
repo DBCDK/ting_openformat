@@ -25,7 +25,7 @@ files[] = test/BibdkBriefDisplay.test
 files[] = test/ting_openformat_methods.test
 files[] = test/ting_openformat_field_shown.test
 files[] = test/ting_openformat_manifestation_unit_test.test
-
+files[] = test/ting_openformat_cqlparser_unit_test.test
 
 files[] = lib/BibdkCollection.inc
 files[] = lib/BibdkSubwork.inc
