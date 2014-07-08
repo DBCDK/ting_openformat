@@ -399,13 +399,18 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
  */
 function ting_openformat_filters() {
   $op = ting_openformat_get_cql_commando('OR');
-
   $filters = module_invoke_all('ting_openformat_query_filter');
   $not = ting_openformat_get_cql_commando('NOT');
   if (!empty($filters)) {
-    return "$not(" . implode($op, $filters) . ")";
+    $return = "$not(" . implode($op, $filters) . ")";
   }
-  return null;
+
+  // Translate filter operators
+  if (ting_openformat_get_cql_language() != 'cqldan') {
+    $return = preg_replace(array('@OG@', '@ELLER@', '@IKKE@'), array('AND', 'OR', 'NOT'), $return);
+  }
+
+  return $return;
 }
 
 /**
