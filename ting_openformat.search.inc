@@ -401,6 +401,7 @@ function ting_openformat_filters() {
   $op = ting_openformat_get_cql_commando('OR');
   $filters = module_invoke_all('ting_openformat_query_filter');
   $not = ting_openformat_get_cql_commando('NOT');
+  $return = null;
   if (!empty($filters)) {
     $return = "$not(" . implode($op, $filters) . ")";
   }
