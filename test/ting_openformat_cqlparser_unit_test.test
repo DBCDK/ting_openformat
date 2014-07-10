@@ -29,40 +29,25 @@ class TingOpenFormatCQLParserUnitTestCase extends DrupalUnitTestCase {
     $this->assertEqual($expected_result, $result);
     $result = parse_operation($expression);
     $this->assertEqual($expected_result, $result);
-    $result = parse_suboperation($expression);
-    $this->assertEqual($expected_result, $result);
 
     // dkcclterm.df=metafysik ELLER dkcclterm.ti=metafysi*
     $expression = "dkcclterm.df=metafysik ELLER dkcclterm.ti=metafysi*";
     $expected_result = "dkcclterm.df='metafysik' or dkcclterm.ti='metafysi*'";
     $result = parse_operation($expression);
     $this->assertEqual($expected_result, $result);
-    $result = parse_suboperation($expression);
-    $this->assertEqual($expected_result, $result);
-
-    // dkcclterm.dk=12 OG (dkcclterm.df=metafysik ELLER dkcclterm.ti=metafysi*)
-    $expression = "dkcclterm.dk=12 OG (dkcclterm.df=metafysik ELLER dkcclterm.ti=metafysi*) ELLER (hest)";
-    $expected_result = "dkcclterm.dk='12' and (dkcclterm.df='metafysik' or dkcclterm.ti='metafysi*') or (hest)";
-    $result = parse_suboperation($expression);
-    $this->assertEqual($expected_result, $result);
-
-    //dkcclterm.df=(unge ELLER teenagere) OG dkcclterm.df=(rusmidler ELLER narkotika ELLER stofmisbrug)
-    $expression = "dkcclterm.df=(unge ELLER teenagere) OG dkcclterm.df=(rusmidler ELLER narkotika ELLER stofmisbrug)";
-    $expected_result = "dkcclterm.df=(unge or teenagere) and dkcclterm.df=(rusmidler or narkotika or stofmisbrug)";
-    $result = parse_suboperation($expression);
-    $this->assertEqual($expected_result, $result);
-
-
-    //dkcclterm.dk=30.175* OG dkcclterm.em=(stedfamilier ELLER sammenbragte familier)
-    $expression = "dkcclterm.dk=30.175* OG dkcclterm.em=(stedfamilier ELLER sammenbragte familier)";
-    $expected_result = "dkcclterm.dk='30.175*' and dkcclterm.em=(stedfamilier or 'sammenbragte familier')";
-    $result = parse_suboperation($expression);
-    $this->assertEqual($expected_result, $result);
 
     $tests = array(
-      "dkcclterm.em=*vilkår OG (dkcclterm.dk=30.1662 ELLER (dkcclterm.dk=30.1664 OG dkcclterm.em=børn*) ELLER dkcclterm.dk=37.2) IKKE (dkcclterm.em=børneopdragelse ELLER dkcclterm.em=børns udvikling)" =>
-      "dkcclterm.em='*vilkår' and (dkcclterm.dk='30.1662' or (dkcclterm.dk='30.1664' and dkcclterm.em='børn*') or dkcclterm.dk='37.2') not (dkcclterm.em='børneopdragelse' or dkcclterm.em='børns udvikling')",
-      "dkcclterm.em=(socialt arbejde ELLER dkcclterm.em=socialrådgivning) OG (dkcclterm.dk=38.4 ELLER dkcclterm.dk=38.42 ELLER dkcclterm.dk=38.43)" => "dkcclterm.em=('socialt arbejde' or dkcclterm.em='socialrådgivning') and (dkcclterm.dk='38.4' or dkcclterm.dk='38.42' or dkcclterm.dk='38.43')"
+      "term.genre=politik og politikere" => "term.genre='politik og politikere'",
+      "dkcclterm.df=metafysik ELLER dkcclterm.ti=metafysi*" => "dkcclterm.df='metafysik' or dkcclterm.ti='metafysi*'",
+      "dkcclterm.dk=12 OG (dkcclterm.df=metafysik ELLER dkcclterm.ti=metafysi*) ELLER (hest)" => "dkcclterm.dk='12' and (dkcclterm.df='metafysik' or dkcclterm.ti='metafysi*') or (hest)",
+      "dkcclterm.df=(unge ELLER teenagere) OG dkcclterm.df=(rusmidler ELLER narkotika ELLER stofmisbrug)" => "dkcclterm.df=(unge or teenagere) and dkcclterm.df=(rusmidler or narkotika or stofmisbrug)",
+      "dkcclterm.dk=30.175* OG dkcclterm.em=(stedfamilier ELLER sammenbragte familier)" => "dkcclterm.dk='30.175*' and dkcclterm.em=(stedfamilier or 'sammenbragte familier')",
+      "dkcclterm.em=*vilkår OG (dkcclterm.dk=30.1662 ELLER (dkcclterm.dk=30.1664 OG dkcclterm.em=børn*) ELLER dkcclterm.dk=37.2) IKKE (dkcclterm.em=børneopdragelse ELLER dkcclterm.em=børns udvikling)" => "dkcclterm.em='*vilkår' and (dkcclterm.dk='30.1662' or (dkcclterm.dk='30.1664' and dkcclterm.em='børn*') or dkcclterm.dk='37.2') not (dkcclterm.em='børneopdragelse' or dkcclterm.em='børns udvikling')",
+      "dkcclterm.em=(socialt arbejde ELLER dkcclterm.em=socialrådgivning) OG (dkcclterm.dk=38.4 ELLER dkcclterm.dk=38.42 ELLER dkcclterm.dk=38.43)" => "dkcclterm.em=('socialt arbejde' or dkcclterm.em='socialrådgivning') and (dkcclterm.dk='38.4' or dkcclterm.dk='38.42' or dkcclterm.dk='38.43')",
+      "(dkcclterm.ok=30.13 OG dkcclterm.ke=socialpsykologi) ELLER (dkcclterm.em=samfund OG dkcclterm.em=socialisering) ELLER massepsykologi IKKE livskvalitet" => "(dkcclterm.ok='30.13' and dkcclterm.ke='socialpsykologi') or (dkcclterm.em='samfund' and dkcclterm.em='socialisering') or massepsykologi not livskvalitet",
+      "dkcclterm.em=kvinder OG dkcclterm.em=(forskning* ELLER videnskab*)  IKKE dkcclterm.dk=sk" => "dkcclterm.em='kvinder' and dkcclterm.em=(forskning* or videnskab*) not dkcclterm.dk='sk'",
+      "(dkcclterm.df=(eksem ELLER huden ELLER hudsygdomme) OG dkcclterm.dk=(61.44)) ELLER (dkcclterm.ok=61.69 OG arbejdsmiljø)" => "(dkcclterm.df=(eksem or huden or hudsygdomme) and dkcclterm.dk=(61.44)) or (dkcclterm.ok='61.69' and arbejdsmiljø)",
+      "(dkcclterm.df=mani) ELLER dkcclterm.df=maniodepressive ELLER dkcclterm.ti=bipolar affektiv" => "(dkcclterm.df='mani') or dkcclterm.df='maniodepressive' or dkcclterm.ti='bipolar affektiv'",
     );
 
 
@@ -71,13 +56,7 @@ class TingOpenFormatCQLParserUnitTestCase extends DrupalUnitTestCase {
       $this->assertEqual($strict, $result);
     }
 
-
-    //dkcclterm.df=''(unge or teenagere) and dkcclterm.df=''''(rusmidler or narkotika or stofmisbrug)
-
-
-
-
-
   }
 
 }
+
