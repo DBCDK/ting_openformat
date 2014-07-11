@@ -22,19 +22,6 @@ class TingOpenFormatCQLParserUnitTestCase extends DrupalUnitTestCase {
   }
 
   public function testParsingMethods() {
-    // term.genre=politik og politikere
-    $expression = "term.genre=politik og politikere";
-    $expected_result = "term.genre='politik og politikere'";
-    $result = parse_expression($expression);
-    $this->assertEqual($expected_result, $result);
-    $result = parse_operation($expression);
-    $this->assertEqual($expected_result, $result);
-
-    // dkcclterm.df=metafysik ELLER dkcclterm.ti=metafysi*
-    $expression = "dkcclterm.df=metafysik ELLER dkcclterm.ti=metafysi*";
-    $expected_result = "dkcclterm.df='metafysik' or dkcclterm.ti='metafysi*'";
-    $result = parse_operation($expression);
-    $this->assertEqual($expected_result, $result);
 
     $tests = array(
       "term.genre=politik og politikere" => "term.genre='politik og politikere'",
@@ -51,8 +38,10 @@ class TingOpenFormatCQLParserUnitTestCase extends DrupalUnitTestCase {
     );
 
 
+    $parser = new CQLToCQLStrictParser();
+
     foreach($tests as $old => $strict) {
-      $result = parse_suboperation($old);
+      $result = $parser->parse($old);
       $this->assertEqual($strict, $result);
     }
 

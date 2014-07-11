@@ -1,92 +1,107 @@
 <?php
 
-function parse_expression($expression) {
+class CQLToCQLStrictParser {
 
-  if (strpos($expression, '=') !== false) {
-    $expressions = explode('=', $expression);
-    list($searchcode, $searchvalue) = $expressions;
-    if (!empty($searchvalue)) {
-      $searchvalue = "'$searchvalue'";
-    }
-    $expression = $searchcode . "=" . $searchvalue;
-  }
-  else if (strpos($expression, ' ') !== false) {
-    $expression = "'$expression'";
-  }
-
-  return $expression;
-}
-
-
-function parse_operation($expression) {
-  $operations = array(
-    '@ IKKE @',
-    '@ ELLER @',
-    '@ OG @',
-    '@ NOT @',
-    '@ OR @',
-    '@ AND @',
+  private $operators = array(
+    '@ IKKE @' => ' not ',
+    '@ NOT @' => ' not ',
+    '@ ELLER @' => ' or ',
+    '@ OR @' => ' or ',
+    '@ OG @' => ' and ',
+    '@ AND @' => ' and ',
   );
 
-  $operator_replacements = array(
-    ' not ',
-    ' or ',
-    ' and ',
-    ' not ',
-    ' or ',
-    ' and ',
-  );
+  public function parse($expression) {
+    // Trim string
+    $expression = str_replace('  ', ' ', $expression);
 
-  $op = preg_replace($operations, '[OP]', $expression);
+    $expression = $this->parseSubExpression($expression);
 
-  $expressions = explode('[OP]', $op);
-  usort($expressions, 'sort_expressions_by_length');
-  foreach ($expressions as $needle) {
-    $replacement = parse_expression($needle);
-    $expression = str_replace($needle, $replacement, $expression);
+    $operators = array_keys($this->operators);
+    $operator_replacements = array_values($this->operators);
+    $expression = preg_replace($operators, $operator_replacements, $expression);
+
+    return $expression;
+
   }
-  $expression = preg_replace($operations, $operator_replacements, $expression);
-  return $expression;
-}
 
-function parse_suboperation($expression) {
-  $expression = str_replace('  ', ' ', $expression);
+  private function parseSubExpression($expression) {
 
-  $sub_regex = '/(\((?>[^()]+|(?1))*\))/';
-  $sub = preg_replace($sub_regex, '[SUB]', $expression);
 
-  preg_match_all($sub_regex, $expression, $match);
-  debug($match[1]);
+    // match all subexpressions recursively
+    $sub_regex = '/(\((?>[^()]+|(?1))*\))/';
+    preg_match_all($sub_regex, $expression, $match);
 
-  if (!empty($match[1])) {
-    foreach ($match[1] as $needle) {
-      $nuddle = trim_expression($needle);
-      debug($needle);
-      $replacement = parse_suboperation($nuddle);
-      $expression = str_replace($needle, '(' . $replacement .')', $expression);
+    if (!empty($match[1])) {
+      foreach ($match[1] as $needle) {
+        $nuddle = $this->trimString($needle);
+        $replacement = $this->parseSubExpression($nuddle);
+        $expression = str_replace($needle, '(' . $replacement .')', $expression);
+      }
     }
+
+    // Parse the rest
+    $sub = preg_replace($sub_regex, '[SUB]', $expression);
+    $expressions = explode('[SUB]', $sub);
+    usort($expressions, 'self::sortStringsByLength');
+    foreach ($expressions as $needle) {
+      $replacement = $this->parseOperations($needle);
+      $expression = str_replace($needle, $replacement, $expression);
+    }
+
+    return $expression;
   }
 
-  $expressions = explode('[SUB]', $sub);
-  usort($expressions, 'sort_expressions_by_length');
-  foreach ($expressions as $needle) {
-    $replacement = parse_operation($needle);
-    $expression = str_replace($needle, $replacement, $expression);
+  private function getSearchCodes($expression) {
+    $operators = array_keys($this->operators);
+    $expressions_with_op = preg_replace($operators, '[OP]', $expression);
+    $expressions = explode('[OP]', $expressions_with_op);
+    usort($expressions, 'self::sortStringsByLength');
+    return $expressions;
   }
-  return $expression;
-}
 
-function trim_expression($expression) {
-  if (substr($expression, 0, 1) === '('){
-    $expression = substr($expression, 1);
-  }
-  if (substr($expression, -1, 1) === ')'){
-    $expression = substr($expression, 0, -1);
-  }
-  return $expression;
-}
+  private function parseOperations($expression) {
 
-function sort_expressions_by_length($a, $b) {
-  return strlen($b) - strlen($a);
+    // Extract searchCode/value expressions
+    $expressions = $this->getSearchCodes($expression);
+
+    // Loop through expressions replace with strict cql
+    foreach ($expressions as $needle) {
+      $replacement = $this->parseSearchCode($needle);
+      $expression = str_replace($needle, $replacement, $expression);
+    }
+
+    return $expression;
+
+  }
+
+  private function parseSearchCode($expression) {
+    if (strpos($expression, '=') !== false) {
+      list($searchcode, $searchvalue) = explode('=', $expression);
+      if (!empty($searchvalue)) {
+        $searchvalue = "'$searchvalue'";
+      }
+      $expression = $searchcode . "=" . $searchvalue;
+    }
+    else if (strpos($expression, ' ') !== false) {
+      $expression = "'$expression'";
+    }
+    return $expression;
+  }
+
+  private function sortStringsByLength($a, $b) {
+    return strlen($b) - strlen($a);
+  }
+
+  private function trimString($expression, $first = '(', $last = ')') {
+    if (substr($expression, 0, 1) === $first){
+      $expression = substr($expression, 1);
+    }
+    if (substr($expression, -1, 1) === $last){
+      $expression = substr($expression, 0, -1);
+    }
+    return $expression;
+  }
+
 }
 
