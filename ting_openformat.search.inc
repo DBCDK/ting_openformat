@@ -9,7 +9,6 @@
  */
 /* * ******** END NOTES ********** */
 
-
 // load theme hooks
 module_load_include('inc', 'ting_openformat', 'ting_openformat.theme');
 
@@ -47,7 +46,6 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   if (!empty($variables)) {
     $params = array_merge($params, $variables);
   }
-
 
   // selected facets from facetbrowser (in query)
   if (isset($conditions['facets']) && $conditions['facets'] != NULL) {
@@ -95,8 +93,8 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
 
   // set facets for result .. if not by ajax
   $by_ajax = variable_get('ding_facetbrowser_by_ajax', FALSE);
-  if(!$by_ajax){
-  _ting_openformat_facet_cache($client, $result, $params);
+  if (!$by_ajax) {
+    _ting_openformat_facet_cache($client, $result, $params);
   }
 
   if (isset($result->collections)) {
@@ -133,20 +131,19 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
     return $search_results;
   }
 
-
   // .. default; no search results
   return array();
 }
 
 function _ting_openformat_set_js_settings() {
   drupal_add_js(array(
-    'ting_openformat' => array(
-      'full_view' => $_SESSION['search_settings']['full_view'],
-      'ajax_callback' => url('ting_openformat/full_view/'),
-      'full_view_all_loaded' => $_SESSION['search_settings']['full_view'],
-      'isLoadingFullView' => FALSE,),
-      ), 'setting'
-  );
+      'ting_openformat' => array(
+        'full_view' => $_SESSION['search_settings']['full_view'],
+        'ajax_callback' => url('ting_openformat/full_view/'),
+        'full_view_all_loaded' => $_SESSION['search_settings']['full_view'],
+        'isLoadingFullView' => FALSE,
+      ),
+    ), 'setting');
 }
 
 /**
@@ -287,7 +284,7 @@ function _ting_openformat_search_get_variables() {
   $params['numResults'] = $resultsPerPage;
   $params['includeHoldingsCount'] = TRUE;
 
-  global $base_root;  // page number (opensearch::start)
+  global $base_root; // page number (opensearch::start)
   $page = pager_find_page();
   $params['start'] = ($page * $resultsPerPage) + 1; // search results start at position 1
   // search profile (opensearch::profile)
@@ -301,7 +298,6 @@ function _ting_openformat_search_get_variables() {
   if (!($params['agency'])) {
     watchdog('openformat search', 'agency is not set - yields no search results', array(), WATCHDOG_ERROR, url('admin/config/ting/settings'));
   }
-
 
   if (isset($_SESSION['search_settings']['full_view']) && $_SESSION['search_settings']['full_view'] == TRUE) {
     $params['collectionType'] = 'work-1';
@@ -372,7 +368,7 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
       $fields[] = '(' . implode($op, $group) . ')';
     }
 
-      $op = ting_openformat_get_cql_commando('AND');
+    $op = ting_openformat_get_cql_commando('AND');
     if (!empty($fields)) {
       $res[] = '(' . implode($op, $fields) . ')';
     }
@@ -389,8 +385,9 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
   $query = join($op, $cql);
 
   $filters = ting_openformat_filters();
-  if (isset($filters))
+  if (isset($filters)) {
     $query .= $filters;
+  }
 }
 
 /** Returns cql parsed filters invoked by hook_ting_openformat_query_filter
@@ -407,7 +404,11 @@ function ting_openformat_filters() {
 
   // Translate filter operators
   if (ting_openformat_get_cql_language() != 'cqldan') {
-    $return = preg_replace(array('@OG@', '@ELLER@', '@IKKE@'), array('AND', 'OR', 'NOT'), $return);
+    $return = preg_replace(array('@OG@', '@ELLER@', '@IKKE@'), array(
+      'AND',
+      'OR',
+      'NOT'
+    ), $return);
   }
 
   return $return;
@@ -417,14 +418,15 @@ function ting_openformat_filters() {
  * Search conditions callback.
  */
 function ting_openformat_conditions_callback($query) {
-   $_REQUEST += module_invoke_all('ting_openformat_conditions', $query);
-   $conditions = array();
+  $_REQUEST += module_invoke_all('ting_openformat_conditions', $query);
+  $conditions = array();
 
   // check tracking id
   if (!empty($_REQUEST['trackingId'])) {
     $conditions['trackingId'] = $_REQUEST['trackingId'];
-  } else {
-    $conditions['trackingId'] = date('Y-m-d\TH:i:s:') . substr((string)microtime(), 2, 6) . ':' . getmypid();
+  }
+  else {
+    $conditions['trackingId'] = date('Y-m-d\TH:i:s:') . substr((string) microtime(), 2, 6) . ':' . getmypid();
   }
 
   $page_id = array();
