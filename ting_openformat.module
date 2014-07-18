@@ -64,7 +64,7 @@ function ting_openformat_menu() {
     'file' => 'system.admin.inc',
     'file path' => drupal_get_path('module', 'system'),
   );
-  $items['admin/config/ting_openformat/disable'] = array(
+  $items['admin/config/ting/disable'] = array(
     'title' => 'Disable this module',
     'description' => 'Delete virtual fields from this module and disable it',
     'weight' => 1,
@@ -73,7 +73,7 @@ function ting_openformat_menu() {
     'access arguments' => array('administer webservices settings'),
     'file' => 'ting_openformat.admin.inc'
   );
-  $items['admin/config/ting_openformat/order'] = array(
+  $items['admin/config/ting/order'] = array(
     'title' => 'Set Type Order',
     'description' => 'Set the order of the different types in a subwork',
     'weight' => 1,
@@ -93,19 +93,19 @@ function ting_openformat_menu() {
   return $items;
 }
 
-function ting_openformat_facets_by_ajax(){
+function ting_openformat_facets_by_ajax() {
   $by_ajax = variable_get('ding_facetbrowser_by_ajax', FALSE);
   if($by_ajax){
     $client = new ting_client_class();
     $params = $_SESSION['latest_search']['params'];
+    $results = new stdClass();
     $results->search_key = $_SESSION['latest_search']['search_key'];
     $results->cacheKey = $_SESSION['latest_search']['cache_key'];
     _ting_openformat_facet_cache($client, $results, $params);
-
   }
+
+  //TODO @PJO: It seems that the searchKey is never being set, true? (mmj)
   $markup = theme('facetbrowser', array($results->facets, (!empty($results->searchkey) ? $results->searchkey : NULL)));
-
-
 
   drupal_json_output(array('markup'=>$markup));
   drupal_exit();

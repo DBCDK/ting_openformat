@@ -122,7 +122,6 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   // init a pager. pager is global @see contenttypes/ting_openformat_pager.inc
   // pager_default_initialize($total, $params['numResults']);
 
-
   $_SESSION['latest_search']['params'] = $params;
   $_SESSION['latest_search']['cache_key'] = $result->cacheKey;
   $_SESSION['latest_search']['search_key'] = $result->search_key;
