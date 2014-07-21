@@ -381,25 +381,6 @@ function ting_openformat_form_ting_client_admin_webservices_settings_alter(&$for
   }
 }
 
-/** Translate CQL commandos. Only support english or danish
- * @param $cql
- * @return null|string
- */
-function ting_openformat_get_cql_commando($cql) {
-  $return = NULL;
-
-  switch ($cql) {
-    case 'AND' :
-      $return = ting_openformat_get_cql_language() == 'cqldan' ? ' OG ' : ' AND ';
-      break;
-    case 'OR' :
-      $return = ting_openformat_get_cql_language() == 'cqldan' ? ' ELLER ' : ' OR ';
-      break;
-  }
-
-  return $return;
-}
-
 function ting_openformat_get_cql_language() {
 
   global $language;
