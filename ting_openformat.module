@@ -104,8 +104,7 @@ function ting_openformat_facets_by_ajax() {
     _ting_openformat_facet_cache($client, $results, $params);
   }
 
-  //TODO @PJO: It seems that the searchKey is never being set, true? (mmj)
-  $markup = theme('facetbrowser', array($results->facets, (!empty($results->searchkey) ? $results->searchkey : NULL)));
+  $markup = theme('facetbrowser', array($results->facets, (!empty($results->search_key) ? $results->search_key : NULL)));
 
   drupal_json_output(array('markup'=>$markup));
   drupal_exit();
