@@ -312,9 +312,6 @@ function _ting_openformat_search_get_variables() {
 
   $params['objectFormat'][] = variable_get('objectFormat', 'briefDisplay');
 
-  //Set queryLanguage
-  $params['queryLanguage'] = ting_openformat_get_cql_language();
-
   return $params;
 }
 
