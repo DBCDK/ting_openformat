@@ -119,10 +119,9 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   }
   // init a pager. pager is global @see contenttypes/ting_openformat_pager.inc
   // pager_default_initialize($total, $params['numResults']);
-
   $_SESSION['latest_search']['params'] = $params;
   $_SESSION['latest_search']['cache_key'] = $result->cacheKey;
-  $_SESSION['latest_search']['search_key'] = $result->search_key;
+  $_SESSION['latest_search']['search_key'] = $result->searchKey;
   $_SESSION['latest_search']['request_uri'] = request_uri();
 
   if (!empty($search_results)) {
@@ -135,13 +134,19 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   return array();
 }
 
+/**
+ * Setting the JavaScript object Drupal.settings.ting_openformat
+ */
 function _ting_openformat_set_js_settings() {
+  global $user;
   drupal_add_js(array(
       'ting_openformat' => array(
         'full_view' => $_SESSION['search_settings']['full_view'],
         'ajax_callback' => url('ting_openformat/full_view/'),
         'full_view_all_loaded' => $_SESSION['search_settings']['full_view'],
         'isLoadingFullView' => FALSE,
+        'search_key' => $_SESSION['latest_search']['search_key'],
+        'isAdmin' => in_array('administrator', $user->roles),
       ),
     ), 'setting');
 }
