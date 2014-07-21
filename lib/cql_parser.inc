@@ -86,7 +86,9 @@ class CQLToCQLStrictParser {
     // Loop through expressions replace with strict cql
     foreach ($expressions as $needle) {
       $replacement = $this->parseSearchCode($needle);
-      $expression = str_replace($needle, $replacement, $expression);
+      if(!empty($replacement)){
+        $expression = str_replace($needle, $replacement, $expression);
+      }
     }
 
     return $expression;
@@ -109,18 +111,15 @@ class CQLToCQLStrictParser {
    * @return string
    */
   private function parseSearchCode($expression) {
-    debug($expression);
     $expression = trim($expression);
     if (strpos($expression, '=') !== false) {
       list($searchcode, $searchvalue) = explode('=', $expression);
       if (!empty($searchvalue)) {
-        debug($searchvalue);
         $searchvalue = "'$searchvalue'";
       }
       $expression = $searchcode . "=" . $searchvalue;
     }
-    else if (!empty($expression) && strpos($expression, ' ') !== false) {
-      debug($expression);
+    else if (strpos($expression, ' ') !== false) {
       $expression = "'$expression'";
     }
     return $expression;
@@ -152,4 +151,5 @@ class CQLToCQLStrictParser {
   }
 
 }
+
 
