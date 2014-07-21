@@ -62,7 +62,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
 
   if (!empty($conditions['qe'])) {
     if (!empty($params['query'])) {
-      $params['query'] .= _bibdk_custom_search_get_cql('AND');
+      $params['query'] .= CQL_AND;
     }
     $params['query'] .= $conditions['qe'];
   }
@@ -323,7 +323,7 @@ function _ting_openformat_search_get_variables() {
  * */
 function _ting_openformat_set_facets(&$query, $facets) {
   if (isset($facets)) {
-    $op = ting_openformat_get_cql_commando('AND');
+    $op = CQL_AND;
     foreach ($facets as $facet) {
       $facet = explode(':', $facet, 2);
       if ($facet[0]) {
@@ -365,7 +365,7 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
       unset($qe['delimiter']);
     }
 
-    $op = ting_openformat_get_cql_commando('OR');
+    $op = CQL_OR;
     foreach ($qe as $term => $group) {
       foreach ($group as $key => $val) {
         $group[$key] = $term . '=' . $val;
@@ -373,7 +373,7 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
       $fields[] = '(' . implode($op, $group) . ')';
     }
 
-    $op = ting_openformat_get_cql_commando('AND');
+    $op = CQL_AND;
     if (!empty($fields)) {
       $res[] = '(' . implode($op, $fields) . ')';
     }
