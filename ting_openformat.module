@@ -381,13 +381,6 @@ function ting_openformat_form_ting_client_admin_webservices_settings_alter(&$for
   }
 }
 
-function ting_openformat_get_cql_language() {
-
-  global $language;
-
-  return $language->language == 'da' ? 'cqldan' : 'cqleng';
-}
-
 /**
  * Load hook as set in entity_info
  * load hook is not currently used .. maybe later.
