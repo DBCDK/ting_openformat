@@ -39,9 +39,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   $all_params = $conditions;
 
   // save query to show in search_block
-  $ting_search_query = !empty($keys) ? $keys : NULL;
-  $ting_search_query = !empty($conditions['qe']['query']) ? $conditions['qe']['query'] : $ting_search_query;
-  drupal_static('ting_search_query', $ting_search_query);
+  drupal_static('ting_search_query', !empty($conditions['qe']['query']) ? $conditions['qe']['query'] : $keys);
 
   // get parameters set as variables
   $variables = _ting_openformat_search_get_variables();
