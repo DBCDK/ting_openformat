@@ -336,7 +336,7 @@ class Manifestation extends ManifestationMaster {
    */
   public function getDebateLinks() {
     if ( !isset($this->manifestation->relationsData) ) {
-      return array();
+      return NULL;
     }
     $debates = array();
     foreach ( $this->manifestation->relationsData as $relation ) {
@@ -361,7 +361,7 @@ class Manifestation extends ManifestationMaster {
         $debates[] = $debate;
       }
     }
-    return $debates;
+    return empty($debates) ? NULL : $debates;
   }
 
 
