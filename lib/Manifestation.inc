@@ -331,6 +331,32 @@ class Manifestation extends ManifestationMaster {
   }
 
   /**
+   * @return array
+   */
+  public function getDebateLinks() {
+    if ( !isset($this->manifestation->relationsData) ) {
+      return array();
+    }
+    $debates = array();
+    foreach ( $this->manifestation->relationsData as $relation ) {
+      if ( $relation->relationType == 'dbcaddi:discussedIn' ) {
+        $debates['discussed_in'][] = $relation->relationUri;
+      }
+      if ( $relation->relationType == 'dbcaddi:continuedIn' ) {
+        $debates['continued_in'][] = $relation->relationUri;
+      }
+      if ( $relation->relationType == 'dbcaddi:discusses' ) {
+        $debates['discusses'][] = $relation->relationUri;
+      }
+      if ( $relation->relationType == 'dbcaddi:continues' ) {
+        $debates['continues'][] = $relation->relationUri;
+      }
+    }
+    return $debates;
+  }
+
+
+  /**
    * @return array|mixed|null
    */
   public function getHostPublicationID() {
