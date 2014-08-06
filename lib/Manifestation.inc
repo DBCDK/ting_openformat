@@ -330,6 +330,7 @@ class Manifestation extends ManifestationMaster {
     return $reviews;
   }
 
+
   /**
    * @return array
    */
@@ -340,16 +341,24 @@ class Manifestation extends ManifestationMaster {
     $debates = array();
     foreach ( $this->manifestation->relationsData as $relation ) {
       if ( $relation->relationType == 'dbcaddi:discussedIn' ) {
-        $debates['discussed_in'][] = $relation->relationUri;
+        $debate['discussed_in']['searchCode'] = 'rec.id=' . $relation->relationUri;
+        $debate['discussed_in']['display'] = t('debate_discussed_in', array(), array('context' => 'ting_openformat'));
+        $debates[] = $debate;
       }
       if ( $relation->relationType == 'dbcaddi:continuedIn' ) {
-        $debates['continued_in'][] = $relation->relationUri;
+        $debate['continued_in']['searchCode'] = 'rec.id=' . $relation->relationUri;
+        $debate['continued_in']['display'] = t('debate_continued_in', array(), array('context' => 'ting_openformat'));
+        $debates[] = $debate;
       }
       if ( $relation->relationType == 'dbcaddi:discusses' ) {
-        $debates['discusses'][] = $relation->relationUri;
+        $debate['discusses']['searchCode'] = 'rec.id=' . $relation->relationUri;
+        $debate['discusses']['display'] = t('debate_discusses', array(), array('context' => 'ting_openformat'));
+        $debates[] = $debate;
       }
       if ( $relation->relationType == 'dbcaddi:continues' ) {
-        $debates['continues'][] = $relation->relationUri;
+        $debate['continues']['searchCode'] = 'rec.id=' . $relation->relationUri;
+        $debate['continues']['display'] = t('debate_continues_discussion', array(), array('context' => 'ting_openformat'));
+        $debates[] = $debate;
       }
     }
     return $debates;
