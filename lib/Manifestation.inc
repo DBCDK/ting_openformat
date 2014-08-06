@@ -340,6 +340,7 @@ class Manifestation extends ManifestationMaster {
     }
     $debates = array();
     foreach ( $this->manifestation->relationsData as $relation ) {
+      $debate = array();
       if ( $relation->relationType == 'dbcaddi:discussedIn' ) {
         $debate['discussed_in']['searchCode'] = 'rec.id=' . $relation->relationUri;
         $debate['discussed_in']['display'] = t('debate_discussed_in', array(), array('context' => 'ting_openformat'));
