@@ -296,6 +296,22 @@ class Manifestation extends ManifestationMaster {
   }
 
   /**
+   * @return bool
+   */
+  public function getRelationUri(){
+    if (!isset($this->manifestation->relationsData)) {
+      return FALSE;
+    }
+
+    foreach ($this->manifestation->relationsData as $relation) {
+      if ($relation->relationType == 'dbcaddi:hasOnlineAccess' ) {
+        return $relation->relationUri;
+      }
+    }
+    return FALSE;
+  }
+
+  /**
    * @return array
    */
   public function getNewsPaperReviews() {
