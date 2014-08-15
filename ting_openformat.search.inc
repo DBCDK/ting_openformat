@@ -365,10 +365,10 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
     $op = CQL_OR;
     foreach ($qe as $term => $group) {
       foreach ($group as $key => $val) {
-        if(strpos($val, '\'') === false) {
+        if(strpos($val, '\'') === false && strpos($val, '(') === false ) {
           $group[$key] = $term . '=' . '\'' . $val . '\'';
         }
-        else {
+        else if (strpos($val, '\'') === false) {
           $group[$key] = $term . '=' . '(' . $val . ')';
         }
 
