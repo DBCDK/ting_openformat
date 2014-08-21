@@ -110,33 +110,6 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
 
   }
 
-  private function _testSearchDefaultVariables() {
-    debug('Test method: _ting_openformat_search_get_variables()');
-    global $language;
-
-    $language_reset = $language;
-
-
-    // Test query language for with danish language
-
-    $language->language = 'da';
-    $variables = _ting_openformat_search_get_variables();
-
-    $result = $variables['queryLanguage'];
-    $language = $language_reset;
-    $this->assertEqual($result, 'cqldan', 'querylanguage is set to cqldan');
-
-
-    // Test query language for non - danish language
-    $language->language = 'en';
-    $variables = _ting_openformat_search_get_variables();
-
-    $result = $variables['queryLanguage'];
-    $language = $language_reset;
-    $this->assertEqual($result, 'cqleng', 'querylanguage is set to cqleng');
-  }
-
-
   /** Test if fields are created
    */
   private function _testFields() {
