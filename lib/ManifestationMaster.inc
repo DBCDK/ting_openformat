@@ -23,6 +23,10 @@ class ManifestationMaster {
     return isset($this->fields->publicationDetails) ? $this->fields->publicationDetails : NULL;
   }
 
+  private function _getContent() {
+    return isset($this->fields->content) ? $this->fields->content : NULL;
+  }
+
 
   /* \brief Distinction
    * zero or more occurence(s)
@@ -452,6 +456,7 @@ class ManifestationMaster {
     return $result;
   }
 
+
   /* \brief contentPartialNote
    * zero or more occurence(s)
    */
@@ -474,10 +479,6 @@ class ManifestationMaster {
     );
     $result = ting_openformat_methods::parseFields($this->_getContent(), $fields);
     return $result;
-  }
-
-  private function _getContent() {
-    return isset($this->fields->content) ? $this->fields->content : NULL;
   }
 
   public function getLatestReprint() {

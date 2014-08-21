@@ -1,6 +1,14 @@
 <?php
 
 /**
+ * WHEN ADDING FIELDS: 
+ * add update_hook_N to install file, and run updates
+ * function ting_openformat_update_NN() {
+ *   ding_entity_modules_enabled(array('ting_openformat'));
+ * }
+ */
+
+/**
  * List of fields and their settings
  * @return array
  */
@@ -430,6 +438,15 @@ function ting_openformat_bibdk_fields() {
       'description' => 'Volume of manifestation',
       'callback method' =>  'getVolume',
     ),
+
+    'bibdk_mani_debates' => array(
+      'label'           => 'Debates',
+      'entity_type'     => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
+      'display'         => array('full'),
+      'description'     => 'links to debates',
+      'callback method' => 'getDebateLinks',
+    ),
+
     //section specific
     'bibdk_section_title' => array(
       'label' => 'Section Title',

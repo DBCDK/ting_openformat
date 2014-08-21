@@ -66,6 +66,38 @@
                       "relationUri": {
                         "$": "870973-anmeld:50752410"
                       }
+                    },
+                    {
+                      "relationType": {
+                        "$": "dbcaddi:continuedIn"
+                      },
+                      "relationUri": {
+                        "$": "870971-tsart:35913300"
+                      }
+                    },
+                    {
+                      "relationType": {
+                        "$": "dbcaddi:discussedIn"
+                      },
+                      "relationUri": {
+                        "$": "870971-tsart:35993185"
+                      }
+                    },
+                    {
+                      "relationType": {
+                        "$": "dbcaddi:continues"
+                      },
+                      "relationUri": {
+                        "$": "870971-avis:35194606"
+                      }
+                    },
+                    {
+                      "relationType": {
+                        "$": "dbcaddi:discusses"
+                      },
+                      "relationUri": {
+                        "$": "870971-avis:35150269"
+                      }
                     }
                   ]
                 },
