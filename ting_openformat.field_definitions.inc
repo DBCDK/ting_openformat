@@ -1,7 +1,7 @@
 <?php
 
 /**
- * WHEN ADDING FIELDS: 
+ * WHEN ADDING FIELDS:
  * add update_hook_N to install file, and run updates
  * function ting_openformat_update_NN() {
  *   ding_entity_modules_enabled(array('ting_openformat'));
@@ -441,7 +441,7 @@ function ting_openformat_bibdk_fields() {
 
     'bibdk_mani_debates' => array(
       'label'           => 'Debates',
-      'entity_type'     => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
+      'entity_type'     => array('bibdkManifestation'),
       'display'         => array('full'),
       'description'     => 'links to debates',
       'callback method' => 'getDebateLinks',
