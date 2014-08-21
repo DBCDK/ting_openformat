@@ -78,52 +78,6 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
   }
 
 
-
-  public function testCqlCommando() {
-    global $language;
-
-    $saved_language = $language;
-
-    $language->language = 'en';
-
-    // Test English - AND
-    $result = ting_openformat_get_cql_commando('AND');
-    $expected = ' AND ';
-    $this->assertEqual($result, $expected, 'CQL Commando correcty translated');
-
-    // Test English - OR
-    $result = ting_openformat_get_cql_commando('OR');
-    $expected = ' OR ';
-    $this->assertEqual($result, $expected, 'CQL Commando correcty translated');
-
-    // Test English - NON VALID
-    $result = ting_openformat_get_cql_commando('FAIL');
-    $expected = NULL;
-    $this->assertEqual($result, $expected, 'CQL Commando correcty translated');
-
-
-    $language->language = 'da';
-
-    // Test Danish - AND
-    $result = ting_openformat_get_cql_commando('AND');
-    $expected = ' OG ';
-    $this->assertEqual($result, $expected, 'CQL Commando correcty translated');
-
-    // Test Danish - OR
-    $result = ting_openformat_get_cql_commando('OR');
-    $expected = ' ELLER ';
-    $this->assertEqual($result, $expected, 'CQL Commando correcty translated');
-
-    // Test Danish - NON Valid
-    $result = ting_openformat_get_cql_commando('FAIL');
-    $expected = NULL;
-    $this->assertEqual($result, $expected, 'CQL Commando correcty translated');
-
-
-    $language = $saved_language;
-
-  }
-
   public function testBibdkCollection() {
 
     $manifestation = new stdClass();
