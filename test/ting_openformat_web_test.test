@@ -31,7 +31,6 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     $this->_testFieldContent();
     $this->_testMethodGetMarkupForField();
     $this->_testMethodParseElement();
-    $this->_testSearchDefaultVariables();
     $this->_testEmptySearch();
     $this->_testHookActions();
     $this->_test_ting_openformat_parse_urls();
