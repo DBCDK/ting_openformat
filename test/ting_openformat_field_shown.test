@@ -33,6 +33,11 @@ class TingOpenFormatFieldShownTestCase extends DrupalWebTestCase {
     $this->assertText('Ludwig van Beethoven, Thomas Dausgaard, Det Svenske Kammerorkester', 'Has expected three creators.');
     $this->assertText('Common contributors', 'Found field label \'Common Contributors\'.');
     $this->assertText('Swedish Chamber Orchestra Örebro ; dirigent: Thomas Dausgaard');
+    $this->assertLink('debate_continued_in', 0, 'debate_continued_in link present');
+    $this->assertLink('debate_discussed_in', 0, 'debate_discussed_in link present');
+    $this->assertLink('debate_continues_discussion', 0, 'debate_continues_discussion link present');
+    $this->assertLink('debate_discusses', 0, 'debate_discusses link present');
+
     $this->drupalGet('work/870970-basis:45483932');
     $this->assertText('Harry Potter', 'Harry.');
     $this->assertText('Harry Potter &amp; the deathly hallows', 'You can\'t hide under your cloak, Harry.');

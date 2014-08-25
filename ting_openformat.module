@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Define constant cql operators
+ */
+define('CQL_AND', ' and ');
+define('CQL_OR', ' or ');
+define('CQL_NOT', ' not ');
+
 // load search info and hooks
 module_load_include('inc', 'ting_openformat', 'ting_openformat.search');
 module_load_include('inc', 'ting_openformat', 'ting_openformat.entities');
@@ -91,6 +98,56 @@ function ting_openformat_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Implements hook_bibdk_usersettings_user_tabs
+ * @return array
+ */
+function ting_openformat_bibdk_usersettings_user_tabs() {
+  $tab['view'] = array(
+    'title' => t('view'),
+    'description' => t('usersettings_tab_view_description'),
+    'weight' => 10,
+  );
+
+  return $tab;
+}
+
+/**
+ * Implements hook_bibdk_usersettings_user_settings
+ * @return array
+ */
+function ting_openformat_bibdk_usersettings_user_settings() {
+
+  $form['view']['ting_openformat_fullview_usersetting'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Prefer full view'),
+    '#default_value' => bibdk_usersettings_user_settings_get('ting_openformat_fullview_usersetting', FALSE),
+  );
+
+  $form['view'] += array(
+    '#type' => 'container',
+    '#weight' => 0,
+    '#tab' => 'view',
+  );
+
+  return $form;
+}
+
+/** Implements hook_language_switch_links_alter. Add query parameters to link
+ * to keep search result when switching language on search page
+ * @param array $links
+ * @param $type
+ * @param $path
+ */
+function ting_openformat_language_switch_links_alter(array &$links, $type, $path) {
+  // Get query parameters
+  $query = drupal_get_query_parameters();
+  foreach (
+    $links as &$link) {
+    $link['query'] = $query;
+  }
 }
 
 function ting_openformat_facets_by_ajax() {
@@ -380,35 +437,6 @@ function ting_openformat_form_ting_client_admin_webservices_settings_alter(&$for
   }
 }
 
-/** Translate CQL commandos. Only support english or danish
- * @param $cql
- * @return null|string
- */
-function ting_openformat_get_cql_commando($cql) {
-  $return = NULL;
-
-  switch ($cql) {
-    case 'AND' :
-      $return = ting_openformat_get_cql_language() == 'cqldan' ? ' OG ' : ' AND ';
-      break;
-    case 'OR' :
-      $return = ting_openformat_get_cql_language() == 'cqldan' ? ' ELLER ' : ' OR ';
-      break;
-    case 'NOT' :
-      $return = ting_openformat_get_cql_language() == 'cqldan' ? ' IKKE ' : ' NOT ';
-      break;
-  }
-
-  return $return;
-}
-
-function ting_openformat_get_cql_language() {
-
-  global $language;
-
-  return $language->language == 'da' ? 'cqldan' : 'cqleng';
-}
-
 /**
  * Load hook as set in entity_info
  * load hook is not currently used .. maybe later.
@@ -599,8 +627,12 @@ function ting_openformat_collection_view($bibdkobject) {
 
   $trackId = ting_openformat_set_tracking_id();
 
+  if(bibdk_usersettings_user_settings_get('ting_openformat_fullview_usersetting', FALSE)){
+    $_SESSION['search_settings']['full_view'] = TRUE;
+  }
+
   //Setting parameters based on a full or short view was requeseted
-  if (isset($_SESSION['search_settings']['full_view']) && $_SESSION['search_settings']['full_view'] == TRUE) {
+  if ((isset($_SESSION['search_settings']['full_view']) && $_SESSION['search_settings']['full_view'] == TRUE)) {
     $showinfoForm = '';
     $workOne = ting_openformat_load_single_full_work($bibdkobject, $all_ids_in_collection, $uid);
   }

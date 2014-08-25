@@ -182,3 +182,17 @@ function ting_openformat_update_7029() {
 function ting_openformat_update_7030() {
   ding_entity_modules_enabled(array('ting_openformat'));
 }
+
+/**
+ * Implements hook_update_N;
+ * Update all field information
+ * */
+function ting_openformat_update_7031() {
+  ding_entity_modules_enabled(array('ting_openformat'));
+  // translate strings once
+  t('debate_continues_discussion', array(), array('context' => 'ting_openformat'));
+  t('debate_discusses', array(), array('context' => 'ting_openformat'));
+  t('debate_continued_in', array(), array('context' => 'ting_openformat'));
+  t('debate_discussed_in', array(), array('context' => 'ting_openformat'));
+}
+
