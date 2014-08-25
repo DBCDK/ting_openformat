@@ -34,7 +34,7 @@ function _ting_openformat_handle_conditions(&$conditions) {
 function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more = NULL) {
 
   $params = array();
-  if ($keys && strpos($keys, '\'') === false && strpos($keys, '(') === false && && strpos($keys, '=') === false){
+  if ($keys && strpos($keys, '\'') === false && strpos($keys, '(') === false && strpos($keys, '=') === false){
     $params['query'] = "'$keys'";
   }
   else {
