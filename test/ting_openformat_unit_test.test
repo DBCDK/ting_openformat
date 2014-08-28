@@ -166,4 +166,27 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     $this->assertEqual($info['accessInformation'][0][0]['accessUrlDisplay'], 'urlInternetPublic', 'accessUrlDisplay is "urlInternetPublic" as expected');
 
   }
+
+  public function testConvertStringToCQL () {
+    module_load_include('inc', 'ting_openformat', 'ting_openformat.search');
+    $tests = array(
+      // string => expected_result
+      'r\'n\'b' => '"r\'n\'b"',
+      'dette er en "god" test' => '"dette er en \"god\" test"',
+      'let\'s dance' => '"let\'s dance"',
+      //the following tests should not change anything
+      '"dont do anything"' => '"dont do anything"',
+      'rec.id="dont do anything"' => 'rec.id="dont do anything"',
+      '"dont" and "do" or "anything"' => '"dont" and "do" or "anything"',
+    );
+
+    foreach($tests as $string => $expected_result) {
+      $result = ting_openformat_string_to_cql($string);
+      $this->assertEqual($result, $expected_result);
+    }
+
+  }
+
+
+
 }

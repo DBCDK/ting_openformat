@@ -33,13 +33,10 @@ function _ting_openformat_handle_conditions(&$conditions) {
 /** implements hook_search_execute */
 function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more = NULL) {
 
+
   $params = array();
-  if ($keys && strpos($keys, '\'') === false && strpos($keys, '(') === false && strpos($keys, '=') === false){
-    $params['query'] = "'$keys'";
-  }
-  else {
-    $params['query'] = $keys;
-  }
+  if($keys)
+  $params['query'] = ting_openformat_string_to_cql($keys);
 
   $all_params = $conditions;
 
@@ -371,20 +368,15 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
     $op = CQL_OR;
     foreach ($qe as $term => $group) {
       foreach ($group as $key => $val) {
-        if(strpos($val, '\'') === false && strpos($val, '(') === false ) {
-          $group[$key] = $term . '=' . '\'' . $val . '\'';
-        }
-        else if (strpos($val, '\'') === false) {
-          $group[$key] = $term . '=' . '(' . $val . ')';
-        }
-
+        $group[$key] = $term . '=' . '(' . ting_openformat_string_to_cql($val) . ')';
       }
-      $fields[] = '(' . implode($op, $group) . ')';
+
+      $fields[] = '(' . join($op, $group) . ')';
     }
 
     $op = CQL_AND;
     if (!empty($fields)) {
-      $res[] = '(' . implode($op, $fields) . ')';
+      $res[] = '(' . join($op, $fields) . ')';
     }
 
     foreach ($preprocessed as $key => $term) {
@@ -395,7 +387,6 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
       $cql[] = join($op, $res);
     }
   }
-
   $query = join($op, $cql);
 
   $filters = ting_openformat_filters();
@@ -493,4 +484,35 @@ function ting_openformat_conditions_callback($query) {
   }
 
   return $conditions;
+}
+
+/** Method to convert a string to strict cql (Basically by adding quotes when needed)
+ * @param $string
+ * @return string
+ */
+function ting_openformat_string_to_cql($string) {
+  if (isset($string) && !_ting_openformat_string_is_cql($string)) {
+    $string = _ting_openformat_convert_string_to_cql($string);
+  }
+  return $string;
+}
+
+/** Add quotes to string and escapes existing quotes
+ * @param $string
+ * @return string
+ */
+function _ting_openformat_convert_string_to_cql($string) {
+  $string = str_replace('"', '\"', $string);
+  return '"' . $string . '"';
+}
+
+/** Tests if a string is cql
+ * @param $string
+ * @return bool|int
+ */
+function _ting_openformat_string_is_cql($string) {
+  if(strpos($string, '"') !== false && (!preg_match('@ and | or | not |=@', $string) && !(substr($string, 0, 1) === '"' && substr($string, -1) === '"'))){
+    return false;
+  }
+  return preg_match('@"|\(|\)|=@', $string);
 }
