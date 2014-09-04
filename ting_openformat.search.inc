@@ -368,6 +368,7 @@ function _ting_openformat_set_query_extended(&$query, $qe) {
     $op = CQL_OR;
     foreach ($qe as $term => $group) {
       foreach ($group as $key => $val) {
+        $val = urldecode($val);
         $group[$key] = $term . '=' . '(' . ting_openformat_string_to_cql($val) . ')';
       }
 
