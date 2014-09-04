@@ -503,8 +503,13 @@ function ting_openformat_string_to_cql($string) {
  * @return string
  */
 function _ting_openformat_convert_string_to_cql($string) {
+  // Escape quotes
   $string = str_replace('"', '\"', $string);
+  // remove multiple whitespaces
+  $string = preg_replace('/\s+/', ' ', $string);
+  // explode string by whitespace
   $expressions = explode(' ', $string);
+  // join expressions with 'and' operator
   return implode(' and ', $expressions);
 }
 
