@@ -171,9 +171,9 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     module_load_include('inc', 'ting_openformat', 'ting_openformat.search');
     $tests = array(
       // string => expected_result
-      'r\'n\'b' => '"r\'n\'b"',
-      'dette er en "god" test' => '"dette er en \"god\" test"',
-      'let\'s dance' => '"let\'s dance"',
+      'r\'n\'b' => 'r\'n\'b',
+      'dette er en "god" test' => 'dette and er and en and \"god\" and test',
+      'let\'s dance' => 'let\'s and dance',
       //the following tests should not change anything
       '"dont do anything"' => '"dont do anything"',
       'rec.id="dont do anything"' => 'rec.id="dont do anything"',
