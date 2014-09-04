@@ -504,7 +504,8 @@ function ting_openformat_string_to_cql($string) {
  */
 function _ting_openformat_convert_string_to_cql($string) {
   $string = str_replace('"', '\"', $string);
-  return '"' . $string . '"';
+  $expressions = explode(' ', $string);
+  return implode(' and ', $expressions);
 }
 
 /** Tests if a string is cql
