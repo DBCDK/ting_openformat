@@ -311,6 +311,22 @@ class Manifestation extends ManifestationMaster {
     return FALSE;
   }
 
+  public function getRemoteAccess(){
+
+    if (!isset($this->manifestation->relationsData)) {
+      return FALSE;
+    }
+
+    foreach ($this->manifestation->relationsData as $relation) {
+      if ($relation->relationType == 'dbcaddi:hasOnlineAccess' ) {
+        if($relation->linkObject->access->{'$'} == 'remote') {
+          return $relation->relationUri;
+        }
+      }
+    }
+    return FALSE;
+  }
+
   /**
    * @return array
    */
