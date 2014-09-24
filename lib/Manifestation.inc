@@ -120,6 +120,32 @@ class Manifestation extends ManifestationMaster {
     return ($requestMethod == 'link') ? TRUE : FALSE;
   }
 
+  public function hasDirectLink() {
+    $directLinks = array('link', 'plusLink', 'linkE17', 'restrictedAccess', 'noAccess');
+    return in_array($this->getInfotext(), $directLinks);
+  }
+
+  /**
+   * Check if material is a special type of non-borrowable ebook
+   */
+  public function isEbook() {
+    if ($this->getInfotext() == 'restrictedAccess' && $this->hasType('literature') && $this->hasType('online') && $this->isLink()) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  /** Check if manifestation is of a certain kind
+   * @param $type
+   * @return bool
+   */
+  public function hasType($type) {
+    $manifestation_types = is_array($this->getType()) ? $this->getType() : array($this->getType());
+    return in_array($type, $manifestation_types);
+  }
+
   /**
    * @return array|mixed|null
    */

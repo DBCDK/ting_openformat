@@ -44,6 +44,28 @@ class BibdkWork {
     return array_keys($reviews);
   }
 
+
+  public function getInfoTexts() {
+    $messages = array();
+    /* @var $manifestation Manifestation */
+    foreach ($this->manifestations as $manifestation) {
+      $infocode = $manifestation->getInfotext();
+      $messageCategory = $manifestation->getMessageCategory();
+      $messages[$messageCategory][] = $infocode;
+    }
+    return $messages;
+  }
+
+  public function isReservable() {
+    /* @var $manifestation Manifestation */
+    foreach ($this->manifestations as $manifestation) {
+      if ($manifestation->isReservable()) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+
   public function getMaterialReview(){
 
     $reviews = array();
