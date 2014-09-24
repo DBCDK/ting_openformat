@@ -53,6 +53,8 @@ function ting_openformat_ting_openformat_search_result_content_type_render($subt
   $search_result = search_data($keys, $info['module'], $conditions);
 
   $output = "<div class=\"search-results $conf[type]-results\">\n";
+  // implemented for blind users
+  $output .= "<h2 class=\"element-invisible\">" . t('shown as material types', array(), array('context' => 'ting_openformat')) . "</h2>\n";
   if (count($search_result['#results']) > 1) {
     foreach ($search_result['#results'] as $result) {
       $output .= theme('search_result', array('result' => $result, 'module' => $conf['type']));
