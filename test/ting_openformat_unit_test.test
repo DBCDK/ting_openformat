@@ -99,7 +99,11 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     $collection = new BibdkCollection($manifestations);
 
     $result = $collection->getTitle();
-    $expected_result = 'First choice for sjette <br /> Teacher\'s book<span> (Flere sprog)</span>';
+    $expected_result = 'First choice for sjette <br /> Teacher\'s book';
+    $this->assertEqual($result, $expected_result, 'Title parsed correctly');
+
+    $result = $collection->getLanguageForBriefDisplay();
+    $expected_result = 'Flere sprog';
     $this->assertEqual($result, $expected_result, 'Title parsed correctly');
 
     $result = $collection->getType();
