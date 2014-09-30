@@ -492,6 +492,7 @@ function ting_openformat_conditions_callback($query) {
  * @return string
  */
 function ting_openformat_string_to_cql($string) {
+  $string = trim($string);
   if (isset($string) && !_ting_openformat_string_is_cql($string)) {
     $string = _ting_openformat_convert_string_to_cql($string);
   }
