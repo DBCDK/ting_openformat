@@ -291,11 +291,20 @@ function ting_openformat_single($id) {
   return drupal_render($render);
 }
 
-/**
- * Remove H1 title from work pages
+/** implements hook_preprocess_page()
+ * - Remove content region if no results
+ * - Remove H1 title from work pages
+ *
+ * @param $variables
  */
 function ting_openformat_preprocess_page(&$variables) {
-  if ($variables['theme_hook_suggestions'][0] == 'page__work') {
+  if ($variables['theme_hook_suggestions'][0] == 'page__search') {
+    $search_result = drupal_static('ting_search_results');
+    if (!isset($search_result) || $search_result->numTotalObjects == 0) {
+      unset($variables['page']['content']);
+    }
+  }
+  else if ($variables['theme_hook_suggestions'][0] == 'page__work') {
     $variables['title'] = FALSE;
   }
 }
