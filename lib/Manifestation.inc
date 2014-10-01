@@ -185,8 +185,9 @@ class Manifestation extends ManifestationMaster {
    * zero or one occurence
    */
   public function getRequestButton() {
-    if (!isset($this->manifestation->adminData))
+    if (!isset($this->manifestation->adminData)) {
       return FALSE;
+    }
     $result = ting_openformat_methods::parseFields($this->manifestation->adminData, array('requestButton'));
 
     return (is_array($result)) ? reset($result) : $result;
