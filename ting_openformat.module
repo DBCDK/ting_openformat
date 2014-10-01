@@ -723,11 +723,11 @@ function _ting_openformat_get_types_list($bibdkobject) {
   $types = $bibdkobject->getWorkTypes();
   $items = array();
   foreach ($types as $type => $ids) {
-    $items[$type] = '<span class="materialtype ' . $type . '-icon-small " title="' . t($type) . '">&nbsp;</span>';
+    $items[$type] = '<span class="materialtype ' . $type . '-icon-small " title="' . t($type) . '">' . t($type) . '&nbsp;</span>';
   }
 
   if ($bibdkobject->isOnline()) {
-    $items['net-icon-small'] = '<span class="materialtype online-icon-small" title="' . t('online') . '">&nbsp;</span>';
+    $items['net-icon-small'] = '<span class="materialtype online-icon-small" title="' . t('online') . '">' . t('online') . '&nbsp;</span>';
   }
 
   $list = array(
