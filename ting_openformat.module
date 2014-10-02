@@ -298,7 +298,7 @@ function ting_openformat_single($id) {
  * @param $variables
  */
 function ting_openformat_preprocess_page(&$variables) {
-  if ($variables['theme_hook_suggestions'][0] == 'page__search') {
+  if ($variables['theme_hook_suggestions'][0] == 'page__search__work') {
     $search_result = drupal_static('ting_search_results');
     if (!isset($search_result) || $search_result->numTotalObjects == 0) {
       unset($variables['page']['content']);
