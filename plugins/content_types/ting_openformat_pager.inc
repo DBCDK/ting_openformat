@@ -18,36 +18,38 @@ $plugin = array(
 
 function ting_openformat_pager($subtype, $conf, $panel_args, $context) {
   // get search results
-  $results = drupal_static('ting_search_results');
-  // initialize pager
-  pager_default_initialize($results->numTotalObjects, 10);
-  // get current pagenumber
-  $page_no = pager_find_page();
+  if ($results = drupal_static('ting_search_results')) {
+    // initialize pager
+    pager_default_initialize($results->numTotalObjects, 10);
+    // get current pagenumber
+    $page_no = pager_find_page();
 
-  $block = new stdClass();
+    $block = new stdClass();
 
-  if($page_no > 1){
-    $block->content['first'] = array(
-      '#theme'=>'pager_first',
-      '#prefix' =>'<span class="bibdk-pager-first">',
+    if ($page_no > 1) {
+      $block->content['first'] = array(
+        '#theme' => 'pager_first',
+        '#prefix' => '<span class="bibdk-pager-first">',
+        '#suffix' => '</span>',
+      );
+    }
+
+    $block->content['prev'] = array(
+      '#theme' => 'pager_previous',
+      '#prefix' => '<span class="bibdk-pager-previous">',
       '#suffix' => '</span>',
     );
+
+    if ($results->more) {
+      $block->content['next'] = array(
+        '#theme' => 'pager_next',
+        '#prefix' => '<span class="bibdk-pager-next">',
+        '#suffix' => '</span>',
+      );
+    }
+
+    return $block;
   }
 
-  $block->content['prev'] = array(
-    '#theme'=>'pager_previous',
-    '#prefix' =>'<span class="bibdk-pager-previous">',
-    '#suffix' => '</span>',
-  );
-
-  if($results->more){
-    $block->content['next'] =array(
-      '#theme' => 'pager_next',
-      '#prefix' =>'<span class="bibdk-pager-next">',
-      '#suffix' => '</span>',
-    );
-  }
-
-  return $block;
 }
 
