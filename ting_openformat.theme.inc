@@ -67,6 +67,7 @@ function ting_openformat_theme() {
       'variables' => array(
         'title' => '',
         'title_full' => '',
+        'language' => '',
         'author' => '',
         'ids' => '',
         'work_type' => '',
@@ -130,7 +131,7 @@ function ting_openformat_theme() {
       ),
       'template' => 'ting_openformat_more_info',
     ),
-    
+
     'ting_openformat_rss_feed' => array(
       'path' => $path,
       'varriables' => array(
