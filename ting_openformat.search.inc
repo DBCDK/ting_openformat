@@ -111,7 +111,8 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
     $search_results[] = _ting_openformat_set_search_result($entity);
   }
 
-  module_invoke_all('ting_openformat_search_results', $keys, $result, $all_params, $params['query']);
+  $query = isset($params['query']) ? $params['query'] : array();
+  module_invoke_all('ting_openformat_search_results', $keys, $result, $all_params, $query);
   $search_results['more'] = $result->more;
 
   // Collections may contain more works than $params['numResults'], and we don't want a pager if there's only one page
