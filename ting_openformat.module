@@ -291,11 +291,20 @@ function ting_openformat_single($id) {
   return drupal_render($render);
 }
 
-/**
- * Remove H1 title from work pages
+/** implements hook_preprocess_page()
+ * - Remove content region if no results
+ * - Remove H1 title from work pages
+ *
+ * @param $variables
  */
 function ting_openformat_preprocess_page(&$variables) {
-  if ($variables['theme_hook_suggestions'][0] == 'page__work') {
+  if (in_array('page__search__work', $variables['theme_hook_suggestions'])) {
+    $search_result = drupal_static('ting_search_results');
+    if (!isset($search_result) || $search_result->numTotalObjects == 0) {
+      unset($variables['page']['content']);
+    }
+  }
+  else if ($variables['theme_hook_suggestions'][0] == 'page__work') {
     $variables['title'] = FALSE;
   }
 }
@@ -658,7 +667,7 @@ function ting_openformat_collection_view($bibdkobject) {
   return theme('ting_openformat_collection', array(
     'title' => $bibdkobject->getTitle(),
     'title_full' => $bibdkobject->getTitleFull(),
-    'title_full_formatted' => $bibdkobject->getTitleFullFormatted(),
+    'language' => $bibdkobject->getLanguageForBriefDisplay(),
     'partOf' => $bibdkobject->getPartOf(),
     'author' => $bibdkobject->getAuthor(),
     'work_type' => (!empty($workType)) ? 'type-' . $workType : 'type-undefined',
@@ -723,11 +732,11 @@ function _ting_openformat_get_types_list($bibdkobject) {
   $types = $bibdkobject->getWorkTypes();
   $items = array();
   foreach ($types as $type => $ids) {
-    $items[$type] = '<span class="materialtype ' . $type . '-icon-small " title="' . t($type) . '">&nbsp;</span>';
+    $items[$type] = '<span class="materialtype ' . $type . '-icon-small " title="' . t($type) . '">' . t($type) . '&nbsp;</span>';
   }
 
   if ($bibdkobject->isOnline()) {
-    $items['net-icon-small'] = '<span class="materialtype online-icon-small" title="' . t('online') . '">&nbsp;</span>';
+    $items['net-icon-small'] = '<span class="materialtype online-icon-small" title="' . t('online') . '">' . t('online') . '&nbsp;</span>';
   }
 
   $list = array(
