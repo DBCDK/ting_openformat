@@ -352,6 +352,27 @@ class Manifestation extends ManifestationMaster {
     return FALSE;
   }
 
+  public function getlinkCollectionIdentifier() {
+    if (!isset($this->manifestation->relationsData)) {
+      return FALSE;
+    }
+    foreach ($this->manifestation->relationsData as $relation) {
+      if ($relation->relationType == 'dbcaddi:hasOnlineAccess' ) {
+          if(isset($relation->linkObject->linkCollectionIdentifier)) {
+            if(is_array($relation->linkObject->linkCollectionIdentifier)){
+              return current($relation->linkObject->linkCollectionIdentifier)->{'$'};
+            }
+            else{
+              return $relation->linkObject->linkCollectionIdentifier->{'$'};
+            }
+        }
+      }
+    }
+    return FALSE;
+
+  }
+
+
   /**
    * @return array
    */
