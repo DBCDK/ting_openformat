@@ -227,7 +227,7 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
     elseif ($key === 'display' || $key === 'accessUrlDescriptor') { /*do nothing*/
     }
     else {
-      $array[] = $value;
+      $array[] = check_plain($value);
     }
   }
   $string = (isset($header)) ? $header . " " : "";
