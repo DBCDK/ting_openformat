@@ -88,7 +88,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
       case 'bibdk_mani_creators':
         $content = _ting_openformat_default_field_view_content($field['field_name'], $entity);
         $value = _ting_openformat_get_markup_for_field($content, "<br />");
-        break;      
+        break;
       case 'bibdk_mani_volume':
         $volume = $entity->getVolume();
         if (isset($volume)) {
@@ -219,15 +219,19 @@ function ting_openformat_text_summary($text, $length = 300) {
  * @return array
  */
 function ting_openformat_trim_string_by_length($text, $length) {
+  // If text is smaller than specified length return string and empty more
+  if(strlen($text) <= $length){
+    return array($text, '');
+  }
   $return = array();
   // extract substring by length
-  $text_trimmed = text_summary($text, null, $length);
+  $text_trimmed = substr($text, 0, $length);
   // Find last space
   $last_space = strrpos($text_trimmed, ' ');
   // adjust trimmed string length to last space
-  $return['trimmed'] = substr($text_trimmed, 0, $last_space);
+  $return[] = substr($text_trimmed, 0, $last_space);
   // Get the text that is trimmed away
-  $return['more'] = substr($text, $last_space);
+  $return[] = substr($text, $last_space);
 
   return $return;
 }
