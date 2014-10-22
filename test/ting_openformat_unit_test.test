@@ -39,6 +39,12 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
     list($trimmed, $more) = ting_openformat_trim_string_by_length($text, 200);
     $this->assertEqual($trimmed, $text, 'trimmed text is correct');
     $this->assertEqual($more, '', 'more is empty');
+
+    // test string whit html
+    $text .= '<a>test</a>';
+    list($trimmed, $more) = ting_openformat_trim_string_by_length($text, 200);
+    $this->assertEqual($trimmed, $text, 'trimmed text is correct');
+    $this->assertEqual($more, '', 'more is empty');
   }
 
   public function testManifestationMethods() {
