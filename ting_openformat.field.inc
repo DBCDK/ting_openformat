@@ -200,10 +200,12 @@ function ting_openformat_text_summary($text, $length = 300) {
     list($trimmed, $more) = ting_openformat_trim_string_by_length($text, $length);
     // We call the theme function directly so this function always can return a
     // string
-    $text = theme('ting_openformat_toggle_more_content', array(
-      'trimmed_text' => $trimmed,
-      'more_text' => $more,
-    ));
+    if (!empty($more)) {
+      $text = theme('ting_openformat_toggle_more_content', array(
+        'trimmed_text' => $trimmed,
+        'more_text' => $more,
+      ));
+    }
   }
 
   return $text;
@@ -220,7 +222,8 @@ function ting_openformat_text_summary($text, $length = 300) {
  */
 function ting_openformat_trim_string_by_length($text, $length) {
   // If text is smaller than specified length return string and empty more
-  if(strlen($text) <= $length){
+  // If text contains html we exclude it to make sure we don't break the html
+  if(strlen($text) <= $length || strlen($text) != strlen(strip_tags($text))){
     return array($text, '');
   }
   $return = array();
