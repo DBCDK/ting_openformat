@@ -135,18 +135,17 @@ function ting_openformat_bibdk_usersettings_user_settings() {
   return $form;
 }
 
-/** Implements hook_language_switch_links_alter. Add query parameters to link
- * to keep search result when switching language on search page
+/**
+ * Implements hook_language_switch_links_alter.
+ * Male sure user goes to frontpage on language change
  * @param array $links
  * @param $type
  * @param $path
  */
 function ting_openformat_language_switch_links_alter(array &$links, $type, $path) {
-  // Get query parameters
-  $query = drupal_get_query_parameters();
   foreach (
     $links as &$link) {
-    $link['query'] = $query;
+    $link['href'] = '';
   }
 }
 
