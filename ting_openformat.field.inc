@@ -88,7 +88,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
       case 'bibdk_mani_creators':
         $content = _ting_openformat_default_field_view_content($field['field_name'], $entity);
         $value = _ting_openformat_get_markup_for_field($content, "<br />");
-        break;      
+        break;
       case 'bibdk_mani_volume':
         $volume = $entity->getVolume();
         if (isset($volume)) {
@@ -177,13 +177,69 @@ function _ting_openformat_default_field_view_content($field_name, $entity){
 function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_header = TRUE, $return_link = TRUE) {
   $return = NULL;
   $markup = _ting_openformat_parse_element($elements, $divider, $use_header, $return_link);
+
   if (isset($markup)) {
     $return = array(
-      '#markup' => $markup,
+      '#markup' => ting_openformat_text_summary($markup, 300),
     );
   }
   return $return;
 }
+
+/**
+ * Method for converting text blocks to trimmed text with a show more link.
+ *
+ * The text are trimmed at the last space within the range given
+ *
+ * @param $text
+ * @param int $length
+ * @return string
+ */
+function ting_openformat_text_summary($text, $length = 300) {
+  if (strlen($text) > $length) {
+    list($trimmed, $more) = ting_openformat_trim_string_by_length($text, $length);
+    // We call the theme function directly so this function always can return a
+    // string
+    if (!empty($more)) {
+      $text = theme('ting_openformat_toggle_more_content', array(
+        'trimmed_text' => $trimmed,
+        'more_text' => $more,
+      ));
+    }
+  }
+
+  return $text;
+}
+
+/**
+ * Trim a textstring by length (to the nearest space)
+ *
+ * Returns an array with the trimmed text and the text that is trimmed off
+ *
+ * @param $text
+ * @param $length
+ * @return array
+ */
+function ting_openformat_trim_string_by_length($text, $length) {
+  // If text is smaller than specified length return string and empty more
+  // If text contains html we exclude it to make sure we don't break the html
+  if(strlen($text) <= $length || strlen($text) != strlen(strip_tags($text))){
+    return array($text, '');
+  }
+  $return = array();
+  // extract substring by length
+  $text_trimmed = substr($text, 0, $length);
+  // Find last space
+  $last_space = strrpos($text_trimmed, ' ');
+  // adjust trimmed string length to last space
+  $return[] = substr($text_trimmed, 0, $last_space);
+  // Get the text that is trimmed away
+  $return[] = substr($text, $last_space);
+
+  return $return;
+}
+
+
 
 /**
  * Parses a field array from a manifestation/work entity. returns a string.
