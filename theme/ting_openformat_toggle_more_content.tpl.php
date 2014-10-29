@@ -10,6 +10,7 @@
 ?>
 <span class='toggle-more'>
 <?php echo $trimmed_text; ?>
+  <span class='toggle-more-content show'>...</span>
   <span class='toggle-more-content hide'>
     <?php echo $more_text; ?>
   </span>
