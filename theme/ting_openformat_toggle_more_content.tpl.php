@@ -10,13 +10,13 @@
 ?>
 <span class='toggle-more'>
 <?php echo $trimmed_text; ?>
-  <span class='toggle-more-content show'>...</span>
-  <span class='toggle-more-content hide'>
+  <span class='toggle-more-content toggle-show'>...</span>
+  <span class='toggle-more-content toggle-hide'>
     <?php echo $more_text; ?>
   </span>
   <a class='toggle-link' href='#show-more'>
     <span class="icon icon-left icon-blue-down">&nbsp;</span>
-    <span class='toggle-text show'><?php echo t('show more', array(), array('context' => 'ting_openformat')); ?></span>
-    <span class='toggle-text hide'><?php echo t('show less', array(), array('context' => 'ting_openformat')); ?></span>
+    <span class='toggle-text toggle-show'><?php echo t('show more', array(), array('context' => 'ting_openformat')); ?></span>
+    <span class='toggle-text toggle-hide'><?php echo t('show less', array(), array('context' => 'ting_openformat')); ?></span>
   </a>
 </span>
