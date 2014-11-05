@@ -37,6 +37,7 @@
       TingOpenformat.loadManifestationsWithAjax(context);
       TingOpenformat.loadWorkEvent(context);
       TingOpenformat.addFullViewButtonEvent(context);
+      TingOpenformat.toggleMore(context);
     }
   };
 
@@ -165,6 +166,13 @@
       $(id).trigger('click');
     });
   }
+
+    TingOpenformat.toggleMore = function (context) {
+        $('.toggle-more .toggle-link', context).click(function (e) {
+            e.preventDefault();
+            $(this).closest('.toggle-more').toggleClass('toggled');
+        });
+    }
 
 })
   (jQuery);

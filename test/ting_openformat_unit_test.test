@@ -26,6 +26,27 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
 
   }
 
+  public function testTrimStringByLength() {
+    module_load_include('inc', 'ting_openformat', 'ting_openformat.field');
+    //test string shorter than $length
+    $text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+    list($trimmed, $more) = ting_openformat_trim_string_by_length($text, 35);
+
+    $this->assertEqual($trimmed, 'Lorem ipsum dolor sit amet,', 'trimmed text is correct');
+    $this->assertEqual($more, ' consectetur adipiscing elit.', 'more text is correct');
+
+    // test string longer than $length
+    list($trimmed, $more) = ting_openformat_trim_string_by_length($text, 200);
+    $this->assertEqual($trimmed, $text, 'trimmed text is correct');
+    $this->assertEqual($more, '', 'more is empty');
+
+    // test string whit html
+    $text .= '<a>test</a>';
+    list($trimmed, $more) = ting_openformat_trim_string_by_length($text, 200);
+    $this->assertEqual($trimmed, $text, 'trimmed text is correct');
+    $this->assertEqual($more, '', 'more is empty');
+  }
+
   public function testManifestationMethods() {
 
     $fields = ting_openformat_bibdk_fields();
