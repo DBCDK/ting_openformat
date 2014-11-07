@@ -125,7 +125,7 @@ class BibdkWork {
   public function getTitle() {
     $fields = array('titleFull');
     $elements = $this->work->title;
-    $result = ting_openformat_methods::parseFields($elements, $fields);
+    $result = TingOpenformatMethods::parseFields($elements, $fields);
 
     return (is_array($result)) ? reset($result) : $result;
   }
@@ -137,7 +137,7 @@ class BibdkWork {
   public function getAbstract() {
     $fields = array('abstract' => array('abstractElement'));
     $elements = $this->_getDescription();
-    $result = ting_openformat_methods::parseFields($elements, $fields);
+    $result = TingOpenformatMethods::parseFields($elements, $fields);
 
     return $result;
   }
@@ -145,7 +145,7 @@ class BibdkWork {
   public function getCreator() {
     $fields = array('creators' => array('creator' => "searchCode"));
     $elements = $this->work;
-    $result = ting_openformat_methods::parseFields($elements, $fields);
+    $result = TingOpenformatMethods::parseFields($elements, $fields);
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -170,7 +170,7 @@ class BibdkWork {
   public function getSubjects() {
     $fields = array('subjects' => array('subjectHeader' => 'header', 'subject' => 'searchCode'));
     $elements = $this->_getDescription();
-    $result = ting_openformat_methods::parseFields($elements, $fields);
+    $result = TingOpenformatMethods::parseFields($elements, $fields);
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -188,7 +188,7 @@ class BibdkWork {
       }
     }
 
-    $parsedFields = ting_openformat_methods::parseFields($elements, $fields);
+    $parsedFields = TingOpenformatMethods::parseFields($elements, $fields);
     return (!empty($parsedFields)) ? $this->_parseFurtherSearches($parsedFields) : array();
   }
 
@@ -224,7 +224,7 @@ class BibdkWork {
       }
     }
 
-    $parsedFields = ting_openformat_methods::parseFields($elements, $fields);
+    $parsedFields = TingOpenformatMethods::parseFields($elements, $fields);
     return (!empty($parsedFields)) ? $this->_parseAboutAuthor($parsedFields) : array();
   }
 

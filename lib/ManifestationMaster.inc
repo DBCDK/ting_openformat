@@ -33,7 +33,7 @@ class ManifestationMaster {
    */
 
   public function getDistinction() {
-    $result = ting_openformat_methods::parseFields($this->work, array('distinction'));
+    $result = TingOpenformatMethods::parseFields($this->work, array('distinction'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -42,7 +42,7 @@ class ManifestationMaster {
    */
 
   public function getOriginalTitle() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('originalTitle' => array('originalTitleHeader' => 'header', "originalTitleElement")));
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('originalTitle' => array('originalTitleHeader' => 'header', "originalTitleElement")));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -51,7 +51,7 @@ class ManifestationMaster {
    */
 
   public function getAlternativeTitle() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('alternativeTitle' => array('alternativeTitleDescriptor' => 'header', "alternativeTitleElement")));
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('alternativeTitle' => array('alternativeTitleDescriptor' => 'header', "alternativeTitleElement")));
     return $result;
   }
 
@@ -60,7 +60,7 @@ class ManifestationMaster {
    */
 
   public function getContributors() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('contributors'));
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('contributors'));
     return $result;
   }
 
@@ -69,7 +69,7 @@ class ManifestationMaster {
    */
 
   public function getFormat() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('format'));
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('format'));
     return $result;
   }
 
@@ -80,7 +80,7 @@ class ManifestationMaster {
    */
 
   public function getForms() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('forms' => array("formSubject" => 'searchCode')));
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('forms' => array("formSubject" => 'searchCode')));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -93,7 +93,7 @@ class ManifestationMaster {
 
   public function getSeriesTitle() {
     $elements = $this->_getDetails();
-    $result = ting_openformat_methods::parseFields($elements, array('seriesTitle' => array('seriesHeader' => 'header', "series" => 'searchCode', "seriesNumber")));
+    $result = TingOpenformatMethods::parseFields($elements, array('seriesTitle' => array('seriesHeader' => 'header', "series" => 'searchCode', "seriesNumber")));
     return $result;
   }
 
@@ -104,7 +104,7 @@ class ManifestationMaster {
    */
 
   public function getRelatedSeriesTitle() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('relatedSeriesTitles' => array('relatedSeriesTitle' => array('relatedSeriesDescription' => 'header', "relatedSeries" => 'searchCode'))));
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('relatedSeriesTitles' => array('relatedSeriesTitle' => array('relatedSeriesDescription' => 'header', "relatedSeries" => 'searchCode'))));
     return $result;
   }
 
@@ -113,7 +113,7 @@ class ManifestationMaster {
    */
 
   public function getReadabilityIndexes() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('readabilityIndexes' => array('readabilityIndex')));
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('readabilityIndexes' => array('readabilityIndex')));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -122,7 +122,7 @@ class ManifestationMaster {
    */
 
   public function getReadabilityNumbers() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('readabilityNumbers' => array('readabilityNumber')));
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('readabilityNumbers' => array('readabilityNumber')));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -140,7 +140,7 @@ class ManifestationMaster {
         'shelfClassification' => "searchCode",
       )
     );
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
 
     return (is_array($result)) ? reset($result) : $result;
   }
@@ -155,7 +155,7 @@ class ManifestationMaster {
         'textLevel' => 'searchCode',
       )
     );
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
 
     return (is_array($result)) ? reset($result) : $result;
   }
@@ -165,7 +165,7 @@ class ManifestationMaster {
    */
 
   public function getGenre() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('genre'));
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('genre'));
     return $result;
   }
 
@@ -179,7 +179,7 @@ class ManifestationMaster {
 
   public function getAudienceSubjects() {
     $fields = array('audienceSubjects' => array('audienceHeader' => 'header', 'audienceSubject' => 'searchCode'));
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
     return $result;
   }
 
@@ -188,7 +188,7 @@ class ManifestationMaster {
    */
 
   public function getMarkedAudience() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('audienceMarked' => array('audienceMarkedElement')));
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('audienceMarked' => array('audienceMarkedElement')));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -197,7 +197,7 @@ class ManifestationMaster {
    */
 
   public function getRecommendedAudience() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('audienceAge' => array('audienceAgeElement')));
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('audienceAge' => array('audienceAgeElement')));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -206,7 +206,7 @@ class ManifestationMaster {
    */
 
   public function getAudiencePegi() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('audiencePegi' => array('audiencePegiElement')));
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('audiencePegi' => array('audiencePegiElement')));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -215,7 +215,7 @@ class ManifestationMaster {
    */
 
   public function getUsedLanguage() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('usedLanguage'));
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('usedLanguage'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -224,7 +224,7 @@ class ManifestationMaster {
    */
 
   public function getActorNote() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('actorNote' => array('actorElement')));
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('actorNote' => array('actorElement')));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -233,7 +233,7 @@ class ManifestationMaster {
    */
 
   public function getDescriptionNote() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('descriptionNote'));
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('descriptionNote'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -242,7 +242,7 @@ class ManifestationMaster {
    */
 
   public function getReferences() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('references'));
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('references'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -251,7 +251,7 @@ class ManifestationMaster {
    */
 
   public function getOriginals() {
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), array('originals'));
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('originals'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -262,7 +262,7 @@ class ManifestationMaster {
 
   public function getContext() {
     $fields = array('context' => array('contextElement'));
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -277,7 +277,7 @@ class ManifestationMaster {
         'identifierDescriptor' => 'header',
         'identifier',
         ));
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -290,7 +290,7 @@ class ManifestationMaster {
     $fields = array('identifiersISBN' => array(
         'identifier',
         ));
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
     return $result;
   }
 
@@ -303,7 +303,7 @@ class ManifestationMaster {
     $fields = array('identifiersISMN' => array(
         'identifier',
         ));
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
     return $result;
   }
 
@@ -316,7 +316,7 @@ class ManifestationMaster {
     $fields = array('identifiersISSN' => array(
         'identifier',
         ));
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
     return $result;
   }
 
@@ -331,7 +331,7 @@ class ManifestationMaster {
         'price',
         'acquisitionTerms',
         ));
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
     return $result;
   }
 
@@ -346,7 +346,7 @@ class ManifestationMaster {
         'languageHeader' => 'header',
         'languageElement',
         ));
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
     return $result;
   }
 
@@ -367,7 +367,7 @@ class ManifestationMaster {
         'accessUrlDisplay',
       )
     );
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
     return $result;
   }
 
@@ -376,7 +376,7 @@ class ManifestationMaster {
    */
   public function getPublisher() {
     $fields = array('publisher');
-    $result = ting_openformat_methods::parseFields($this->_getPublicationDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getPublicationDetails(), $fields);
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -385,7 +385,7 @@ class ManifestationMaster {
    */
   public function getPublicationYear() {
     $fields = array('publicationYear');
-    $result = ting_openformat_methods::parseFields($this->_getPublicationDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getPublicationDetails(), $fields);
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -394,7 +394,7 @@ class ManifestationMaster {
    */
   public function getEdition() {
     $fields = array('edition');
-    $result = ting_openformat_methods::parseFields($this->_getPublicationDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getPublicationDetails(), $fields);
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -404,7 +404,7 @@ class ManifestationMaster {
 
   public function getPublicationFormat() {
     $fields = array('format');
-    $result = ting_openformat_methods::parseFields($this->_getPublicationDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getPublicationDetails(), $fields);
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -418,32 +418,32 @@ class ManifestationMaster {
         'hostPublicationElement',
       ),
     );
-    $result = ting_openformat_methods::parseFields($this->_getPublicationDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getPublicationDetails(), $fields);
     return (is_array($result)) ? reset($result) : $result;
   }
 
   public function getContentTitle() {
     $fields = array('content' => 'contentTitle');
-    $result = ting_openformat_methods::parseFields($this->_getContent(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getContent(), $fields);
 
     return $result;
   }
 
   public function getSystemDemands() {
     $fields = array('systemDemands' => array('systemDemandsDescriptor', 'systemDemandsElement'));
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
     return $result;
   }
 
   public function getDatabaseRef() {
     $fields = array('referencesExternal');
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
     return $result;
   }
 
   public function getAccessMethod() {
     $fields = array('accessMethod' => array('accessMethodDescription','accessMethodElement'));
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
     return $result;
   }
 
@@ -452,7 +452,7 @@ class ManifestationMaster {
         'analyticContributor' => 'searchCode',
         'analyticTitle' => array('analyticTitleMain' => 'searchCode', 'analyticRestOfTitle')
         ));
-    $result = ting_openformat_methods::parseFields($this->_getContent(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getContent(), $fields);
     return $result;
   }
 
@@ -465,7 +465,7 @@ class ManifestationMaster {
     $fields = array(
       'contentPartialNote' => array('contentPartialNoteDescription', 'contentPartialNoteElement')
     );
-    $result = ting_openformat_methods::parseFields($this->_getContent(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getContent(), $fields);
     return $result;
   }
 
@@ -477,7 +477,7 @@ class ManifestationMaster {
     $fields = array(
       'contentNote' => array('contentNoteDescription', 'contentNoteElement')
     );
-    $result = ting_openformat_methods::parseFields($this->_getContent(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getContent(), $fields);
     return $result;
   }
 
@@ -485,7 +485,7 @@ class ManifestationMaster {
     $fields = array(
       'latestReprint' => array('latestReprint' => 'latestReprintElement'),
     );
-    $result = ting_openformat_methods::parseFields($this->_getPublicationDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getPublicationDetails(), $fields);
 
     return $result;
   }
@@ -494,7 +494,7 @@ class ManifestationMaster {
     $fields = array(
       'commonContributors'
     );
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
     return (is_array($result)) ? reset($result) : $result;
   }
 }
