@@ -508,15 +508,6 @@ function ting_openformat_set_tracking_id() {
   return $trackId;
 }
 
-/**
- * @param array $a
- * @param array $b
- * @return Boolean
- */
-function _ting_openformat_sortfields_by_weight($a, $b) {
-  return $a['#weight'] - $b['#weight'];
-}
-
 /* * ***************** ADMIN **************** */
 
 /**
