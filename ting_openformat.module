@@ -421,16 +421,6 @@ function ting_openformat_form_ting_client_admin_webservices_settings_alter(&$for
 }
 
 /**
- * Load hook as set in entity_info
- * load hook is not currently used .. maybe later.
- */
-function ting_openformat_manifestations_load($stdObjects) {
-  $ret = array();
-
-  return $ret;
-}
-
-/**
  * uri callback as defined in hook_entity_info
  * */
 function ting_openformat_maniobject_uri() {
@@ -1229,7 +1219,6 @@ function ting_openformat_entity_info() {
       'base table' => 'ting_openformat_manifestation',
       'ding_entity_type' => 'bibdk_entity',
       'controller class' => 'bibdkEntityApiController',
-      'load hook' => 'manifestations_load',
       'entity keys' => array(
         'id' => 'ding_entity_id',
       ),
