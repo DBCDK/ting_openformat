@@ -13,6 +13,7 @@ module_load_include('inc', 'ting_openformat', 'ting_openformat.entities');
 module_load_include('inc', 'ting_openformat', 'ting_openformat.field_definitions');
 module_load_include('inc', 'ting_openformat', 'ting_openformat.field');
 module_load_include('inc', 'ting_openformat', 'ting_openformat_feeds');
+include_once 'inc/ting_openformat.view.inc';
 
 function ting_openformat_menu() {
   $items = array();
