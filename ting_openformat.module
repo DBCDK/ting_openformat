@@ -80,6 +80,7 @@ function ting_openformat_menu() {
     'access arguments' => array('administer webservices settings'),
     'file' => 'ting_openformat.admin.inc'
   );
+  //@todo remove order methods - they are not in use
   $items['admin/config/ting/order'] = array(
     'title' => 'Set Type Order',
     'description' => 'Set the order of the different types in a subwork',
@@ -467,16 +468,6 @@ function ting_openformat_ding_devel_timers() {
 }
 
 /* * *********** VIEWS ************* */
-
-/*
- * preprocess template to add stylesheet
- * @TODO; this method is for developing only - move and adjust css to proper file when ready
- */
-
-function template_preprocess_ting_openformat_subwork_tabs(&$variables) {
-  $path = drupal_get_path('module', 'ting_openformat') . '/css';
-  drupal_add_css($path . '/ting_openformat_subwork.css');
-}
 
 /**
  * Creates html view for bibdkWorkEntity
