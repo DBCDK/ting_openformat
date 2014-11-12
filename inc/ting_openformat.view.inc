@@ -4,8 +4,6 @@
  * Contains all methods related to generating a work view
  */
 
-/* * *********** VIEWS ************* */
-
 /**
  * Creates html view for bibdkWorkEntity
  * @param Manifestation|BibdkWork|BibdkSubwork|BibdkCollection $bibdkWork
@@ -334,8 +332,8 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
   return $build;
 }
 
-
-/** Invokes hook_ting_openformat_actions
+/**
+ * Invokes hook_ting_openformat_actions().
  * @param $type
  * @param $entity
  * @param string $view_mode
@@ -351,38 +349,6 @@ function ting_openformat_get_actions($type, $entity, $view_mode = 'full', $langc
   }
 
   return $actions;
-}
-
-/**
- * Create view for manifestation volume fields
- * @param $volume
- * @param string $view_mode
- * @param null $langcode
- * @return bool|string
- */
-function ting_openformat_volume_view($volume, $view_mode = 'full', $langcode = NULL) {
-  if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->language;
-  }
-  $field_content = _prepare_view('bibdkManifestationVolume', $volume, $view_mode, $langcode);
-
-  return drupal_render($field_content);
-}
-
-/**
- * Create view for manifestation section fields
- * @param $volume
- * @param string $view_mode
- * @param null $langcode
- * @return bool|string
- */
-function ting_openformat_section_view($volume, $view_mode = 'full', $langcode = NULL) {
-  if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->language;
-  }
-  $field_content = _prepare_view('bibdkManifestationSection', $volume, $view_mode, $langcode);
-
-  return drupal_render($field_content);
 }
 
 /**

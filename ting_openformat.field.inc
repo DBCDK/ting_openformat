@@ -92,15 +92,16 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
       case 'bibdk_mani_volume':
         $volume = $entity->getVolume();
         if (isset($volume)) {
-          $volume_entity = entity_load('bibdkManifestationVolume', $entity->id, $volume);
-          $element[$delta]['#markup'] = ting_openformat_volume_view($volume_entity, 'full', $langcode);
+          dpm(func_get_args());
+          $entity = entity_load('bibdkManifestationVolume', $entity->id, $volume);
+          $value = _prepare_view('bibdkManifestationVolume', $entity, 'full', $langcode);
         }
         break;
       case 'bibdk_mani_section':
         $volume = $entity->getSection();
         if (isset($volume)) {
-          $volume_entity = entity_load('bibdkManifestationSection', $entity->id, $volume);
-          $element[$delta]['#markup'] = ting_openformat_section_view($volume_entity, 'full', $langcode);
+          $entity = entity_load('bibdkManifestationSection', $entity->id, $volume);
+          $value = _prepare_view('bibdkManifestationSection', $entity, 'full', $langcode);
         }
         break;
       // usedLanguage
