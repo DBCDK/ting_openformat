@@ -102,8 +102,8 @@ function ting_openformat_default_page_manager_handlers() {
   $pane = new stdClass();
   $pane->pid = 'new-3';
   $pane->panel = 'facets';
-  $pane->type = 'ding_facetbrowser';
-  $pane->subtype = 'ding_facetbrowser';
+  $pane->type = 'bibdk_facetbrowser';
+  $pane->subtype = 'bibdk_facetbrowser';
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
