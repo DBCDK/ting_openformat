@@ -1,4 +1,4 @@
-<div class="work element-wrapper <?php print $work_type; ?>">
+<div class="work element-wrapper">
 
   <div class="element">
 

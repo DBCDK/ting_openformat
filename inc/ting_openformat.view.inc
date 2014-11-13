@@ -141,8 +141,9 @@ function ting_openformat_collection_view(BibdkCollection $bibdkobject) {
     $workOne = NULL;
   }
 
+  // Get fields for Collection
   $actions = _prepare_view('bibdkCollection', $bibdkobject, 'full', NULL);
-  $workType = $bibdkobject->getWorkType();
+
   $type = $bibdkobject->getType();
   $types_classes = _ting_openformat_get_types_list($bibdkobject);
 
@@ -157,7 +158,6 @@ function ting_openformat_collection_view(BibdkCollection $bibdkobject) {
     '#title' => _ting_openformat_brief_display_title($bibdkobject),
     '#partOf' => $bibdkobject->getPartOf(),
     '#author' => $bibdkobject->getAuthor(),
-    '#work_type' => (!empty($workType)) ? 'type-' . $workType : 'type-undefined',
     '#type' => $type,
     '#ids' => implode(',', $all_ids_in_collection),
     '#togglework' => $togglework,
