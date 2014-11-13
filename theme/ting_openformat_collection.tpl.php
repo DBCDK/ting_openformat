@@ -6,7 +6,7 @@
 
       <div class="element-title">
         <div>
-          <h2><?php print ( !empty($title_full)) ? $title_full : $title; ?> <?php print ( !empty($language)) ? "($language)" : ''; ?></h2>
+          <h2><?php $title; ?></h2>
           <h3><?php print $author; ?></h3>
           <?php if (!empty($partOf)) : ?>
             <span>I: <?php print $partOf; ?></span>

@@ -154,11 +154,9 @@ function ting_openformat_collection_view(BibdkCollection $bibdkobject) {
 
   return array(
     '#theme' => 'ting_openformat_collection',
-    '#title' => check_plain($bibdkobject->getTitle()),
-    '#title_full' => check_plain($bibdkobject->getTitleFull()),
-    '#language' => check_plain($bibdkobject->getLanguageForBriefDisplay()),
-    '#partOf' => check_plain($bibdkobject->getPartOf()),
-    '#author' => check_plain($bibdkobject->getAuthor()),
+    '#title' => _ting_openformat_brief_display_title($bibdkobject),
+    '#partOf' => $bibdkobject->getPartOf(),
+    '#author' => $bibdkobject->getAuthor(),
     '#work_type' => (!empty($workType)) ? 'type-' . $workType : 'type-undefined',
     '#type' => $type,
     '#ids' => implode(',', $all_ids_in_collection),
@@ -168,6 +166,25 @@ function ting_openformat_collection_view(BibdkCollection $bibdkobject) {
     '#actions' => (!empty($actions)) ? $actions : array(),
     '#types' => $types_classes,
   );
+}
+
+
+/**
+ * Create title element for brief display view
+ *
+ * @param BibdkCollection $collection
+ * @return array|mixed|null|string
+ */
+function _ting_openformat_brief_display_title(BibdkCollection $collection) {
+  $title = $collection->getTitleFull();
+  if (empty($title)) {
+    $title = $collection->getTitle();
+  }
+  if ($language = $collection->getLanguageForBriefDisplay()) {
+    $title .= " ($language)";
+  }
+
+  return $title;
 }
 
 /**
