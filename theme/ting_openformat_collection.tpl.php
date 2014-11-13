@@ -5,13 +5,11 @@
     <div class="work-header element-section">
 
       <div class="element-title">
-        <div>
-          <h2><?php $title; ?></h2>
+          <h2><?php print $title; ?></h2>
           <h3><?php print $author; ?></h3>
           <?php if (!empty($partOf)) : ?>
             <span>I: <?php print $partOf; ?></span>
           <?php endif; ?>
-        </div>
       </div>
 
       <div class="element-types-actions">
@@ -30,9 +28,12 @@
       <?php print $togglework; ?>
 
     </div>
+    <div class="work-body work-body-has-cover element-section">
+      <!-- enter new work here -->
+    </div>
 
     <!-- element-section (work-header) -->
-    <?php if ( isset($work_one) ): ?>
+    <?php if ( false ): ?>
 
       <div class="work-body work-body-has-cover element-section">
         <div><?php print $work_one; ?></div>

@@ -117,15 +117,15 @@ function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langc
  * @return string
  */
 function ting_openformat_collection_view(BibdkCollection $bibdkobject) {
-  $all_ids_in_collection = $bibdkobject->getCollectionIds();
-  $uid = strtolower(strtr(reset($all_ids_in_collection), array(
+  //@todo use drupal_clean_css_identifier() -> This requires a lot of py tests to be updated
+  $uid = strtolower(strtr(reset($bibdkobject->getCollectionIds()), array(
     ':' => '',
     '-' => '',
     '_' => ''
   )));
-
   $trackId = ting_openformat_set_tracking_id();
 
+  // Full view logic
   if(bibdk_usersettings_user_settings_get('ting_openformat_fullview_usersetting', FALSE)){
     $_SESSION['search_settings']['full_view'] = TRUE;
   }
@@ -133,18 +133,18 @@ function ting_openformat_collection_view(BibdkCollection $bibdkobject) {
   //Setting parameters based on a full or short view was requeseted
   if ((isset($_SESSION['search_settings']['full_view']) && $_SESSION['search_settings']['full_view'] == TRUE)) {
     $showinfoForm = '';
-    $workOne = ting_openformat_load_single_full_work($bibdkobject, $all_ids_in_collection, $uid);
+    $workOne = ting_openformat_load_single_full_work($bibdkobject, $bibdkobject->getCollectionIds(), $uid);
   }
   else {
     $form = drupal_get_form('ting_openformat_show_info_get_form', $bibdkobject, $uid, $trackId);
     $showinfoForm = drupal_render($form);
     $workOne = NULL;
   }
+  // Full view logic ends
 
   // Get fields for Collection
   $actions = _prepare_view('bibdkCollection', $bibdkobject, 'full', NULL);
 
-  $type = $bibdkobject->getType();
   $types_classes = _ting_openformat_get_types_list($bibdkobject);
 
   $togglework = theme('ting_openformat_toggle_work', array(
@@ -152,17 +152,16 @@ function ting_openformat_collection_view(BibdkCollection $bibdkobject) {
     'showinfo' => $showinfoForm,
     'full_view' => !is_null($workOne),
   ));
-
+  $workType = $bibdkobject->getWorkType();
   return array(
     '#theme' => 'ting_openformat_collection',
     '#title' => _ting_openformat_brief_display_title($bibdkobject),
     '#partOf' => $bibdkobject->getPartOf(),
     '#author' => $bibdkobject->getAuthor(),
-    '#type' => $type,
-    '#ids' => implode(',', $all_ids_in_collection),
     '#togglework' => $togglework,
     '#work_one' => $workOne,
     '#uid' => $uid,
+    '#work_type' => (!empty($workType)) ? 'type-' . $workType : 'type-undefined',
     '#actions' => (!empty($actions)) ? $actions : array(),
     '#types' => $types_classes,
   );
@@ -184,6 +183,7 @@ function _ting_openformat_brief_display_title(BibdkCollection $collection) {
     $title .= " ($language)";
   }
 
+  dpm($title);
   return $title;
 }
 
