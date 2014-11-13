@@ -217,6 +217,8 @@ function ting_openformat_ajax_manifestations($type, $json) {
 
 /**
  * View single work
+ *
+ * invoked by menu hook displaying single manifestation as a work
  */
 function ting_openformat_single($id) {
   drupal_set_title('');
