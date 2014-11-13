@@ -221,11 +221,7 @@ function _ting_openformat_parse_collection(&$original_manifestations, &$entity_i
 function _ting_openformat_set_search_result($bibdkobject) {
   $result = array(
     'link' => url("work/" . $bibdkobject->getId()),
-    'type' => '',
-    'title' => $bibdkobject->getTitle(),
-    'user' => '',
-    'date' => '',
-    'snippet' => ting_openformat_collection_view($bibdkobject),
+    'snippet' => drupal_render(ting_openformat_collection_view($bibdkobject)),
   );
 
   return $result;

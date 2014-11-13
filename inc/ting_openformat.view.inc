@@ -116,7 +116,7 @@ function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langc
  * @param BibdkCollection $bibdkobject
  * @return string
  */
-function ting_openformat_collection_view($bibdkobject) {
+function ting_openformat_collection_view(BibdkCollection $bibdkobject) {
   $all_ids_in_collection = $bibdkobject->getCollectionIds();
   $uid = strtolower(strtr(reset($all_ids_in_collection), array(
     ':' => '',
@@ -152,21 +152,22 @@ function ting_openformat_collection_view($bibdkobject) {
     'full_view' => !is_null($workOne),
   ));
 
-  return theme('ting_openformat_collection', array(
-    'title' => check_plain($bibdkobject->getTitle()),
-    'title_full' => check_plain($bibdkobject->getTitleFull()),
-    'language' => check_plain($bibdkobject->getLanguageForBriefDisplay()),
-    'partOf' => check_plain($bibdkobject->getPartOf()),
-    'author' => check_plain($bibdkobject->getAuthor()),
-    'work_type' => (!empty($workType)) ? 'type-' . $workType : 'type-undefined',
-    'type' => $type,
-    'ids' => implode(',', $all_ids_in_collection),
-    'togglework' => $togglework,
-    'work_one' => $workOne,
-    'uid' => $uid,
-    'actions' => (!empty($actions)) ? $actions : array(),
-    'types' => $types_classes,
-  ));
+  return array(
+    '#theme' => 'ting_openformat_collection',
+    '#title' => check_plain($bibdkobject->getTitle()),
+    '#title_full' => check_plain($bibdkobject->getTitleFull()),
+    '#language' => check_plain($bibdkobject->getLanguageForBriefDisplay()),
+    '#partOf' => check_plain($bibdkobject->getPartOf()),
+    '#author' => check_plain($bibdkobject->getAuthor()),
+    '#work_type' => (!empty($workType)) ? 'type-' . $workType : 'type-undefined',
+    '#type' => $type,
+    '#ids' => implode(',', $all_ids_in_collection),
+    '#togglework' => $togglework,
+    '#work_one' => $workOne,
+    '#uid' => $uid,
+    '#actions' => (!empty($actions)) ? $actions : array(),
+    '#types' => $types_classes,
+  );
 }
 
 /**
