@@ -92,7 +92,6 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
       case 'bibdk_mani_volume':
         $volume = $entity->getVolume();
         if (isset($volume)) {
-          dpm(func_get_args());
           $entity = entity_load('bibdkManifestationVolume', $entity->id, $volume);
           $value = _prepare_view('bibdkManifestationVolume', $entity, 'full', $langcode);
         }

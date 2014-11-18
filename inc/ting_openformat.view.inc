@@ -182,8 +182,6 @@ function _ting_openformat_brief_display_title(BibdkCollection $collection) {
   if ($language = $collection->getLanguageForBriefDisplay()) {
     $title .= " ($language)";
   }
-
-  dpm($title);
   return $title;
 }
 
