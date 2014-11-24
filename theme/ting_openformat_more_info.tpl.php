@@ -1,1 +1,1 @@
-<?php print drupal_render($showinfoform); ?>
+<?php print $showinfoform; ?>
