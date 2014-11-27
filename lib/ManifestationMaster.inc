@@ -1,12 +1,5 @@
 <?php
 
-
-function log_to_file($text) {
-  $f = fopen('/home/jgn/jgn.ding/sites/default/files/log.txt', 'a');
-  fwrite($f, date('Ymd H:i:s - ') . print_r($text,1) . "\n");
-  fclose($f);
-}
-
 /**
  * Class ManifestationMaster
  */
