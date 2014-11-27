@@ -331,6 +331,13 @@
                     "price": {
                       "$": "kr. 139.00"
                     }
+                  },
+                  "acquisitionInformation": {
+                    "acquisitionTerms": {
+                      "$":"kun for medlemmer",
+                      "@":"of"
+                    },
+                    "@":"of"
                   }
                 },
                 "publicationDetails": {

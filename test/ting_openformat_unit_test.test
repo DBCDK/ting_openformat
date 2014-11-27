@@ -72,10 +72,15 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
       if ( $known_method ) {
         $result = $manifestation->$method();
         $this->assertEqual($expected, $result, $method . '() returns expected result for definition: '. $field_name);
+        if ( $expected != $result ) {
+          log_to_file($expected);
+          log_to_file($result);
+        }
       }
     }
 
   }
+
 
 
   function testShowLocalizationLink(){
@@ -207,7 +212,7 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
 
     foreach($tests as $string => $expected_result) {
       $result = ting_openformat_string_to_cql($string);
-      $this->assertEqual($result, $expected_result);
+      $this->assertEqual($result, $expected_result, $string . ' -> converted to cql: ' . $result);
     }
 
   }

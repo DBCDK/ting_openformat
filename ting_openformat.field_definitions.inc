@@ -184,6 +184,13 @@ function ting_openformat_bibdk_fields() {
       'description' => 'ISSN of manifestation',
       'callback method' =>  'getIdentifiersISSN',
     ),
+    'bibdk_mani_acquisition_info' => array(
+      'label' => 'Acquisition',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
+      'display' => array('full'),
+      'description' => 'Acquisition information',
+      'callback method' =>  'getAcquisitionInformation',
+    ),
     'bibdk_mani_alt_title' => array(
       'label' => 'Alternative title',
       'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),

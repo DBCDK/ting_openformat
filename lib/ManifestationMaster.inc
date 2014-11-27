@@ -1,5 +1,12 @@
 <?php
 
+
+function log_to_file($text) {
+  $f = fopen('/home/jgn/jgn.ding/sites/default/files/log.txt', 'a');
+  fwrite($f, date('Ymd H:i:s - ') . print_r($text,1) . "\n");
+  fclose($f);
+}
+
 /**
  * Class ManifestationMaster
  */
@@ -311,7 +318,6 @@ class ManifestationMaster {
    * zero or more occurence(s)
    * identifier zero or more occurence(s)
    */
-
   public function getIdentifiersISSN() {
     $fields = array('identifiersISSN' => array(
         'identifier',
@@ -320,11 +326,23 @@ class ManifestationMaster {
     return $result;
   }
 
+  /* \brief acquisition information
+   * zero or more occurences
+   */
+  public function getAcquisitionInformation() {
+    $fields = array('acquisitionInformation' => array(
+        'acquisitionTerms',
+        ));
+    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
+    return $result;
+  }
+
+
+
   /* \brief priceInformation
    * priceHeader zero or 1 occurence
    * price 1 occurence
    */
-
   public function getPriceInformation() {
     $fields = array('priceInformation' => array(
         'priceHeader' => 'header',
@@ -340,7 +358,6 @@ class ManifestationMaster {
    * languageHeader 1 occurence
    * languageElement 1 occurence
    */
-
   public function getLanguage() {
     $fields = array('language' => array(
         'languageHeader' => 'header',
@@ -497,4 +514,5 @@ class ManifestationMaster {
     $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
     return (is_array($result)) ? reset($result) : $result;
   }
+
 }
