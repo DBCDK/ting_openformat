@@ -22,6 +22,8 @@ class TingOpenformatManifestationObjectTest extends DrupalUnitTestCase {
 
   public function testSpecifyArticleData(){
     $manifestation = new stdClass();
+    $manifestation->adminData = new stdClass();
+    $manifestation->adminData->specifyArticleData = new stdClass();
     $manifestation->adminData->specifyArticleData->{'$'} = 'false';
     $mani = new Manifestation($manifestation);
     $this->assertFalse($mani->getSpecifyArticleData(), 'got false as expected');
@@ -35,16 +37,22 @@ class TingOpenformatManifestationObjectTest extends DrupalUnitTestCase {
 
   public function testGetMessageCategory(){
     $manifestation = new stdClass();
+    $manifestation->adminData = new stdClass();
+    $manifestation->adminData->messageCategory = new stdClass();
     $manifestation->adminData->messageCategory->{'$'} = 0;
     $mani = new Manifestation($manifestation);
     $this->assertEqual(0, $mani->getMessageCategory());
 
     $manifestation = new stdClass();
+    $manifestation->adminData = new stdClass();
+    $manifestation->adminData->messageCategory = new stdClass();
     $manifestation->adminData->messageCategory->{'$'} = 1;
     $mani = new Manifestation($manifestation);
     $this->assertEqual(1, $mani->getMessageCategory());
 
     $manifestation = new stdClass();
+    $manifestation->adminData = new stdClass();
+    $manifestation->adminData->messageCategory = new stdClass();
     $manifestation->adminData->messageCategory->{'$'} = NULL;
 
     $mani = new Manifestation($manifestation);
