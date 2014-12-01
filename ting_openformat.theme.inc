@@ -64,19 +64,18 @@ function ting_openformat_theme() {
 
     'ting_openformat_collection' => array(
       'path' => $path,
+      'template' => 'ting_openformat_collection',
       'variables' => array(
         'title' => '',
         'author' => '',
-        'ids' => '',
+        'part_of' => '',
         'uid' => '',
         'actions' => array(),
-        'work_type' => '',
-        'type' => '',
         'types' => '',
-        'togglework' => '',
-        'work_one' => '',
+        'work' => '',
+        'theme_attributes' => array(),
       ),
-      'template' => 'ting_openformat_collection',
+      'override preprocess functions' => TRUE,
     ),
 
     'ting_openformat_collection_actions' => array(

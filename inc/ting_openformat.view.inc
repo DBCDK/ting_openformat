@@ -34,14 +34,13 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   );
   $tabs = drupal_render($render_tabs);
 
-  $render = array(
+  return array(
     '#theme' => 'ting_openformat_work',
     '#fields' => $work_fields,
     '#subWorks' => $ordered_subworks,
     '#tabs' => $tabs,
     '#ding_id' => $ding_id
   );
-  return drupal_render($render);
 }
 
 /** Get Subworks ordered by type and subtype
@@ -116,57 +115,66 @@ function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langc
  * @param BibdkCollection $bibdkobject
  * @return string
  */
-function ting_openformat_collection_view(BibdkCollection $bibdkobject) {
+function ting_openformat_collection_view(BibdkCollection $bibdkobject, $full_view) {
   //@todo use drupal_clean_css_identifier() -> This requires a lot of py tests to be updated
   $uid = strtolower(strtr(reset($bibdkobject->getCollectionIds()), array(
     ':' => '',
     '-' => '',
     '_' => ''
   )));
-  $trackId = ting_openformat_set_tracking_id();
-
-  // Full view logic
-  if(bibdk_usersettings_user_settings_get('ting_openformat_fullview_usersetting', FALSE)){
-    $_SESSION['search_settings']['full_view'] = TRUE;
-  }
-
-  //Setting parameters based on a full or short view was requeseted
-  if ((isset($_SESSION['search_settings']['full_view']) && $_SESSION['search_settings']['full_view'] == TRUE)) {
-    $showinfoForm = '';
-    $workOne = ting_openformat_load_single_full_work($bibdkobject, $bibdkobject->getCollectionIds(), $uid);
-  }
-  else {
-    $form = drupal_get_form('ting_openformat_show_info_get_form', $bibdkobject, $uid, $trackId);
-    $showinfoForm = drupal_render($form);
-    $workOne = NULL;
-  }
-  // Full view logic ends
+  $work = _ting_openformat_work_full_view($bibdkobject, $uid, $full_view);
 
   // Get fields for Collection
   $actions = _prepare_view('bibdkCollection', $bibdkobject, 'full', NULL);
 
+  // format part_of
+  $part_of = $bibdkobject->getPartOf();
+  $part_of = !empty($part_of) ? t('I: @partof', array('@partof' => $bibdkobject->getPartOf()), array('context' => 'ting_openformat')) : '';
+
+  // get type icons
   $types_classes = _ting_openformat_get_types_list($bibdkobject);
 
-  $togglework = theme('ting_openformat_toggle_work', array(
-    'uid' => $uid,
-    'showinfo' => $showinfoForm,
-    'full_view' => !is_null($workOne),
-  ));
-  $workType = $bibdkobject->getWorkType();
   return array(
     '#theme' => 'ting_openformat_collection',
     '#title' => _ting_openformat_brief_display_title($bibdkobject),
-    '#partOf' => $bibdkobject->getPartOf(),
+    '#part_of' => $part_of,
     '#author' => $bibdkobject->getAuthor(),
-    '#togglework' => $togglework,
-    '#work_one' => $workOne,
+    '#theme_attributes' => array(
+      'class' => array('work', 'element-wrapper'),
+    ),
+    '#work' => $work,
     '#uid' => $uid,
-    '#work_type' => (!empty($workType)) ? 'type-' . $workType : 'type-undefined',
     '#actions' => (!empty($actions)) ? $actions : array(),
     '#types' => $types_classes,
   );
 }
 
+
+function _ting_openformat_work_full_view(BibdkCollection $bibdkobject, $uid, $full_view = true) {
+  $trackId = ting_openformat_set_tracking_id();
+
+
+  //Setting parameters based on a full or short view was requeseted
+  if ($full_view) {
+    $work = ting_openformat_load_single_full_work($bibdkobject, $bibdkobject->getCollectionIds(), $uid);
+  }
+  else {
+    $work = drupal_get_form('ting_openformat_show_info_get_form', $bibdkobject, $uid, $trackId);
+  }
+
+  return $work;
+}
+
+function _ting_openformat_init_full_view() {
+  if(bibdk_usersettings_user_settings_get('ting_openformat_fullview_usersetting', FALSE)){
+    $_SESSION['search_settings']['full_view'] = TRUE;
+  }
+  if (isset($_SESSION['search_settings']['full_view']) && $_SESSION['search_settings']['full_view'] == TRUE) {
+    return TRUE;
+  }
+
+  return FALSE;
+}
 
 /**
  * Create title element for brief display view
