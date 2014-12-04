@@ -10,16 +10,6 @@
 function ting_openformat_theme() {
   $path = drupal_get_path('module', 'ting_openformat') . '/theme';
   return array(
-    'ting_openformat_search_results' => array(
-      'path' => $path,
-      'variables' => array(
-        'content' => array(),
-        'work' => array(),
-        'manifestations' => array()
-      ),
-      //'file'      => 'ting_openformat.search_pages.inc',
-      'template'  => 'ting_openformat_search_results',
-    ),
     'ting_openformat_manifestation' => array(
       'path' => $path,
       'variables' => array(
@@ -36,30 +26,10 @@ function ting_openformat_theme() {
       'variables' => array(
         'fields' => array(),
         'cover' => '',
-        'work_tabs' => '',
-        'tabs' => '',
-        'subWorks' => array(),
+        'manifestations' => array(),
         'ding_id' => 0,
       ),
       'template' => 'ting_openformat_work',
-    ),
-
-    'ting_openformat_toggle_work' => array(
-      'path' => $path,
-      'variables' => array(
-        'uid' => '',
-        'showinfo' => '',
-        'full_view' => FALSE,
-      ),
-      'template' => 'ting_openformat_toggle_work',
-    ),
-
-    'ting_openformat_work_info' => array(
-      'path' => $path,
-      'variables' => array(
-        'info' => array(),
-      ),
-      'template' => 'ting_openformat_work_info',
     ),
 
     'ting_openformat_collection' => array(
@@ -75,33 +45,6 @@ function ting_openformat_theme() {
         'work' => '',
         'theme_attributes' => array(),
       ),
-      'override preprocess functions' => TRUE,
-    ),
-
-    'ting_openformat_collection_actions' => array(
-      'path' => $path,
-      'variables' => array(
-        'types' => array(),
-      ),
-      'template' => 'ting_openformat_collection_actions',
-    ),
-
-    'ting_openformat_subwork' => array(
-      'path' => $path,
-      'variables' => array(
-        'manifestations' => array(),
-        'id' => 0,
-      ),
-      'template' => 'ting_openformat_subwork',
-    ),
-
-    'ting_openformat_subwork_tabs' => array(
-      'path' => $path,
-      'variables' => array(
-        'subWorks' => array(),
-        'ding_id' => '',
-      ),
-      'template' => 'ting_openformat_subwork_tabs',
     ),
     'ting_openformat_single_work' => array(
       'path' => $path,
@@ -141,6 +84,53 @@ function ting_openformat_theme() {
       ),
       'template' => 'ting_openformat_toggle_more_content',
     ),
-
+    'ting_openformat_toggle_link' => array(
+      'render elements' => 'element',
+      'variables' => array(
+        'icon' => '',
+        'show' => '',
+        'hide' => '',
+        'attributes' => array(),
+      ),
+    ),
   );
+}
+
+/**
+ * Implements theme_HOOK().
+ * Renders a toggle link with an icon, a show text and a hide text.
+ *
+ * @param $variables
+ * @return string
+ */
+function theme_ting_openformat_toggle_link($variables) {
+  $toggle[] = array(
+    '#theme' => 'html_tag',
+    '#tag' => 'span',
+    '#value' => '&nbsp;',
+    '#attributes' =>  array(
+    'class' => array('icon', 'icon-left') + array($variables['icon']))
+  );
+  $toggle[] = array(
+    '#theme' => 'html_tag',
+    '#tag' => 'span',
+    '#value' => $variables['show'],
+    '#attributes' =>  array(
+    'class' => array('toggle-text'))
+  );
+  $toggle[] = array(
+    '#theme' => 'html_tag',
+    '#tag' => 'span',
+    '#value' => $variables['hide'],
+    '#attributes' =>  array(
+    'class' => array('toggle-text', 'toggle-hidden'))
+  );
+  $options = array(
+    'html' => TRUE,
+    'fragment' => 'toggle-link',
+    'external' => TRUE,
+    'attributes' => $variables['attributes'],
+  );
+
+  return l(drupal_render($toggle), '', $options);
 }
