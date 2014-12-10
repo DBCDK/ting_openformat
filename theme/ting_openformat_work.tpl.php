@@ -6,9 +6,13 @@
  */
 ?>
 
-<div class="work"></div>
-<div class="work-tabs">
-  <?php print drupal_render($fields); ?>
+<div class="work-information">
+<div class="work-fields clearfix">
+  <div class="work-cover-wrapper"><?php print drupal_render($fields['ting_cover_work']); ?></div>
+  <div class="show-small-only"><?php print drupal_render($fields['ting_openformat_work_abstract']); ?></div>
+  <div class="work-tabs hide-for-small">
+    <?php print drupal_render($fields); ?>
+  </div>
 </div>
 <div class="work-accordion">
   <dl class="accordion" data-accordion>
@@ -16,7 +20,7 @@
       <?php list($tab, $manifestation, $toggle) = array_values($group); ?>
       <dd class="accordion-navigation">
         <a href="#<?php print $key; ?>">
-          <?php print $tab; ?>
+          <?php print drupal_render($tab); ?>
         </a>
         <div id="<?php print $key; ?>" class="content">
           <?php print drupal_render($manifestation); ?>
