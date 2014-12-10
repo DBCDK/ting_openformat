@@ -5,107 +5,6 @@
  */
 
 /**
- * Creates html view for bibdkWorkEntity
- * @param Manifestation|BibdkWork|BibdkSubwork|BibdkCollection $bibdkWork
- * @param string $view_mode
- * @param null $langcode
- * @return string
- */
-function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = NULL) {
-  if (!is_object($bibdkWork)) {
-    return;
-  }
-  if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->language;
-  }
-
-  $work_fields = array();
-  $work_fields += _prepare_view('bibdkWorkEntity', $bibdkWork, $view_mode, $langcode);
-
-  $subWorks = $bibdkWork->getSubWorks();
-
-  $ordered_subworks = ting_openformat_get_ordered_subworks($subWorks);
-
-  $ding_id = preg_replace('/[^a-zA-Z0-9]+/', '', $bibdkWork->id);
-  $render_tabs = array(
-    '#theme' => 'ting_openformat_subwork_tabs',
-    '#subWorks' => $ordered_subworks,
-    '#ding_id' => $ding_id,
-  );
-  $tabs = drupal_render($render_tabs);
-
-  return array(
-    '#theme' => 'ting_openformat_work',
-    '#fields' => $work_fields,
-    '#subWorks' => $ordered_subworks,
-    '#tabs' => $tabs,
-    '#ding_id' => $ding_id
-  );
-}
-
-/** Get Subworks ordered by type and subtype
- * @param $subWorks
- * @return mixed
- */
-function ting_openformat_get_ordered_subworks($subWorks) {
-  $sub = array();
-  foreach ($subWorks as $id => $subWork) {
-    $type = drupal_strtolower($subWork->getType());
-    $subtype = $subWork->getSubType();
-    $sub[$type][$subtype] = ting_openformat_subwork_view($subWork);
-  }
-
-  foreach ($sub as $type => $value) {
-    foreach ($value as $subtype => $val) {
-      $subtype_id = strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $subtype));
-      // Context is added for subtype to reuse translations.
-      //There is no context on type because this would clear existing translations
-      $trans = array('type' => t($type), 'subtype' => t($subtype, array(), array('context' => 'material_type')));
-
-      $type_id = $trans['type'];
-      $ordered_subworks[$type_id][$subtype_id]['manifest'] = $val;
-      $ordered_subworks[$type_id][$subtype_id]['translation'] = $trans;
-      $ordered_subworks[$type_id][$subtype_id]['manifest']['subtype_actions'] = module_invoke_all('ting_openformat_subwork_materialtype_actions', $ordered_subworks, $type_id, $subtype_id, $val['bibdkSubwork']);
-    }
-  }
-
-  return $ordered_subworks;
-}
-
-/**
- * Creates html view for bibdkSubwork
- * @param BibdkSubwork $bibdkSubwork
- * @param string $view_mode
- * @param null $langcode
- * @return mixed
- */
-function ting_openformat_subwork_view($bibdkSubwork, $view_mode = 'full', $langcode = NULL) {
-  $sub['fields'] = _prepare_view('bibdkSubwork', $bibdkSubwork, $view_mode, $langcode);
-  $sub['bibdkSubwork'] = $bibdkSubwork;
-  foreach ($bibdkSubwork->getManifestations() as $manifestation) {
-    if (get_class($manifestation) == 'Manifestation') {
-      // first element is parsed
-      $manifestation_view = ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL);
-    }
-    else {
-      // other elements are given a container
-      $manifestation_view = array(
-        '#type' => 'container',
-        '#attributes' => array(
-          'class' => 'manifestation-container',
-          'data-id' => $manifestation->id,
-        ),
-      );
-      // container for the remaining
-    }
-    $sub['manifestations'][$manifestation->id] = drupal_render($manifestation_view);
-  }
-
-  return $sub;
-}
-
-
-/**
  * Generates the collection view with an 'Order any edition' button if view is
  * implemented (requires bibdk_reservation module)
  *
@@ -122,14 +21,14 @@ function ting_openformat_collection_view(BibdkCollection $bibdkobject, $full_vie
     '-' => '',
     '_' => ''
   )));
-  $work = _ting_openformat_work_full_view($bibdkobject, $uid, $full_view);
+  $work = _ting_openformat_collection_full_view($bibdkobject, $uid, $full_view);
 
   // Get fields for Collection
   $actions = _prepare_view('bibdkCollection', $bibdkobject, 'full', NULL);
 
   // format part_of
   $part_of = $bibdkobject->getPartOf();
-  $part_of = !empty($part_of) ? t('I: @partof', array('@partof' => $bibdkobject->getPartOf()), array('context' => 'ting_openformat')) : '';
+  $part_of = !empty($part_of) ? t('I: @partof', array('@partof' => $part_of), array('context' => 'ting_openformat')) : '';
 
   // get type icons
   $types_classes = _ting_openformat_get_types_list($bibdkobject);
@@ -139,34 +38,162 @@ function ting_openformat_collection_view(BibdkCollection $bibdkobject, $full_vie
     '#title' => _ting_openformat_brief_display_title($bibdkobject),
     '#part_of' => $part_of,
     '#author' => $bibdkobject->getAuthor(),
-    '#theme_attributes' => array(
-      'class' => array('work', 'element-wrapper'),
-    ),
     '#work' => $work,
     '#uid' => $uid,
     '#actions' => (!empty($actions)) ? $actions : array(),
     '#types' => $types_classes,
+    '#theme_attributes' => array(
+      'class' => array('work'),
+      'id' => $uid,
+    ),
   );
 }
 
-
-function _ting_openformat_work_full_view(BibdkCollection $bibdkobject, $uid, $full_view = true) {
+/**
+ * Retrieve render array for work, depending on full/short view
+ *
+ * @param BibdkCollection $bibdkobject
+ * @param $uid
+ * @param bool $full_view
+ * @return array|mixed|string
+ */
+function _ting_openformat_collection_full_view(BibdkCollection $bibdkobject, $uid, $full_view = true) {
   $trackId = ting_openformat_set_tracking_id();
 
-
-  //Setting parameters based on a full or short view was requeseted
+  //Setting parameters based on a full or short view was requested
   if ($full_view) {
     $work = ting_openformat_load_single_full_work($bibdkobject, $bibdkobject->getCollectionIds(), $uid);
   }
   else {
     $work = drupal_get_form('ting_openformat_show_info_get_form', $bibdkobject, $uid, $trackId);
   }
-
   return $work;
 }
 
+
+/**
+ * Creates html view for bibdkWorkEntity
+ *
+ * @param Manifestation|BibdkWork|BibdkSubwork|BibdkCollection $bibdkWork
+ * @param string $view_mode
+ * @param null $langcode
+ * @return string
+ */
+function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = NULL) {
+  if (!is_object($bibdkWork)) {
+    return;
+  }
+  if (!isset($langcode)) {
+    $langcode = $GLOBALS['language_content']->language;
+  }
+
+  $work_fields = _prepare_view('bibdkWorkEntity', $bibdkWork, $view_mode, $langcode);
+  $manifestations = ting_openformat_get_ordered_manifestations($bibdkWork->getManifestations());
+
+  return array(
+    '#theme' => 'ting_openformat_work',
+    '#fields' => $work_fields,
+    '#manifestations' => $manifestations,
+  );
+}
+
+/** Get Subworks ordered by type and subtype
+ *
+ * @param $subWorks
+ * @return mixed
+ */
+function ting_openformat_get_ordered_manifestations($manifestations) {
+  $ordered_list = array();
+  /* @var Manifestation $manifestation */
+  foreach ($manifestations as $manifestation) {
+    $key = drupal_clean_css_identifier($manifestation->getSubType());
+    $ordered_list[$key]['tab'] = array(
+      '#theme' => 'bibdk_icon',
+      '#text' => $manifestation->getSubType(),
+      '#icon' => $manifestation->getType(),
+    );
+    $ordered_list[$key]['manifestations'][] = ting_openformat_subwork_view($manifestation, $view_mode = 'full', $langcode = NULL);
+  }
+  foreach ($ordered_list as $key => $value) {
+    $toggle = array();
+    $count = count($value['manifestations']);
+    if ($count > 1) {
+      $toggle = array(
+        '#theme' => 'ting_openformat_toggle_link',
+        '#icon' => 'icon-blue-down',
+        '#show' => t("show all (@count)", array('@count' => $count)),
+        '#hide' => t('hide'),
+        '#attributes' => array(
+          'class' => 'manifestation-toggle-link'
+        ),
+      );
+    }
+    $ordered_list[$key]['toggle'] = $toggle;
+  }
+  return $ordered_list;
+}
+
+/**
+ * Creates html view for bibdkSubwork
+ *
+ * @param BibdkSubwork $bibdkSubwork
+ * @param string $view_mode
+ * @param null $langcode
+ * @return mixed
+ */
+function ting_openformat_subwork_view($manifestation, $view_mode = 'full', $langcode = NULL) {
+  if (get_class($manifestation) == 'Manifestation') {
+    // first element is parsed
+    $manifestation_view = ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL);
+  }
+  else {
+    // other elements are given a container
+    $manifestation_view = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => 'manifestation-container',
+        'data-id' => $manifestation->id,
+      ),
+    );
+    // container for the remaining
+  }
+  return $manifestation_view;
+}
+
+
+/**
+ * @param $manifestation
+ * @param string $view_mode
+ * @param null $langcode
+ * @return array
+ */
+function ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL) {
+  if (!isset($langcode)) {
+    $langcode = $GLOBALS['language_content']->language;
+  }
+
+  $fields = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
+
+  $actions = ting_openformat_get_actions('bibdkManifestation', $manifestation, $view_mode, $langcode);
+
+  $build = array(
+    '#theme' => 'ting_openformat_manifestation',
+    '#view_mode' => $view_mode,
+    '#language' => $langcode,
+    '#fields' => $fields,
+    '#actions' => $actions,
+  );
+
+  return $build;
+}
+
+/**
+ * Check if user has loaded full or short view
+ *
+ * @return bool
+ */
 function _ting_openformat_init_full_view() {
-  if(bibdk_usersettings_user_settings_get('ting_openformat_fullview_usersetting', FALSE)){
+  if (bibdk_usersettings_user_settings_get('ting_openformat_fullview_usersetting', FALSE)) {
     $_SESSION['search_settings']['full_view'] = TRUE;
   }
   if (isset($_SESSION['search_settings']['full_view']) && $_SESSION['search_settings']['full_view'] == TRUE) {
@@ -201,27 +228,19 @@ function _ting_openformat_brief_display_title(BibdkCollection $collection) {
  * @return String html
  */
 function _ting_openformat_get_types_list($bibdkobject) {
-  $types = $bibdkobject->getWorkTypes();
-  $items = array();
-  foreach ($types as $type => $ids) {
-    $items[$type] = '<span class="materialtype ' . $type . '-icon-small " title="' . t($type) . '">' . t($type) . '&nbsp;</span>';
-  }
-
+  $list = $bibdkobject->getWorkTypes();
   if ($bibdkobject->isOnline()) {
-    $items['net-icon-small'] = '<span class="materialtype online-icon-small" title="' . t('online') . '">' . t('online') . '&nbsp;</span>';
+    $list['online'] = 'online';
   }
 
-  $list = array(
+    return array(
     '#type' => 'ol',
     '#theme' => 'item_list',
-    '#items' => $items,
+    '#items' => $list,
     '#attributes' => array(
       'class' => 'material-types-list',
     ),
   );
-
-
-  return drupal_render($list);
 }
 
 /**
@@ -236,6 +255,12 @@ function _ting_openformat_get_types_list($bibdkobject) {
  */
 function ting_openformat_show_info_get_form($form, $form_state, $bibdkObject, $uid, $trackId = 0) {
   $all_ids_in_collection = $bibdkObject->getCollectionIds();
+  $form = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'id' => array('ajax_placeholder_' . $uid),
+    ),
+  );
   $form['info'] = array(
     '#trackId' => $trackId,
     '#type' => 'button',
@@ -246,7 +271,10 @@ function ting_openformat_show_info_get_form($form, $form_state, $bibdkObject, $u
     '#id' => 'work_' . $uid,
     '#prefix' => "<span id='ajax-$uid'>",
     '#suffix' => "</span>",
-    '#attributes' => array('class' => array('visuallyhidden')),
+    '#attributes' => array(
+      'class' => array('visuallyhidden'),
+      'data-work-load' => TRUE
+    ),
     '#ajax' => array(
       'callback' => 'ting_openformat_show_info_ajax_callback',
       'wrapper' => 'ajax_placeholder_' . $uid,
@@ -274,7 +302,7 @@ function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
 
   $view = ting_openformat_load_single_full_work($collection, $ids, $uid, $tracking_id);
 
-  $view = theme('status_messages') . $view;
+  $view = theme('status_messages') . drupal_render($view);
 
   $commands = array();
   $commands[] = ajax_command_remove("#ajax-$uid");
@@ -311,7 +339,7 @@ function ting_openformat_load_single_full_work($collection, $ids, $uid, $trackin
        * from openSearch is not rendered correctly and we send a message to the
        * user that the object could not be shown, and log it to the watchdog
        * */
-      if (!isset($bibdkWork->manifestations[$briefDisplay->id])){
+      if (!isset($bibdkWork->manifestations[$briefDisplay->id])) {
 
         drupal_set_message(t('This record could not be generated properly. A message have been send to the site administrators', array(), array('context' => 'ting_openformat')), 'warning');
         watchdog('ting_openformat', 'ERROR manifestation with id @id failed generate bibdkWorkDisplay', array('@id' => $briefDisplay->id), WATCHDOG_ERROR);
@@ -329,35 +357,9 @@ function ting_openformat_load_single_full_work($collection, $ids, $uid, $trackin
   return ting_openformat_work_view($bibdkWork);
 }
 
-
-/**
- * @param $manifestation
- * @param string $view_mode
- * @param null $langcode
- * @return array
- */
-function ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL) {
-  if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->language;
-  }
-
-  $fields = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
-
-  $actions = ting_openformat_get_actions('bibdkManifestation', $manifestation, $view_mode, $langcode);
-
-  $build = array(
-    '#theme' => 'ting_openformat_manifestation',
-    '#view_mode' => $view_mode,
-    '#language' => $langcode,
-    '#fields' => $fields,
-    '#actions' => $actions,
-  );
-
-  return $build;
-}
-
 /**
  * Invokes hook_ting_openformat_actions().
+ *
  * @param $type
  * @param $entity
  * @param string $view_mode
@@ -377,6 +379,7 @@ function ting_openformat_get_actions($type, $entity, $view_mode = 'full', $langc
 
 /**
  * attach entity fields to a single entity. Return a renderable array
+ *
  * @param $entity_type
  * @param Manifestation|BibdkWork|BibdkSubwork|BibdkCollection $object
  * @param $view_mode
