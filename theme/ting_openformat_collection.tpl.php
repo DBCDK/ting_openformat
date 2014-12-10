@@ -15,40 +15,29 @@
  */
 ?>
 <div <?php echo drupal_attributes($theme_attributes); ?>>
-
-  <div class="element">
-  <div class="element-section">
     <div class="work-header clearfix">
 
-      <div class="element-title">
+      <div class="work-title" data-work-toggle="<?php print $uid; ?>">
         <h2><?php print $title; ?></h2>
-
-        <h3><?php print $author; ?></h3>
-        <span><?php print $part_of; ?></span>
+        <div class="title-meta">
+          <h3><?php print $author; ?></h3>
+          <span><?php print $part_of; ?></span>
+        </div>
       </div>
 
-      <div class="element-types-actions">
-        <div class="element-types">
-          <?php print $types; ?>
+      <div class="work-types-actions">
+        <div class="work-types">
+          <?php print drupal_render($types); ?>
         </div>
-        <div class="element-actions">
+        <div class="work-actions">
           <?php print drupal_render($actions); ?>
         </div>
       </div>
       <!-- element-types-actions -->
     </div>
     <!-- work-header -->
-    <div class="work-toggle" data-work-toggle>
-      <a href="#work_<?php print $uid; ?>" id="selid-<?php print $uid; ?>">
-      <span class="icon icon-left icon-blue-down">&nbsp;</span>
-      <span class="work-toggle-text"><?php print t('More info'); ?></span>
-      <span class="work-toggle-text work-hidden"><?php print t('Less info'); ?></span>
-      </a>
-    </div><!-- work-toggle -->
-  </div><!-- element-section -->
-    <div class="work-body work-body-has-cover element-section work-hidden">
+    <div class="work-body work-hidden">
       <?php print drupal_render($work); ?>
     </div>
     <!-- work-body -->
-  </div>
 </div>
