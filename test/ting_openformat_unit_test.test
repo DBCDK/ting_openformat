@@ -78,6 +78,7 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
   }
 
 
+
   function testShowLocalizationLink(){
     $path = drupal_get_path('module', 'ting_openformat');
     $file = $path.'/test/mockup/no_localizations.json';
@@ -210,7 +211,7 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
 
     foreach($tests as $string => $expected_result) {
       $result = ting_openformat_string_to_cql($string);
-      $this->assertEqual($result, $expected_result);
+      $this->assertEqual($result, $expected_result, $string . ' -> converted to cql: ' . $result);
     }
 
   }
