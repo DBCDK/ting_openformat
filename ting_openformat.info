@@ -13,6 +13,7 @@ files[] = ting_openformat.field_definitions.inc
 files[] = ting_openformat.admin.inc
 files[] = ting_openformat.controllers.inc
 files[] = ting_openformat.entities.inc
+files[] = ting_openformat.facetbrowser.inc
 
 files[] = ting_openformat_feeds.inc
 
