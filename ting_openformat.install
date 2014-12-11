@@ -184,7 +184,6 @@ function ting_openformat_update_7030() {
 }
 
 /**
- * Implements hook_update_N;
  * Update all field information
  * */
 function ting_openformat_update_7031() {
@@ -194,5 +193,12 @@ function ting_openformat_update_7031() {
   t('debate_discusses', array(), array('context' => 'ting_openformat'));
   t('debate_continued_in', array(), array('context' => 'ting_openformat'));
   t('debate_discussed_in', array(), array('context' => 'ting_openformat'));
+}
+
+/**
+ * Update all field information
+ * */
+function ting_openformat_update_7032() {
+  ding_entity_modules_enabled(array('ting_openformat'));
 }
 
