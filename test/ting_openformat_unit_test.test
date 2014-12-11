@@ -103,6 +103,9 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
   public function testBibdkCollection() {
 
     $manifestation = new stdClass();
+    foreach(array('acessType', 'fedoraPid', 'identifier', 'language', 'title', 'dependentTitle', 'type', 'workType') as $attr) {
+      $manifestation->$attr = new stdClass();
+    }
     $manifestation->acessType->{'$'} = 'physical';
     $manifestation->fedoraPid->{'$'} = '870970-basis:27295150';
     $manifestation->identifier->{'$'} = '870970-basis:27295150';
