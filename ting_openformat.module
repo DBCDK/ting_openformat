@@ -335,6 +335,19 @@ function _ting_openformat_get_bibdk_work_entity($openformat) {
 }
 
 /**
+ * Get a single manifestation from a pid
+ *
+ * @param $pid
+ * @return Manifestation
+ */
+function ting_openformat_get_single_manifestation($pid) {
+  /* @var $work BibdkWork */
+  $work = reset(ting_openformat_get_single($pid));
+  $manifestation = reset($work->getManifestations());
+  return $manifestation;
+}
+
+/**
  * @param $id
  * @return null|string
  */
