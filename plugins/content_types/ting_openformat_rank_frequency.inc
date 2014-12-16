@@ -34,8 +34,8 @@ function ting_openformat_rank_frequency($subtype, $conf, $args, $context) {
 
   if ($result) {
     if ($sort == 'rank_frequency') {
-      $rank_method = $result->sortUsed;
-      $block->content = t('You have used rank_frequency so you might be looking for ' . $rank_method, array(), array('context' => 'ting_openformat'));
+      $rank_method = t($result->sortUsed, array(), array('content' => 'ting_openformat'));
+      $block->content = t('You have used rank_frequency so you might be looking for @rank_method. Otherwise select another option in the dropdown above.', array('@rank_method' => $rank_method), array('context' => 'ting_openformat'));
     }
   }
 
