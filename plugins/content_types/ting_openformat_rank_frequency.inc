@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * Plugin definition of rank_frequency explanation box
+ */
+$plugin = array(
+  'title' => t('Default rank frequency', array(), array('context' => 'ting_openformat')), 
+  'content_types' => array('ting_openformat_rank_frequency'),
+  'admin info' => 'ting_openformat_rank_frequency_admin_info',
+  'single' => TRUE,
+  'render callback' => 'ting_openformat_rank_frequency',
+  'category' => 'Openformat',
+  'render last' => TRUE,
+);
+
+/**
+ * 'admin info' callback for panel pane.
+ */
+function ting_openformat_rank_frequency_admin_info($subtype, $conf, $contexts = NULL) {
+  $block = new stdClass();
+  $block->title = t('Openformat Search - \'rank frequency\' box', array(), array('context' => 'ting_openformat'));
+  $block->content = t('', array(), array('context' => 'ting_openformat'));
+
+  return $block;
+}
+
+/**
+ * Content for the rank_frequency explanation box
+ */
+function ting_openformat_rank_frequency($subtype, $conf, $args, $context) {
+  $sort = $_GET['sort'];
+  $result = drupal_static('ting_search_results');
+  $block = new stdClass();
+
+  if ($result) {
+    if ($sort == 'rank_frequency') {
+      $rank_method = $result->sortUsed;
+      $block->content = t('You have used rank_frequency so you might be looking for ' . $rank_method, array(), array('context' => 'ting_openformat'));
+    }
+  }
+
+  return $block;
+}
