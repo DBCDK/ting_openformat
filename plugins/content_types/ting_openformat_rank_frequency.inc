@@ -4,7 +4,7 @@
  * Plugin definition of rank_frequency explanation box
  */
 $plugin = array(
-  'title' => t('Default rank frequency', array(), array('context' => 'ting_openformat')), 
+  'title' => t('Openformat Search - \'rank frequency\' explanation box', array(), array('context' => 'ting_openformat')),
   'content_types' => array('ting_openformat_rank_frequency'),
   'admin info' => 'ting_openformat_rank_frequency_admin_info',
   'single' => TRUE,
@@ -17,11 +17,6 @@ $plugin = array(
  * 'admin info' callback for panel pane.
  */
 function ting_openformat_rank_frequency_admin_info($subtype, $conf, $contexts = NULL) {
-  $block = new stdClass();
-  $block->title = t('Openformat Search - \'rank frequency\' box', array(), array('context' => 'ting_openformat'));
-  $block->content = t('', array(), array('context' => 'ting_openformat'));
-
-  return $block;
 }
 
 /**
