@@ -248,6 +248,24 @@ function ting_openformat_default_page_manager_handlers() {
   $pane->locks = array();
   $display->content['new-9'] = $pane;
   $display->panels['works_controls_top'][3] = 'new-9';
+  $pane = new stdClass();
+  $pane->pid = 'new-10';
+  $pane->panel = 'works_controls_top';
+  $pane->type = 'ting_openformat_rank_frequency';
+  $pane->subtype = 'ting_openformat_rank_frequency';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array();
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 4;
+  $pane->locks = array();
+  $display->content['new-10'] = $pane;
+  $display->panels['works_controls_top'][4] = 'new-10';
   $display->hide_title = PANELS_TITLE_FIXED;
   $display->title_pane = '0';
   $handler->conf['display'] = $display;
