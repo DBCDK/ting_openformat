@@ -104,6 +104,12 @@ function ting_openformat_theme() {
  * @return string
  */
 function theme_ting_openformat_toggle_link($variables) {
+  // Set the default theme class
+  if(!isset($variables['attributes']['class'])) {
+    $variables['attributes']['class'] = array();
+  }
+  $variables['attributes']['class'][] = 'ting-openformat-toggle-link';
+
   $toggle[] = array(
     '#theme' => 'html_tag',
     '#tag' => 'span',
@@ -123,13 +129,13 @@ function theme_ting_openformat_toggle_link($variables) {
     '#tag' => 'span',
     '#value' => $variables['hide'],
     '#attributes' =>  array(
-    'class' => array('toggle-text', 'toggle-hidden'))
+    'class' => array('toggle-text', 'toggle-hide'))
   );
   $options = array(
     'html' => TRUE,
     'fragment' => 'toggle-link',
     'external' => TRUE,
-    'attributes' => $variables['attributes'],
+    'attributes' => $variables['attributes'] + array('data-toggle-link' => TRUE),
   );
 
   return l(drupal_render($toggle), '', $options);
