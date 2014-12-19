@@ -15,9 +15,9 @@
  */
 ?>
 <div <?php echo drupal_attributes($theme_attributes); ?>>
-    <div class="work-header clearfix">
+    <div class="work-header clearfix" data-work-toggle="<?php print $uid; ?>">
 
-      <div class="work-title" data-work-toggle="<?php print $uid; ?>">
+      <div class="work-title">
         <h2><?php print $title; ?></h2>
         <div class="title-meta">
           <h3><?php print $author; ?></h3>

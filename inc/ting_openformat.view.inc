@@ -43,7 +43,7 @@ function ting_openformat_collection_view(BibdkCollection $bibdkobject, $full_vie
     '#actions' => (!empty($actions)) ? $actions : array(),
     '#types' => $types_classes,
     '#theme_attributes' => array(
-      'class' => array('work'),
+      'class' => array('work', 'mobile-page'),
       'id' => $uid,
     ),
   );
@@ -88,12 +88,15 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   }
 
   $work_fields = _prepare_view('bibdkWorkEntity', $bibdkWork, $view_mode, $langcode);
-  $manifestations = ting_openformat_get_ordered_manifestations($bibdkWork->getManifestations());
+  $cover = drupal_render($work_fields['ting_cover_work']);
+  $manifestations = ting_openformat_get_ordered_manifestations($bibdkWork->getManifestations(), $bibdkWork->getId());
 
   return array(
     '#theme' => 'ting_openformat_work',
     '#fields' => $work_fields,
+    '#cover' => $cover,
     '#manifestations' => $manifestations,
+    '#id' => drupal_clean_css_identifier($bibdkWork->getId()),
   );
 }
 
@@ -102,11 +105,11 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
  * @param $subWorks
  * @return mixed
  */
-function ting_openformat_get_ordered_manifestations($manifestations) {
+function ting_openformat_get_ordered_manifestations($manifestations, $work_id) {
   $ordered_list = array();
   /* @var Manifestation $manifestation */
   foreach ($manifestations as $manifestation) {
-    $key = drupal_clean_css_identifier($manifestation->getSubType());
+    $key = drupal_clean_css_identifier($manifestation->getSubType() . '-' . $work_id);
     $ordered_list[$key]['tab'] = array(
       '#theme' => 'bibdk_icon',
       '#text' => $manifestation->getSubType(),
@@ -124,11 +127,12 @@ function ting_openformat_get_ordered_manifestations($manifestations) {
         '#show' => t("show all (@count)", array('@count' => $count)),
         '#hide' => t('hide'),
         '#attributes' => array(
-          'class' => 'manifestation-toggle-link'
+          'class' => array('manifestation-toggle-link')
         ),
       );
     }
     $ordered_list[$key]['toggle'] = $toggle;
+    $ordered_list[$key]['subwork_actions'] = module_invoke_all('ting_openformat_subwork_materialtype_actions', $manifestations, $key);
   }
   return $ordered_list;
 }
@@ -176,15 +180,13 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
 
   $actions = ting_openformat_get_actions('bibdkManifestation', $manifestation, $view_mode, $langcode);
 
-  $build = array(
+  return array(
     '#theme' => 'ting_openformat_manifestation',
     '#view_mode' => $view_mode,
     '#language' => $langcode,
     '#fields' => $fields,
     '#actions' => $actions,
   );
-
-  return $build;
 }
 
 /**
@@ -392,4 +394,33 @@ function _prepare_view($entity_type, $object, $view_mode, $langcode) {
   $fields = field_attach_view($entity_type, $object, $view_mode, $langcode);
 
   return $fields;
+}
+
+function ting_openformat_worktabs_items(BibdkWork $entity) {
+  $elements = array();
+  $elements['abstract'] = array(
+    '#theme' => 'html_tag',
+    '#tag' => 'div',
+    '#value' => _ting_openformat_parse_element($entity->getAbstract()),
+    '#attributes' => array(
+      'class' => 'work-abstract',
+    ),
+  );
+
+  $elements['subject'] = array(
+    '#theme' => 'html_tag',
+    '#tag' => 'div',
+    '#value' => _ting_openformat_parse_element($entity->getSubjects()),
+    '#attributes' => array(
+      'class' => 'work-subject',
+    ),
+  );
+
+  $tabs = array();
+  $tabs['basic-information']['work-information'] = array(
+    '#content' => drupal_render($elements),
+    'weight' => -1,
+  );
+
+  return $tabs;
 }
