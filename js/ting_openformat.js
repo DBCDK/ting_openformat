@@ -93,7 +93,7 @@
       if ($(this).attr('id') === 'ting-openformat-full-view-button-expanded'){
         Drupal.settings.ting_openformat.full_view = true;
         if (Drupal.settings.ting_openformat.full_view_all_loaded){
-          $('.work-toggle-element').trigger('show-work');
+          $('.work').toggleClass('is-toggled');
           TingOpenformat.setFullViewPref('1');
         }
         else if (!Drupal.settings.ting_openformat.isLoadingFullView){
@@ -111,7 +111,7 @@
       }
       else {
         Drupal.settings.ting_openformat.full_view = false;
-        $('.work-toggle-element').trigger('hide-work');
+        $('.work').toggleClass('is-toggled');
         TingOpenformat.setFullViewPref('0');
       }
     });
