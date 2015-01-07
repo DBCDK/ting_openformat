@@ -20,7 +20,7 @@
 </div>
 <div class="work-accordion">
   <dl class="accordion" data-accordion>
-    <?php foreach ($manifestations as $key => $group) : ?>
+    <?php foreach($manifestations as $key => $group) : ?>
       <?php list($tab, $manifestation, $toggle, $subwork_actions) = array_values($group); ?>
       <dd class="accordion-navigation">
         <a href="#<?php print $key; ?>">
@@ -33,9 +33,11 @@
           <div class="manifestations">
             <?php print drupal_render($manifestation); ?>
           </div>
+          <?php if(!empty($toggle)) : ?>
           <div class="manifestation-toggle" data-manifestation-toggle="<?php print $key; ?>">
             <?php print drupal_render($toggle); ?>
           </div>
+        <?php endif; ?>
         </div>
       </dd>
     <?php endforeach; ?>
