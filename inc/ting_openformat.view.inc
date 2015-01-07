@@ -157,6 +157,7 @@ function ting_openformat_subwork_view($manifestation, $view_mode = 'full', $lang
       '#attributes' => array(
         'class' => 'manifestation-container',
         'data-id' => $manifestation->id,
+        'id' => drupal_clean_css_identifier($manifestation->id),
       ),
     );
     // container for the remaining
