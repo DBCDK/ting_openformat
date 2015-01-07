@@ -8,6 +8,7 @@
  * Generates the collection view with an 'Order any edition' button if view is
  * implemented (requires bibdk_reservation module)
  *
+ * @todo move documentation
  * If $_SESSION['search_settings']['full_view'] is TRUE the generated will be a
  * full view with all information visible.
  *
@@ -33,6 +34,13 @@ function ting_openformat_collection_view(BibdkCollection $bibdkobject, $full_vie
   // get type icons
   $types_classes = _ting_openformat_get_types_list($bibdkobject);
 
+  // Set classes for collection object
+  $collection_classes = array('work', 'mobile-page');
+  if($full_view) {
+    $collection_classes[] = 'is-toggled';
+  }
+
+
   return array(
     '#theme' => 'ting_openformat_collection',
     '#title' => _ting_openformat_brief_display_title($bibdkobject),
@@ -43,7 +51,7 @@ function ting_openformat_collection_view(BibdkCollection $bibdkobject, $full_vie
     '#actions' => (!empty($actions)) ? $actions : array(),
     '#types' => $types_classes,
     '#theme_attributes' => array(
-      'class' => array('work', 'mobile-page'),
+      'class' => $collection_classes,
       'id' => $uid,
     ),
   );
@@ -397,31 +405,47 @@ function _prepare_view($entity_type, $object, $view_mode, $langcode) {
   return $fields;
 }
 
+
+/**
+ * Implements hook_worktabs_items
+ *
+ * Add description and subjects to a work-information tab
+ *
+ * @param BibdkWork $entity
+ * @return array
+ */
 function ting_openformat_worktabs_items(BibdkWork $entity) {
   $elements = array();
-  $elements['abstract'] = array(
-    '#theme' => 'html_tag',
-    '#tag' => 'div',
-    '#value' => _ting_openformat_parse_element($entity->getAbstract()),
-    '#attributes' => array(
-      'class' => 'work-abstract',
-    ),
-  );
-
-  $elements['subject'] = array(
-    '#theme' => 'html_tag',
-    '#tag' => 'div',
-    '#value' => _ting_openformat_parse_element($entity->getSubjects()),
-    '#attributes' => array(
-      'class' => 'work-subject',
-    ),
-  );
-
   $tabs = array();
-  $tabs['basic-information']['work-information'] = array(
-    '#content' => drupal_render($elements),
-    'weight' => -1,
-  );
+
+  if($abstract = _ting_openformat_parse_element($entity->getAbstract())) {
+    $elements['abstract'] = array(
+      '#theme' => 'html_tag',
+      '#tag' => 'div',
+      '#value' => $abstract,
+      '#attributes' => array(
+        'class' => 'work-abstract',
+      ),
+    );
+  }
+
+  if($subjects = _ting_openformat_parse_element($entity->getSubjects())) {
+    $elements['subject'] = array(
+      '#theme' => 'html_tag',
+      '#tag' => 'div',
+      '#value' => $subjects,
+      '#attributes' => array(
+        'class' => 'work-subject',
+      ),
+    );
+  }
+
+  if(!empty($elements)) {
+    $tabs['basic-information']['work-information'] = array(
+      '#content' => drupal_render($elements),
+      'weight' => -1,
+    );
+  }
 
   return $tabs;
 }
