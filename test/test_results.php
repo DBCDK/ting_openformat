@@ -272,6 +272,19 @@ function ting_openformat_test_results() {
       '_ting_openformat_default_field_view_content' => NULL,
       '_ting_openformat_parse_element' => '',
     ),
+    'bibdk_mani_acquisition_info' =>
+    array(
+      'method' => 'getAcquisitionInformation',
+      '_ting_openformat_default_field_view_content' =>
+      array(
+        'acquisitionInformation' => array(
+          0 => array(
+            'acquisitionTerms' => 'kun for medlemmer'
+          )
+        )
+      ),
+      '_ting_openformat_parse_element' => 'kun for medlemmer',
+    ),
     'bibdk_mani_alt_title' =>
     array(
       'method' => 'getAlternativeTitle',

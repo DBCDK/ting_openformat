@@ -50,15 +50,15 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
     $params = array_merge($params, $variables);
   }
 
-  // selected facets from facetbrowser (in query)
-  if (isset($conditions['facets']) && $conditions['facets'] != NULL) {
-    _ting_openformat_set_facets($params['query'], $conditions['facets']);
-    unset($conditions['facets']);
-  }
-
   if (isset($conditions['qe']) && $conditions['qe'] != NULL) {
     _ting_openformat_set_query_extended($params['query'], $conditions['qe']);
     unset($conditions['qe']);
+  }
+
+  // selected facets from facetbrowser (in query). Do last because we may use a NOT operator
+  if (isset($conditions['facets']) && $conditions['facets'] != NULL) {
+    _ting_openformat_set_facets($params['query'], $conditions['facets']);
+    unset($conditions['facets']);
   }
 
   if (!empty($conditions['qe'])) {
@@ -95,7 +95,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   }
 
   // set facets for result .. if not by ajax
-  $by_ajax = variable_get('ding_facetbrowser_by_ajax', FALSE);
+  $by_ajax = variable_get('bibdk_facetbrowser_by_ajax', FALSE);
   if (!$by_ajax) {
     _ting_openformat_facet_cache($client, $result, $params);
   }
@@ -231,58 +231,6 @@ function _ting_openformat_set_search_result($bibdkobject) {
   return $result;
 }
 
-/**
- * Set facet for search result. Look in cache if not found do a request and set cache
- * Returns nothing, but sets facet for $result-object given as parameter
- *
- * @param $client - search_client
- * @param $params - parameters for searchrequest
- * @param $result - search result
- * */
-function _ting_openformat_facet_cache($client, $result, $params) {
-  // check facets; get from cache if set - else do zero search to get facets
-  $local_cache_key = 'facets-' . $result->cacheKey;
-  if (!$facets = cache_get($local_cache_key)) {
-    // default facets
-    if (module_exists('ding_facetbrowser')) {
-      $facets = _ting_openformat_set_default_facets();
-    }
-    if (isset($facets)) {
-      $params['facets'] = $facets;
-      $params['numFacets'] = variable_get('ding_facetbrowser_number_requested', 25);
-    }
-
-    // do a zero search to get the facets
-    $params['numResults'] = 0;
-    // use DKABM .. it is fastest
-    $params['objectFormat'] = 'DKABM';
-
-    //$facet_result = $client->do_search($params);
-    $facet_result = $client->do_request('search', $params);
-    if (isset($facet_result->facets)) {
-      $result->facets = $facet_result->facets;
-      cache_set($local_cache_key, $facet_result->facets, 'cache', CACHE_TEMPORARY);
-      drupal_static('ting_search_results', $result);
-    }
-  }
-  // facets was found in cache
-  else {
-    $result->facets = cache_get($local_cache_key)->data;
-    drupal_static('ting_search_results', $result);
-  }
-}
-
-/** \brief get facets from variables
- * return array (facets)
- * */
-function _ting_openformat_set_default_facets() {
-  $facets = array();
-  foreach (variable_get('ding_facetbrowser_facets', array()) as $facet) {
-    $facets[] = $facet['name'];
-  }
-
-  return $facets;
-}
 
 /**
  * Get variables and set corresponding search parameters
@@ -319,26 +267,6 @@ function _ting_openformat_search_get_variables() {
   return $params;
 }
 
-/**
- * Set facets for request
- * */
-function _ting_openformat_set_facets(&$query, $facets) {
-  if (isset($facets)) {
-    $op = CQL_AND;
-    foreach ($facets as $facet) {
-      $facet = explode(':', $facet, 2);
-      if ($facet[0]) {
-        $facetArray[] = $facet[0] . '="' . rawurldecode($facet[1]) . '"';
-      }
-    }
-    if (!empty($query)) {
-      $query .= $op . implode($op, $facetArray);
-    }
-    else {
-      $query .= implode($op, $facetArray);
-    }
-  }
-}
 
 /** \brief Set facets for extended query
  *

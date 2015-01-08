@@ -222,12 +222,12 @@ class TingOpenformatMethodsUnittest extends DrupalUnitTestCase {
     $this->assertIdentical($list, $expected, 'Iterating over array');
   }
 
-  public function errorHandler($errorCode, $errorString, $errorFile, $errorLine, $errorContext) {
+  public function errorHandler($errorCode, $errorString, $errorFile = NULL, $errorLine = NULL) {
     if ($errorCode == E_NOTICE && $errorString == 'Undefined property: stdClass::$$') {
       throw new Exception();
     }
     else {
-      return parent::errorHandler($errorCode, $errorString, $errorFile, $errorLine, $errorContext);
+      return parent::errorHandler($errorCode, $errorString, $errorFile, $errorLine);
     }
   }
 }
