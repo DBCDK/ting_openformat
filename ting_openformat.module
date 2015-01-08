@@ -8,13 +8,13 @@ define('CQL_OR', ' or ');
 define('CQL_NOT', ' not ');
 
 // load search info and hooks
-module_load_include('inc', 'ting_openformat', 'ting_openformat.search');
-module_load_include('inc', 'ting_openformat', 'ting_openformat.entities');
-module_load_include('inc', 'ting_openformat', 'ting_openformat.field_definitions');
-module_load_include('inc', 'ting_openformat', 'ting_openformat.field');
-module_load_include('inc', 'ting_openformat', 'ting_openformat_feeds');
-module_load_include('inc', 'ting_openformat', 'ting_openformat.facetbrowser');
-include_once 'inc/ting_openformat.view.inc';
+include_once 'ting_openformat.search.inc';
+include_once 'ting_openformat.entities.inc';
+include_once 'ting_openformat.field_definitions.inc';
+include_once 'ting_openformat.field.inc';
+include_once 'ting_openformat_feeds.inc';
+include_once 'ting_openformat.facetbrowser.inc';
+include_once 'ting_openformat.view.inc';
 
 function ting_openformat_menu() {
   $items = array();
