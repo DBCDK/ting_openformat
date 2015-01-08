@@ -9,7 +9,6 @@ define('CQL_NOT', ' not ');
 
 // load search info and hooks
 include_once 'ting_openformat.search.inc';
-include_once 'ting_openformat.entities.inc';
 include_once 'ting_openformat.field_definitions.inc';
 include_once 'ting_openformat.field.inc';
 include_once 'ting_openformat_feeds.inc';
