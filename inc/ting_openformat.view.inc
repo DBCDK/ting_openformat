@@ -8,10 +8,6 @@
  * Generates the collection view with an 'Order any edition' button if view is
  * implemented (requires bibdk_reservation module)
  *
- * @todo move documentation
- * If $_SESSION['search_settings']['full_view'] is TRUE the generated will be a
- * full view with all information visible.
- *
  * @param BibdkCollection $bibdkobject
  * @return string
  */
@@ -39,7 +35,6 @@ function ting_openformat_collection_view(BibdkCollection $bibdkobject, $full_vie
   if($full_view) {
     $collection_classes[] = 'is-toggled';
   }
-
 
   return array(
     '#theme' => 'ting_openformat_collection',
@@ -78,14 +73,59 @@ function _ting_openformat_collection_full_view(BibdkCollection $bibdkobject, $ui
   return $work;
 }
 
+/**
+ * @param BibdkCollection $collection
+ * @param $ids
+ * @param $uid
+ * @param int $tracking_id
+ * @return string
+ */
+function ting_openformat_load_single_full_work($collection, $ids, $uid, $tracking_id = 0) {
+  module_invoke_all('show_manifestation_info_prerender', $ids, $uid);
+
+  foreach ($collection->manifestations as $manifestation) {
+    $briefDisplay = new BibdkBriefDisplay($manifestation);
+    if (!isset($bibdkWork)) {
+      if ($bibdkWork = $collection->getWorkOne()) {
+        $bibdkWork = _ting_openformat_get_bibdk_work_entity(array($bibdkWork));
+      }
+      else {
+        $bibdkWork = ting_openformat_get_manifestations($briefDisplay->id, array('trackingId' => $tracking_id));
+      }
+
+      $bibdkWork = current($bibdkWork);
+
+      /*
+       * If manifestation with $briefDisplay->id does not exists, the result
+       * from openSearch is not rendered correctly and we send a message to the
+       * user that the object could not be shown, and log it to the watchdog
+       * */
+      if (!isset($bibdkWork->manifestations[$briefDisplay->id])) {
+
+        drupal_set_message(t('This record could not be generated properly. A message have been send to the site administrators', array(), array('context' => 'ting_openformat')), 'warning');
+        watchdog('ting_openformat', 'ERROR manifestation with id @id failed generate bibdkWorkDisplay', array('@id' => $briefDisplay->id), WATCHDOG_ERROR);
+        return;
+      }
+
+      $bibdkWork->manifestations[$briefDisplay->id]->setBriefDisplayType($briefDisplay->gettype());
+      $bibdkWork->manifestations[$briefDisplay->id]->setSubType($briefDisplay->getSubtype());
+    }
+    else {
+      $bibdkWork->manifestations[$briefDisplay->id] = $briefDisplay;
+    }
+  }
+
+  return ting_openformat_work_view($bibdkWork);
+}
+
 
 /**
- * Creates html view for bibdkWorkEntity
+ * Creates view for work
  *
- * @param Manifestation|BibdkWork|BibdkSubwork|BibdkCollection $bibdkWork
+ * @param object $bibdkWork
  * @param string $view_mode
- * @param null $langcode
- * @return string
+ * @param string $langcode
+ * @return array
  */
 function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = NULL) {
   if (!is_object($bibdkWork)) {
@@ -175,9 +215,12 @@ function ting_openformat_subwork_view($manifestation, $view_mode = 'full', $lang
 
 
 /**
+ * Generate view for a single manifestation
+ *
  * @param $manifestation
  * @param string $view_mode
  * @param null $langcode
+ *
  * @return array
  */
 function ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL) {
@@ -186,13 +229,10 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
   }
 
   $fields = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
-
   $actions = ting_openformat_get_actions('bibdkManifestation', $manifestation, $view_mode, $langcode);
 
   return array(
     '#theme' => 'ting_openformat_manifestation',
-    '#view_mode' => $view_mode,
-    '#language' => $langcode,
     '#fields' => $fields,
     '#actions' => $actions,
   );
@@ -200,6 +240,9 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
 
 /**
  * Check if user has loaded full or short view
+ *
+ * If $_SESSION['search_settings']['full_view'] is TRUE the generated will be a
+ * full view with all information visible.
  *
  * @return bool
  */
@@ -320,52 +363,6 @@ function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
   $commands[] = ajax_command_replace(NULL, $view);
 
   return array('#type' => 'ajax', '#commands' => $commands);
-}
-
-
-/**
- * @param BibdkCollection $collection
- * @param $ids
- * @param $uid
- * @param int $tracking_id
- * @return string
- */
-function ting_openformat_load_single_full_work($collection, $ids, $uid, $tracking_id = 0) {
-  module_invoke_all('show_manifestation_info_prerender', $ids, $uid);
-
-  foreach ($collection->manifestations as $manifestation) {
-    $briefDisplay = new BibdkBriefDisplay($manifestation);
-    if (!isset($bibdkWork)) {
-      if ($bibdkWork = $collection->getWorkOne()) {
-        $bibdkWork = _ting_openformat_get_bibdk_work_entity(array($bibdkWork));
-      }
-      else {
-        $bibdkWork = ting_openformat_get_manifestations($briefDisplay->id, array('trackingId' => $tracking_id));
-      }
-
-      $bibdkWork = current($bibdkWork);
-
-      /*
-       * If manifestation with $briefDisplay->id does not exists, the result
-       * from openSearch is not rendered correctly and we send a message to the
-       * user that the object could not be shown, and log it to the watchdog
-       * */
-      if (!isset($bibdkWork->manifestations[$briefDisplay->id])) {
-
-        drupal_set_message(t('This record could not be generated properly. A message have been send to the site administrators', array(), array('context' => 'ting_openformat')), 'warning');
-        watchdog('ting_openformat', 'ERROR manifestation with id @id failed generate bibdkWorkDisplay', array('@id' => $briefDisplay->id), WATCHDOG_ERROR);
-        return;
-      }
-
-      $bibdkWork->manifestations[$briefDisplay->id]->setBriefDisplayType($briefDisplay->gettype());
-      $bibdkWork->manifestations[$briefDisplay->id]->setSubType($briefDisplay->getSubtype());
-    }
-    else {
-      $bibdkWork->manifestations[$briefDisplay->id] = $briefDisplay;
-    }
-  }
-
-  return ting_openformat_work_view($bibdkWork);
 }
 
 /**
