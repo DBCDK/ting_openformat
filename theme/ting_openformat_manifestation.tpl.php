@@ -1,11 +1,21 @@
+<?php
+/**
+ * @file
+ * theme implementation for manifestation
+ *
+ * Variables
+ * $fields: main information fields for manifestation
+ * $actions: Actions for a specific manifestation
+ *
+ * Additional variables
+ * $secondary actions: bibdk_theme divides actions into actions and secondary actions
+ */
+?>
 <article class="manifestation clearfix">
   <div class="manifestation-data medium-16 columns">
     <?php print drupal_render($fields); ?>
   </div>
   <div class="actions medium-8 columns">
-    <div class="any-edition-actions">
-      <?php //print drupal_render($any_edition_actions); ?>
-    </div>
     <div class="reservation-button">
       <?php print isset($actions['reservation']) ? drupal_render($actions['reservation']) : ''; ?>
     </div>
@@ -19,5 +29,4 @@
     </div>
   </div>
   <!-- .actions -->
-
 </article>

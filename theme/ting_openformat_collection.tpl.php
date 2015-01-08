@@ -4,6 +4,7 @@
  * theme implementation for brief display of a collection
  *
  * Variables:
+ * $uid: work id @todo remove selid- from id, this requires seleniumtests to be upated
  * $theme_attributes: array of attributes for the wrapper div
  * $title: Title of the collection
  * $author: Author of the collection
@@ -16,7 +17,6 @@
 ?>
 <div <?php echo drupal_attributes($theme_attributes); ?>>
     <div class="work-header clearfix" data-work-toggle="<?php print $uid; ?>">
-
       <div class="work-title">
         <h2><?php print $title; ?></h2>
         <div class="title-meta">
@@ -24,7 +24,6 @@
           <span><?php print $part_of; ?></span>
         </div>
       </div>
-
       <div class="work-types-actions">
         <div class="work-types">
           <?php print drupal_render($types); ?>

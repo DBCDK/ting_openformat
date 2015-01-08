@@ -3,9 +3,23 @@
  * @file
  * Template for rendering a full work view
  *
+ * Variables
+ * $id: ID for a work
+ * $fields: Fields for a work; contains the work tabs
+ * $cover: Cover for a work
+ * $manifestations: Information about manifestations in work, grouped by type
+ *  @see information about manifestation variables
+ *
+ * Manifestation variables
+ * $tab: Type tab information
+ * $manifestation: Contains manifestation view or container if manifestation is
+ *  not loaded
+ * $toggle: If a work contains more than 1 manifestation a toggle button is
+ *  provided
+ * $subwork_actions: actions related to a manifestation type (subwork)
+ *
  */
 ?>
-
 <div class="work-information" id="<?php echo $id; ?>"
      selenium-id="work-<?php echo $id; ?>">
   <div class="work-fields clearfix row">
