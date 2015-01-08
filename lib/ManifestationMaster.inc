@@ -326,7 +326,7 @@ class ManifestationMaster {
     $fields = array('acquisitionInformation' => array(
         'acquisitionTerms',
         ));
-    $result = ting_openformat_methods::parseFields($this->_getDetails(), $fields);
+    $result = tingOpenformatMethods::parseFields($this->_getDetails(), $fields);
     return $result;
   }
 
