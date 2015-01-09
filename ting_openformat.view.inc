@@ -13,7 +13,7 @@
  */
 function ting_openformat_collection_view(BibdkCollection $bibdkobject, $full_view) {
   //@todo use drupal_clean_css_identifier() -> This requires a lot of py tests to be updated
-  $uid = 'selid-' . strtolower(strtr(reset($bibdkobject->getCollectionIds()), array(
+  $uid = strtolower(strtr(reset($bibdkobject->getCollectionIds()), array(
     ':' => '',
     '-' => '',
     '_' => ''
