@@ -22,6 +22,8 @@ class BibdkCollection {
           $id = $manifestation->identifier->{'$'};
           $type = isset($manifestation->type->{'$'}) ? $manifestation->type->{'$'} : 'Unknown';
           $this->collectionTypes[$type][] = $id;
+          $work_type = isset($manifestation->workType->{'$'}) ? $manifestation->workType->{'$'} : 'unknown';
+          $this->collectionWorkTypes[$work_type][] = $id;
           $this->collectionIds[] = $id;
         }
       }
@@ -88,6 +90,10 @@ class BibdkCollection {
 
   public function getCollectionTypes() {
     return $this->collectionTypes;
+  }
+
+  public function getCollectionWorkTypes() {
+    return $this->collectionWorkTypes;
   }
 
   public function getWorkType() {
