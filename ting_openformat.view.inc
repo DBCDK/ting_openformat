@@ -137,13 +137,13 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
 
   $work_fields = _prepare_view('bibdkWorkEntity', $bibdkWork, $view_mode, $langcode);
   $cover = drupal_render($work_fields['ting_cover_work']);
-  $manifestations = ting_openformat_get_ordered_manifestations($bibdkWork->getManifestations(), $bibdkWork->getId());
+  $subworks = ting_openformat_get_subworks($bibdkWork->getManifestations(), $bibdkWork->getId());
 
   return array(
     '#theme' => 'ting_openformat_work',
     '#fields' => $work_fields,
     '#cover' => $cover,
-    '#manifestations' => $manifestations,
+    '#subworks' => $subworks,
     '#id' => drupal_clean_css_identifier($bibdkWork->getId()),
   );
 }
@@ -153,7 +153,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
  * @param $subWorks
  * @return mixed
  */
-function ting_openformat_get_ordered_manifestations($manifestations, $work_id) {
+function ting_openformat_get_subworks($manifestations, $work_id) {
   $ordered_list = array();
   /* @var Manifestation $manifestation */
   foreach ($manifestations as $manifestation) {
@@ -163,40 +163,51 @@ function ting_openformat_get_ordered_manifestations($manifestations, $work_id) {
       '#text' => $manifestation->getSubType(),
       '#icon' => $manifestation->getType(),
     );
-    $ordered_list[$key]['manifestations'][] = ting_openformat_subwork_view($manifestation, $view_mode = 'full', $langcode = NULL);
+    $ordered_list[$key]['manifestations'][] = ting_openformat_get_manifestation_for_subwork($manifestation, $view_mode = 'full', $langcode = NULL);
   }
   foreach ($ordered_list as $key => $value) {
-    $toggle = array();
-    $count = count($value['manifestations']);
-    if ($count > 1) {
-      $toggle = array(
-        '#theme' => 'ting_openformat_toggle_link',
-        '#icon' => 'icon-blue-down',
-        '#show' => t("show all (@count)", array('@count' => $count)),
-        '#hide' => t('hide'),
-        '#attributes' => array(
-          'class' => array('manifestation-toggle-link')
-        ),
-      );
-    }
-    $ordered_list[$key]['toggle'] = $toggle;
+    $ordered_list[$key]['toggle'] = ting_openformat_subwork_toggle($value['manifestations']);
     $ordered_list[$key]['subwork_actions'] = module_invoke_all('ting_openformat_subwork_materialtype_actions', $manifestations, $key);
   }
   return $ordered_list;
 }
 
 /**
- * Creates html view for bibdkSubwork
+ * Get toggle button for subwork if more than 1 manifestation
  *
- * @param BibdkSubwork $bibdkSubwork
+ * @param array $manifestations
+ * @return array
+ */
+function ting_openformat_subwork_toggle($manifestations) {
+  $toggle = array();
+  $count = count($manifestations);
+  if ($count > 1) {
+    $toggle = array(
+      '#theme' => 'ting_openformat_toggle_link',
+      '#icon' => 'icon-blue-down',
+      '#show' => t("show all (@count)", array('@count' => $count)),
+      '#hide' => t('hide'),
+      '#attributes' => array(
+        'class' => array('manifestation-toggle-link')
+      ),
+    );
+  }
+
+  return $toggle;
+}
+
+/**
+ * get view or container for manifestation
+ *
+ * @param mixed $manifestation
  * @param string $view_mode
  * @param null $langcode
  * @return mixed
  */
-function ting_openformat_subwork_view($manifestation, $view_mode = 'full', $langcode = NULL) {
+function ting_openformat_get_manifestation_for_subwork($manifestation, $view_mode = 'full', $langcode = NULL) {
   if (get_class($manifestation) == 'Manifestation') {
     // first element is parsed
-    $manifestation_view = ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL);
+    $manifestation_view = ting_openformat_manifestation_view($manifestation, $view_mode, $langcode);
   }
   else {
     // other elements are given a container
@@ -208,7 +219,6 @@ function ting_openformat_subwork_view($manifestation, $view_mode = 'full', $lang
         'id' => drupal_clean_css_identifier($manifestation->id),
       ),
     );
-    // container for the remaining
   }
   return $manifestation_view;
 }

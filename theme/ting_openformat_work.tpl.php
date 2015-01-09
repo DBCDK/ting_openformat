@@ -7,7 +7,7 @@
  * $id: ID for a work
  * $fields: Fields for a work; contains the work tabs
  * $cover: Cover for a work
- * $manifestations: Information about manifestations in work, grouped by type
+ * $subworks: Information about manifestations in work, grouped by type
  *  @see information about manifestation variables
  *
  * Manifestation variables
@@ -36,7 +36,7 @@
   </div>
   <div class="work-accordion">
     <dl class="accordion" data-accordion>
-      <?php foreach ($manifestations as $key => $group) : ?>
+      <?php foreach ($subworks as $key => $group) : ?>
         <?php list($tab, $manifestation, $toggle, $subwork_actions) = array_values($group); ?>
         <dd class="accordion-navigation">
           <a href="#<?php print $key; ?>">
