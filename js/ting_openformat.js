@@ -14,9 +14,10 @@
      * Replace response data and attach behavours. Is used for loading work information
      */
     Drupal.ajax.prototype.commands.add_manifestations = function(ajax, response, status){
-      $(response.selector).replaceWith(response.data);
+      $articles = $(response.data);
+      $(response.selector).replaceWith($articles);
       var settings = response.settings || ajax.settings || Drupal.settings;
-      //Drupal.attachBehaviors(response.data, settings);
+      Drupal.attachBehaviors($articles, settings);
     }
   }
 
@@ -123,7 +124,7 @@
       url: Drupal.settings.ting_openformat.ajax_callback,
       data: {full_view: pref},
       timeout: 30000,
-      success: function(msg){
+      success: function(){
         if (onSuccess){
           window.location = onSuccess;
         }
