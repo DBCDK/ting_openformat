@@ -86,7 +86,6 @@ class BibdkWork {
       $this->manifestations[$id] = entity_load('bibdkManifestation', $id, $manifestation);
     }
 
-
     // set work part
     $this->work = reset($this->manifestations)->getWork();
   }
@@ -134,9 +133,25 @@ class BibdkWork {
     return (isset($this->work->description)) ? $this->work->description : NULL;
   }
 
+  /**
+   * Get detail information from manifestation volume or main
+   *
+   * @return array|null
+   */
+  private function _getDetails() {
+    $work_manifestation = reset($this->getManifestations());
+    if (isset($work_manifestation->manifestation->volume->details)) {
+      return $work_manifestation->manifestation->volume->details;
+    }
+    else if (isset($work_manifestation->manifestation->main->details)){
+      return $work_manifestation->manifestation->main->details;
+    }
+    return null;
+  }
+
   public function getAbstract() {
     $fields = array('abstract' => array('abstractElement'));
-    $elements = $this->_getDescription();
+    $elements = $this->_getDetails();
     $result = TingOpenformatMethods::parseFields($elements, $fields);
 
     return $result;
