@@ -30,6 +30,7 @@ files[] = lib/BibdkBriefDisplay.inc
 files[] = lib/TingOpenformatMethods.inc
 
 scripts[] = js/ting_openformat.js
+scripts[] = js/ting_openformat_full_view.js
 
 dependencies[] = search
 dependencies[] = ting_client
