@@ -23,7 +23,7 @@ function ting_openformat_rank_frequency_admin_info($subtype, $conf, $contexts = 
  * Content for the rank_frequency explanation box
  */
 function ting_openformat_rank_frequency($subtype, $conf, $args, $context) {
-  $sort = $_GET['sort'];
+  $sort = isset($_GET['sort']) ? $_GET['sort'] : '';
   $result = drupal_static('ting_search_results');
   $block = new stdClass();
 

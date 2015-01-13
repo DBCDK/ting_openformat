@@ -698,7 +698,7 @@ function ting_openformat_set_tracking_id() {
  * @return String html
  */
 function _ting_openformat_get_types_list($bibdkobject) {
-  $types = $bibdkobject->getWorkTypes();
+  $types = $bibdkobject->getCollectionWorkTypes();
   $items = array();
   foreach ($types as $type => $ids) {
     $items[$type] = '<span class="materialtype ' . $type . '-icon-small " title="' . t($type) . '">' . t($type) . '&nbsp;</span>';

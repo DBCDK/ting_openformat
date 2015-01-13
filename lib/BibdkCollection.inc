@@ -22,6 +22,8 @@ class BibdkCollection {
           $id = $manifestation->identifier->{'$'};
           $type = isset($manifestation->type->{'$'}) ? $manifestation->type->{'$'} : 'Unknown';
           $this->collectionTypes[$type][] = $id;
+          $work_type = isset($manifestation->workType->{'$'}) ? $manifestation->workType->{'$'} : 'unknown';
+          $this->collectionWorkTypes[$work_type][] = $id;
           $this->collectionIds[] = $id;
         }
       }
@@ -90,6 +92,10 @@ class BibdkCollection {
     return $this->collectionTypes;
   }
 
+  public function getCollectionWorkTypes() {
+    return $this->collectionWorkTypes;
+  }
+
   public function getWorkType() {
     $result = ting_openformat_methods::parseFields($this->manifestations[0], array('workType'));
     return (is_array($result)) ? reset($result) : $result;
@@ -120,17 +126,6 @@ class BibdkCollection {
       }
     }
     return FALSE;
-  }
-
-  public function getWorkTypes() {
-    $result = ting_openformat_methods::parseFields($this->manifestations, array('workType'));
-    $res = array();
-    if(is_array($result)){
-      foreach ($result as $index => $type) {
-        $res[$type['workType']] = $type['workType'];
-      }
-    }
-    return $res;
   }
 
   public function getType() {
