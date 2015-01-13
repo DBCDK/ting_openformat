@@ -58,6 +58,7 @@
       var manifestation_id = $(wrapper_id + " .manifestation-container").attr('data-id');
       manifestation_ids.push(manifestation_id);
     }
+    return manifestation_ids;
   }
 
   /**
