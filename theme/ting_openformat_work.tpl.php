@@ -39,7 +39,7 @@
       <?php foreach ($subworks as $key => $group) : ?>
         <?php list($tab, $manifestation, $toggle, $subwork_actions) = array_values($group); ?>
         <dd class="accordion-navigation">
-          <a href="#<?php print $key; ?>">
+          <a href="#<?php print $key; ?>" data-manifestation-toggle="<?php print $key; ?>">
             <?php print drupal_render($tab); ?>
           </a>
           <div id="<?php print $key; ?>" class="content">
@@ -51,7 +51,7 @@
             </div>
             <?php if (!empty($toggle)) : ?>
               <div class="manifestation-toggle"
-                   data-manifestation-toggle="<?php print $key; ?>">
+                   data-manifestation-toggle="<?php print $key; ?>" data-load-multible>
                 <?php print drupal_render($toggle); ?>
               </div>
             <?php endif; ?>

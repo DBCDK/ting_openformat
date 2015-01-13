@@ -5,7 +5,7 @@
  *
  */
 
-(function($){
+(function tingOpenformat($){
 
   if (typeof(Drupal.ajax) != 'undefined'){
 
@@ -26,57 +26,62 @@
    */
   Drupal.behaviors.ting_openformat = {
     attach: function(context){
-      console.log(context);
-      TingOpenformat.loadManifestationsWithAjax(context);
-      TingOpenformat.addFullViewButtonEvent(context);
-      TingOpenformat.toggleMore(context);
-      TingOpenformat.toggleWorkEventListener(context);
-      TingOpenformat.toggleManifestationsEventListener(context);
-      $
+      loadManifestationsEventListener(context);
+      toggleWorkEventListener(context);
+      toggleManifestationsEventListener(context);
+      toggleMoreEventListener(context);
     }
-  };
+  }
 
-  var TingOpenformat = {};
+  /**
+   * Add eventlistener for loading manifestations
+   */
+  function loadManifestationsEventListener(context){
+    $('[data-manifestation-toggle]', context).one('click', function(e){
+      var wrapper_id = '#' + this.getAttribute('data-manifestation-toggle');
+      var manifestation_ids = getManifestationIds(wrapper_id, this.hasAttribute('data-load-multible'));
+      loadManifestationsWithAjax($(wrapper_id), manifestation_ids);
+    });
+  }
 
-  TingOpenformat.loadManifestationsWithAjax = function(context){
-
-    $('[data-manifestation-toggle]', context).once().click(function(e){
-      var id = $(this).attr('data-manifestation-toggle');
-      var manifestation_ids = new Array();
-      $('#' + id).find("[data-id]").each(function(i){
-        manifestation_ids.push($(this).attr('data-id'));
-        //$(this).html('<div class="ajax-progress ajax-progress-throbber"><div class="throbber">&nbsp;</div></div>');
+  /**
+   * Get Ids for manifestations to be loaded with ajax
+   */
+  function getManifestationIds(wrapper_id, load_multible) {
+    var manifestation_ids = new Array();
+    if(load_multible) {
+      $(wrapper_id + " .manifestation-container").each(function(i, element){
+        manifestation_ids.push(element.getAttribute('data-id'));
       });
+    }
+    else if (!$(wrapper_id + ' .manifestation').length) {
+      var manifestation_id = $(wrapper_id + " .manifestation-container").attr('data-id');
+      manifestation_ids.push(manifestation_id);
+    }
+  }
 
-      TingOpenformat.addAjaxToElement($(this), manifestation_ids);
-
-    });
-
-    // TODO  clean up
-    $('.accordion-navigation > a', context).one('click', function(e){
-
-      var wrapper_id = $(this).attr('href');
-      // We load the first manifestation only if it has not been loaded before.
-      if ($(wrapper_id + ' .manifestation').length == 0){
-        var manifestation_id = $(wrapper_id).find(".manifestation-container").first()
-          .attr('data-id');
-        var manifestation_ids = new Array(manifestation_id);
-        TingOpenformat.addAjaxToElement($(wrapper_id), manifestation_ids);
-      }
-    });
-  };
-
-  TingOpenformat.addAjaxToElement = function(element, manifestation_ids, event){
+  /**
+   * Get manifestations via ajax
+   *
+   * this method uses Drupals way of doing ajax, by binding a custom eventtype,
+   * trigger the event and unbinding
+   *
+   * @todo consider rewriting this to use standard jQuery ajax, for better
+   * readability
+   */
+  function loadManifestationsWithAjax(element, manifestation_ids){
     if (manifestation_ids.length == 0){
       return false;
     }
 
     var url = Drupal.settings.basePath + Drupal.settings.pathPrefix + 'ting_openformat/ajax/manifestations/' + JSON.stringify(manifestation_ids);
-    var element_settings = {};
-    element_settings.url = url;
-    element_settings.event = (typeof event != 'undefined') ? event : 'load_manifestations';
-    element_settings.progress = { type: 'throbber' };
-
+    var element_settings = {
+      url: url,
+      event: 'load_manifestations',
+      progress: {
+        type: 'throbber'
+      }
+    };
     var id = element.attr('id');
     Drupal.ajax[id] = new Drupal.ajax(id, element, element_settings);
     element.trigger('load_manifestations');
@@ -84,74 +89,19 @@
 
   };
 
-  TingOpenformat.addFullViewButtonEvent = function(context){
-    $('.full-view-links a', context).click(function(e){
-      e.preventDefault();
-      if (!$(this).hasClass('inactive')){
-        $('.full-view-links a').toggleClass('inactive');
-      }
-
-      if ($(this).attr('id') === 'ting-openformat-full-view-button-expanded'){
-        Drupal.settings.ting_openformat.full_view = true;
-        if (Drupal.settings.ting_openformat.full_view_all_loaded){
-          $('.work').toggleClass('is-toggled');
-          TingOpenformat.setFullViewPref('1');
-        }
-        else if (!Drupal.settings.ting_openformat.isLoadingFullView){
-          Drupal.settings.ting_openformat.isLoadingFullView = true;
-
-          $(this).toggleClass('ajax-progress');
-          $(this).append('<span class="throbber">&nbsp;</span>');
-
-          var search = window.location.search.replace('&full_view=1', '');
-          search = search.replace('&full_view=0', '');
-
-          var location = window.location.pathname + search;
-          TingOpenformat.setFullViewPref('1', location);
-        }
-      }
-      else {
-        Drupal.settings.ting_openformat.full_view = false;
-        $('.work').toggleClass('is-toggled');
-        TingOpenformat.setFullViewPref('0');
-      }
-    });
-  };
-
-  TingOpenformat.setFullViewPref = function(pref, onSuccess){
-    $.ajax({
-      type: "POST",
-      url: Drupal.settings.ting_openformat.ajax_callback,
-      data: {full_view: pref},
-      timeout: 30000,
-      success: function(){
-        if (onSuccess){
-          window.location = onSuccess;
-        }
-      },
-      complete: function(object, status){
-        if (status == 'timeout' && pref == '1'){
-          var full_view = (window.location.search.length == 0) ? '?full_view=1' : '&full_view=1';
-          window.location = onSuccess + full_view;
-        }
-      }
-    });
-  };
-
   /**
    * Toggle view of multiple editions of a manifestations
    */
-  TingOpenformat.toggleManifestationsEventListener = function (context) {
-    $('[data-manifestation-toggle]', context).click(function(e) {
-      var wrapper_id = $(this).attr('data-manifestation-toggle');
-      $('#' + wrapper_id + ' .manifestations').toggleClass('is-toggled');
+  function toggleManifestationsEventListener(context) {
+    $('[data-load-multible]', context).click(function(e) {
+      $(this).closest('.manifestations').toggleClass('is-toggled');
     });
   }
 
   /**
    * Toggle link for showing more text for a field
    */
-  TingOpenformat.toggleMore = function(context){
+  function toggleMoreEventListener(context){
     $('[data-toggle-link]', context).click(function(e){
       e.preventDefault();
       $(this).toggleClass('is-toggled');
@@ -161,7 +111,7 @@
   /**
    * Toggle work
    */
-  TingOpenformat.toggleWorkEventListener = function(context){
+  function toggleWorkEventListener(context){
     $('[data-work-toggle]', context).click(function(e){
       e.preventDefault();
       var id = '#' + $(this).attr('data-work-toggle');
@@ -170,5 +120,4 @@
       $(id).find('[data-work-load]').trigger('click');
     });
   }
-})
-  (jQuery);
+})(jQuery);
