@@ -46,17 +46,6 @@ function ting_openformat_theme() {
         'theme_attributes' => array(),
       ),
     ),
-    'ting_openformat_single_work' => array(
-      'path' => $path,
-      'variables' => array(
-        'title' => '',
-        'author' => '',
-        'ids' => '',
-        'work' => '',
-        'uid' => '',
-      ),
-      'template' => 'ting_openformat_single_work',
-    ),
     'ting_openformat_type_order_form' => array(
       'render element' => 'form',
       'file' => 'ting_openformat.admin.inc',

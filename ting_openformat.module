@@ -239,15 +239,18 @@ function ting_openformat_single($id) {
   );
   drupal_add_html_head( $meta_description, 'meta_description' );
 
-  $render = array(
-    '#theme' => 'ting_openformat_single_work',
+  return array(
+    '#theme' => 'ting_openformat_collection',
     '#title' => $bibdkEntity->getTitle(),
     '#partOf' => $part_of,
     '#author' => drupal_render($creator),
-    '#ids' => $id,
+    '#uid' => $id,
     '#work' => ting_openformat_work_view($bibdkEntity),
+    '#theme_attributes' => array(
+      'class' => array('work', 'is-toggled', 'single'),
+      'id' => $id,
+    ),
   );
-  return drupal_render($render);
 }
 
 /** implements hook_preprocess_page()
