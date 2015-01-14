@@ -14,7 +14,7 @@
      * Replace response data and attach behavours. Is used for loading work information
      */
     Drupal.ajax.prototype.commands.add_manifestations = function(ajax, response, status){
-      $articles = $(response.data);
+      var $articles = $(response.data);
       $(response.selector).replaceWith($articles);
       var settings = response.settings || ajax.settings || Drupal.settings;
       Drupal.attachBehaviors($articles, settings);
@@ -95,7 +95,7 @@
    */
   function toggleManifestationsEventListener(context) {
     $('[data-load-multible]', context).click(function(e) {
-      $(this).closest('.manifestations').toggleClass('is-toggled');
+      $(this).siblings('.manifestations').toggleClass('is-toggled');
     });
   }
 
