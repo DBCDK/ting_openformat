@@ -32,7 +32,7 @@ function ting_openformat_collection_view(BibdkCollection $bibdkobject, $full_vie
 
   // Set classes for collection object
   $collection_classes = array('work', 'mobile-page');
-  if($full_view) {
+  if ($full_view) {
     $collection_classes[] = 'is-toggled';
   }
 
@@ -136,7 +136,8 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   }
 
   $work_fields = _prepare_view('bibdkWorkEntity', $bibdkWork, $view_mode, $langcode);
-  $cover = drupal_render($work_fields['ting_cover_work']);
+  $cover = $work_fields['ting_cover_work'];
+  unset($work_fields['ting_cover_work']);
   $subworks = ting_openformat_get_subworks($bibdkWork->getManifestations(), $bibdkWork->getId());
 
   return array(
@@ -298,7 +299,7 @@ function _ting_openformat_get_types_list($bibdkobject) {
     $list['online'] = 'online';
   }
 
-    return array(
+  return array(
     '#type' => 'ol',
     '#theme' => 'item_list',
     '#items' => $list,
@@ -426,7 +427,7 @@ function ting_openformat_worktabs_items(BibdkWork $entity) {
   $elements = array();
   $tabs = array();
 
-  if($abstract = _ting_openformat_parse_element($entity->getAbstract())) {
+  if ($abstract = _ting_openformat_parse_element($entity->getAbstract())) {
     $elements['abstract'] = array(
       '#theme' => 'html_tag',
       '#tag' => 'div',
@@ -437,7 +438,7 @@ function ting_openformat_worktabs_items(BibdkWork $entity) {
     );
   }
 
-  if($subjects = _ting_openformat_parse_element($entity->getSubjects())) {
+  if ($subjects = _ting_openformat_parse_element($entity->getSubjects())) {
     $elements['subject'] = array(
       '#theme' => 'html_tag',
       '#tag' => 'div',
@@ -448,12 +449,16 @@ function ting_openformat_worktabs_items(BibdkWork $entity) {
     );
   }
 
-  if(!empty($elements)) {
-    $tabs['basic-information']['work-information'] = array(
-      '#content' => drupal_render($elements),
-      'weight' => -1,
+  if (empty($elements)) {
+    $elements = array(
+      '#markup' => t('no_description_for_work', array(), array('context' => 'ting_openformat')),
     );
   }
+
+  $tabs['basic-information']['work-information'] = array(
+    '#content' => drupal_render($elements),
+    'weight' => -1,
+  );
 
   return $tabs;
 }

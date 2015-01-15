@@ -24,7 +24,7 @@
      selenium-id="work-<?php echo $id; ?>">
   <div class="work-fields clearfix">
     <div class="row">
-      <div class="show-for-small small-16 columns">
+      <div class="work-description-wrapper show-for-small small-16 columns">
         <?php print drupal_render($fields['ting_openformat_work_abstract']); ?>
         <?php print drupal_render($fields['ting_openformat_work_subjects']); ?>
       </div>
@@ -32,7 +32,7 @@
         <?php print drupal_render($fields); ?>
       </div>
       <div class="work-cover-wrapper small-8 large-6 columns">
-        <?php print $cover; ?>
+        <?php print drupal_render($cover); ?>
       </div>
     </div>
   </div><!-- work-information -->
