@@ -168,6 +168,7 @@ function ting_openformat_get_subworks($manifestations, $work_id) {
   foreach ($ordered_list as $key => $value) {
     $ordered_list[$key]['toggle'] = ting_openformat_subwork_toggle($value['manifestations']);
     $ordered_list[$key]['subwork_actions'] = module_invoke_all('ting_openformat_subwork_materialtype_actions', $manifestations, $key);
+    $ordered_list[$key]['active'] = (array_search($key, array_keys($ordered_list)) == 0) ? 'active' : '';
   }
   return $ordered_list;
 }

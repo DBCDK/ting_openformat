@@ -39,12 +39,12 @@
   <div class="work-accordion">
     <dl class="accordion" data-accordion>
       <?php foreach ($subworks as $key => $group) : ?>
-        <?php list($tab, $manifestation, $toggle, $subwork_actions) = array_values($group); ?>
-        <dd class="accordion-navigation">
+        <?php list($tab, $manifestation, $toggle, $subwork_actions, $active) = array_values($group); ?>
+        <dd class="accordion-navigation <?php print $active; ?>">
           <a id="manifestation-toggle-button-<?php print $key; ?>" href="#<?php print $key; ?>" data-manifestation-toggle="<?php print $key; ?>">
             <?php print drupal_render($tab); ?>
           </a>
-          <div id="<?php print $key; ?>" class="content">
+          <div id="<?php print $key; ?>" class="content <?php print $active; ?>">
             <div class="subwork">
               <?php print drupal_render($subwork_actions); ?>
             </div>
