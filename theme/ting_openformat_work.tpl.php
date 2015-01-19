@@ -2,7 +2,7 @@
 
 <div class="addi-tabs clearfix">
   <div class="cover">
-    <?php print drupal_render($fields['ting_cover_work']); ?>
+    <?php print drupal_render($fields['bibdk_cover_work']); ?>
   </div>
   <!-- cover -->
 
