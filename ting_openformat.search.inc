@@ -32,8 +32,6 @@ function _ting_openformat_handle_conditions(&$conditions) {
 
 /** implements hook_search_execute */
 function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more = NULL) {
-
-
   $params = array();
   if($keys)
   $params['query'] = ting_openformat_string_to_cql($keys);
@@ -268,9 +266,9 @@ function _ting_openformat_search_get_variables() {
 }
 
 
-/** \brief Set facets for extended query
- *
- * */
+/**
+ * Set facets for extended query
+ **/
 function _ting_openformat_set_query_extended(&$query, $qe) {
   $cql = $preprocessed = array();
 
