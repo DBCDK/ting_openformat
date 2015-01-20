@@ -113,6 +113,13 @@
    * Toggle work
    */
   function toggleWorkEventListener(context){
+    // Eventhandler to expand work on enter
+    $('[data-work-toggle]', context).keydown(function(e) {
+      if((e.keyCode || e.which) == 13) {
+        $(this).click();
+      }
+    });
+
     $('[data-work-toggle]', context).click(function(e){
       e.preventDefault();
       var id = '#' + $(this).attr('data-work-toggle');
