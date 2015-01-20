@@ -14,21 +14,21 @@ $ranking_definitions['rank_subject'][] = 'dkcclphrase.lem';
 $ranking_definitions['rank_subject'][] = 'phrase.subject';
 $ranking_definitions['rank_subject'][] = 'phrase.genre';
 
-// use rank_title if any of these search codes are used:
-$ranking_definitions['rank_title'][] = 'ti';
-$ranking_definitions['rank_title'][] = 'se';
-$ranking_definitions['rank_title'][] = 'vp';
-$ranking_definitions['rank_title'][] = 'term.title';
-$ranking_definitions['rank_title'][] = 'term.maintitle';
-$ranking_definitions['rank_title'][] = 'dkcclterm.ti';
-$ranking_definitions['rank_title'][] = 'dkcclterm.vp';
-$ranking_definitions['rank_title'][] = 'dkcclterm.se';
-$ranking_definitions['rank_title'][] = 'dkcclphrase.lti';
-$ranking_definitions['rank_title'][] = 'dkcclphrase.lvx';
-$ranking_definitions['rank_title'][] = 'dkcclphrase.lse';
-$ranking_definitions['rank_title'][] = 'dkcclphrase.lht';
-$ranking_definitions['rank_title'][] = 'phrase.title';
-$ranking_definitions['rank_title'][] = 'phrase.titleSeries';
+// use rank_main_title if any of these search codes are used:
+$ranking_definitions['rank_main_title'][] = 'ti';
+$ranking_definitions['rank_main_title'][] = 'se';
+$ranking_definitions['rank_main_title'][] = 'vp';
+$ranking_definitions['rank_main_title'][] = 'term.title';
+$ranking_definitions['rank_main_title'][] = 'term.maintitle';
+$ranking_definitions['rank_main_title'][] = 'dkcclterm.ti';
+$ranking_definitions['rank_main_title'][] = 'dkcclterm.vp';
+$ranking_definitions['rank_main_title'][] = 'dkcclterm.se';
+$ranking_definitions['rank_main_title'][] = 'dkcclphrase.lti';
+$ranking_definitions['rank_main_title'][] = 'dkcclphrase.lvx';
+$ranking_definitions['rank_main_title'][] = 'dkcclphrase.lse';
+$ranking_definitions['rank_main_title'][] = 'dkcclphrase.lht';
+$ranking_definitions['rank_main_title'][] = 'phrase.title';
+$ranking_definitions['rank_main_title'][] = 'phrase.titleSeries';
 
 // use rank_creator if any of these search codes are used:
 $ranking_definitions['rank_creator'][] = 'fo';
