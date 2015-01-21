@@ -348,12 +348,12 @@ function ting_openformat_filters() {
  * @param $conditions
  * @return string
  */
-function _ting_openformat_set_sort_ranking($query, $conditions) {
+function _ting_openformat_set_sort_ranking($query = '', $conditions = array()) {
 
-  require_once('ting_openformat.ranking_definitions.inc');
+  require('ting_openformat.ranking_definitions.inc'); // nb: require_once() cause unit tests to fail.
   
   // remove multiple whitespaces
-  $query = preg_replace('/\s=+/', '=', $query);
+  $query = preg_replace('/\s+/', '', $query);
 
   foreach ( $ranking_definitions as $sort => $sort_triggers ) {
     foreach ( $sort_triggers as $key => $search_code ) {
@@ -390,7 +390,7 @@ function _ting_openformat_sort_ranking_array_search($query, $search_code) {
     }
   } else {
     // remove multiple whitespaces
-    $query = preg_replace('/\s=+/', '=', $query);
+    $query = preg_replace('/\s+/', '', $query);
     $pos = strpos(urldecode($query), $search_code . '=');
     if ( $pos !== FALSE ) {
       return TRUE;
