@@ -367,7 +367,7 @@ function _ting_openformat_set_sort_ranking($query, $conditions) {
     }
   }
 
-  return 'date_descending';
+  return $sort;
 
 }
 

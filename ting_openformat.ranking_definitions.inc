@@ -37,8 +37,5 @@ $ranking_definitions['rank_creator'][] = 'term.creator';
 $ranking_definitions['rank_creator'][] = 'term.maincreator';
 $ranking_definitions['rank_creator'][] = 'phrase.creator';
 
-// if any other search codes are used:
-$ranking_definitions['year_descending'] = array();
-
  // default sorting, if no search codes are used
 $ranking_definitions['rank_frequency'] = array();
