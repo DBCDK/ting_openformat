@@ -36,7 +36,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
 
   $params = array();
 
-  if (  $keys ) {
+  if ($keys) {
     $params['query'] = ting_openformat_string_to_cql($keys);
   }
 
@@ -52,7 +52,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
     $params = array_merge($params, $variables);
   }
 
-  if ( isset($conditions['qe']) && $conditions['qe'] != NULL ) {
+  if (isset($conditions['qe']) && $conditions['qe'] != NULL) {
     _ting_openformat_set_query_extended($params['query'], $conditions['qe']);
     unset($conditions['qe']);
   }
@@ -78,7 +78,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   // do the actual search via ting_client_class
   $client = new ting_client_class();
 
-  if ( isset($params['query']) && empty($params['query']) ) {
+  if (isset($params['query']) && empty($params['query'])) {
     return array();
   }
 
@@ -355,13 +355,13 @@ function _ting_openformat_set_sort_ranking($query = '', $conditions = array()) {
   // remove multiple whitespaces
   $query = preg_replace('/\s+/', '', $query);
 
-  foreach ( $ranking_definitions as $sort => $sort_triggers ) {
-    foreach ( $sort_triggers as $key => $search_code ) {
+  foreach ($ranking_definitions as $sort => $sort_triggers) {
+    foreach ($sort_triggers as $key => $search_code) {
       $pos = strpos($query, $search_code . '=');
       if ( $pos !== FALSE ) {
         return $sort;
       }
-      if ( !empty($conditions['qe']) && _ting_openformat_sort_ranking_array_search($conditions['qe'], $search_code) ) {
+      if (!empty($conditions['qe']) && _ting_openformat_sort_ranking_array_search($conditions['qe'], $search_code)) {
         return $sort;
       }
     }
@@ -379,12 +379,12 @@ function _ting_openformat_set_sort_ranking($query = '', $conditions = array()) {
  * @return boolan
  */
 function _ting_openformat_sort_ranking_array_search($query, $search_code) {
-  if ( is_array($query) ) {
-    if ( array_key_exists($search_code,$query) ) {
+  if (is_array($query)) {
+    if (array_key_exists($search_code,$query)) {
       return TRUE;
     }
-    foreach ( $query as $elem ) {
-      if ( _ting_openformat_sort_ranking_array_search($elem, $search_code) ) {
+    foreach ($query as $elem) {
+      if (_ting_openformat_sort_ranking_array_search($elem, $search_code)) {
         return TRUE;
       }
     }
@@ -436,7 +436,7 @@ function ting_openformat_conditions_callback($query) {
   }
 
   // set the sort parameter here - thus it will work when sort parameter is added to url
-  if ( !empty($_REQUEST['sort']) ) {
+  if (!empty($_REQUEST['sort'])) {
     $conditions['sort'] = check_plain($_REQUEST['sort']);
   }
   else { // default sort parameter
