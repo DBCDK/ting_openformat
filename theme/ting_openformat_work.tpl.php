@@ -20,8 +20,8 @@
  *
  */
 ?>
-<div class="work-information" id="<?php echo $id; ?>"
-     selenium-id="work-<?php echo $id; ?>">
+<div class="work-information <?php echo $uid; ?>_start" id="<?php echo $uid; ?>"
+     selenium-id="work-<?php echo $uid; ?>">
   <div class="work-fields clearfix">
     <div class="row">
       <div class="work-description-wrapper show-for-small small-16 columns">

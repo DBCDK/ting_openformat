@@ -27,7 +27,7 @@ function ting_openformat_theme() {
         'fields' => array(),
         'cover' => '',
         'subworks' => array(),
-        'ding_id' => 0,
+        'uid' => 0,
       ),
       'template' => 'ting_openformat_work',
     ),
