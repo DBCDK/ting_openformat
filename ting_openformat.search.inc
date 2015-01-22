@@ -30,11 +30,14 @@ function _ting_openformat_handle_conditions(&$conditions) {
   }
 }
 
+
 /** implements hook_search_execute */
 function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more = NULL) {
   $params = array();
-  if($keys)
-  $params['query'] = ting_openformat_string_to_cql($keys);
+
+  if ($keys) {
+    $params['query'] = ting_openformat_string_to_cql($keys);
+  }
 
   $all_params = $conditions;
 
@@ -73,7 +76,6 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
 
   // do the actual search via ting_client_class
   $client = new ting_client_class();
-  // $result = $client->do_search($params);
 
   if (isset($params['query']) && empty($params['query'])) {
     return array();
@@ -135,6 +137,7 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   // .. default; no search results
   return array();
 }
+
 
 /**
  * Setting the JavaScript object Drupal.settings.ting_openformat
@@ -337,6 +340,65 @@ function ting_openformat_filters() {
   return $return;
 }
 
+
+/**
+ * Parsing the search string for search codes that define a sort ranking
+ * @param $query
+ * @param $conditions
+ * @return string
+ */
+function _ting_openformat_set_sort_ranking($query = '', $conditions = array()) {
+
+  require('ting_openformat.ranking_definitions.inc'); // nb: require_once() cause unit tests to fail.
+  
+  // remove multiple whitespaces
+  $query = preg_replace('/\s+/', '', $query);
+
+  foreach ($ranking_definitions as $sort => $sort_triggers) {
+    foreach ($sort_triggers as $key => $search_code) {
+      $pos = strpos($query, $search_code . '=');
+      if ( $pos !== FALSE ) {
+        return $sort;
+      }
+      if (!empty($conditions['qe']) && _ting_openformat_sort_ranking_array_search($conditions['qe'], $search_code)) {
+        return $sort;
+      }
+    }
+  }
+
+  return $sort;
+
+}
+
+
+/**
+ * recursive search for search code that trigger ranking
+ * @param $query
+ * @param $search_code
+ * @return boolan
+ */
+function _ting_openformat_sort_ranking_array_search($query, $search_code) {
+  if (is_array($query)) {
+    if (array_key_exists($search_code,$query)) {
+      return TRUE;
+    }
+    foreach ($query as $elem) {
+      if (_ting_openformat_sort_ranking_array_search($elem, $search_code)) {
+        return TRUE;
+      }
+    }
+  } else {
+    // remove multiple whitespaces
+    $query = preg_replace('/\s+/', '', $query);
+    $pos = strpos(urldecode($query), $search_code . '=');
+    if ( $pos !== FALSE ) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+
 /**
  * Search conditions callback.
  */
@@ -371,12 +433,13 @@ function ting_openformat_conditions_callback($query) {
   elseif (!isset($_SESSION['search_settings']['full_view'])) {
     $_SESSION['search_settings']['full_view'] = FALSE;
   }
+
   // set the sort parameter here - thus it will work when sort parameter is added to url
   if (!empty($_REQUEST['sort'])) {
     $conditions['sort'] = check_plain($_REQUEST['sort']);
   }
   else { // default sort parameter
-    $conditions['sort'] = 'date_descending';
+    $conditions['sort'] = _ting_openformat_set_sort_ranking($query, $conditions);
   }
 
   // If facets is set, check if we have to remove any, if so,
