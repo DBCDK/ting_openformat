@@ -23,7 +23,7 @@ class TingOpenFormatSortSelectUnitTestCase extends DrupalUnitTestCase {
 
   public function testSortSelect() {
 
-    module_load_include('inc', 'ting_openformat', 'ting_openformat.search.inc');
+    module_load_include('inc', 'ting_openformat', 'ting_openformat.search');
 
     // default sorting
     $query = 'fubar';
