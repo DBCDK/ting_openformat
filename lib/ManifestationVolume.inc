@@ -13,7 +13,7 @@ class ManifestationVolume extends ManifestationMaster {
     $fields = array('titleFull');
     if (isset($this->fields->title)) {
       $element = $this->fields->title;
-      $result = ting_openformat_methods::parseFields($element, $fields);
+      $result = TingOpenformatMethods::parseFields($element, $fields);
       return (is_array($result)) ? reset($result) : $result;
     }
     return NULL;
@@ -23,7 +23,7 @@ class ManifestationVolume extends ManifestationMaster {
     $fields = array('creator' => 'searchCode');
     if (isset($this->fields->creators)) {
       $element = $this->fields->creators;
-      $result = ting_openformat_methods::parseFields($element, $fields);
+      $result = TingOpenformatMethods::parseFields($element, $fields);
       return (is_array($result)) ? reset($result) : $result;
     }
     return NULL;
@@ -33,7 +33,7 @@ class ManifestationVolume extends ManifestationMaster {
     $fields = array('dependentTitle');
     if (isset($this->fields->dependentTitle)) {
       $element = $this->fields->dependentTitle;
-      $result = ting_openformat_methods::parseFields($element, $fields);
+      $result = TingOpenformatMethods::parseFields($element, $fields);
       return (is_array($result)) ? reset($result) : $result;
     }
     return NULL;

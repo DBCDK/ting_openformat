@@ -1,65 +1,65 @@
-<div class="<?php print $ding_id . '_start' ?>"></div>
-
-<div class="addi-tabs clearfix">
-  <div class="cover">
-    <?php print drupal_render($fields['ting_cover_work']); ?>
-  </div>
-  <!-- cover -->
-
-  <div class="wrapper">
-    <?php print drupal_render($fields); ?>
-    <?php print $work_tabs ?>
-
-    <!-- tabs -->
-  </div>
-  <!-- wrapper -->
-
-</div>
-
-<!-- work-share-data -->
-<div class="bibdk-tabs bibdk-tabs-heavy">
-  <?php print $tabs; ?>
-
-  <!-- tabs-nav -->
-  <div class="tabs-sections">
-    <?php $count = 0; ?>
-    <?php foreach ($subWorks as $type) : ?>
-      <?php foreach ($type as $subtype => $manifest) : $count++; ?>
-        <div id="<?php print $subtype; ?><?php print $ding_id; ?>"
-             class="subwork tabs-section <?php ($count != 1) ? print "visuallyhidden" : print "" ?>">
-          <div class="padded text clearfix">
-            <?php print drupal_render($manifest['manifest']['subtype_actions']); ?>
-          </div>
-          <!-- tabs-content -->
-          <div class="manifestations zebra-wrapper">
-            <div class="zebra-content">
-              <?php $count_manifestation = 0; ?>
-              <?php foreach ($manifest['manifest']['manifestations'] as $manifestation) : $count_manifestation++; ?>
-                <div class="manifestation zebra <?php ($count_manifestation > 1) ? print "visuallyhidden toggle" : print "" ?>">
-                  <?php print $manifestation; ?>
-                </div>
-              <?php endforeach; ?>
-
+<?php
+/**
+ * @file
+ * Template for rendering a full work view
+ *
+ * Variables
+ * $id: ID for a work
+ * $fields: Fields for a work; contains the work tabs
+ * $cover: Cover for a work
+ * $subworks: Information about manifestations in work, grouped by type
+ *  @see information about manifestation variables
+ *
+ * Manifestation variables
+ * $tab: Type tab information
+ * $manifestation: Contains manifestation view or container if manifestation is
+ *  not loaded
+ * $toggle: If a work contains more than 1 manifestation a toggle button is
+ *  provided
+ * $subwork_actions: actions related to a manifestation type (subwork)
+ *
+ */
+?>
+<div class="work-information <?php echo $uid; ?>_start" id="<?php echo $uid; ?>"
+     selenium-id="work-<?php echo $uid; ?>">
+  <div class="work-fields clearfix">
+    <div class="row">
+      <div class="work-description-wrapper show-for-small small-16 columns">
+        <?php print drupal_render($fields['ting_openformat_work_abstract']); ?>
+        <?php print drupal_render($fields['ting_openformat_work_subjects']); ?>
+      </div>
+      <div class="work-tabs hide-for-small medium-16 large-18 columns">
+        <?php print drupal_render($fields); ?>
+      </div>
+      <div class="work-cover-wrapper small-8 large-6 columns">
+        <?php print drupal_render($cover); ?>
+      </div>
+    </div>
+  </div><!-- work-information -->
+  <div class="work-accordion">
+    <dl class="accordion" data-accordion>
+      <?php foreach ($subworks as $key => $group) : ?>
+        <?php list($tab, $manifestation, $toggle, $subwork_actions, $active) = array_values($group); ?>
+        <dd class="accordion-navigation <?php print $active; ?>">
+          <a id="manifestation-toggle-button-<?php print $key; ?>" href="#<?php print $key; ?>" data-manifestation-toggle="<?php print $key; ?>">
+            <?php print drupal_render($tab); ?>
+          </a>
+          <div id="<?php print $key; ?>" class="content <?php print $active; ?>">
+            <div class="subwork">
+              <?php print drupal_render($subwork_actions); ?>
             </div>
-            <!-- end zebra-content -->
-            <?php if (count($manifest['manifest']['manifestations']) > 1) : ?>
-              <div class="zebra-toggle">
-                <a href="#<?php print $subtype; ?><?php print $ding_id; ?>">
-                  <span class="icon icon-left icon-blue-down">?</span>
-                  <span class="toggle-text"><?php print t("show all (@count)", array('@count' => count($manifest['manifest']['manifestations']))); ?></span>
-                  <span class="toggle-text hidden"><?php print t("hide"); ?></span>
-                </a>
+            <div class="manifestations">
+              <?php print drupal_render($manifestation); ?>
+            </div>
+            <?php if (!empty($toggle)) : ?>
+              <div class="manifestation-toggle"
+                   data-manifestation-toggle="<?php print $key; ?>" data-load-multible>
+                <?php print drupal_render($toggle); ?>
               </div>
             <?php endif; ?>
           </div>
-          <!-- manifestations -->
-        </div>
+        </dd>
       <?php endforeach; ?>
-    <?php endforeach; ?>
-    <!-- tabs-section -->
-  </div>
-  <!-- tabs-sections -->
-
+    </dl>
+  </div><!-- work-accordion -->
 </div>
-<!-- tabs -->
-<div class="<?php print $ding_id . '_slut'; ?>"></div>

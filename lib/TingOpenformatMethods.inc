@@ -1,6 +1,6 @@
 <?php
 
-class ting_openformat_methods {
+class TingOpenformatMethods {
 
   /* \brief parse searchCode,display elements
    * @param array of stdObjects
