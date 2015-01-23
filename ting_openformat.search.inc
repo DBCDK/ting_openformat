@@ -435,11 +435,11 @@ function ting_openformat_conditions_callback($query) {
   }
 
   // set the sort parameter here - thus it will work when sort parameter is added to url
-  if (!empty($_REQUEST['sort'])) {
-    $conditions['sort'] = check_plain($_REQUEST['sort']);
-  }
-  else { // default sort parameter
+  if (empty($_REQUEST['sort']) || $_REQUEST['sort'] == 'rank_frequency') {
     $conditions['sort'] = _ting_openformat_set_sort_ranking($query, $conditions);
+  }
+  else { // default sort parameter ('rank_frequency')
+    $conditions['sort'] = check_plain($_REQUEST['sort']);
   }
 
   // If facets is set, check if we have to remove any, if so,
