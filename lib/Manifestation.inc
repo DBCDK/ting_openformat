@@ -503,7 +503,7 @@ class Manifestation extends ManifestationMaster {
     $VolumeTag = $this->getVolume();
     if (isset($VolumeTag)) {
       // get accessinformation from volume tag
-      $result = ting_openformat_methods::parseFields($VolumeTag->details, $fields);
+      $result = TingOpenformatMethods::parseFields($VolumeTag->details, $fields);
       return $result;
     }
     return NULL;
