@@ -1,0 +1,93 @@
+<?php
+
+/**
+ * Test class for ting_openformat
+ */
+class TingOpenFormatSortSelectUnitTestCase extends DrupalUnitTestCase {
+
+  /**
+   * @return array
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Ting OpenFormat Sort SelectUnittest'),
+      'description' => t('Tests the sorting selection functions'),
+      'group' => t('Ting Openformat'),
+    );
+  }
+
+  public function setUp() {
+    parent::setUp();
+
+  }
+
+  public function testSortSelect() {
+
+    module_load_include('inc', 'ting_openformat', 'ting_openformat.search');
+
+    // default sorting
+    $query = 'fubar';
+    $sort = 'rank_frequency';
+    $this->assertEqual($sort, _ting_openformat_set_sort_ranking($query), 'Default sort is rank_frequency');
+
+    // search codes used in search_block_form
+    $query = 'term.subject = fubar';
+    $sort = 'rank_subject';
+    $this->assertEqual($sort, _ting_openformat_set_sort_ranking($query), $sort . '  sorting is used with term.subject used in search_block_form');
+
+    $query = 'term.maintitle = fubar';
+    $sort = 'rank_main_title';
+    $this->assertEqual($sort, _ting_openformat_set_sort_ranking($query), $sort . '  sorting is used with term.maintitle used in search_block_form');
+
+    $query = 'term.creator = fubar';
+    $sort = 'rank_creator';
+    $this->assertEqual($sort, _ting_openformat_set_sort_ranking($query), $sort . '  sorting is used with term.creator used in search_block_form');
+
+    // search codes used in bibdk_custom_search input elements
+    $conditions['qe']['term.creator'][0] = 'foo';
+    $sort = 'rank_creator';
+    $this->assertEqual($sort, _ting_openformat_set_sort_ranking('', $conditions), $sort . '  sorting is used with term.creator used in bibdk_custom_search input elements');
+    unset($conditions);
+
+    $conditions['qe']['dkcclterm.ti'][0] = 'foo';
+    $sort = 'rank_main_title';
+    $this->assertEqual($sort, _ting_openformat_set_sort_ranking('', $conditions), $sort . ' sorting is used with term.creator used in bibdk_custom_search input elements');
+    unset($conditions);
+
+    $conditions['qe']['dkcclterm.em'][0] = 'foo';
+    $sort = 'rank_subject';
+    $this->assertEqual($sort, _ting_openformat_set_sort_ranking('', $conditions), $sort . '  sorting is used with dkcclterm.em used in bibdk_custom_search input elements');
+    unset($conditions);
+
+    // search codes priority
+    $conditions['qe']['term.creator'][0] = 'foo';
+    $conditions['qe']['dkcclterm.ti'][0] = 'foo';
+    $conditions['qe']['dkcclterm.em'][0] = 'foo';
+    $sort = 'rank_subject';
+    $this->assertEqual($sort, _ting_openformat_set_sort_ranking('', $conditions), $sort . '  has priority over rank_main_title and rank_creator');
+    unset($conditions);
+
+    $conditions['qe']['term.creator'][0] = 'foo';
+    $conditions['qe']['dkcclterm.ti'][0] = 'foo';
+    $sort = 'rank_main_title';
+    $this->assertEqual($sort, _ting_openformat_set_sort_ranking('', $conditions), $sort . '  has priority over rank_creator');
+    unset($conditions);
+
+    // 'deep array' search codes used in bibdk_custom_search input elements
+    $conditions['qe']['foo']['bar']['bas'][0] = 'term.creator%3D%22fubar%22';
+    $sort = 'rank_creator';
+    $this->assertEqual($sort, _ting_openformat_set_sort_ranking('', $conditions), $sort . '  sorting is used with term.creator used bibdk_custom_search select, checkboxes, etc.');
+    unset($conditions);
+
+    // check that whitespace are normalised
+    $query = 'term.subject=fubar';
+    $sort = 'rank_subject';
+    $this->assertEqual($sort, _ting_openformat_set_sort_ranking($query), 'sorting work with no whitespace');
+
+    $query = 'term.subject  =  fubar';
+    $sort = 'rank_subject';
+    $this->assertEqual($sort, _ting_openformat_set_sort_ranking($query), 'sorting work with extra whitespace');
+
+  }
+
+}

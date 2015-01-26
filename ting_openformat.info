@@ -1,21 +1,11 @@
 name = Search client
 description = Searching for bibdk.
 package = Bibliotek.dk
-version = 7.x-0.62
+version = 7.x-0.63
 core = 7.x
 
 ;configure link from module list
 configure = admin/config/ting_openformat
-
-files[] = ting_openformat.module
-files[] = ting_openformat.field.inc
-files[] = ting_openformat.field_definitions.inc
-files[] = ting_openformat.admin.inc
-files[] = ting_openformat.controllers.inc
-files[] = ting_openformat.entities.inc
-files[] = ting_openformat.facetbrowser.inc
-
-files[] = ting_openformat_feeds.inc
 
 files[] = test/ting_openformat_unit_test.test
 files[] = test/ting_openformat_web_test.test
@@ -26,6 +16,9 @@ files[] = test/BibdkBriefDisplay.test
 files[] = test/ting_openformat_methods.test
 files[] = test/ting_openformat_field_shown.test
 files[] = test/ting_openformat_manifestation_unit_test.test
+files[] = test/ting_openformat_sort_select_unit_test.test
+
+files[] = ting_openformat.controllers.inc
 
 files[] = lib/BibdkCollection.inc
 files[] = lib/BibdkSubwork.inc
@@ -35,8 +28,10 @@ files[] = lib/ManifestationMaster.inc
 files[] = lib/ManifestationSection.inc
 files[] = lib/ManifestationVolume.inc
 files[] = lib/BibdkBriefDisplay.inc
+files[] = lib/TingOpenformatMethods.inc
 
 scripts[] = js/ting_openformat.js
+scripts[] = js/ting_openformat_full_view.js
 
 dependencies[] = search
 dependencies[] = ting_client

@@ -1,51 +1,42 @@
-<div class="work element-wrapper <?php print $work_type; ?>">
-
-  <div class="element">
-
-    <div class="work-header element-section">
-
-      <div class="element-title">
-        <div>
-          <h2><?php print ( !empty($title_full)) ? $title_full : $title; ?> <?php print ( !empty($language)) ? "($language)" : ''; ?></h2>
+<?php
+/**
+ * @file
+ * theme implementation for brief display of a collection
+ *
+ * Variables:
+ * $uid: work id @todo remove selid- from id, this requires seleniumtests to be upated
+ * $theme_attributes: array of attributes for the wrapper div
+ * $title: Title of the collection
+ * $author: Author of the collection
+ * $part_of: (optional) If collection is part of a series
+ * $types: List of type icons
+ * $actions: fields attached to the BibdkCollection object
+ * $work: If in full view mode it contains a work else an ajax wrapper
+ *
+ */
+?>
+<div <?php echo drupal_attributes($theme_attributes); ?>>
+    <div role='link' tabindex="0" class="work-header clearfix" data-work-toggle="<?php print $uid; ?>">
+      <div class="work-title" id="selid-<?php print $uid; ?>">
+        <h2><?php print $title; ?></h2>
+        <div class="title-meta">
           <h3><?php print $author; ?></h3>
-          <?php if (!empty($partOf)) : ?>
-            <span>I: <?php print $partOf; ?></span>
-          <?php endif; ?>
+          <span><?php print $part_of; ?></span>
         </div>
       </div>
-
-      <div class="element-types-actions">
-        <div class="element-types">
-          <?php print $types; ?>
+      <div class="work-types-actions">
+        <div class="work-types">
+          <?php print drupal_render($types); ?>
         </div>
-
-        <div class="element-actions">
+        <div class="work-actions">
           <?php print drupal_render($actions); ?>
         </div>
       </div>
-
-
-      <div class="msg-<?php print $uid; ?> collection-msg clearfix"></div>
-
-      <?php print $togglework; ?>
-
+      <!-- element-types-actions -->
     </div>
-
-    <!-- element-section (work-header) -->
-    <?php if ( isset($work_one) ): ?>
-
-      <div class="work-body work-body-has-cover element-section">
-        <div><?php print $work_one; ?></div>
-      </div>
-
-    <?php else: ?>
-
-      <div class="work-body work-body-has-cover element-section visuallyhidden">
-        <div id="ajax_placeholder_<?php print $uid; ?>"></div>
-      </div>
-
-    <?php endif; ?>
-    <!-- element-section -->
-  </div>
-  <!-- element -->
+    <!-- work-header -->
+    <div class="work-body work-hidden">
+      <?php print drupal_render($work); ?>
+    </div>
+    <!-- work-body -->
 </div>

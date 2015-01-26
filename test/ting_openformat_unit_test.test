@@ -16,8 +16,8 @@ class TingOpenFormatUnitTestCase extends DrupalUnitTestCase {
   }
 
   public function setUp() {
+    module_load_include('inc', 'ting_openformat', 'lib/TingOpenformatMethods');
     module_load_include('inc', 'ting_openformat', 'lib/ManifestationMaster');
-    module_load_include('inc', 'ting_openformat', 'ting_openformat.entities');
     module_load_include('inc', 'ting_openformat', 'lib/BibdkCollection');
     module_load_include('php', 'ting_openformat', 'test/test_results');
     module_load_include('inc', 'ting_openformat', 'lib/BibdkSubwork');

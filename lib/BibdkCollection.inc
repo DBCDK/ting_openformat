@@ -31,12 +31,12 @@ class BibdkCollection {
   }
 
   public function getId() {
-    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('identifier'));
+    $result = TingOpenformatMethods::parseFields($this->manifestations[0], array('identifier'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
   public function getTitle() {
-    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('title'));
+    $result = TingOpenformatMethods::parseFields($this->manifestations[0], array('title'));
     $title = (is_array($result)) ? reset($result) : $result;
     $dependent_title = $this->getDependentTitle();
     $ret = (!empty($dependent_title)) ? $title . " <br /> " . implode('. ', $dependent_title) : $title;
@@ -59,28 +59,28 @@ class BibdkCollection {
   }
 
   public function getTitleFull() {
-    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('titleFull'));
+    $result = TingOpenformatMethods::parseFields($this->manifestations[0], array('titleFull'));
     return ( is_array($result) ) ? reset($result) : $result;
   }
 
   public function getLanguage(){
-    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('language'));
+    $result = TingOpenformatMethods::parseFields($this->manifestations[0], array('language'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
   public function getDependentTitle() {
-    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('dependentTitle'));
+    $result = TingOpenformatMethods::parseFields($this->manifestations[0], array('dependentTitle'));
     return $result;
   }
 
 
   public function getPartOf() {
-    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('partOf'));
+    $result = TingOpenformatMethods::parseFields($this->manifestations[0], array('partOf'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
   public function getAuthor() {
-    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('creator'));
+    $result = TingOpenformatMethods::parseFields($this->manifestations[0], array('creator'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -97,7 +97,7 @@ class BibdkCollection {
   }
 
   public function getWorkType() {
-    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('workType'));
+    $result = TingOpenformatMethods::parseFields($this->manifestations[0], array('workType'));
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -109,7 +109,7 @@ class BibdkCollection {
   }
 
   public function getAccessType(){
-    $result = ting_openformat_methods::parseFields($this->manifestations, array('accessType'));
+    $result = TingOpenformatMethods::parseFields($this->manifestations, array('accessType'));
     return (is_array($result)) ? $result : array();
   }
 
@@ -128,8 +128,19 @@ class BibdkCollection {
     return FALSE;
   }
 
+  public function getWorkTypes() {
+    $result = TingOpenformatMethods::parseFields($this->manifestations, array('workType'));
+    $res = array();
+    if(is_array($result)){
+      foreach ($result as $index => $type) {
+        $res[$type['workType']] = $type['workType'];
+      }
+    }
+    return $res;
+  }
+
   public function getType() {
-    $result = ting_openformat_methods::parseFields($this->manifestations[0], array('type'));
+    $result = TingOpenformatMethods::parseFields($this->manifestations[0], array('type'));
     return (is_array($result)) ? reset($result) : $result;
   }
 

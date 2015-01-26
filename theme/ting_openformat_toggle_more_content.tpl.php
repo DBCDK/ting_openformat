@@ -8,7 +8,7 @@
  *  $more_text: the part of the text that can be toggled
  */
 ?>
-<span class='toggle-more'>
+<span class='toggle-more' data-toggle-link>
 <?php echo $trimmed_text; ?>
   <span class='toggle-more-content toggle-show'>...</span>
   <span class='toggle-more-content toggle-hide'>
