@@ -13,7 +13,8 @@
  */
 function ting_openformat_collection_view(BibdkCollection $bibdkobject, $full_view) {
   //@todo use drupal_clean_css_identifier() -> This requires a lot of py tests to be updated
-  $uid = strtolower(strtr(reset($bibdkobject->getCollectionIds()), array(
+  $object_ids = $bibdkobject->getCollectionIds();
+  $uid = strtolower(strtr(reset($object_ids), array(
     ':' => '',
     '-' => '',
     '_' => ''
@@ -156,6 +157,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
  */
 function ting_openformat_get_subworks($manifestations, $work_id) {
   $ordered_list = array();
+  $subwork_manifestations = array();
   /* @var Manifestation $manifestation */
   foreach ($manifestations as $manifestation) {
     $key = drupal_clean_css_identifier($manifestation->getSubType() . '-' . $work_id);
@@ -164,11 +166,12 @@ function ting_openformat_get_subworks($manifestations, $work_id) {
       '#text' => $manifestation->getSubType(),
       '#icon' => $manifestation->getType(),
     );
+    $subwork_manifestations[$key][] = $manifestation;
     $ordered_list[$key]['manifestations'][] = ting_openformat_get_manifestation_for_subwork($manifestation, $view_mode = 'full', $langcode = NULL);
   }
   foreach ($ordered_list as $key => $value) {
     $ordered_list[$key]['toggle'] = ting_openformat_subwork_toggle($value['manifestations']);
-    $ordered_list[$key]['subwork_actions'] = module_invoke_all('ting_openformat_subwork_materialtype_actions', $manifestations, $key);
+    $ordered_list[$key]['subwork_actions'] = module_invoke_all('ting_openformat_subwork_materialtype_actions', $subwork_manifestations[$key], $key);
     $ordered_list[$key]['active'] = (array_search($key, array_keys($ordered_list)) == 0) ? 'active' : '';
   }
   return $ordered_list;

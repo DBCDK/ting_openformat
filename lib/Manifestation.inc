@@ -488,4 +488,25 @@ class Manifestation extends ManifestationMaster {
     return NULL;
   }
 
+  /**
+   * Return Get accessInformation from volume tag
+   * @return result array or NULL if volume tag do not exist
+   */
+  public function getVolumeAccessInformation() {
+    $fields = array(
+      'accessInformation' => array(
+        'accessUrl',
+        'accessUrlDescriptor',
+        'accessUrlDisplay',
+      )
+    );
+    $VolumeTag = $this->getVolume();
+    if (isset($VolumeTag)) {
+      // get accessinformation from volume tag
+      $result = TingOpenformatMethods::parseFields($VolumeTag->details, $fields);
+      return $result;
+    }
+    return NULL;
+  }
+
 }
