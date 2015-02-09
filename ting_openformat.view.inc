@@ -137,8 +137,8 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   }
 
   $work_fields = _prepare_view('bibdkWorkEntity', $bibdkWork, $view_mode, $langcode);
-  $cover = isset($work_fields['ting_cover_work']) ? $work_fields['ting_cover_work'] : null;
-  unset($work_fields['ting_cover_work']);
+  $cover = isset($work_fields['bibdk_cover_work']) ? $work_fields['bibdk_cover_work'] : null;
+  unset($work_fields['bibdk_cover_work']);
   $subworks = ting_openformat_get_subworks($bibdkWork->getManifestations(), $bibdkWork->getId());
 
   return array(
