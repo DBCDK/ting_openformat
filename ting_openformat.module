@@ -430,7 +430,7 @@ function ting_openformat_maniobject_uri() {
   return 'Brønd';
 }
 
-/* * *********  panel-pages *************** */
+/* * *********  content types  *************** */
 
 /**
  * Implements hook_ctools_plugin_directory().
@@ -444,16 +444,7 @@ function ting_openformat_ctools_plugin_directory($module, $plugin) {
   }
 }
 
-/**
- * Implement hook_ctools_plugin_api().
- */
-function ting_openformat_ctools_plugin_api($module, $api) {
-  if ($module == 'page_manager' && $api == 'pages_default') {
-    return array('version' => 1);
-  }
-}
-
-/* * ************** end panel-pages ************** */
+/* * ************** end content types ************** */
 
 /** Implements hook_ding_devel_timers
  */
