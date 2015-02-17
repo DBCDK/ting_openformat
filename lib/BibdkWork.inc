@@ -141,6 +141,7 @@ class BibdkWork {
   private function _getDetails() {
     $manifestations = $this->getManifestations();
     $work_manifestation = reset($manifestations);
+
     if (isset($work_manifestation->manifestation->volume->details)) {
       return $work_manifestation->manifestation->volume->details;
     }
