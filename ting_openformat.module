@@ -191,9 +191,10 @@ function ting_openformat_ajax_manifestations($type, $json) {
     $view = drupal_render(ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL));
     $commands[] = array(
       'command' => 'add_manifestations',
-      'selector' => '[data-id=' . $manifestation->id . ']',
+      'selector' => str_replace(':', '', '#' . $manifestation->id) ,
       'data' => $view,
     );
+    
   }
   ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
 }
