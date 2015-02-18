@@ -15,8 +15,15 @@ function ting_openformat_full_view_button($subtype, $conf, $panel_args, $context
 
   $block = new stdClass();
 
+  $content = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array('full-view-links'),
+    ),
+  );
+
   $content['short'] = array(
-    '#theme' => 'link',
+    '#theme' => 'link_with_svg',
     '#text' => t('short view', array(), array('context' => 'ting_openformat')),
     '#path' => NULL,
     '#options' => array(
@@ -26,13 +33,13 @@ function ting_openformat_full_view_button($subtype, $conf, $panel_args, $context
       'attributes' => array(
         'id' => 'ting-openformat-full-view-button-closed',
         'class' => (!$_SESSION['search_settings']['full_view']) ? 'inactive' : ''
-
       ),
     ),
+    '#svg' => 'svg-view-list',
   );
 
   $content['full'] = array(
-    '#theme' => 'link',
+    '#theme' => 'link_with_svg',
     '#text' => t('full view', array(), array('context' => 'ting_openformat')),
     '#path' => NULL,
     '#options' => array(
@@ -44,17 +51,10 @@ function ting_openformat_full_view_button($subtype, $conf, $panel_args, $context
         'class' => ($_SESSION['search_settings']['full_view']) ? 'inactive' : ''
       ),
     ),
+    '#svg' => 'svg-view-details',
   );
 
-
-  $block->content = array(
-    '#theme' => 'html_tag',
-    '#tag' => 'div',
-    '#value' => drupal_render($content),
-    '#attributes' => array(
-      'class' => 'full-view-links'
-    ),
-  );
+  $block->content = $content;
 
   return $block;
 
