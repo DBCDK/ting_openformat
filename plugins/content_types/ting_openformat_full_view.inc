@@ -22,9 +22,10 @@ function ting_openformat_full_view_button($subtype, $conf, $panel_args, $context
     ),
   );
 
+  $short_view_text = t('short view', array(), array('context' => 'ting_openformat'));
   $content['short'] = array(
     '#theme' => 'link_with_svg',
-    '#text' => t('short view', array(), array('context' => 'ting_openformat')),
+    '#text' => $short_view_text,
     '#path' => NULL,
     '#options' => array(
       'html' => TRUE,
@@ -32,15 +33,17 @@ function ting_openformat_full_view_button($subtype, $conf, $panel_args, $context
       'external' => TRUE,
       'attributes' => array(
         'id' => 'ting-openformat-full-view-button-closed',
-        'class' => (!$_SESSION['search_settings']['full_view']) ? 'inactive' : ''
+        'class' => (!$_SESSION['search_settings']['full_view']) ? 'inactive' : '',
+        'title' => $short_view_text,
       ),
     ),
     '#svg' => 'svg-view-list',
   );
 
+  $full_view_text = t('full view', array(), array('context' => 'ting_openformat'));
   $content['full'] = array(
     '#theme' => 'link_with_svg',
-    '#text' => t('full view', array(), array('context' => 'ting_openformat')),
+    '#text' => $full_view_text,
     '#path' => NULL,
     '#options' => array(
       'html' => TRUE,
@@ -48,7 +51,8 @@ function ting_openformat_full_view_button($subtype, $conf, $panel_args, $context
       'external' => TRUE,
       'attributes' => array(
         'id' => 'ting-openformat-full-view-button-expanded',
-        'class' => ($_SESSION['search_settings']['full_view']) ? 'inactive' : ''
+        'class' => ($_SESSION['search_settings']['full_view']) ? 'inactive' : '',
+        'title' => $full_view_text,
       ),
     ),
     '#svg' => 'svg-view-details',
