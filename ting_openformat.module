@@ -188,12 +188,14 @@ function ting_openformat_ajax_manifestations($type, $json) {
   }
 
   foreach ($manifestations as $manifestation) {
-    $view = drupal_render(ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL));
+    $render_view = ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL);
+    $view = drupal_render($render_view);
     $commands[] = array(
       'command' => 'add_manifestations',
-      'selector' => '[data-id=' . $manifestation->id . ']',
+      'selector' => str_replace(':', '', '#' . $manifestation->id) ,
       'data' => $view,
     );
+    
   }
   ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
 }
@@ -348,7 +350,8 @@ function _ting_openformat_get_bibdk_work_entity($openformat) {
  */
 function ting_openformat_get_single_manifestation($pid) {
   /* @var $work BibdkWork */
-  $work = reset(ting_openformat_get_single($pid));
+  $pid_array = ting_openformat_get_single($pid);
+  $work = reset($pid_array);
   $manifestation = reset($work->getManifestations());
   return $manifestation;
 }
