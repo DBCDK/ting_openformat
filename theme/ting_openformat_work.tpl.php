@@ -19,7 +19,6 @@
  * $subwork_actions: actions related to a manifestation type (subwork)
  *
  */
-echo 'HEST'
 ?>
 <div class="work-information <?php echo $uid; ?>_start" id="<?php echo $uid; ?>"
      selenium-id="work-<?php echo $uid; ?>">
