@@ -34,11 +34,13 @@ function ting_openformat_pager($subtype, $conf, $panel_args, $context) {
       );
     }
 
-    $block->content['prev'] = array(
-      '#theme' => 'pager_previous',
-      '#prefix' => '<span class="bibdk-pager-previous">',
-      '#suffix' => '</span>',
-    );
+    if ($page_no > 0) {
+      $block->content['prev'] = array(
+        '#theme' => 'pager_previous',
+        '#prefix' => '<span class="bibdk-pager-previous">',
+        '#suffix' => '</span>',
+      );
+    }
 
     if ($results->more) {
       $block->content['next'] = array(
