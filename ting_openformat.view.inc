@@ -323,6 +323,7 @@ function _ting_openformat_get_types_list($bibdkobject) {
  * @return array
  */
 function ting_openformat_show_info_get_form($form, $form_state, $bibdkObject, $uid, $trackId = 0) {
+
   $all_ids_in_collection = $bibdkObject->getCollectionIds();
   $form = array(
     '#type' => 'container',
@@ -351,7 +352,6 @@ function ting_openformat_show_info_get_form($form, $form_state, $bibdkObject, $u
       'event' => 'click',
     ),
   );
-
   return $form;
 }
 
@@ -366,16 +366,13 @@ function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
   $ids = $form_state['clicked_button']['#ids'];
   $uid = $form_state['clicked_button']['#uid'];
   $collection = $form_state['clicked_button']['#collection'];
-
   $tracking_id = $form_state['clicked_button']['#trackId'];
 
   $view = ting_openformat_load_single_full_work($collection, $ids, $uid, $tracking_id);
-
   $view = theme('status_messages') . drupal_render($view);
 
   $commands = array();
-  $commands[] = ajax_command_remove("#ajax-$uid");
-  $commands[] = ajax_command_replace(NULL, $view);
+  $commands[] = ajax_command_replace("#ajax-$uid", $view);
 
   return array('#type' => 'ajax', '#commands' => $commands);
 }
