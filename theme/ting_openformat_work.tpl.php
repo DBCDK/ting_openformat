@@ -41,10 +41,10 @@
       <?php foreach ($subworks as $key => $group) : ?>
         <?php list($tab, $manifestation, $toggle, $subwork_actions, $active) = array_values($group); ?>
         <dd class="accordion-navigation <?php print $active; ?>">
-          <a id="manifestation-toggle-button-<?php print $key; ?>" href="#<?php print $key; ?>" data-manifestation-toggle="<?php print $key; ?>">
+          <a id="manifestation-toggle-button-<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>" href="#<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>" data-manifestation-toggle="<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>">
             <?php print drupal_render($tab); ?>
           </a>
-          <div id="<?php print $key; ?>" class="content <?php print $active; ?>">
+          <div id="<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>" class="content <?php print $active; ?>">
             <div class="subwork">
               <?php print drupal_render($subwork_actions); ?>
             </div>
@@ -53,7 +53,7 @@
             </div>
             <?php if (!empty($toggle)) : ?>
               <div class="manifestation-toggle"
-                   data-manifestation-toggle="<?php print $key; ?>" data-load-multible>
+                   data-manifestation-toggle="<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>" data-load-multible>
                 <?php print drupal_render($toggle); ?>
               </div>
             <?php endif; ?>

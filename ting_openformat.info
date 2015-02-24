@@ -1,7 +1,7 @@
 name = Search client
 description = Searching for bibdk.
 package = Bibliotek.dk
-version = 7.x-0.64
+version = 7.x-0.65
 core = 7.x
 
 ;configure link from module list
@@ -39,8 +39,3 @@ dependencies[] = ctools
 dependencies[] = ding_entity
 dependencies[] = page_manager
 dependencies[] = bibdk_usersettings
-
-features[ctools][] = page_manager:pages_default:1
-features[features_api][] = api:1
-features[page_manager_handlers][] = search_ting_openformat_panel_context
-
