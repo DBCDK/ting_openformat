@@ -40,6 +40,31 @@ class TingOpenformatMethods {
   }
 
   /**
+   * Link elements are of type $o->[display,url]
+   * There can be one or more
+   * @param $stdObjects
+   * return array[url,display]
+   */
+  public static function _parseLinkElements($stdObjects){
+    $ret = Array();
+
+    if (!is_array($stdObjects)) {
+      $stdObjects = array($stdObjects);
+    }
+
+    foreach ($stdObjects as $object) {
+      if (!isset($object->url) || !isset($object->display)) {
+        continue;
+      }
+      $element['accessUrl'] = $object->url->{'$'};
+      $element['accessUrlDisplay'] = $object->display->{'$'};
+      $ret[] = $element;
+
+    }
+    return $ret;
+  }
+
+  /**
    * @param $object
    * @param array $fields
    * @return array|null
@@ -63,6 +88,9 @@ class TingOpenformatMethods {
       if (is_array($value) && isset($object->$field)) {
         $ret[$field][] = self::parseFields($object->$field, $value);
       }
+      elseif($value == 'linkElements' && isset($object->$value)) {
+        $ret[$value] = self::_parseLinkElements($object->$value);
+      }
       elseif ($value == 'searchCode' && isset($object->$field)) {
         $ret[$field][] = self::_parseSearchCode($object->$field);
       }
@@ -70,7 +98,6 @@ class TingOpenformatMethods {
         $ret[$value] = $object->$field->{'$'};
       }
       elseif (!is_array($value) && isset($object->$value) && is_array($object->$value)) {
-
         foreach ($object->$value as $val) {
           $ret[$value][] = $val->{'$'};
         }
@@ -79,6 +106,7 @@ class TingOpenformatMethods {
         $ret[$value] = $object->$value->{'$'};
       }
     }
+
 
     return $ret;
   }
