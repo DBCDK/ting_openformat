@@ -108,6 +108,23 @@ class ManifestationMaster {
     return $result;
   }
 
+  public function getRelatedSeriesLink() {
+    $elements = $this->_getDetails();
+
+    $fields = array(
+      'relatedSeriesTitles' => array(
+        'relatedSeriesTitle' => array(
+          'relatedSeries' => array(
+            'linkElements',
+          ),
+        ),
+      ),
+    );
+    $result = TingOpenformatMethods::parseFields($elements,$fields);
+
+    return $result;
+  }
+
   /* \brief readabilityIndexes
    * zero or more occurence(s)
    */
