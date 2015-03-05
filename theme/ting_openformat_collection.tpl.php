@@ -20,7 +20,7 @@
       <div class="work-title" id="selid-<?php print $uid; ?>">
         <h2><?php print $title; ?></h2>
         <div class="title-meta">
-          <h3><?php print $author; ?></h3>
+          <h3><?php print is_array($author) ? implode(', ', $author) : $author; ?></h3>
           <span><?php print $part_of; ?></span>
         </div>
       </div>

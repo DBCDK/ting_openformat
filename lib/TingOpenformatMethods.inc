@@ -74,6 +74,12 @@ class TingOpenformatMethods {
         foreach ($object->$value as $val) {
           $ret[$value][] = $val->{'$'};
         }
+
+        // When using briefDisplay as format sometimes an array is encapsulating the value
+        // But are there situation where the array with one element is required?
+        if (count($ret[$value]) == 1) {
+          $ret[$value] = $ret[$value][0];
+        }
       }
       elseif (!is_array($value) && isset($object->$value) && is_object($object->$value)) {
         $ret[$value] = $object->$value->{'$'};

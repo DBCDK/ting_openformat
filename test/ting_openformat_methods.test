@@ -84,7 +84,18 @@ class TingOpenformatMethodsUnittest extends DrupalUnitTestCase {
     $obj->value = array($val_obj);
     $fields = array('field' => 'value');
     $ret = TingOpenformatMethods::parseFields($obj, $fields);
-    $this->assertIdentical($ret, array('value' => array('dollar')), 'Object has array as value property and got a dollar');
+    $this->assertIdentical($ret, array('value' => 'dollar'), 'Object has array as value property and got a dollar string');
+    $obj = new StdClass();
+    $val_obj = new StdClass();
+    $val_obj->{'$'} = 'dollar';
+    $val_obj2 = new StdClass();
+    $val_obj2->{'$'} = 'dollar2';
+    $obj->value = array($val_obj, $val_obj2);
+    $fields = array('field' => 'value');
+    $ret = TingOpenformatMethods::parseFields($obj, $fields);
+    $this->assertIdentical($ret, array('value' => array('dollar', 'dollar2')), 'Object has array as value property and got an array of dollars');
+
+
     $obj = new StdClass();
     $val_obj = new StdClass();
     $obj->value = $val_obj;
