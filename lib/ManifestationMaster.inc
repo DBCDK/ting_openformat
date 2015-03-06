@@ -110,7 +110,6 @@ class ManifestationMaster {
 
   public function getRelatedSeriesLink() {
     $elements = $this->_getDetails();
-
     $fields = array(
       'relatedSeriesTitles' => array(
         'relatedSeriesTitle' => array(
@@ -120,8 +119,7 @@ class ManifestationMaster {
         ),
       ),
     );
-    $result = TingOpenformatMethods::parseFields($elements,$fields);
-
+    $result = TingOpenformatMethods::parseFields($elements, $fields);
     return $result;
   }
 
@@ -149,7 +147,6 @@ class ManifestationMaster {
    * shelfMusic 0 or more occurence(s)
    * shelfClassification 0 or more occurence(s)
    */
-
   public function getShelf() {
     $fields = array("shelf" => array(
         'shelfHeader' => 'header',

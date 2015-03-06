@@ -59,8 +59,8 @@ class TingOpenformatMethods {
       $element['accessUrl'] = $object->url->{'$'};
       $element['accessUrlDisplay'] = $object->display->{'$'};
       $ret[] = $element;
-
     }
+
     return $ret;
   }
 
@@ -106,7 +106,6 @@ class TingOpenformatMethods {
         $ret[$value] = $object->$value->{'$'};
       }
     }
-
 
     return $ret;
   }

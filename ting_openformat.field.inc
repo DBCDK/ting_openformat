@@ -145,8 +145,6 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
   return $element;
 }
 
-
-
 /** Generic Helper function to get content elements for a speficic filed
  * @param $field_name
  * @param $entity
