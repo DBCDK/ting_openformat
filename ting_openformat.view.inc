@@ -372,7 +372,7 @@ function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
   $view = theme('status_messages') . drupal_render($view);
 
   $commands = array();
-  $commands[] = ajax_command_replace("#ajax-$uid", $view);
+  $commands[] = ajax_command_replace(NULL, $view);
 
   return array('#type' => 'ajax', '#commands' => $commands);
 }
