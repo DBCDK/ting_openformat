@@ -29,6 +29,7 @@
       loadManifestationsEventListener(context);
       toggleWorkEventListener(context);
       toggleManifestationsEventListener(context);
+      toggleManifestationsLinkEventListener(context);
       toggleMoreEventListener(context);
     }
   }
@@ -37,9 +38,10 @@
    * Add eventlistener for loading manifestations
    */
   function loadManifestationsEventListener(context){
-    $('[data-manifestation-toggle]', context).one('click', function(e){
-      var wrapper_id = '#' + this.getAttribute('data-manifestation-toggle');
-      var manifestation_ids = getManifestationIds(wrapper_id, this.hasAttribute('data-load-multible'));
+    $('[data-manifestation-toggle] a', context).one('click', function(e){
+      var parent = this.parentNode;
+      var wrapper_id = '#' + parent.getAttribute('data-manifestation-toggle');
+      var manifestation_ids = getManifestationIds(wrapper_id, parent.hasAttribute('data-load-multible'));
       loadManifestationsWithAjax($(wrapper_id), manifestation_ids);
     });
   }
@@ -95,7 +97,14 @@
    */
   function toggleManifestationsEventListener(context) {
     $('[data-load-multible]', context).click(function(e) {
-      $(this).siblings('.manifestations').toggleClass('is-toggled');
+      $('a', this).click();
+    });
+  }
+
+  function toggleManifestationsLinkEventListener(context) {
+    $('[data-load-multible] a', context).click(function(e) {
+      e.stopPropagation();
+      $(this).parent().siblings('.manifestations').toggleClass('is-toggled');
     });
   }
 
