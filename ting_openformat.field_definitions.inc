@@ -248,14 +248,6 @@ function ting_openformat_bibdk_fields() {
       'callback method' =>  'getRelatedSeriesTitle',
     ),
 
-    'bibdk_nami_related_series_link' => array(
-      'label' => 'Related series_link',
-      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
-      'display' => array('full'),
-      'description' => 'link to related titles of manifestation',
-      'callback method' =>  'getRelatedSeriesLink',
-    ),
-
     'bibdk_mani_readability_indexes' => array(
       'label' => 'Readability indexes',
       'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),

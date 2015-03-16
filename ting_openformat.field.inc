@@ -129,10 +129,6 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $urls = $entity->getAccessInformation();
         $value = _ting_openformat_get_markup_for_field($urls, '<br/>');
         break;
-      case 'bibdk_nami_related_series_link':
-        $urls = $entity->getRelatedSeriesLink();
-        $value = _ting_openformat_get_markup_for_field($urls, '<br/>');
-        break;
       default :
         $content = _ting_openformat_default_field_view_content($field['field_name'], $entity);
         $value = _ting_openformat_get_markup_for_field($content);
