@@ -8,12 +8,11 @@ class TingOpenformatMethods {
    */
   public static function _parseSearchCode($stdObjects) {
     $ret = Array();
-
     if (!is_array($stdObjects)) {
       $stdObjects = array($stdObjects);
     }
 
-    foreach ($stdObjects as $object) {
+    foreach ($stdObjects as $key => $object) {
       if (isset($object->searchCode) || isset($object->display)) {
         $subject['searchCode'] = isset($object->searchCode) ? self::_getSearchCodeElement($object->searchCode) : NULL;
         $subject['display'] = isset($object->display) ? $object->display->{'$'} : NULL;
@@ -41,24 +40,22 @@ class TingOpenformatMethods {
 
   /**
    * Link elements are of type $o->[display,url]
-   * There can be one or more
-   * @param $stdObjects
+   *
+   * @param $stdObject
    * return array[url,display]
    */
-  public static function _parseLinkElements($stdObjects){
+  public static function _parseLinkElement($stdObjects) {
     $ret = Array();
-
     if (!is_array($stdObjects)) {
       $stdObjects = array($stdObjects);
     }
 
-    foreach ($stdObjects as $object) {
-      if (!isset($object->url) || !isset($object->display)) {
-        continue;
+    foreach ($stdObjects as $key => $object) {
+      if (isset($object->url) && isset($object->display)) {
+        $subject['accessUrl'] = $object->url->{'$'};
+        $subject['accessUrlDisplay'] = $object->display->{'$'};
+        $ret[] = $subject;
       }
-      $element['accessUrl'] = $object->url->{'$'};
-      $element['accessUrlDisplay'] = $object->display->{'$'};
-      $ret[] = $element;
     }
 
     return $ret;
@@ -83,16 +80,18 @@ class TingOpenformatMethods {
 
       return $ret;
     }
-
     foreach ($fields as $field => $value) {
       if (is_array($value) && isset($object->$field)) {
         $ret[$field][] = self::parseFields($object->$field, $value);
       }
-      elseif($value == 'linkElements' && isset($object->$value)) {
-        $ret[$value] = self::_parseLinkElements($object->$value);
-      }
       elseif ($value == 'searchCode' && isset($object->$field)) {
         $ret[$field][] = self::_parseSearchCode($object->$field);
+      }
+      elseif ($value == 'searchCode' && isset($object->$value)) {
+        $ret[$field][] = self::_parseSearchCode($object);
+      }
+      elseif ($value == 'linkElements' && isset($object->$value)){
+        $ret[$field][] = self::_parseLinkElement($object->$value);
       }
       elseif ($value == 'header' && isset($object->$field)) {
         $ret[$value] = $object->$field->{'$'};

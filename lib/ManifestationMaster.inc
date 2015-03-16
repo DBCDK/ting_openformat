@@ -93,7 +93,8 @@ class ManifestationMaster {
 
   public function getSeriesTitle() {
     $elements = $this->_getDetails();
-    $result = TingOpenformatMethods::parseFields($elements, array('seriesTitle' => array('seriesHeader' => 'header', "series" => 'searchCode', "seriesNumber")));
+    $fields = array('seriesTitle' => array('seriesHeader' => 'header', "series" => array('searchCode', "seriesNumber")));
+    $result = TingOpenformatMethods::parseFields($elements, $fields);
     return $result;
   }
 
@@ -104,11 +105,22 @@ class ManifestationMaster {
    */
 
   public function getRelatedSeriesTitle() {
-    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('relatedSeriesTitles' => array('relatedSeriesTitle' => array('relatedSeriesDescription' => 'header', "relatedSeries" => 'searchCode'))));
+    $elements = $this->_getDetails();
+    $fields = array(
+      'relatedSeriesTitles' => array(
+        'relatedSeriesTitle' => array(
+          'relatedSeriesDescription' => 'header',
+          'relatedSeries' => array( 'linkElements','searchCode'),
+        ),
+      ),
+    );
+
+    $result = TingOpenformatMethods::parseFields($elements, $fields);
+
     return $result;
   }
 
-  public function getRelatedSeriesLink() {
+ /* public function getRelatedSeriesLink() {
     $elements = $this->_getDetails();
     $fields = array(
       'relatedSeriesTitles' => array(
@@ -121,7 +133,7 @@ class ManifestationMaster {
     );
     $result = TingOpenformatMethods::parseFields($elements, $fields);
     return $result;
-  }
+  }*/
 
   /* \brief readabilityIndexes
    * zero or more occurence(s)
@@ -474,7 +486,7 @@ class ManifestationMaster {
   public function getAnalyticContent() {
     $fields = array('analyticContent' => array(
         'analyticContributor' => 'searchCode',
-        'analyticTitle' => array('analyticTitleMain' => 'searchCode', 'analyticRestOfTitle')
+        'analyticTitle' => array('analyticTitleMain' => array('searchCode', 'analyticRestOfTitle'))
         ));
     $result = TingOpenformatMethods::parseFields($this->_getContent(), $fields);
     return $result;
