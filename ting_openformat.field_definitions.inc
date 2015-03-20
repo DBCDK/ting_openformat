@@ -247,6 +247,7 @@ function ting_openformat_bibdk_fields() {
       'description' => 'related titles of manifestation',
       'callback method' =>  'getRelatedSeriesTitle',
     ),
+
     'bibdk_mani_readability_indexes' => array(
       'label' => 'Readability indexes',
       'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),

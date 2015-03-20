@@ -202,3 +202,10 @@ function ting_openformat_update_7032() {
   ding_entity_modules_enabled(array('ting_openformat'));
 }
 
+/**
+ * update field information
+ */
+function ting_openformat_update_7033() {
+  ding_entity_modules_enabled(array('ting_openformat'));
+}
+

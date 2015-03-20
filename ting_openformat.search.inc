@@ -496,6 +496,9 @@ function ting_openformat_string_to_cql($string) {
 function _ting_openformat_convert_string_to_cql($string) {
   // Escape quotes
   $string = str_replace('"', '\"', $string);
+  // qoute forward slash -it is a boolean modifier ??
+  // are there more to qoute ??
+  $string = str_replace('/', ' "/" ', $string);
   // remove multiple whitespaces
   $string = preg_replace('/\s+/', ' ', $string);
   // explode string by whitespace
