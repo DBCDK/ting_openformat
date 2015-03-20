@@ -262,7 +262,13 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
     if ( is_array($value) && array_key_exists('accessUrl', $value ) ) {
       $txt = '';
       if(!empty($value['accessUrlDescriptor'])){
-        $txt = t($value['accessUrlDescriptor'], array(), array('context' => 'bibdk_openformat'));
+        // NOTE - pjo 200315 can this be an array ?? - for now grab the first
+        if(is_array($value['accessUrlDescriptor'])){
+          $txt = reset($value['accessUrlDescriptor']);
+        }
+        else {
+          $txt = $value['accessUrlDescriptor'];
+        }
       }
       elseif(!empty($value['accessUrlDisplay'])){
         $txt = t($value['accessUrlDisplay'], array(), array('context' => 'bibdk_openformat'));
