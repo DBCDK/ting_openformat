@@ -83,14 +83,15 @@ function _ting_openformat_set_facets(&$query, $facets) {
   }
 }
 
-function ting_openformat_get_facet_group($result, $group){
+function ting_openformat_get_facet_group($group){
+  $result = new stdClass();
+  $result->cacheKey = $_SESSION['latest_search']['cache_key'];
   $client = new ting_client_class();
   $params = $_SESSION['latest_search']['params'];
   // make sure facets are set
   _ting_openformat_facet_cache($client, $result, $params );
   // get current result
   $current_cache = drupal_static('ting_search_results');
-
   // set parameters to get the whole facetgroup
   $params['facets'] = array('facet.' . $group);
   $params['numFacets'] = variable_get('bibdk_facetbrowser_number_requested', 25);
@@ -99,25 +100,22 @@ function ting_openformat_get_facet_group($result, $group){
   // use DKABM .. it is fastest
   $params['objectFormat'] = 'DKABM';
  // do the request
-  $facet_result = $client->do_request('search', $params);
-  dpm($current_cache,'CURRNET');
-  dpm($facet_result, 'FACETS');
+  $facet_result = $client->do_request('search', $params, FALSE);
   // replace cached facetgroup
   $current_cache->facets['facet.'.$group] = $facet_result->facets['facet.'.$group];
   ting_openformat_do_set_facet_cache($current_cache);
 
-  dpm(drupal_static('ting_search_results'), 'SEARCH RESULTS');
 }
 
 function ting_openformat_do_set_facet_cache($result){
   $local_cache_key = ting_openformat_get_facet_cachekey($result);
-  //cache_set($local_cache_key, $result->facets, 'cache', CACHE_PERMANENT);
+  cache_set($local_cache_key, $result->facets, 'cache', CACHE_PERMANENT);
   drupal_static('ting_search_results', $result);
 }
 
 
 function ting_openformat_get_facet_cachekey($result){
-  $cache_key = 'facets-' . $result->cacheKey;
+  $cache_key = 'facets-' . $_SESSION['latest_search']['search_key'];
   return $cache_key;
 }
 /**
@@ -131,8 +129,8 @@ function ting_openformat_get_facet_cachekey($result){
 function _ting_openformat_facet_cache($client, $result, $params) {
   // check facets; get from cache if set - else do zero search to get facets
   $local_cache_key = ting_openformat_get_facet_cachekey($result);
+
   if (!$facets = cache_get($local_cache_key)) {
-  //if(TRUE){
     // default facets
     if (module_exists('bibdk_facetbrowser')) {
       $facets = _ting_openformat_set_default_facets();
@@ -147,6 +145,7 @@ function _ting_openformat_facet_cache($client, $result, $params) {
     // use DKABM .. it is fastest
     $params['objectFormat'] = 'DKABM';
 
+    // pjo 080515 added FALSE to override configuration cache for search
     $facet_result = $client->do_request('search', $params);
     if (isset($facet_result->facets)) {
       $result->facets = $facet_result->facets;
