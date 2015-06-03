@@ -411,7 +411,12 @@ function ting_openformat_conditions_callback($query) {
     $conditions['trackingId'] = $_REQUEST['trackingId'];
   }
   else {
-    $conditions['trackingId'] = date('Y-m-d\TH:i:s:') . substr((string) microtime(), 2, 6) . ':' . getmypid();
+    if(isset($_SESSION['timetrace']['trackingid'])){
+      $conditions['trackingId'] = $_SESSION['timetrace']['trackingid'];
+    }
+    else {
+      $conditions['trackingId'] = date('Y-m-d\TH:i:s:') . substr((string) microtime(), 2, 6) . ':' . getmypid();
+    }
   }
 
   $page_id = array();
