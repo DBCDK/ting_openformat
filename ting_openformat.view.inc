@@ -250,7 +250,9 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
     '#theme' => 'ting_openformat_manifestation',
     '#fields' => $fields,
     '#actions' => $actions,
+    '#typeof' => 'fubar',
   );
+  dpm('fubar');
 }
 
 /**

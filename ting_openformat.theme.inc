@@ -16,7 +16,8 @@ function ting_openformat_theme() {
         'fields' => array(),
         'view_mode' => 'full',
         'id' => 0,
-        'actions' => array()
+        'actions' => array(),
+        'typeof' => 'CreativeWork' // schema.org creativework type
       ),
       'template' => 'ting_openformat_manifestation',
     ),

@@ -141,7 +141,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
   return $element;
 }
 
-/** Generic Helper function to get content elements for a speficic filed
+/** Generic Helper function to get content elements for a speficic field
  * @param $field_name
  * @param $entity
  * @throws Exception
@@ -175,15 +175,12 @@ function _ting_openformat_default_field_view_content($field_name, $entity){
  * @return array|null
  */
 function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_header = TRUE, $return_link = TRUE) {
-  $return = NULL;
-  $markup = _ting_openformat_parse_element($elements, $divider, $use_header, $return_link);
-
-  if (isset($markup)) {
-    $return = array(
-      '#markup' => ting_openformat_text_summary($markup, 300),
-    );
+  $render_array = array();
+  $render_array = _ting_openformat_parse_element($elements, $render_array, $divider, $use_header, $return_link);
+  if (empty($render_array)) {
+    return NULL;
   }
-  return $return;
+  return $render_array;
 }
 
 /**
@@ -249,9 +246,10 @@ function ting_openformat_trim_string_by_length($text, $length) {
  * @param string $divider
  * @param bool $use_header
  * @param bool $return_link If FALSE value will be returned without markup for href. Otherwise complete markup for href is returned
- * @return string
+ * @return render array
  */
-function _ting_openformat_parse_element($elements, $divider = ". ", $use_header = TRUE, $return_link = TRUE, $link_label = NULL) {
+// function _ting_openformat_parse_element($elements, &$render_array = array(), $divider = ". ", $use_header = TRUE, $return_link = TRUE) {
+function _ting_openformat_parse_element($elements, $render_array = array(), $divider = FALSE, $use_header = TRUE, $return_link = TRUE) {
   if (!isset($elements)) {
     return NULL;
   }
@@ -261,24 +259,30 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
   foreach ($elements as $key => $value) {
     if ( is_array($value) && array_key_exists('accessUrl', $value ) ) {
       $txt = '';
-      if(!empty($value['accessUrlDescriptor'])){
+      if (!empty($value['accessUrlDescriptor'])) {
         // NOTE - pjo 200315 can this be an array ?? - for now grab the first
-        if(is_array($value['accessUrlDescriptor'])){
+        if (is_array($value['accessUrlDescriptor'])) {
           $txt = reset($value['accessUrlDescriptor']);
         }
         else {
           $txt = $value['accessUrlDescriptor'];
         }
       }
-      elseif(!empty($value['accessUrlDisplay'])){
+      elseif (!empty($value['accessUrlDisplay'])) {
         $txt = t($value['accessUrlDisplay'], array(), array('context' => 'bibdk_openformat'));
       }
-      $url = $value['accessUrl'];
-      $label = ( !empty($txt) ) ? $txt : $url;
-      $array[] = l($label, $url, array('attributes' => array('target' => '_blank'), 'html' => true));
+      $render_array[] = array(
+        '#theme' => 'link',
+        '#text' => ( !empty($txt) ) ? $txt : $url,
+        '#path' => $value['accessUrl'],
+        '#options' => array(
+          'attributes' => array('target' => '_blank'),
+          'html' => TRUE,
+        ),
+      );
     }
     else if (is_array($value)) {
-      $array[] = _ting_openformat_parse_element($value, $divider, $use_header, $return_link, $link_label);
+      $render_array = _ting_openformat_parse_element($value, $render_array, FALSE, $use_header, $return_link);
     }
     elseif ($key === "header") {
       if ($use_header) {
@@ -287,23 +291,46 @@ function _ting_openformat_parse_element($elements, $divider = ". ", $use_header 
     }
     elseif ($key === 'searchCode') {
       if ($return_link && isset($elements['searchCode'])) {
-        $array[] = l($elements['display'], 'search/work/' . $elements['searchCode']);
+        $render_array[] = array(
+          '#theme' => 'link',
+          '#text' => $elements['display'],
+          '#path' => 'search/work/' . $elements['searchCode'],
+          '#options' => array(
+            'attributes' => array(),
+            'html' => TRUE,
+          ),
+        );
       }
       else {
-        $array[] = $elements['display'];
+        $render_array[] = array('#markup' => $elements['display']);
       }
     }
     elseif ($key === 'display' || $key === 'accessUrlDescriptor') { /*do nothing*/
     }
     else {
-      $array[] = check_plain($value);
+      $render_array[] = array('#markup' => check_plain($value));
     }
   }
-  $string = (isset($header)) ? $header . " " : "";
-  if (isset($array)) {
-    $string .= implode($divider, $array);
+
+  $render_array = (isset($header)) ? array('#markup' => check_plain($header . " ")) + $render_array : $render_array;
+
+  if (sizeof($render_array) > 1 && $divider) {
+    $tmp_array = array();
+    foreach ($render_array as $key => $element) {
+      if (sizeof($tmp_array) > 0) {
+        $tmp_array[] = array(
+          '#markup' => $divider,
+        );
+      }
+      $tmp_array[] = $element;
+    }
+    $render_array = $tmp_array;
   }
-  return $string;
+
+  // dpm($elements);
+  // dpm($render_array);
+  return $render_array;
+
 }
 
 /**
@@ -333,51 +360,61 @@ function _ting_openformat_parse_urls($urls) {
  * @return array|null
  */
 function _ting_openformat_parse_analytic_content($analytic_content, $entity = NULL, $options = array()) {
-
   // Check variables
   if (!isset($analytic_content) || !isset($analytic_content['analyticContent'][0])) {
     return null;
   }
   $analytic_content = reset($analytic_content['analyticContent']);
+  $render_array = array();
 
   // Parse through elements
   foreach ($analytic_content as $element) {
-
     $element_markup = _ting_openformat_parse_analytic_content_element($element);
-
     // if element has analyticContributor it should start on a new line else it should be divided with ;
-    if (isset($markup)){
+    if (!empty($render_array)) {
       if (array_key_exists('analyticContributor', $element) || (isset($prevElement) && array_key_exists('analyticContributor', $prevElement))) {
-        $markup .= '<br/>' . $element_markup;
+        $render_array[] = array('#markup' => "<br/>");
+        $render_array = array_merge($render_array, $element_markup);
       }
       else {
-        $markup .= ' ; ' . $element_markup;
+        $render_array[] = array('#markup' => " ; ");
+        $render_array = array_merge($render_array, $element_markup);
       }
     } else {
-      $markup = $element_markup;
+      $render_array = $element_markup;
     }
     $prevElement = $element;
   }
 
-  $value['#markup'] = $markup;
-  return $value;
+  return $render_array;
 }
 
 /**
  * @param $element
  * @return string
  */
-function _ting_openformat_parse_analytic_content_element($element){
+function _ting_openformat_parse_analytic_content_element($element) {
+  $render_array = array();
   foreach ($element as $key => $value) {
     $markup = _ting_openformat_get_markup_for_field($value, " ");
-    $markup = $markup['#markup'];
     if ($key == 'analyticContributor') {
-      $markup .= ":";
+      $markup[] = array(
+        '#markup' => ": ",
+      );
     }
-    $element_values[] = $markup;
+    $render_array = array_merge($render_array, $markup);
   }
-  return implode(' ', $element_values);
+  return $render_array;
 
+}
+
+
+/**
+ * Implements hook_field_is_empty().
+ * @return boolean
+ */
+function ting_openformat_field_is_empty($item, $field) {
+  return empty($item['value']) && (string) $item['value'] !== '0';
 }
 
 //900 lines before refactoring
