@@ -93,7 +93,7 @@ class ManifestationMaster {
 
   public function getSeriesTitle() {
     $elements = $this->_getDetails();
-    $fields = array('seriesTitle' => array('seriesHeader' => 'header', "series" => array('searchCode', "seriesNumber")));
+    $fields = array('seriesTitle' => array('seriesHeader' => 'header', 'series' => array('searchCode'),'seriesNumber'));
     $result = TingOpenformatMethods::parseFields($elements, $fields);
     return $result;
   }
