@@ -94,11 +94,6 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
     ting_openformat_feeds_redirect($result, $params['query']);
   }
 
-  // set facets for result .. if not by ajax
-  $by_ajax = variable_get('bibdk_facetbrowser_by_ajax', FALSE);
-  if (!$by_ajax) {
-    _ting_openformat_facet_cache($client, $result, $params);
-  }
 
   if (isset($result->collections)) {
     $result->search_key = $keys;
@@ -121,12 +116,17 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   if (!$result->more) {
     $total = $params['start'] + $result->numTotalCollections;
   }
-  // init a pager. pager is global @see contenttypes/ting_openformat_pager.inc
-  // pager_default_initialize($total, $params['numResults']);
+
   $_SESSION['latest_search']['params'] = $params;
   $_SESSION['latest_search']['cache_key'] = $result->cacheKey;
   $_SESSION['latest_search']['search_key'] = $result->searchKey;
   $_SESSION['latest_search']['request_uri'] = request_uri();
+
+  // set facets for result .. if not by ajax
+  $by_ajax = variable_get('bibdk_facetbrowser_by_ajax', FALSE);
+  if (!$by_ajax) {
+    _ting_openformat_facet_cache($client, $result, $params);
+  }
 
   if (!empty($search_results)) {
     _ting_openformat_set_js_settings();
@@ -404,6 +404,7 @@ function _ting_openformat_sort_ranking_array_search($query, $search_code) {
  */
 function ting_openformat_conditions_callback($query) {
   $_REQUEST += module_invoke_all('ting_openformat_conditions', $query);
+
   $conditions = array();
 
   // check tracking id
@@ -473,6 +474,7 @@ function ting_openformat_conditions_callback($query) {
       drupal_goto(rawurldecode($_GET['q']), array('query' => $facets + $conditions + $page_id));
     }
   }
+
 
   return $conditions;
 }
