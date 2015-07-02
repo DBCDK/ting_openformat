@@ -83,9 +83,10 @@ function _ting_openformat_set_facets(&$query, $facets) {
   }
 }
 
-function ting_openformat_get_facet_group($group){
+function ting_openformat_get_facet_group($facet_name){
   $result = new stdClass();
   $result->cacheKey = $_SESSION['latest_search']['cache_key'];
+  $result->searchKey = $_SESSION['latest_search']['search_key'];
   $client = new ting_client_class();
   $params = $_SESSION['latest_search']['params'];
   // make sure facets are set
@@ -93,7 +94,7 @@ function ting_openformat_get_facet_group($group){
   // get current result
   $current_cache = drupal_static('ting_search_results');
   // set parameters to get the whole facetgroup
-  $params['facets'] = array('facet.' . $group);
+  $params['facets'] = array($facet_name);
   $params['numFacets'] = variable_get('bibdk_facetbrowser_number_requested', 25);
   // do a zero search to get the facets
   $params['numResults'] = 0;
@@ -102,15 +103,20 @@ function ting_openformat_get_facet_group($group){
  // do the request
   $facet_result = $client->do_request('search', $params, FALSE);
   // replace cached facetgroup
-  $current_cache->facets['facet.'.$group] = $facet_result->facets['facet.'.$group];
+  $current_cache->facets[$facet_name] = $facet_result->facets[$facet_name];
   ting_openformat_do_set_facet_cache($current_cache);
 
+  return $facet_result;
 }
 
 function ting_openformat_do_set_facet_cache($result){
+  // do NOT cache empty facets
+  if(empty($result->facets)){
+    return;
+  }
   $local_cache_key = ting_openformat_get_facet_cachekey($result);
-  cache_set($local_cache_key, $result->facets, 'cache', CACHE_PERMANENT);
-  drupal_static('ting_search_results', $result);
+  cache_set($local_cache_key, $result->facets, 'cache', CACHE_TEMPORARY);
+  //drupal_static('ting_search_results', $result);
 }
 
 
