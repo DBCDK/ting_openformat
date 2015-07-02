@@ -101,11 +101,10 @@ function ting_openformat_get_facet_group($facet_name){
   // use DKABM .. it is fastest
   $params['objectFormat'] = 'DKABM';
  // do the request
-  $facet_result = $client->do_request('search', $params, FALSE);
+  $facet_result = $client->do_request('search', $params);
   // replace cached facetgroup
   $current_cache->facets[$facet_name] = $facet_result->facets[$facet_name];
   ting_openformat_do_set_facet_cache($current_cache);
-
   return $facet_result;
 }
 
@@ -116,7 +115,7 @@ function ting_openformat_do_set_facet_cache($result){
   }
   $local_cache_key = ting_openformat_get_facet_cachekey($result);
   cache_set($local_cache_key, $result->facets, 'cache', CACHE_TEMPORARY);
-  //drupal_static('ting_search_results', $result);
+  drupal_static('ting_search_results', $result);
 }
 
 
