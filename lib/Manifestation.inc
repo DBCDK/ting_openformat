@@ -267,6 +267,13 @@ class Manifestation extends ManifestationMaster {
    */
   public function getType() {
     $result = (isset($this->type)) ? array($this->type) : TingOpenformatMethods::parseFields($this->manifestation->adminData, array('typeGroup'));
+    
+    // <hack>: Until openFormat is 'unfrozen', we'll use getOrsOrderMaterialType() to see if type is 'periodical'
+    //         Delete once openFormat return periodical types.
+    if ($result['typeGroup'] == 'none' && $this->getOrsOrderMaterialType() == 'journal') {
+      return 'periodical';
+    }
+    // </hack>
 
     return (is_array($result)) ? reset($result) : $result;
   }
