@@ -248,11 +248,10 @@ function ting_openformat_manifestation_view($manifestation, $view_mode = 'full',
 
   return array(
     '#theme' => 'ting_openformat_manifestation',
-    '#fields' => $fields,
+    '#fields'  => $fields,
     '#actions' => $actions,
-    '#typeof' => 'fubar',
+    '#typeof'  => $manifestation->getSchemaOrgType(), // schema.org creativework type
   );
-  dpm('fubar');
 }
 
 /**
@@ -431,23 +430,29 @@ function ting_openformat_worktabs_items(BibdkWork $entity) {
 
   if ($abstract = _ting_openformat_parse_element($entity->getAbstract())) {
     $elements['abstract'] = array(
-      '#theme' => 'html_tag',
-      '#tag' => 'div',
-      '#value' => ting_openformat_text_summary($abstract),
+      '#type' => 'container',
       '#attributes' => array(
-        'class' => 'work-abstract',
+        'class' => array('work-abstract'),
       ),
+      'summary' => array('#markup' => ting_openformat_text_summary($abstract)),
     );
   }
 
   if ($subjects = _ting_openformat_parse_element($entity->getSubjects())) {
+    $divider = array('#markup' => '. ');
+    $subjects_divider = array();
+    foreach ($subjects as $key => $arr) {
+      if ( $subjects_divider ) {
+        $subjects_divider[] = $divider;
+      }
+      $subjects_divider[] = $arr;
+    }
     $elements['subject'] = array(
-      '#theme' => 'html_tag',
-      '#tag' => 'div',
-      '#value' => $subjects,
+      '#type' => 'container',
       '#attributes' => array(
-        'class' => 'work-subject',
+        'class' => array('work-subject'),
       ),
+      'subjects' => $subjects_divider,
     );
   }
 

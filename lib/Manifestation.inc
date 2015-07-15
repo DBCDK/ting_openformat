@@ -41,7 +41,6 @@ class Manifestation extends ManifestationMaster {
     $fields = array('titleFull');
     $elements = isset($this->getWork()->title) ? $this->getWork()->title : NULL;
     $result = TingOpenformatMethods::parseFields($elements, $fields);
-
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -245,20 +244,29 @@ class Manifestation extends ManifestationMaster {
     if (isset($result['type']) && is_array($result['type'])) {
       $result['type'] = implode(' + ', $result['type']);
     }
-
     return (is_array($result)) ? reset($result) : $result;
   }
 
+
+  /**
+   * Gets 'orsOrderMaterialType'.
+   * @return array|mixed|null
+   */
   public function getOrsOrderMaterialType() {
     $result = TingOpenformatMethods::parseFields($this->manifestation->adminData, array('orsOrderMaterialType'));
-
     return (is_array($result)) ? reset($result) : $result;
   }
 
+
+  /**
+   * Gets 'webArchive'.
+   * @return array|mixed|null
+   */
   public function getWebArchive() {
     $result = TingOpenformatMethods::parseFields($this->manifestation->adminData, array('webArchive'));
     return (is_array($result)) ? reset($result) : $result;
   }
+
 
   /**
    * Gets 'typeGroup'. If you need 'type' see: getSubType()
@@ -277,6 +285,19 @@ class Manifestation extends ManifestationMaster {
 
     return (is_array($result)) ? reset($result) : $result;
   }
+
+  /**
+   * Gets schema.org CreativeWork type.
+   * @return array|mixed|null
+   */
+  public function getSchemaOrgType() {
+    $result = $this->manifestation->{'@schemaType'}->{'$'};
+    if (!$result) {
+      return 'CreativeWork';
+    }
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
 
   /**
    * @return bool

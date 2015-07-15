@@ -11,7 +11,7 @@
  * $secondary actions: bibdk_theme divides actions into actions and secondary actions
  */
 ?>
-<article class="manifestation clearfix" property="about" vocab="http://schema.org/" typeof="<?php print drupal_render($typeof); ?>">
+<article class="manifestation clearfix" property="about" vocab="http://schema.org/" typeof="<?php print $typeof; ?>">
   <div class="manifestation-data medium-16 columns">
     <?php print drupal_render($fields); ?>
   </div>

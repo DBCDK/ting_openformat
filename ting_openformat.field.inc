@@ -135,11 +135,13 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         break;
     }
     if (isset($value)) {
+      drupal_alter('openformat_field', $value, $field['field_name']);
       $element[$delta] = $value;
     }
   }
   return $element;
 }
+
 
 /** Generic Helper function to get content elements for a speficic field
  * @param $field_name
@@ -147,14 +149,13 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
  * @throws Exception
  * @return null
  */
-function _ting_openformat_default_field_view_content($field_name, $entity){
+function _ting_openformat_default_field_view_content($field_name, $entity) {
   $value = null;
   $field_definitions = ting_openformat_bibdk_fields();
-  if (isset($field_definitions[$field_name])){
+  if (isset($field_definitions[$field_name])) {
     $field = $field_definitions[$field_name];
     $method = $field['callback method'];
-
-    if(isset($method) && is_callable(array($entity, $method))){
+    if (isset($method) && is_callable(array($entity, $method))) {
       $value = $entity->$method();
     }
     else {
@@ -166,6 +167,7 @@ function _ting_openformat_default_field_view_content($field_name, $entity){
   }
   return $value;
 }
+
 
 /**
  * @param $elements
@@ -183,6 +185,7 @@ function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_
   return $render_array;
 }
 
+
 /**
  * Method for converting text blocks to trimmed text with a show more link.
  *
@@ -192,7 +195,8 @@ function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_
  * @param int $length
  * @return string
  */
-function ting_openformat_text_summary($text, $length = 300) {
+function ting_openformat_text_summary($render_array, $length = 300) {
+  $text = ting_openformat_recursive_find($render_array, '#markup');
   if (strlen($text) > $length) {
     list($trimmed, $more) = ting_openformat_trim_string_by_length($text, $length);
     // We call the theme function directly so this function always can return a
@@ -207,6 +211,7 @@ function ting_openformat_text_summary($text, $length = 300) {
 
   return $text;
 }
+
 
 /**
  * Trim a textstring by length (to the nearest space)
@@ -237,9 +242,29 @@ function ting_openformat_trim_string_by_length($text, $length) {
 }
 
 
+/**
+ * Recursive find value of key in array
+ *
+ * Returns value of key $needle
+ *
+ * @param $array
+ * @param $needle
+ * @return mixed
+ */
+function ting_openformat_recursive_find(array $array, $needle) {
+  $iterator  = new RecursiveArrayIterator($array);
+  $recursive = new RecursiveIteratorIterator($iterator,
+                   RecursiveIteratorIterator::SELF_FIRST);
+  foreach ($recursive as $key => $value) {
+    if ($key === $needle) {
+      return $value;
+    }
+  }
+}
+
 
 /**
- * Parses a field array from a manifestation/work entity. returns a string.
+ * Parses a field array from a manifestation/work entity. returns a render array.
  * searchCode and header are specialcases what generates a field-label and a link
  *
  * @param array|string|null $elements
@@ -248,14 +273,23 @@ function ting_openformat_trim_string_by_length($text, $length) {
  * @param bool $return_link If FALSE value will be returned without markup for href. Otherwise complete markup for href is returned
  * @return render array
  */
-// function _ting_openformat_parse_element($elements, &$render_array = array(), $divider = ". ", $use_header = TRUE, $return_link = TRUE) {
-function _ting_openformat_parse_element($elements, $render_array = array(), $divider = FALSE, $use_header = TRUE, $return_link = TRUE) {
-  if (!isset($elements)) {
-    return NULL;
+function _ting_openformat_parse_element($elements = NULL, $render_array = array(), $divider = FALSE, $use_header = TRUE, $return_link = TRUE) {
+  if (!$elements) {
+    return array();
   }
+
   if (!is_array($elements)) {
     $elements = array($elements);
   }
+
+  if ( !is_array($render_array) ) {
+    $render_array[] = array(
+      '#theme' => 'ting_openformat_field',
+      '#openformat_field' => array('#markup' => $render_array),
+    );
+    dpm($render_array);
+  }
+
   foreach ($elements as $key => $value) {
     if ( is_array($value) && array_key_exists('accessUrl', $value ) ) {
       $txt = '';
@@ -272,12 +306,15 @@ function _ting_openformat_parse_element($elements, $render_array = array(), $div
         $txt = t($value['accessUrlDisplay'], array(), array('context' => 'bibdk_openformat'));
       }
       $render_array[] = array(
-        '#theme' => 'link',
-        '#text' => ( !empty($txt) ) ? $txt : $url,
-        '#path' => $value['accessUrl'],
-        '#options' => array(
-          'attributes' => array('target' => '_blank'),
-          'html' => TRUE,
+        '#theme' => 'ting_openformat_field',
+        '#openformat_field' => array(
+          '#theme' => 'link',
+          '#text' => ( !empty($txt) ) ? $txt : $url,
+          '#path' => $value['accessUrl'],
+          '#options' => array(
+            'attributes' => array('target' => '_blank'),
+            'html' => TRUE,
+          ),
         ),
       );
     }
@@ -286,49 +323,65 @@ function _ting_openformat_parse_element($elements, $render_array = array(), $div
     }
     elseif ($key === "header") {
       if ($use_header) {
-        $header = $value;
+        $header = array(
+          '#theme' => 'ting_openformat_field',
+          '#openformat_header' =>  array('#markup' => check_plain($value)),
+        );
       }
     }
     elseif ($key === 'searchCode') {
       if ($return_link && isset($elements['searchCode'])) {
         $render_array[] = array(
-          '#theme' => 'link',
-          '#text' => $elements['display'],
-          '#path' => 'search/work/' . $elements['searchCode'],
-          '#options' => array(
-            'attributes' => array(),
-            'html' => TRUE,
+          '#theme' => 'ting_openformat_field',
+          '#openformat_field' => array(
+            '#theme' => 'link',
+            '#text' => $elements['display'],
+            '#path' => 'search/work/' . $elements['searchCode'],
+            '#options' => array(
+              'attributes' => array(),
+              'html' => TRUE,
+            ),
           ),
         );
       }
       else {
-        $render_array[] = array('#markup' => $elements['display']);
+        $render_array[] = array(
+          '#theme' => 'ting_openformat_field',
+          '#openformat_field' => array('#markup' => $elements['display']),
+        );
       }
     }
     elseif ($key === 'display' || $key === 'accessUrlDescriptor') { /*do nothing*/
     }
     else {
-      $render_array[] = array('#markup' => check_plain($value));
+      $render_array[] = array(
+        '#theme' => 'ting_openformat_field',
+        '#openformat_field' => array('#markup' => check_plain($value)),
+      );
     }
   }
-
-  $render_array = (isset($header)) ? array('#markup' => check_plain($header . " ")) + $render_array : $render_array;
 
   if (sizeof($render_array) > 1 && $divider) {
     $tmp_array = array();
     foreach ($render_array as $key => $element) {
-      if (sizeof($tmp_array) > 0) {
+      if (sizeof($tmp_array) > 0 && !isset($tmp_array[$tmp_key]['#openformat_header'])) {
         $tmp_array[] = array(
+          '#prefix' => '<span class="openformat-field-divider">',
           '#markup' => $divider,
+          '#suffix' => '</span>',
         );
       }
       $tmp_array[] = $element;
+      $tmp_key = key($tmp_array);
     }
     $render_array = $tmp_array;
   }
 
-  // dpm($elements);
-  // dpm($render_array);
+  if (isset($header)) {
+    array_unshift($render_array, $header);
+    dpm($render_array);
+  }
+
   return $render_array;
 
 }
