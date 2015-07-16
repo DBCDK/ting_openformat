@@ -283,7 +283,7 @@ function _ting_openformat_parse_element($elements = NULL, $render_array = array(
   }
 
   if ( !is_array($render_array) ) {
-    $render_array[] = array(
+    $render_array = array(
       '#theme' => 'ting_openformat_field',
       '#openformat_field' => array('#markup' => $render_array),
     );
