@@ -291,9 +291,16 @@ class Manifestation extends ManifestationMaster {
    * @return array|mixed|null
    */
   public function getSchemaOrgType() {
+    $default = 'CreativeWork';
+    if (!is_object($this->manifestation)) {
+      return $default;
+    }
+    if (!isset($this->manifestation->{'@schemaType'}) || !is_object($this->manifestation->{'@schemaType'})) {
+      return $default;
+    }
     $result = $this->manifestation->{'@schemaType'}->{'$'};
     if (!$result) {
-      return 'CreativeWork';
+      return $default;
     }
     return (is_array($result)) ? reset($result) : $result;
   }
