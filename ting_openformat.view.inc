@@ -219,7 +219,7 @@ function ting_openformat_get_manifestation_for_subwork($manifestation, $view_mod
     $manifestation_view = array(
       '#type' => 'container',
       '#attributes' => array(
-        'class' => 'manifestation-container',
+        'class' => array('manifestation-container'),
         'data-id' => $manifestation->id,
         'id' => drupal_clean_css_identifier($manifestation->id),
       ),
@@ -308,7 +308,7 @@ function _ting_openformat_get_types_list($bibdkobject) {
     '#theme' => 'item_list',
     '#items' => $list,
     '#attributes' => array(
-      'class' => 'material-types-list',
+      'class' => array('material-types-list'),
     ),
   );
 }
