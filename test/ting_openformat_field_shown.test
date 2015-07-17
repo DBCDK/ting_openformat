@@ -30,7 +30,9 @@ class TingOpenFormatFieldShownTestCase extends DrupalWebTestCase {
   private function testCommonContributors() {
     $this->drupalGet('work/870970-basis:29977828');
     $this->assertText('Prometheus', 'Got the work Prometheus');
-    $this->assertText('Ludwig van Beethoven, Thomas Dausgaard, Det Svenske Kammerorkester', 'Has expected three creators.');
+    $this->assertText('Ludwig van Beethoven', 'Has expected three creators: 1) Ludwig van Beethoven.');
+    $this->assertText('Thomas Dausgaard', 'Has expected three creators: 2) Thomas Dausgaard.');
+    $this->assertText('Det Svenske Kammerorkester', 'Has expected three creators: 3) Det Svenske Kammerorkester.');
     $this->assertText('Common contributors', 'Found field label \'Common Contributors\'.');
     $this->assertText('Swedish Chamber Orchestra Örebro ; dirigent: Thomas Dausgaard');
     $this->assertLink('debate_continued_in', 0, 'debate_continued_in link present');
@@ -39,8 +41,8 @@ class TingOpenFormatFieldShownTestCase extends DrupalWebTestCase {
     $this->assertLink('debate_discusses', 0, 'debate_discusses link present');
 
     $this->drupalGet('work/870970-basis:45483932');
-    $this->assertText('Harry Potter', 'Harry.');
-    $this->assertText('Harry Potter &amp; the deathly hallows', 'You can\'t hide under your cloak, Harry.');
+    $this->assertText('Harry Potter', 'Found "Harry Potter."');
+    $this->assertText('Harry Potter &amp; the deathly hallows', 'Found "Harry Potter &amp; the deathly hallows"');
     $this->assertNoText('Common contributors', 'Didn\'t find field label \'Common Contributors\'.');
   }
 }
