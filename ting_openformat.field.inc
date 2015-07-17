@@ -379,7 +379,6 @@ function _ting_openformat_parse_element($elements = NULL, $render_array = array(
 
   if (isset($header)) {
     array_unshift($render_array, $header);
-    dpm($render_array);
   }
 
   return $render_array;
