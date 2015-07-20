@@ -308,7 +308,7 @@ function _ting_openformat_parse_element($elements = NULL, $render_array = array(
         '#theme' => 'ting_openformat_field',
         '#openformat_field' => array(
           '#theme' => 'link',
-          '#text' => ( !empty($txt) ) ? $txt : $url,
+          '#text' => ( !empty($txt) ) ? $txt : $value['accessUrl'],
           '#path' => $value['accessUrl'],
           '#options' => array(
             'attributes' => array('target' => '_blank'),
