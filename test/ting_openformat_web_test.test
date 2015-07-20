@@ -74,17 +74,21 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     debug('Testing _ting_openformat_get_markup_for_field():');
     //loading the element to parse
     $element = drupal_json_decode(file_get_contents(drupal_get_path('module', 'ting_openformat') . '/test/mockup/element.json'));
-
     //ensuring that a link by default is returned as part of the value of the #markup key
     $response = _ting_openformat_get_markup_for_field($element);
-    $this->assertTrue(array_key_exists('#markup', $response), t('\'#markup\' present in respone from _ting_openformat_get_markup_for_field()'));
-    $result = strstr($response['#markup'], 'search/work/phrase.creator%3D%22Joanne%20K.%20Rowling%22">Joanne K. Rowling</a>');
-    $this->assertTrue($result, t('href correctly received'));
+    
+    $this->assertTrue(array_key_exists('#theme', $response[0]), t('\'#theme\' present in response from _ting_openformat_get_markup_for_field()'));
+    $this->assertTrue(array_key_exists('#openformat_field', $response[0]), t('\'#openformat_field\' present in response from _ting_openformat_get_markup_for_field()'));
+    $result = ($response[0]['#theme'] == 'ting_openformat_field');
+    $this->assertTrue($result, t('\'#theme\' is "ting_openformat_field" in response from _ting_openformat_get_markup_for_field()'));
+    $result = strstr($response[0]['#openformat_field']['#path'], 'search/work/phrase.creator="Joanne K. Rowling"');
+    $this->assertTrue($result, t('url correctly received'));
 
     //ensuring that no link is returned when requested not to return href
     $response = _ting_openformat_get_markup_for_field($element, ', ', TRUE, FALSE);
-    $this->assertTrue(array_key_exists('#markup', $response), t('\'#markup\' present in respone from _ting_openformat_get_markup_for_field()'));
-    $result = strstr($response['#markup'], 'search/work/phrase.creator%3D%22Joanne%20K.%20Rowling%22">Joanne K. Rowling</a>');
+    $this->assertTrue(array_key_exists('#theme', $response[0]), t('\'#theme\' present in response from _ting_openformat_get_markup_for_field()'));
+    $this->assertTrue(array_key_exists('#markup', $response[0]['#openformat_field']), t('\'#markup\' present in response from _ting_openformat_get_markup_for_field()'));
+    $result = strstr($response[0]['#openformat_field']['#markup'], 'search/work/phrase.creator="Joanne K. Rowling"');
     $this->assertFalse($result, t('No href received'));
   }
 
