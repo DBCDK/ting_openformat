@@ -420,9 +420,9 @@ class ManifestationMaster {
    * zero or more occurences
    */
   public function getEdition() {
-    $fields = array('edition');
+    $fields = array('edition', 'editionPerson');
     $result = TingOpenformatMethods::parseFields($this->_getPublicationDetails(), $fields);
-    return (is_array($result)) ? reset($result) : $result;
+    return (is_array($result)) ? $result : array($result);
   }
 
   /* \brief (publication)format
