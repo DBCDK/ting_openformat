@@ -244,7 +244,13 @@ class ManifestationMaster {
    */
 
   public function getDescriptionNote() {
-    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('descriptionNote'));
+    $elements = $this->_getDetails();
+    $fields = array(
+      'descriptionNoteLink' => array(
+        'descriptionNoteLink' => 'linkElements'
+      ),
+    );
+    $result = TingOpenformatMethods::parseFields($elements, $fields);
     return (is_array($result)) ? reset($result) : $result;
   }
 
