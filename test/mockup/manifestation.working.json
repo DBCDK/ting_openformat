@@ -319,6 +319,13 @@
                       "$": "Sunget p\u00e5 italiensk"
                     }
                   ],
+                  "descriptionNoteLink": [
+                    {
+                      "descriptionNoteLinkElement":{"$":"Kan downloades i EPUB-format","@":"of"},
+                      "linkElements":{"url":{"$":"http:\/\/www.stenlosearkiv.dk\/Boger\/boger.htm","@":"of"},"display":{"$":"urlInternetPublic","@":"of"},"@":"of"},
+                      "descriptionNoteLinkDescriptor":{"$":"her","@":"of"},"@":"of"
+                    }
+                  ],
                   "identifiers": {
                     "identifier": {
                       "$": "L'Estro Armonico EA 020"

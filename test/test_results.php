@@ -212,7 +212,7 @@ function ting_openformat_test_results() {
     'bibdk_mani_edition' =>
     array(
       'method' => 'getEdition',
-      '_ting_openformat_default_field_view_content' => NULL,
+      '_ting_openformat_default_field_view_content' => array('0' => ''),
       '_ting_openformat_parse_element' => '',
     ),
     'bibdk_mani_pub_year' =>
@@ -378,10 +378,19 @@ function ting_openformat_test_results() {
     'bibdk_mani_description_note' =>
     array(
       'method' => 'getDescriptionNote',
-      '_ting_openformat_default_field_view_content' =>
-      array(
-        0 => 'Live-optagelser, 19. november 1966 (Rigoletto) og 1945 (Rigoletto (uddrag))',
-        1 => 'Sunget på italiensk',
+      '_ting_openformat_default_field_view_content' => array(
+        0 => array(
+          0 => array(
+            'descriptionNoteLink' => array(
+              0 => array(
+                0 => array(
+                    'accessUrl' => 'http://www.stenlosearkiv.dk/Boger/boger.htm',
+                    'accessUrlDisplay' => 'urlInternetPublic',
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
       '_ting_openformat_parse_element' => 'Live-optagelser, 19. november 1966 (Rigoletto) og 1945 (Rigoletto (uddrag)). Sunget på italiensk',
     ),
