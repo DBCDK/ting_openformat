@@ -13,10 +13,12 @@ function ting_openformat_theme() {
     'ting_openformat_manifestation' => array(
       'path' => $path,
       'variables' => array(
+        'manifestation' => NULL,
         'fields' => array(),
+        'actions' => array(),
         'view_mode' => 'full',
         'id' => 0,
-        'actions' => array()
+        'typeof' => 'CreativeWork' // schema.org creativework type
       ),
       'template' => 'ting_openformat_manifestation',
     ),
@@ -46,6 +48,7 @@ function ting_openformat_theme() {
         'theme_attributes' => array(),
       ),
     ),
+
     'ting_openformat_type_order_form' => array(
       'render element' => 'form',
       'file' => 'ting_openformat.admin.inc',
@@ -55,6 +58,7 @@ function ting_openformat_theme() {
       'render element' => 'element',
       'file' => 'ting_openformat.admin.inc',
     ),
+
     'ting_openformat_rss_feed' => array(
       'path' => $path,
       'varriables' => array(
@@ -65,6 +69,7 @@ function ting_openformat_theme() {
       ),
       'template' => 'ting_openformat_rss_feed',
     ),
+
     'ting_openformat_toggle_more_content' => array(
       'path' => $path,
       'varriables' => array(
@@ -73,6 +78,13 @@ function ting_openformat_theme() {
       ),
       'template' => 'ting_openformat_toggle_more_content',
     ),
+
+    'ting_openformat_field' => array(
+      'path' => $path,
+      'render element' => 'element',
+      'template' => 'ting_openformat_field',
+    ),
+
     'ting_openformat_toggle_link' => array(
       'render elements' => 'element',
       'variables' => array(

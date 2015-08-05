@@ -230,6 +230,7 @@ function ting_openformat_single($id) {
   drupal_set_title($title);
 
   $abstract = _ting_openformat_parse_element($bibdkEntity->getAbstract());
+  $abstract = (empty($abstract)) ? '' : $abstract[0]['#openformat_field']['#markup'];
 
   $meta_description = array(
       '#type' => 'html_tag',

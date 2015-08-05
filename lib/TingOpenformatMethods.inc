@@ -77,7 +77,6 @@ class TingOpenformatMethods {
           $ret[] = self::parseFields($o, $fields);
         }
       }
-
       return $ret;
     }
     foreach ($fields as $field => $value) {
