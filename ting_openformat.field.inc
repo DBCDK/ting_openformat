@@ -181,19 +181,6 @@ function _ting_openformat_default_field_view_content($field_name, $entity) {
  * @return array|null
  */
 function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_header = TRUE, $return_link = TRUE) {
-
-/*
-  $return = NULL;
-  $markup = _ting_openformat_parse_element($elements, $divider, $use_header, $return_link);
-
-  if (isset($markup)) {
-    $return = array(
-      '#markup' => ting_openformat_text_summary($markup, 300),
-    );
-  }
-  return $return;
-*/
-
   $render_array = array();
   $render_array = _ting_openformat_parse_element($elements, $render_array, $divider, $use_header, $return_link);
   if (empty($render_array)) {
