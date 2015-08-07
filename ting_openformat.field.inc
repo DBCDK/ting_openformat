@@ -181,11 +181,25 @@ function _ting_openformat_default_field_view_content($field_name, $entity) {
  * @return array|null
  */
 function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_header = TRUE, $return_link = TRUE) {
+
+/*
+  $return = NULL;
+  $markup = _ting_openformat_parse_element($elements, $divider, $use_header, $return_link);
+
+  if (isset($markup)) {
+    $return = array(
+      '#markup' => ting_openformat_text_summary($markup, 300),
+    );
+  }
+  return $return;
+*/
+
   $render_array = array();
   $render_array = _ting_openformat_parse_element($elements, $render_array, $divider, $use_header, $return_link);
   if (empty($render_array)) {
     return NULL;
   }
+  $render_array = ting_openformat_text_summary($render_array);
   return $render_array;
 }
 
@@ -199,21 +213,53 @@ function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_
  * @param int $length
  * @return string
  */
-function ting_openformat_text_summary($render_array, $length = 300) {
-  $text = ting_openformat_recursive_find($render_array, '#markup');
-  if (strlen($text) > $length) {
-    list($trimmed, $more) = ting_openformat_trim_string_by_length($text, $length);
-    // We call the theme function directly so this function always can return a
-    // string
-    if (!empty($more)) {
-      $text = theme('ting_openformat_toggle_more_content', array(
-        'trimmed_text' => $trimmed,
-        'more_text' => $more,
-      ));
+function ting_openformat_text_summary($render_array, $length = 290) {
+  $trimmed = $more = array();
+  $text = '';
+  $text_len = 0;
+
+  foreach ($render_array as $item) {
+    $text .= _ting_openformat_get_render_string($item);
+  }
+
+  if (mb_strlen($text) < $length) {
+    return $render_array;
+  }
+
+  // text is longer than $length
+  foreach ($render_array as $item) {
+    $text = _ting_openformat_get_render_string($item);
+    if (mb_strlen($text) >= $length - $text_len && $text_len < $length) {
+     // add break in middle of item text
+      list($item_trimmed, $item_more) = ting_openformat_trim_string_by_length($text, $length);
+      $trimmed[] = array(
+        '#theme' => 'ting_openformat_field',
+        '#openformat_field' => array('#markup' => $item_trimmed),
+      );
+      $more[] = array(
+        '#theme' => 'ting_openformat_field',
+        '#openformat_field' => array('#markup' => $item_more),
+      );
+      $text_len = $length;
+    }
+    else if ($text_len + mb_strlen($text) < $length) {
+      $text_len += mb_strlen($text);
+      $trimmed[] = $item;
+    }
+    else {
+      $more[] = $item;
     }
   }
 
-  return $text;
+  if (!empty($more)) {
+    $render_array = array(
+      '#theme' => 'ting_openformat_toggle_more_content',
+      '#trimmed_text' => $trimmed,
+      '#more_text' => $more,
+    );
+  }
+
+  return $render_array;
 }
 
 
@@ -471,5 +517,22 @@ function _ting_openformat_parse_analytic_content_element($element) {
 function ting_openformat_field_is_empty($item, $field) {
   return empty($item['value']) && (string) $item['value'] !== '0';
 }
+
+/**
+ * Helper function to return text part of a render array
+ * @param $render_array
+ * @return string
+ */
+function _ting_openformat_get_render_string($render_array) {
+  $item = '';
+  $callback = function($value, $key) use (&$item) {
+    if ($key == '#markup' || $key == '#text') {
+      $item = $value;
+    }
+  };
+  array_walk_recursive($render_array, $callback);
+  return $item;
+}
+
 
 //900 lines before refactoring
