@@ -31,7 +31,7 @@ function _ting_openformat_set_facets(&$query, $facets) {
   if ( isset($facets) ) {
 
     // sort the facets
-    $facetsTemp = array();
+    $facets_temp = array();
     foreach ( $facets as $facet ) {
       $facet = explode(':', $facet, 2);
       if ( $facet[0] ) {
@@ -39,51 +39,57 @@ function _ting_openformat_set_facets(&$query, $facets) {
         if ( $op == CQL_NOT ) {
            $facet[0] = substr( $facet[0], 1);
         }
-        $facetVal['val'] = rawurldecode($facet[1]);
-        $facetVal['op'] = $op;
-        $facetsTemp[ $facet[0] ][] = $facetVal;
+        $facet_val['val'] = rawurldecode($facet[1]);
+        $facet_val['op'] = $op;
+        $facets_temp[ $facet[0] ][] = $facet_val;
       }
     }
 
-    foreach ( $facetsTemp as $facet_name => $facet ) {
-      $facetNOT = array();
-      $facetOR = array();
+    foreach ( $facets_temp as $facet_name => $facet ) {
+      $facet_not = array();
+      $facet_or = array();
       foreach ( $facet as $item ) {
         if ( $item['op'] == CQL_NOT ) {
-          $facetNOT[] = $facet_name . '="' . rawurldecode($item['val']) . '"';
-        } else {
-          $facetOR[] = $facet_name . '="' . rawurldecode($item['val']) . '"';
+          $facet_not[] = $facet_name . '="' . rawurldecode($item['val']) . '"';
+        }
+        else {
+          $facet_or[] = $facet_name . '="' . rawurldecode($item['val']) . '"';
         } 
       }
-      if ( !empty($facetNOT) ) {
-        $facetArrayNot[] = '(' . implode(CQL_OR, $facetNOT) . ')';
+      if ( !empty($facet_not) ) {
+        $facet_array_not[] = '(' . implode(CQL_OR, $facet_not) . ')';
       }
-      if ( !empty($facetOR) ) {
-        $facetArrayOr[] = '(' . implode(CQL_OR, $facetOR) . ')';
+      if ( !empty($facet_or) ) {
+        $facet_array_or[] = '(' . implode(CQL_OR, $facet_or) . ')';
       }
     }
 
     if ( !empty($query) ) {
-      if ( !empty($facetArrayOr) ) {
-        $query .= CQL_AND . implode(CQL_AND, $facetArrayOr); 
+      if ( !empty($facet_array_or) ) {
+        $query .= CQL_AND . implode(CQL_AND, $facet_array_or);
       }
-      if ( !empty($facetArrayNot) ) {
-        $query .= CQL_NOT . implode(CQL_NOT, $facetArrayNot);
+      if ( !empty($facet_array_not) ) {
+        $query .= CQL_NOT . implode(CQL_NOT, $facet_array_not);
       }
     }
     else {
-      if ( !empty($facetArrayOr) ) {
-        $query .= implode(CQL_AND, $facetArrayOr);
+      if ( !empty($facet_array_or) ) {
+        $query .= implode(CQL_AND, $facet_array_or);
       }
-      if ( !empty($facetArrayNot) ) {
-        $query .= CQL_NOT . implode(CQL_NOT, $facetArrayNot);
+      if ( !empty($facet_array_not) ) {
+        $query .= CQL_NOT . implode(CQL_NOT, $facet_array_not);
       }
     }
 
   }
 }
 
-function ting_openformat_get_facet_group($facet_name){
+/**
+ * Get a single facetgroup from webservice and update cache.
+ * @param $facet_name
+ * @return bool|\stdClass|string
+ */
+function ting_openformat_get_facet_group($facet_name) {
   $result = new stdClass();
   $result->cacheKey = $_SESSION['latest_search']['cache_key'];
   $result->searchKey = $_SESSION['latest_search']['search_key'];
@@ -108,9 +114,13 @@ function ting_openformat_get_facet_group($facet_name){
   return $facet_result;
 }
 
-function ting_openformat_do_set_facet_cache($result){
+/**
+ * Set facetcache.
+ * @param $result
+ */
+function ting_openformat_do_set_facet_cache($result) {
   // do NOT cache empty facets
-  if(empty($result->facets)){
+  if (empty($result->facets)) {
     return;
   }
   $local_cache_key = ting_openformat_get_facet_cachekey($result);
@@ -119,7 +129,12 @@ function ting_openformat_do_set_facet_cache($result){
 }
 
 
-function ting_openformat_get_facet_cachekey($result){
+/**
+ * Get a cachekey for the facets.
+ * @param $result
+ * @return string
+ */
+function ting_openformat_get_facet_cachekey($result) {
   $cache_key = 'facets-' . $_SESSION['latest_search']['search_key'];
   return $cache_key;
 }
