@@ -123,7 +123,7 @@ class BibdkWork {
 
   public function getTitle() {
     $fields = array('titleFull');
-    $elements = $this->work->title;
+    $elements = isset($this->work->title) ? $this->work->title : $this->work;
     $result = TingOpenformatMethods::parseFields($elements, $fields);
 
     return (is_array($result)) ? reset($result) : $result;
