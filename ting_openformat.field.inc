@@ -181,11 +181,21 @@ function _ting_openformat_default_field_view_content($field_name, $entity) {
  * @return array|null
  */
 function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_header = TRUE, $return_link = TRUE) {
+  if (!is_array($elements)) {
+    $elements = array($elements);
+  }
+
+  if(empty($elements) || empty(current($elements))){
+    return NULL;
+  }
+
   $render_array = array();
   $render_array = _ting_openformat_parse_element($elements, $render_array, $divider, $use_header, $return_link);
+
   if (empty($render_array)) {
     return NULL;
   }
+
   return $render_array;
 }
 
