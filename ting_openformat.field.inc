@@ -185,7 +185,13 @@ function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_
     $elements = array($elements);
   }
 
-  if(empty($elements) || empty(current($elements))){
+  if(empty($elements)){
+    return NULL;
+  }
+
+  # check first element in array
+  $val = current($elements);
+  if ( empty($val) ){
     return NULL;
   }
 
