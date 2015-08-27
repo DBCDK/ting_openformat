@@ -185,13 +185,15 @@ function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_
     $elements = array($elements);
   }
 
-  if(empty($elements)){
-    return NULL;
-  }
+  $empty = TRUE;
+  $callback = function($value, $key) use (&$empty) {
+    if (!empty($value)) {
+      $empty = FALSE;
+    }
+  };
+  array_walk_recursive($elements, $callback);
 
-  # check first element in array
-  $val = current($elements);
-  if ( empty($val) ){
+  if ($empty) {
     return NULL;
   }
 
