@@ -70,7 +70,7 @@ function ting_openformat_ting_openformat_search_result_content_type_render($subt
       drupal_set_message(drupal_render($items) , 'warning', FALSE);
     } else {
       $msg = t('Your search yielded no results');
-      drupal_set_message($msg, 'status', FALSE);
+      drupal_set_message($msg, 'warning', FALSE);
     }
   }
   $output .= "</div>\n";
