@@ -61,8 +61,17 @@ function ting_openformat_ting_openformat_search_result_content_type_render($subt
     }
   }
   else {
-    $msg = t('Your search yielded no results');
-    drupal_set_message($msg, 'warning', FALSE);
+    // no search result
+    if (!empty($conditions['qe']['query'])) {
+     $items = module_invoke_all('0_hit_search',$conditions['qe']['query']);
+    }
+    if (!empty($items['suggest_list']) && (count($items['suggest_list']['#items']) > 1) ) {
+      // Show - did you mean - from suggestion
+      drupal_set_message(drupal_render($items) , 'warning', FALSE);
+    } else {
+      $msg = t('Your search yielded no results');
+      drupal_set_message($msg, 'status', FALSE);
+    }
   }
   $output .= "</div>\n";
 
