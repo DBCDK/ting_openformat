@@ -107,17 +107,20 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     $this->assertTrue(array_key_exists('#openformat_field', $response[0]), t('\'#openformat_field\' present in response from _ting_openformat_get_markup_for_field()'));
     $result = ($response[0]['#theme'] == 'ting_openformat_field');
     $this->assertTrue($result, t('\'#theme\' is "ting_openformat_field" in response from _ting_openformat_get_markup_for_field()'));
-    $result = strstr($response[0]['#openformat_field']['#path'], 'search/work/phrase.creator="Joanne K. Rowling"');
-    $this->assertTrue($result, t('url correctly received'));
+    $result = strstr($response[0]['#openformat_field']['#path'], 'search/work/');
+    $this->assertTrue($result, t('url path part correctly received'));
+    $result = strstr($response[0]['#openformat_field']['#options']['query']['search_block_form'], 'phrase.creator="Joanne K. Rowling"');
+    $this->assertTrue($result, t('url query part correctly received'));
 
     //ensuring that no link is returned when requested not to return href
     $response = _ting_openformat_parse_element($element, array(), ', ', TRUE, FALSE);
     $this->assertTrue(array_key_exists('#theme', $response[0]), t('\'#theme\' present in response from _ting_openformat_get_markup_for_field()'));
     $this->assertTrue(array_key_exists('#markup', $response[0]['#openformat_field']), t('\'#markup\' present in response from _ting_openformat_get_markup_for_field()'));
-    $result = strstr($response[0]['#openformat_field']['#markup'], 'search/work/phrase.creator="Joanne K. Rowling"');
+    $result = strstr($response[0]['#openformat_field']['#markup'], 'search/work/');
     $this->assertFalse($result, t('No href received'));
 
   }
+
 
   /** Test if fields are created
    */
