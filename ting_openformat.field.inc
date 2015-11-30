@@ -357,8 +357,10 @@ function _ting_openformat_parse_element($elements = NULL, $render_array = array(
           '#openformat_field' => array(
             '#theme' => 'link',
             '#text' => $elements['display'],
-            '#path' => 'search/work/' . $elements['searchCode'],
+            '#path' => 'search/work/',
             '#options' => array(
+              'query' => array('search_block_form' => $elements['searchCode']),
+              'fragment' => 'content',
               'attributes' => array(),
               'html' => TRUE,
             ),
