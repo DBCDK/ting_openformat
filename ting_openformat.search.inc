@@ -107,6 +107,10 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   }
 
   $query = isset($params['query']) ? $params['query'] : array();
+
+
+
+
   module_invoke_all('ting_openformat_search_results', $keys, $result, $all_params, $query);
   $search_results['more'] = $result->more;
 
@@ -489,6 +493,12 @@ function ting_openformat_conditions_callback($query) {
  * @return string
  */
 function ting_openformat_string_to_cql($string) {
+  $doc = new TingSearchCqlDoctor($string);
+  $query = $doc->string_to_cql();
+  return $query;
+
+  return $string;
+
   $string = trim($string);
   if (isset($string) && !_ting_openformat_string_is_cql($string)) {
     $string = _ting_openformat_convert_string_to_cql($string);
@@ -519,6 +529,7 @@ function _ting_openformat_convert_string_to_cql($string) {
  * @return bool|int
  */
 function _ting_openformat_string_is_cql($string) {
+
   if(strpos($string, '"') !== false && (!preg_match('@ and | or | not |=@', $string) && !(substr($string, 0, 1) === '"' && substr($string, -1) === '"'))){
     return false;
   }

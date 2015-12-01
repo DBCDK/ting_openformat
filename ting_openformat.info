@@ -18,6 +18,7 @@ files[] = test/ting_openformat_field_shown.test
 files[] = test/ting_openformat_manifestation_unit_test.test
 files[] = test/ting_openformat_sort_select_unit_test.test
 
+files[] = lib/TingSearchCqlDoctor.class.inc
 files[] = ting_openformat.controllers.inc
 
 files[] = lib/BibdkCollection.inc
