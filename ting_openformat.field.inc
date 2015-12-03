@@ -181,8 +181,25 @@ function _ting_openformat_default_field_view_content($field_name, $entity) {
  * @return array|null
  */
 function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_header = TRUE, $return_link = TRUE) {
+  if (!is_array($elements)) {
+    $elements = array($elements);
+  }
+
+  $empty = TRUE;
+  $callback = function($value, $key) use (&$empty) {
+    if (!empty($value)) {
+      $empty = FALSE;
+    }
+  };
+  array_walk_recursive($elements, $callback);
+
+  if ($empty) {
+    return NULL;
+  }
+
   $render_array = array();
   $render_array = _ting_openformat_parse_element($elements, $render_array, $divider, $use_header, $return_link);
+
   if (empty($render_array)) {
     return NULL;
   }
@@ -372,8 +389,10 @@ function _ting_openformat_parse_element($elements = NULL, $render_array = array(
           '#openformat_field' => array(
             '#theme' => 'link',
             '#text' => $elements['display'],
-            '#path' => 'search/work/' . $elements['searchCode'],
+            '#path' => 'search/work/',
             '#options' => array(
+              'query' => array('search_block_form' => $elements['searchCode']),
+              'fragment' => 'content',
               'attributes' => array(),
               'html' => TRUE,
             ),
@@ -473,6 +492,8 @@ function _ting_openformat_parse_analytic_content($analytic_content, $entity = NU
     }
     $prevElement = $element;
   }
+
+  $render_array = ting_openformat_text_summary($render_array);
 
   return $render_array;
 }

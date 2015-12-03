@@ -7,7 +7,6 @@
  *  $trimmed_text: the part of the text that is visible by default
  *  $more_text: the part of the text that can be toggled
  */
- dpm($variables);
 ?>
 <span class='toggle-more' data-toggle-link>
 <?php echo drupal_render($variables['trimmed_text']); ?>
