@@ -204,6 +204,7 @@ function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_
     return NULL;
   }
   $render_array = ting_openformat_text_summary($render_array);
+
   return $render_array;
 }
 
@@ -532,6 +533,9 @@ function ting_openformat_field_is_empty($item, $field) {
  * @return string
  */
 function _ting_openformat_get_render_string($render_array) {
+  if ( is_string($render_array)){
+    return $render_array;
+  }
   $item = '';
   $callback = function($value, $key) use (&$item) {
     if ($key == '#markup' || $key == '#text') {
