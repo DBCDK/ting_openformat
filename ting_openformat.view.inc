@@ -434,7 +434,7 @@ function ting_openformat_worktabs_items(BibdkWork $entity) {
       '#attributes' => array(
         'class' => array('work-abstract'),
       ),
-      'summary' => array('#markup' => ting_openformat_text_summary($abstract)),
+      'summary' => ting_openformat_text_summary($abstract),
     );
   }
 
