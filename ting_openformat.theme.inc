@@ -61,7 +61,7 @@ function ting_openformat_theme() {
 
     'ting_openformat_rss_feed' => array(
       'path' => $path,
-      'varriables' => array(
+      'variables' => array(
         'item' => array(),
         'title' => '',
         'description' => '',
@@ -72,7 +72,7 @@ function ting_openformat_theme() {
 
     'ting_openformat_toggle_more_content' => array(
       'path' => $path,
-      'varriables' => array(
+      'variables' => array(
         'trimmed_text' => '',
         'more_text' => '',
       ),

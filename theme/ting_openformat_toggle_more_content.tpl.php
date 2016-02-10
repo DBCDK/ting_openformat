@@ -9,10 +9,10 @@
  */
 ?>
 <span class='toggle-more' data-toggle-link>
-<?php echo $trimmed_text; ?>
+<?php echo drupal_render($variables['trimmed_text']); ?>
   <span class='toggle-more-content toggle-show'>...</span>
   <span class='toggle-more-content toggle-hide'>
-    <?php echo $more_text; ?>
+    <?php echo drupal_render($variables['more_text']); ?>
   </span>
   <a class='toggle-link' href='#show-more'>
     <span class="icon icon-left icon-blue-down">&nbsp;</span>
