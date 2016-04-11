@@ -14,9 +14,7 @@ function ting_openformat_feeds_link($subtype, $conf, $panel_args, $context) {
   $block = new stdClass();
 
   $url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-  //change standard sort from rank_rank_frequency to date_descending
-  //acquisitionDate
-  //date_descending
+  //change standard sort rank_rank_frequency
   $url = str_replace('&sort=rank_frequency','&sort=acquisitionDate_descending',$url);
 
   //check if request parameters are set
