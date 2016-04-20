@@ -13,7 +13,11 @@ $plugin = array(
 function ting_openformat_feeds_link($subtype, $conf, $panel_args, $context) {
   $block = new stdClass();
 
-  $url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+  //change standard sort rank_rank_frequency
+  $url = 'http://' . $_SERVER['HTTP_HOST'] . str_replace('&sort=','&sort=date_descending&',$_SERVER['REQUEST_URI']);
+  $url = str_replace('rank_frequency&','',$url);
+  $url = str_replace('&date_descending&','&',$url);
+
   //check if request parameters are set
   $params_not_set = strpos($url, '?') === FALSE;
 
