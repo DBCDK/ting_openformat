@@ -32,8 +32,6 @@ function ting_openformat_schema() {
     'primary key' => array('tid'),
   );
 
-  // ... also make a cache table in case we decide to cache som entities
-  $schema['cache_bibdk_webservices'] = drupal_get_schema_unprocessed('system', 'cache');
 
   return $schema;
 }
