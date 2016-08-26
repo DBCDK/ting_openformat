@@ -280,12 +280,23 @@ function ting_openformat_preprocess_page(&$variables) {
  * @return array
  */
 function ting_openformat_get_manifestations($ids, $params = array()) {
+
+  dpm($params, 'MODULE PARAMS');
+
   $client = new ting_client_class();
   $default_params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
-  $default_params['objectId'] = $ids;
+  //$default_params['objectId'] = $ids;
   $default_params['includeHoldingsCount'] = TRUE;
+
+  $default_params['action'] = 'getObjectRequest';
+  $default_params['identifier'] = $ids;
+
   drupal_alter('ting_openformat_getobject_params', $default_params);
   $params += $default_params;
+
+  $addi_params = ting_openformat_new_ting_client_extra_params();
+  $params += $addi_params;
+
   $result = $client->do_request('object', $params);
 
   if (empty($result->collections)) {

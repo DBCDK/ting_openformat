@@ -30,6 +30,17 @@ function _ting_openformat_handle_conditions(&$conditions) {
   }
 }
 
+function ting_openformat_new_ting_client_extra_params() {
+  /**
+   * PJO changes for new ting_client
+   */
+  return array(
+    'action' => 'searchRequest',
+    'outputType' => 'json',
+    'stepValue' => 10
+  );
+}
+
 
 /** implements hook_search_execute */
 function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more = NULL) {
@@ -84,6 +95,10 @@ function ting_openformat_search_execute($keys = NULL, $conditions = NULL, &$more
   if (isset($_GET['feed_me'])) {
     ting_openformat_feeds_set_params($params);
   }
+
+
+  $addi_params = ting_openformat_new_ting_client_extra_params();
+  $params += $addi_params;
 
   $result = $client->do_request('search', $params);
   if (!$result) {
