@@ -57,7 +57,7 @@ function ting_openformat_search_content_help_render($element_id, $result_text, $
  $helptxt = t('Help', array(), array('context' => 'bibdk_theme'));
  $helptext =
    "<div class='custom-search--helptext-container'>
-      <span class='bibdk-pager-next'>$result_text</span>
+      <span class='bibdk-pager-result'>$result_text</span>
       <p class='helptext' title='$help'>
       <a data-dropdown='custom-search-elements-help-$element_id'
          aria-controls='custom-search-elements-help-$element_id'
