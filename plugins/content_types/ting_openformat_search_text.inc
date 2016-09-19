@@ -22,10 +22,12 @@ function ting_openformat_search_content_type_render($subtype, $conf, $panel_args
     if ($pager_total[0] == TRUE) {
       $total = $results->numTotalObjects;
       $block->title = t('Search results text');
-      $block->content = '<div class="ting-openformat-search-amount-block">' . format_plural(
-          $total,
-          '1 result',
-          '@count results', array()) . '</div>';
+      $block->content =
+          '<div class="ting-openformat-search-amount-block"><span>' .
+                       ting_openformat_search_content_help_render('input-search-result',
+                                                                  format_plural($total,'1 result','@count results', array()),
+                                                                  t('Search_help_result', array(), array('context' => 'bibdk_theme'))) .
+          '</div>';
     }
     return $block;
   }
@@ -36,5 +38,47 @@ function ting_openformat_search_content_type_render($subtype, $conf, $panel_args
  */
 function ting_openformat_ting_openformat_search_text_content_type_edit_form($form, &$form_state) {
   return $form;
+}
+
+/**
+ * Display questionmark, search result text and text for help display
+ *
+ * @param  $element_id
+ * element name
+ * @param  $result_text
+ * result text for display ex. 36 results
+ * @param  $help
+ * Defined helptext for display (t function)
+ * @return
+ * string display blok
+ */
+function ting_openformat_search_content_help_render($element_id, $result_text, $help ) {
+
+ $helptxt = t('Help', array(), array('context' => 'bibdk_theme'));
+ $helptext =
+   "<div class='custom-search--helptext-container'>
+      <span class='bibdk-pager-result'>$result_text</span>
+      <p class='helptext' title='$help'>
+      <a data-dropdown='custom-search-elements-help-$element_id'
+         aria-controls='custom-search-elements-help-$element_id'
+         aria-expanded='false'
+         aria-label='$helptxt'
+         role='button'>
+         <svg class='svg-icon svg-question'>
+           <use xlink:href='#svg-question' xmlns:xlink='http://www.w3.org/1999/xlink'>
+         </svg>
+      </a>
+      </p>
+      <div id='custom-search-elements-help-$element_id'
+        data-dropdown-content
+        class='f-dropdown tiny'
+        aria-hidden='true'
+        tabindex='-1'>
+        <p class='helptext-content'>
+          $help
+        </p>
+      </div>
+    </div>";
+    return $helptext;
 }
 
