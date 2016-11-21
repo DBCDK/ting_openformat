@@ -213,7 +213,7 @@ class Manifestation extends ManifestationMaster {
   }
 
   /**
-   * getRestrictedExtendedUse  url: login, proxy, onsite (Check: free, preview)
+   * getRestrictedExtendedUse  url: login, proxy, onsite (Check: free and preview)
    * zero or one occurence
    */
   public function getRestrictedExtendedUse() {
