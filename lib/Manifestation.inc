@@ -213,6 +213,37 @@ class Manifestation extends ManifestationMaster {
   }
 
   /**
+   * getRestrictedExtendedUse  url: login, proxy, onsite (Check: free and preview?)
+   * zero or one occurence
+   */
+  public function getRestrictedExtendedUse() {
+    if (!isset($this->manifestation->relationsData)) {
+      return FALSE;
+    }
+
+    //priority 1  - login
+    foreach ($this->manifestation->relationsData as $relation) {
+      if ($relation->relationType == 'dbcaddi:hasOnlineAccess' &&($relation->linkObject->access->{'$'} == 'login')) {
+        return $relation->relationUri;
+      }
+    }
+    //priority 2  - proxy
+    foreach ($this->manifestation->relationsData as $relation) {
+      if ($relation->relationType == 'dbcaddi:hasOnlineAccess' &&($relation->linkObject->access->{'$'} == 'proxy')) {
+        return $relation->relationUri;
+      }
+    }
+    //priority 3  - onsite
+    foreach ($this->manifestation->relationsData as $relation) {
+      if ($relation->relationType == 'dbcaddi:hasOnlineAccess' &&($relation->linkObject->access->{'$'} == 'onsite')) {
+        return $relation->relationUri;
+      }
+    }
+
+    return FALSE;
+  }
+
+  /**
    * Set eksternal type. Typically from briefdisplay
    * @param $type
    */
