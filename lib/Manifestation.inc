@@ -213,7 +213,7 @@ class Manifestation extends ManifestationMaster {
   }
 
   /**
-   * getRestrictedExtendedUse  url: login, proxy, onsite (Check: free & preview)
+   * getRestrictedExtendedUse  url: login, proxy, onsite, hasopenUrl
    * zero or one occurence
    */
   public function getRestrictedExtendedUse() {
@@ -224,19 +224,35 @@ class Manifestation extends ManifestationMaster {
     //priority 1  - login
     foreach ($this->manifestation->relationsData as $relation) {
       if ($relation->relationType == 'dbcaddi:hasOnlineAccess' &&($relation->linkObject->access->{'$'} == 'login')) {
+        //dpm($relation->relationUri,'login');
         return $relation->relationUri;
       }
     }
     //priority 2  - proxy
     foreach ($this->manifestation->relationsData as $relation) {
       if ($relation->relationType == 'dbcaddi:hasOnlineAccess' &&($relation->linkObject->access->{'$'} == 'proxy')) {
+        //dpm($relation->relationUri,'proxy');
         return $relation->relationUri;
       }
     }
     //priority 3  - onsite
     foreach ($this->manifestation->relationsData as $relation) {
       if ($relation->relationType == 'dbcaddi:hasOnlineAccess' &&($relation->linkObject->access->{'$'} == 'onsite')) {
+        //dpm($relation->relationUri,'onsite');
         return $relation->relationUri;
+      }
+    }
+
+    //priority 4  - hasopenUrl
+    foreach ($this->manifestation->relationsData as $relation) {
+      if ($relation->relationType == 'dbcaddi:hasOpenUrl') {
+        //$typeGroup = TingOpenformatMethods::parseFields($this->manifestation->adminData, array('typeGroup'));
+        if ($this->getType() == 'article') {
+          if ($this->getSingleaccessUrlDisplay() != 'urlInternetPublic') {
+            //dpm($relation->relationUri,'hasOpenUrl and article:');
+          return $relation->relationUri;
+        }
+        }
       }
     }
 
@@ -530,6 +546,16 @@ class Manifestation extends ManifestationMaster {
     return (is_array($result)) ? reset($result) : $result;
   }
 
+
+
+  /**
+   * Return the accessUrlDisplay element in the AccessInformation Array
+   * @return array|null
+   */
+  public function getSingleaccessUrlDisplay() {
+    $urls = TingOpenformatMethods::parseFields($this->manifestation->main->details->accessInformation, array('accessUrlDisplay'));
+    return $urls['accessUrlDisplay'];
+  }
 
   /**
    * Return the first AccessUrl element in the AccessInformation Array
