@@ -224,21 +224,18 @@ class Manifestation extends ManifestationMaster {
     //priority 1  - login
     foreach ($this->manifestation->relationsData as $relation) {
       if ($relation->relationType == 'dbcaddi:hasOnlineAccess' &&($relation->linkObject->access->{'$'} == 'login')) {
-        //dpm($relation->relationUri,'login');
         return $relation->relationUri;
       }
     }
     //priority 2  - proxy
     foreach ($this->manifestation->relationsData as $relation) {
       if ($relation->relationType == 'dbcaddi:hasOnlineAccess' &&($relation->linkObject->access->{'$'} == 'proxy')) {
-        //dpm($relation->relationUri,'proxy');
         return $relation->relationUri;
       }
     }
     //priority 3  - onsite
     foreach ($this->manifestation->relationsData as $relation) {
       if ($relation->relationType == 'dbcaddi:hasOnlineAccess' &&($relation->linkObject->access->{'$'} == 'onsite')) {
-        //dpm($relation->relationUri,'onsite');
         return $relation->relationUri;
       }
     }
@@ -246,12 +243,12 @@ class Manifestation extends ManifestationMaster {
     //priority 4  - hasopenUrl
     foreach ($this->manifestation->relationsData as $relation) {
       if ($relation->relationType == 'dbcaddi:hasOpenUrl') {
-        //$typeGroup = TingOpenformatMethods::parseFields($this->manifestation->adminData, array('typeGroup'));
         if ($this->getType() == 'article') {
-          if ($this->getSingleaccessUrlDisplay() != 'urlInternetPublic') {
-            //dpm($relation->relationUri,'hasOpenUrl and article:');
+          if (!$this->getSingleaccessUrlDisplay() || $this->getSingleaccessUrlDisplay() != 'urlInternetPublic') {
+            return $relation->relationUri;
+          }
+        } else {
           return $relation->relationUri;
-        }
         }
       }
     }
