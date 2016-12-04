@@ -213,12 +213,12 @@ class Manifestation extends ManifestationMaster {
   }
 
   /**
-   * getRestrictedExtendedUse  url: login, proxy, onsite, hasopenUrl
-   * zero or one occurence
+   * getRestrictedExtendedUse  url: login, proxy, onsite, hasopenUrl, restrictedAccess and hasopenUrl
+   * return zero or one occurence
    */
   public function getRestrictedExtendedUse() {
     if (!isset($this->manifestation->relationsData)) {
-      return FALSE;
+      return '';
     }
 
     //priority 1  - login
@@ -247,13 +247,20 @@ class Manifestation extends ManifestationMaster {
           if (!$this->getSingleaccessUrlDisplay() || $this->getSingleaccessUrlDisplay() != 'urlInternetPublic') {
             return $relation->relationUri;
           }
-        } else {
+        }
+      }
+    }
+
+    //priority 5  - restrictedAccess and hasopenUrl
+    if ($this->getRestrictedUse() === 'restrictedAccess') {
+      foreach ($this->manifestation->relationsData as $relation) {
+        if ($relation->relationType == 'dbcaddi:hasOpenUrl') {
           return $relation->relationUri;
         }
       }
     }
 
-    return FALSE;
+    return '';
   }
 
   /**
