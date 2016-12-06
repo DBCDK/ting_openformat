@@ -239,7 +239,6 @@ class Manifestation extends ManifestationMaster {
         return $relation->relationUri;
       }
     }
-
     //priority 4  - hasopenUrl
     foreach ($this->manifestation->relationsData as $relation) {
       if ($relation->relationType == 'dbcaddi:hasOpenUrl') {
@@ -250,9 +249,8 @@ class Manifestation extends ManifestationMaster {
         }
       }
     }
-
     //priority 5  - restrictedAccess and hasopenUrl
-    if ($this->getRestrictedUse() === 'restrictedAccess') {
+    if ($this->getRestrictedUse() == 'restrictedAccess') {
       foreach ($this->manifestation->relationsData as $relation) {
         if ($relation->relationType == 'dbcaddi:hasOpenUrl') {
           return $relation->relationUri;
