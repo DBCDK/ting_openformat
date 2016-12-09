@@ -223,20 +223,26 @@ class Manifestation extends ManifestationMaster {
 
     //priority 1  - login
     foreach ($this->manifestation->relationsData as $relation) {
-      if ($relation->relationType == 'dbcaddi:hasOnlineAccess' &&($relation->linkObject->access->{'$'} == 'login')) {
-        return $relation->relationUri;
+      if (isset($relation->linkObject->access->{'$'})) {
+        if ($relation->relationType == 'dbcaddi:hasOnlineAccess' &&($relation->linkObject->access->{'$'} == 'login')) {
+          return $relation->relationUri;
+        }
       }
     }
     //priority 2  - proxy
     foreach ($this->manifestation->relationsData as $relation) {
-      if ($relation->relationType == 'dbcaddi:hasOnlineAccess' &&($relation->linkObject->access->{'$'} == 'proxy')) {
-        return $relation->relationUri;
+      if (isset($relation->linkObject->access->{'$'})) {
+        if ($relation->relationType == 'dbcaddi:hasOnlineAccess' &&($relation->linkObject->access->{'$'} == 'proxy')) {
+          return $relation->relationUri;
+        }
       }
     }
     //priority 3  - onsite
     foreach ($this->manifestation->relationsData as $relation) {
-      if ($relation->relationType == 'dbcaddi:hasOnlineAccess' &&($relation->linkObject->access->{'$'} == 'onsite')) {
-        return $relation->relationUri;
+      if (isset($relation->linkObject->access->{'$'})) {
+        if ($relation->relationType == 'dbcaddi:hasOnlineAccess' &&($relation->linkObject->access->{'$'} == 'onsite')) {
+          return $relation->relationUri;
+        }
       }
     }
     //priority 4  - hasopenUrl
