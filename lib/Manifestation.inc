@@ -213,6 +213,61 @@ class Manifestation extends ManifestationMaster {
   }
 
   /**
+   * getRestrictedExtendedUse  url: login, proxy, onsite, hasopenUrl, restrictedAccess and hasopenUrl
+   * return zero or one occurence
+   */
+  public function getRestrictedExtendedUse() {
+    if (!isset($this->manifestation->relationsData)) {
+      return '';
+    }
+
+    //priority 1  - login
+    foreach ($this->manifestation->relationsData as $relation) {
+      if (isset($relation->linkObject->access->{'$'})) {
+        if ($relation->relationType == 'dbcaddi:hasOnlineAccess' &&($relation->linkObject->access->{'$'} == 'login')) {
+          return $relation->relationUri;
+        }
+      }
+    }
+    //priority 2  - proxy
+    foreach ($this->manifestation->relationsData as $relation) {
+      if (isset($relation->linkObject->access->{'$'})) {
+        if ($relation->relationType == 'dbcaddi:hasOnlineAccess' &&($relation->linkObject->access->{'$'} == 'proxy')) {
+          return $relation->relationUri;
+        }
+      }
+    }
+    //priority 3  - onsite
+    foreach ($this->manifestation->relationsData as $relation) {
+      if (isset($relation->linkObject->access->{'$'})) {
+        if ($relation->relationType == 'dbcaddi:hasOnlineAccess' &&($relation->linkObject->access->{'$'} == 'onsite')) {
+          return $relation->relationUri;
+        }
+      }
+    }
+    //priority 4  - hasopenUrl
+    foreach ($this->manifestation->relationsData as $relation) {
+      if ($relation->relationType == 'dbcaddi:hasOpenUrl') {
+        if ($this->getType() == 'article') {
+          if (!$this->getSingleaccessUrlDisplay() || $this->getSingleaccessUrlDisplay() != 'urlInternetPublic') {
+            return $relation->relationUri;
+          }
+        }
+      }
+    }
+    //priority 5  - restrictedAccess and hasopenUrl
+    if ($this->getRestrictedUse() == 'restrictedAccess') {
+      foreach ($this->manifestation->relationsData as $relation) {
+        if ($relation->relationType == 'dbcaddi:hasOpenUrl') {
+          return $relation->relationUri;
+        }
+      }
+    }
+
+    return '';
+  }
+
+  /**
    * Set eksternal type. Typically from briefdisplay
    * @param $type
    */
@@ -499,6 +554,16 @@ class Manifestation extends ManifestationMaster {
     return (is_array($result)) ? reset($result) : $result;
   }
 
+
+
+  /**
+   * Return the accessUrlDisplay element in the AccessInformation Array
+   * @return array|null
+   */
+  public function getSingleaccessUrlDisplay() {
+    $urls = TingOpenformatMethods::parseFields($this->manifestation->main->details->accessInformation, array('accessUrlDisplay'));
+    return $urls['accessUrlDisplay'];
+  }
 
   /**
    * Return the first AccessUrl element in the AccessInformation Array
