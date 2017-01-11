@@ -140,6 +140,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   $cover = isset($work_fields['bibdk_cover_work']) ? $work_fields['bibdk_cover_work'] : null;
   unset($work_fields['bibdk_cover_work']);
   $subworks = ting_openformat_get_subworks($bibdkWork->getManifestations(), $bibdkWork->getId());
+  dpm($subworks,'$subworks');
 
   return array(
     '#theme' => 'ting_openformat_work',
@@ -163,7 +164,7 @@ function ting_openformat_get_subworks($manifestations, $work_id) {
     $key = drupal_clean_css_identifier($manifestation->getSubType() . '-' . $work_id);
     $ordered_list[$key]['tab'] = array(
       '#theme' => 'bibdk_icon',
-      '#text' => $manifestation->getSubType(),
+      '#text' => t($manifestation->getSubType(), array(), array('context' => 'material_type')),
       '#icon' => $manifestation->getType(),
     );
     $subwork_manifestations[$key][] = $manifestation;
