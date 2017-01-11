@@ -140,7 +140,6 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   $cover = isset($work_fields['bibdk_cover_work']) ? $work_fields['bibdk_cover_work'] : null;
   unset($work_fields['bibdk_cover_work']);
   $subworks = ting_openformat_get_subworks($bibdkWork->getManifestations(), $bibdkWork->getId());
-  dpm($subworks,'$subworks');
 
   return array(
     '#theme' => 'ting_openformat_work',
