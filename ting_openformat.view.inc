@@ -163,7 +163,7 @@ function ting_openformat_get_subworks($manifestations, $work_id) {
     $key = drupal_clean_css_identifier($manifestation->getSubType() . '-' . $work_id);
     $ordered_list[$key]['tab'] = array(
       '#theme' => 'bibdk_icon',
-      '#text' => $manifestation->getSubType(),
+      '#text' => t($manifestation->getSubType(), array(), array('context' => 'material_type')),
       '#icon' => $manifestation->getType(),
     );
     $subwork_manifestations[$key][] = $manifestation;

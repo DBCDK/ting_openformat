@@ -574,7 +574,11 @@ class Manifestation extends ManifestationMaster {
       $urls = TingOpenformatMethods::parseFields($this->manifestation->volume->details->accessInformation, array('accessUrl'));
     }
     else {
-      $urls = TingOpenformatMethods::parseFields($this->manifestation->main->details->accessInformation, array('accessUrl'));
+      if (isset($this->manifestation->main->details->accessInformation)) {
+        $urls = TingOpenformatMethods::parseFields($this->manifestation->main->details->accessInformation, array('accessUrl'));
+      } else {
+        return NULL;
+      }
     }
     while (is_array($urls)) {
       if (isset($urls['accessUrl'])) {
