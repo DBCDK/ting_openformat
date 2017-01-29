@@ -1,7 +1,7 @@
 name = Search client
 description = Searching for bibdk.
 package = Bibliotek.dk
-version = 7.x-0.78
+version = 7.x-0.80
 core = 7.x
 
 ;configure link from module list
