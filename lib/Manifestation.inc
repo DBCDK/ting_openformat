@@ -561,8 +561,11 @@ class Manifestation extends ManifestationMaster {
    * @return array|null
    */
   public function getSingleaccessUrlDisplay() {
-    $urls = TingOpenformatMethods::parseFields($this->manifestation->main->details->accessInformation, array('accessUrlDisplay'));
-    return $urls['accessUrlDisplay'];
+    if (isset($this->manifestation->main->details->accessInformation)) {
+      $urls = TingOpenformatMethods::parseFields($this->manifestation->main->details->accessInformation, array('accessUrlDisplay'));
+      return $urls['accessUrlDisplay'];
+    }
+    return NULL;
   }
 
   /**
