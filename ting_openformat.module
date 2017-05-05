@@ -195,7 +195,7 @@ function ting_openformat_ajax_manifestations($type, $json) {
       'selector' => str_replace(':', '', '#' . $manifestation->id) ,
       'data' => $view,
     );
-    
+
   }
   ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
 }
@@ -284,6 +284,8 @@ function ting_openformat_get_manifestations($ids, $params = array()) {
   $default_params['objectFormat'] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
   $default_params['objectId'] = $ids;
   $default_params['includeHoldingsCount'] = TRUE;
+  $default_params['agency'] = variable_get('ting_agency', '190101');
+  $default_params['profile'] = variable_get('ting_search_profile', 'default');
   drupal_alter('ting_openformat_getobject_params', $default_params);
   $params += $default_params;
   $result = $client->do_request('object', $params);
