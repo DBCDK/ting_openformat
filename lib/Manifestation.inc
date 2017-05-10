@@ -225,10 +225,18 @@ class Manifestation extends ManifestationMaster {
     foreach ($this->manifestation->relationsData as $relation) {
       if (isset($relation->linkObject->access->{'$'})) {
         if ($relation->relationType == 'dbcaddi:hasOnlineAccess' &&($relation->linkObject->access->{'$'} == 'login')) {
-          return $relation->relationUri;
+          if (isset($relation->linkObject->linkTo->{'$'})) {
+            if ($relation->linkObject->linkTo->{'$'} != 'webservice') {
+              // extra check - only linkTo != webservice
+              return $relation->relationUri;
+            }
+          } else {
+            return $relation->relationUri;
+          }
         }
       }
     }
+
     //priority 2  - proxy
     foreach ($this->manifestation->relationsData as $relation) {
       if (isset($relation->linkObject->access->{'$'})) {
