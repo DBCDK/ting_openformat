@@ -103,9 +103,9 @@
    * Toggle link for showing more text for a field
    */
   function toggleMoreEventListener(context){
-    $('[data-toggle-link]', context).click(function(e){
+    $('[data-toggle-link] .toggle-link', context).click(function(e){
       e.preventDefault();
-      $(this).toggleClass('is-toggled');
+      $(this).parents('[data-toggle-link]').toggleClass('is-toggled');
     });
   }
 
