@@ -158,6 +158,11 @@ class Manifestation extends ManifestationMaster {
       return $requestMethod;
     }
 
+    // #US-2018 and bug: 20616 - special case
+    if (isset($requestMethod) && $requestMethod == 'none' && $restrictedUse == '') {
+      return 'restrictedAccessNoLink';
+    }
+
     return NULL;
   }
 
