@@ -8,8 +8,8 @@
  *  $more_text: the part of the text that can be toggled
  */
 ?>
-<span class='toggle-more' data-toggle-link>
 <?php echo drupal_render($variables['trimmed_text']); ?>
+<span class='toggle-more' data-toggle-link>
   <span class='toggle-more-content toggle-show'>...</span>
   <span class='toggle-more-content toggle-hide'>
     <?php echo drupal_render($variables['more_text']); ?>
