@@ -156,7 +156,6 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
  * @return mixed
  */
 function ting_openformat_get_subworks($manifestations, $work_id) {
-dpm(__FUNCTION__);
   $ordered_list = $subtype_ids = array();
   $subwork_manifestations = array();
   /* @var Manifestation $manifestation */
