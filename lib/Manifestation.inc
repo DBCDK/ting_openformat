@@ -7,7 +7,7 @@ class Manifestation extends ManifestationMaster {
 
   private $briefDisplayType;
   private $subType;
-  private $subtypeOrderIds = array();
+  private $subtypeOrderIds;
 
   /**
    * @param $manifestation

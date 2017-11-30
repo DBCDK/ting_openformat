@@ -203,6 +203,10 @@ dpm(__FUNCTION__);
     $ordered_list[$key]['active'] = (array_search($key, array_keys($ordered_list)) == 0) ? 'active' : '';
   }
 
+  return $ordered_list;
+}
+
+
 /**
  * Get toggle button for subwork if more than 1 manifestation
  *
