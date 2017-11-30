@@ -3,7 +3,7 @@
 class BibdkBriefDisplay {
 
   public $id;
-  private subtypeOrderIds = array();
+  private $subtypeOrderIds = array();
 
   function __construct($manifestation){
     $this->manifestation = $manifestation;

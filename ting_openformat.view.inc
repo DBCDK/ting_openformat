@@ -492,3 +492,4 @@ function ting_openformat_worktabs_items(BibdkWork $entity) {
 
   return $tabs;
 }
+
