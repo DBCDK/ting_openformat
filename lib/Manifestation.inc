@@ -7,6 +7,7 @@ class Manifestation extends ManifestationMaster {
 
   private $briefDisplayType;
   private $subType;
+  private subtypeOrderIds = array();
 
   /**
    * @param $manifestation
@@ -627,6 +628,14 @@ class Manifestation extends ManifestationMaster {
       return $result;
     }
     return NULL;
+  }
+
+  public function setSubtypeOrderIds($ids) {
+    $this->subtypeOrderIds = $ids;
+  }
+
+  public function getSubtypeOrderIds() {
+    return $this->subtypeOrderIds;
   }
 
 }

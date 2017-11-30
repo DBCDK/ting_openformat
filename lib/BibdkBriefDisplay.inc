@@ -3,6 +3,7 @@
 class BibdkBriefDisplay {
 
   public $id;
+  private subtypeOrderIds = array();
 
   function __construct($manifestation){
     $this->manifestation = $manifestation;
@@ -32,6 +33,14 @@ class BibdkBriefDisplay {
   public function getHostPublicationID(){
     //type
     return $this->id;
+  }
+  
+  public function setSubtypeOrderIds($ids) {
+    $this->subtypeOrderIds = $ids;
+  }
+
+  public function getSubtypeOrderIds() {
+    return $this->subtypeOrderIds;
   }
 
 }
