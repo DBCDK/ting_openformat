@@ -39,22 +39,26 @@
   <div class="work-accordion">
     <dl class="accordion" data-accordion>
       <?php foreach ($subworks as $key => $group) : ?>
-        <?php list($tab, $manifestation, $toggle, $subwork_actions, $active) = array_values($group); ?>
-        <dd class="accordion-navigation <?php print $active; ?>">
-          <a id="manifestation-toggle-button-<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>" href="#<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>" data-manifestation-toggle="<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>">
-            <?php print drupal_render($tab); ?>
+        <dd class="accordion-navigation <?php print $group['active']; ?>">
+          <a id="manifestation-toggle-button-<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>" 
+             href="#<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>" 
+             data-manifestation-toggle="<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>"
+             data-subtype-orderids="<?php print implode(',', $group['subtype_order_ids']); ?>">
+            <?php print drupal_render($group['tab']); ?>
           </a>
-          <div id="<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>" class="content <?php print $active; ?>">
+          <div id="<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>" class="content <?php print $group['active']; ?>">
             <div class="subwork">
-              <?php print drupal_render($subwork_actions); ?>
+              <?php print drupal_render($group['subwork_actions']); ?>
             </div>
             <div class="manifestations">
-              <?php print drupal_render($manifestation); ?>
+              <?php print drupal_render($group['manifestations']); ?>
             </div>
-            <?php if (!empty($toggle)) : ?>
+            <?php if (!empty($group['toggle'])) : ?>
               <div class="manifestation-toggle"
-                   data-manifestation-toggle="<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>" data-load-multible>
-                <?php print drupal_render($toggle); ?>
+                   data-manifestation-toggle="<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>"
+                   data-subtype-orderids="<?php print implode(',', $group['subtype_order_ids']); ?>"
+                   data-load-multible>
+                <?php print drupal_render($group['toggle']); ?>
               </div>
             <?php endif; ?>
           </div>

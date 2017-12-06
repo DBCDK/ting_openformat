@@ -176,7 +176,6 @@ function ting_openformat_get_subworks($manifestations, $work_id) {
       }
     }
   }
-
   foreach ($manifestations as $manifestation) {
     $key = drupal_clean_css_identifier($manifestation->getSubType() . '-' . $work_id);
     if (get_class($manifestation) == 'Manifestation') {
@@ -191,15 +190,16 @@ function ting_openformat_get_subworks($manifestations, $work_id) {
       '#text' => t($subtype, array(), array('context' => 'material_type')),
       '#icon' => $manifestation->getType(),
     );
-    $ordered_list[$key]['subtype_order_ids'] = $subtype_ids[$subtype];
     $subwork_manifestations[$key][] = $manifestation;
     $ordered_list[$key]['manifestations'][] = ting_openformat_get_manifestation_for_subwork($manifestation, $view_mode = 'full', $langcode = NULL);
+    $ordered_list[$key]['subtype_order_ids'] = $subtype_ids[$subtype];
   }
   foreach ($ordered_list as $key => $value) {
     $ordered_list[$key]['toggle'] = ting_openformat_subwork_toggle($value['manifestations'], $value['subtype_order_ids']);
     $ordered_list[$key]['subwork_actions'] = module_invoke_all('ting_openformat_subwork_materialtype_actions', $subwork_manifestations[$key], $key);
     $ordered_list[$key]['active'] = (array_search($key, array_keys($ordered_list)) == 0) ? 'active' : '';
   }
+dpm($ordered_list);  
   return $ordered_list;
 }
 
@@ -219,7 +219,7 @@ function ting_openformat_subwork_toggle($manifestations, $subtype_order_ids = NU
       '#icon' => 'icon-blue-down',
       '#show' => t("show all (@count)", array('@count' => $count)),
       '#hide' => t('hide'),
-      // '#subtype_order_ids' => $subtype_order_ids,
+      '#subtype_order_ids' => $subtype_order_ids,
       '#attributes' => array(
         'class' => array('manifestation-toggle-link'),
       ),
@@ -249,7 +249,7 @@ function ting_openformat_get_manifestation_for_subwork($manifestation, $view_mod
       '#attributes' => array(
         'class' => array('manifestation-container'),
         'data-id' => $manifestation->id,
-        'data-subtypeIds' => $manifestation->getSubtypeOrderIds(),
+        'data-subtypeIds' => implode(',', $manifestation->getSubtypeOrderIds()),
         'id' => drupal_clean_css_identifier($manifestation->id),
       ),
     );
