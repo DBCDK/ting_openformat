@@ -199,7 +199,6 @@ function ting_openformat_get_subworks($manifestations, $work_id) {
     $ordered_list[$key]['subwork_actions'] = module_invoke_all('ting_openformat_subwork_materialtype_actions', $subwork_manifestations[$key], $key);
     $ordered_list[$key]['active'] = (array_search($key, array_keys($ordered_list)) == 0) ? 'active' : '';
   }
-dpm($ordered_list);  
   return $ordered_list;
 }
 
@@ -267,13 +266,13 @@ function ting_openformat_get_manifestation_for_subwork($manifestation, $view_mod
  *
  * @return array
  */
-function ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL) {
+function ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL, $subtype_pids = array()) {
   if (!isset($langcode)) {
     $langcode = $GLOBALS['language_content']->language;
   }
 
   $fields = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
-  $actions = ting_openformat_get_actions('bibdkManifestation', $manifestation, $view_mode, $langcode);
+  $actions = ting_openformat_get_actions('bibdkManifestation', $manifestation, $view_mode, $langcode, $subtype_pids);
   return array(
     '#theme' => 'ting_openformat_manifestation',
     '#fields'  => $fields,
