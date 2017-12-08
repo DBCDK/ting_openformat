@@ -47,7 +47,7 @@ function ting_openformat_menu() {
   $items['ting_openformat/ajax/manifestations'] = array(
     'title' => 'Single work',
     'description' => 'View single work',
-    'page arguments' => array(1),
+    'page arguments' => array(3, 4),
     'page callback' => 'ting_openformat_ajax_manifestations',
     'access arguments' => array('access content'),
     'type' => MENU_LOCAL_TASK,
@@ -162,15 +162,17 @@ function ting_openformat_load_full_view() {
 }
 
 /** Load manifestations and insert into placeholder via AJAX
- * @param $type
- * @param $json json encoded manifestation ids
+ * @param $pids json encoded manifestation ids
+ * @param $subtype_pids json encoded subtype ids (for "order any" version option)
  * @return json|false
  */
-function ting_openformat_ajax_manifestations($type, $json) {
+function ting_openformat_ajax_manifestations($pids, $subtype_pids) {
   $commands = array();
-  $manifestation_ids = json_decode($json);
+  $manifestation_ids = json_decode($pids);
+  $subtype_pids = json_decode($subtype_pids);
 
-  if (!is_array($manifestation_ids) || count($manifestation_ids) == 0) {
+  if (!is_array($manifestation_ids) || count($manifestation_ids) == 0
+    || !is_array($subtype_pids) || count($subtype_pids) == 0) {
     return FALSE;
   }
 
@@ -188,11 +190,12 @@ function ting_openformat_ajax_manifestations($type, $json) {
   }
 
   foreach ($manifestations as $manifestation) {
+    $manifestation->setSubtypeOrderIds($subtype_pids);
     $render_view = ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL);
     $view = drupal_render($render_view);
     $commands[] = array(
       'command' => 'add_manifestations',
-      'selector' => str_replace(':', '', '#' . $manifestation->id) ,
+      'selector' => str_replace(':', '', '#' . $manifestation->id),
       'data' => $view,
     );
 

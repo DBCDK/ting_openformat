@@ -156,26 +156,54 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
  * @return mixed
  */
 function ting_openformat_get_subworks($manifestations, $work_id) {
-  $ordered_list = array();
+  $ordered_list = $subtype_list = array();
   $subwork_manifestations = array();
   /* @var Manifestation $manifestation */
+
+  // Collect ids for 'order work' checkbox.
   foreach ($manifestations as $manifestation) {
+    if (get_class($manifestation) == 'Manifestation') {
+      $subtype = $manifestation->getSubType();
+      $manifestation_ids = $manifestation->getIDs();
+      foreach ($manifestation_ids as $id) {
+        $subtype_list[$subtype][] = $id;
+      }
+    }
+    else {
+      if (get_class($manifestation) == 'BibdkBriefDisplay') {
+        $subtype = $manifestation->manifestation->type->{'$'};
+        $subtype_list[$subtype][] = $manifestation->id;
+      }
+    }
+  }
+  foreach ($manifestations as $manifestation) {
+    $subtype = NULL;
     $key = drupal_clean_css_identifier($manifestation->getSubType() . '-' . $work_id);
+    if (get_class($manifestation) == 'Manifestation') {
+      $subtype = $manifestation->getSubType();
+    }
+    else if (get_class($manifestation) == 'BibdkBriefDisplay') {
+      $subtype = $manifestation->manifestation->type->{'$'};
+    }
+    $subtype_ids = (!empty($subtype)) ? $subtype_list[$subtype] : array();
+    $manifestation->setSubtypeOrderIds($subtype_ids);
     $ordered_list[$key]['tab'] = array(
       '#theme' => 'bibdk_icon',
-      '#text' => t($manifestation->getSubType(), array(), array('context' => 'material_type')),
+      '#text' => t($subtype, array(), array('context' => 'material_type')),
       '#icon' => $manifestation->getType(),
     );
     $subwork_manifestations[$key][] = $manifestation;
     $ordered_list[$key]['manifestations'][] = ting_openformat_get_manifestation_for_subwork($manifestation, $view_mode = 'full', $langcode = NULL);
+    $ordered_list[$key]['subtype_order_ids'] = $subtype_ids;
   }
   foreach ($ordered_list as $key => $value) {
-    $ordered_list[$key]['toggle'] = ting_openformat_subwork_toggle($value['manifestations']);
+    $ordered_list[$key]['toggle'] = ting_openformat_subwork_toggle($value['manifestations'], $value['subtype_order_ids']);
     $ordered_list[$key]['subwork_actions'] = module_invoke_all('ting_openformat_subwork_materialtype_actions', $subwork_manifestations[$key], $key);
     $ordered_list[$key]['active'] = (array_search($key, array_keys($ordered_list)) == 0) ? 'active' : '';
   }
   return $ordered_list;
 }
+
 
 /**
  * Get toggle button for subwork if more than 1 manifestation
@@ -183,7 +211,7 @@ function ting_openformat_get_subworks($manifestations, $work_id) {
  * @param array $manifestations
  * @return array
  */
-function ting_openformat_subwork_toggle($manifestations) {
+function ting_openformat_subwork_toggle($manifestations, $subtype_order_ids = NULL) {
   $toggle = array();
   $count = count($manifestations);
   if ($count > 1) {
@@ -192,8 +220,9 @@ function ting_openformat_subwork_toggle($manifestations) {
       '#icon' => 'icon-blue-down',
       '#show' => t("show all (@count)", array('@count' => $count)),
       '#hide' => t('hide'),
+      '#subtype_order_ids' => $subtype_order_ids,
       '#attributes' => array(
-        'class' => array('manifestation-toggle-link')
+        'class' => array('manifestation-toggle-link'),
       ),
     );
   }
@@ -221,6 +250,7 @@ function ting_openformat_get_manifestation_for_subwork($manifestation, $view_mod
       '#attributes' => array(
         'class' => array('manifestation-container'),
         'data-id' => $manifestation->id,
+        'data-subtypeIds' => implode(',', $manifestation->getSubtypeOrderIds()),
         'id' => drupal_clean_css_identifier($manifestation->id),
       ),
     );
@@ -238,14 +268,13 @@ function ting_openformat_get_manifestation_for_subwork($manifestation, $view_mod
  *
  * @return array
  */
-function ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL) {
+function ting_openformat_manifestation_view($manifestation, $view_mode = 'full', $langcode = NULL, $subtype_pids = array()) {
   if (!isset($langcode)) {
     $langcode = $GLOBALS['language_content']->language;
   }
 
   $fields = _prepare_view('bibdkManifestation', $manifestation, $view_mode, $langcode);
-  $actions = ting_openformat_get_actions('bibdkManifestation', $manifestation, $view_mode, $langcode);
-
+  $actions = ting_openformat_get_actions('bibdkManifestation', $manifestation, $view_mode, $langcode, $subtype_pids);
   return array(
     '#theme' => 'ting_openformat_manifestation',
     '#fields'  => $fields,
@@ -324,7 +353,6 @@ function _ting_openformat_get_types_list($bibdkobject) {
  * @return array
  */
 function ting_openformat_show_info_get_form($form, $form_state, $bibdkObject, $uid, $trackId = 0) {
-
   $all_ids_in_collection = $bibdkObject->getCollectionIds();
   $form = array(
     '#type' => 'container',
@@ -388,13 +416,10 @@ function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
  * @return array
  */
 function ting_openformat_get_actions($type, $entity, $view_mode = 'full', $langcode = NULL) {
-
   $actions = module_invoke_all('ting_openformat_actions', $type, $entity, $view_mode, $langcode);
-
   if (!empty($actions)) {
     uasort($actions, 'element_sort');
   }
-
   return $actions;
 }
 

@@ -40,7 +40,8 @@
     $('[data-manifestation-toggle]', context).one('click', function(e){
       var wrapper_id = '#' + this.getAttribute('data-manifestation-toggle');
       var manifestation_ids = getManifestationIds(wrapper_id, this.hasAttribute('data-load-multible'));
-      loadManifestationsWithAjax($(wrapper_id), manifestation_ids);
+      var subtype_order_ids = this.getAttribute('data-subtype-orderids').split(',');
+      loadManifestationsWithAjax($(wrapper_id), manifestation_ids, subtype_order_ids);
     });
   }
 
@@ -49,7 +50,7 @@
    */
   function getManifestationIds(wrapper_id, load_multible) {
     var manifestation_ids = new Array();
-    if(load_multible) {
+    if (load_multible) {
       $(wrapper_id + " .manifestation-container").each(function(i, element){
         manifestation_ids.push(element.getAttribute('data-id'));
       });
@@ -70,12 +71,12 @@
    * @todo consider rewriting this to use standard jQuery ajax, for better
    * readability
    */
-  function loadManifestationsWithAjax(element, manifestation_ids){
-    if (manifestation_ids.length == 0){
+  function loadManifestationsWithAjax(element, manifestation_ids, subtype_order_ids){
+    if (manifestation_ids.length == 0 || subtype_order_ids.length == 0){
       return false;
     }
 
-    var url = Drupal.settings.basePath + Drupal.settings.pathPrefix + 'ting_openformat/ajax/manifestations/' + JSON.stringify(manifestation_ids);
+    var url = Drupal.settings.basePath + Drupal.settings.pathPrefix + 'ting_openformat/ajax/manifestations/' + JSON.stringify(manifestation_ids) + '/' + JSON.stringify(subtype_order_ids);
     var element_settings = {
       url: url,
       event: 'load_manifestations',
