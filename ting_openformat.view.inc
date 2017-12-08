@@ -156,7 +156,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
  * @return mixed
  */
 function ting_openformat_get_subworks($manifestations, $work_id) {
-  $ordered_list = $subtype_ids = array();
+  $ordered_list = $subtype_list = array();
   $subwork_manifestations = array();
   /* @var Manifestation $manifestation */
 
@@ -166,17 +166,18 @@ function ting_openformat_get_subworks($manifestations, $work_id) {
       $subtype = $manifestation->getSubType();
       $manifestation_ids = $manifestation->getIDs();
       foreach ($manifestation_ids as $id) {
-        $subtype_ids[$subtype][] = $id;
+        $subtype_list[$subtype][] = $id;
       }
     }
     else {
       if (get_class($manifestation) == 'BibdkBriefDisplay') {
         $subtype = $manifestation->manifestation->type->{'$'};
-        $subtype_ids[$subtype][] = $manifestation->id;
+        $subtype_list[$subtype][] = $manifestation->id;
       }
     }
   }
   foreach ($manifestations as $manifestation) {
+    $subtype = NULL;
     $key = drupal_clean_css_identifier($manifestation->getSubType() . '-' . $work_id);
     if (get_class($manifestation) == 'Manifestation') {
       $subtype = $manifestation->getSubType();
@@ -184,7 +185,8 @@ function ting_openformat_get_subworks($manifestations, $work_id) {
     else if (get_class($manifestation) == 'BibdkBriefDisplay') {
       $subtype = $manifestation->manifestation->type->{'$'};
     }
-    $manifestation->setSubtypeOrderIds($subtype_ids[$subtype]);
+    $subtype_ids = (!empty($subtype)) ? $subtype_list[$subtype] : array();
+    $manifestation->setSubtypeOrderIds($subtype_ids);
     $ordered_list[$key]['tab'] = array(
       '#theme' => 'bibdk_icon',
       '#text' => t($subtype, array(), array('context' => 'material_type')),
@@ -192,7 +194,7 @@ function ting_openformat_get_subworks($manifestations, $work_id) {
     );
     $subwork_manifestations[$key][] = $manifestation;
     $ordered_list[$key]['manifestations'][] = ting_openformat_get_manifestation_for_subwork($manifestation, $view_mode = 'full', $langcode = NULL);
-    $ordered_list[$key]['subtype_order_ids'] = $subtype_ids[$subtype];
+    $ordered_list[$key]['subtype_order_ids'] = $subtype_ids;
   }
   foreach ($ordered_list as $key => $value) {
     $ordered_list[$key]['toggle'] = ting_openformat_subwork_toggle($value['manifestations'], $value['subtype_order_ids']);
