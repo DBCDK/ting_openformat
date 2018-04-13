@@ -14,6 +14,7 @@ include_once 'ting_openformat.field.inc';
 include_once 'ting_openformat_feeds.inc';
 include_once 'ting_openformat.facetbrowser.inc';
 include_once 'ting_openformat.view.inc';
+include_once 'ting_openformat.gdpr.inc';
 
 function ting_openformat_menu() {
   $items = array();
