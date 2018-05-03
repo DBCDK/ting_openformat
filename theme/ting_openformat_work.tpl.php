@@ -66,4 +66,9 @@
       <?php endforeach; ?>
     </dl>
   </div><!-- work-accordion -->
+  
+  <?php $uids = array(); 
+  foreach ($subworks as $key => $group) { $uids = array_merge($uids, $group['subtype_order_ids']); } ?>
+  <div class="js-recommender" data-uids="<?php echo implode(',', $uids); ?>">
+  </div>
 </div>
