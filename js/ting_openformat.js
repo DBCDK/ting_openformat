@@ -24,20 +24,47 @@
   /**
    * Attach work/manifestation related behaviors ajax loaded content.
    */
-  Drupal.behaviors.ting_openformat = {
-    attach: function(context){
-      loadManifestationsEventListener(context);
-      toggleWorkEventListener(context);
-      toggleManifestationsEventListener(context);
-      toggleMoreEventListener(context);
-    }
-  }
 
+  /**
+   * Toggle work
+   */
+  Drupal.behaviors.ting_openformat_toggle_work = {
+    attach: function(context) {
+      $('[data-work-toggle]', context).once('data-work-toggle').each(function(index, element) {
+        toggleWorkEventListener($(this));
+      });
+    }
+  };
+  
+  function toggleWorkEventListener(element){
+    // Eventhandler to expand work on enter
+    element.on( "keydown", function(e) {
+      if ((e.keyCode || e.which) == 13) {
+        element.click();
+      }
+    });
+    element.on( "click", function(e) {
+      e.preventDefault();
+      var id = '#' + element.attr('data-work-toggle');
+      $(id).toggleClass('is-toggled');
+      // This loads work information with ajax.
+      $(id).find('[data-work-load]').trigger('click');
+    });
+  }
+  
   /**
    * Add eventlistener for loading manifestations
    */
-  function loadManifestationsEventListener(context){
-    $('[data-manifestation-toggle]', context).one('click', function(e){
+  Drupal.behaviors.ting_openformat_load_manifestations = {
+    attach: function(context) {
+      $('[data-manifestation-toggle]', context).once('data-manifestation-toggle').each(function(index, element) {
+        loadManifestationsEventListener($(this));
+      });
+    }
+  };
+  
+  function loadManifestationsEventListener(element){
+    element.one('click', function(e){
       var wrapper_id = '#' + this.getAttribute('data-manifestation-toggle');
       var manifestation_ids = getManifestationIds(wrapper_id, this.hasAttribute('data-load-multible'));
       var subtype_order_ids = this.getAttribute('data-subtype-orderids').split(',');
@@ -94,8 +121,16 @@
   /**
    * Toggle view of multiple editions of a manifestations
    */
-  function toggleManifestationsEventListener(context) {
-    $('[data-load-multible]', context).click(function(e) {
+  Drupal.behaviors.ting_openformat_toggle_manifestations = {
+    attach: function(context) {
+      $('[data-load-multible]', context).once('data-load-multible').each(function(index, element) {
+        toggleManifestationsEventListener($(this));
+      });
+    }
+  };
+  
+  function toggleManifestationsEventListener(element) {
+    element.on( "click", function(e) {
       $(this).siblings('.manifestations').toggleClass('is-toggled');
     });
   }
@@ -103,30 +138,19 @@
   /**
    * Toggle link for showing more text for a field
    */
-  function toggleMoreEventListener(context){
-    $('[data-toggle-link] .toggle-link', context).click(function(e){
+  Drupal.behaviors.ting_openformat_toggle_nore = {
+    attach: function(context) {
+      $('[data-toggle-link] .toggle-link', context).once('data-toggle-link').each(function(index, element) {
+        toggleMoreEventListener($(this));
+      });
+    }
+  };
+  
+  function toggleMoreEventListener(element){
+    element.click(function(e){
       e.preventDefault();
-      $(this).parents('[data-toggle-link]').toggleClass('is-toggled');
+      element.parents('[data-toggle-link]').toggleClass('is-toggled');
     });
   }
 
-  /**
-   * Toggle work
-   */
-  function toggleWorkEventListener(context){
-    // Eventhandler to expand work on enter
-    $('[data-work-toggle]', context).keydown(function(e) {
-      if((e.keyCode || e.which) == 13) {
-        $(this).click();
-      }
-    });
-
-    $('[data-work-toggle]', context).click(function(e){
-      e.preventDefault();
-      var id = '#' + $(this).attr('data-work-toggle');
-      $(id).toggleClass('is-toggled');
-      // This loads work information with ajax.
-      $(id).find('[data-work-load]').trigger('click');
-    });
-  }
 })(jQuery);
