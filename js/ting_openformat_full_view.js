@@ -8,19 +8,27 @@
 
 (function tingOpenformatFullView($){
 
+  Drupal.behaviors.ting_openformat_full_view = {
+    attach: function(context) {
+      $('.full-view-links a', context).once('full-view-links').each(function(index, element) {
+        TingOpenformat.addFullViewButtonEvent($(this));
+      });
+    }
+  };
+  
   /**
    * Attach work/manifestation related behaviors ajax loaded content.
    */
-  Drupal.behaviors.ting_openformat_full_view = {
-    attach: function(context){
-      TingOpenformat.addFullViewButtonEvent(context);
-    }
-  };
+  // Drupal.behaviors.ting_openformat_full_view = {
+  //   attach: function(context){
+  //     TingOpenformat.addFullViewButtonEvent(context);
+  //   }
+  // };
 
   var TingOpenformat = {};
 
-  TingOpenformat.addFullViewButtonEvent = function(context){
-    $('.full-view-links a', context).click(function(e){
+  TingOpenformat.addFullViewButtonEvent = function(element){
+    element.click(function(e){
       e.preventDefault();
       if (!$(this).hasClass('inactive')){
         $('.full-view-links a').toggleClass('inactive');
