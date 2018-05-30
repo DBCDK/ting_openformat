@@ -27,20 +27,20 @@
 
   var TingOpenformat = {};
 
-  TingOpenformat.addFullViewButtonEvent = function(element){
-    element.click(function(e){
+  TingOpenformat.addFullViewButtonEvent = function(element) {
+    element.click(function(e) {
       e.preventDefault();
       if (!$(this).hasClass('inactive')){
         $('.full-view-links a').toggleClass('inactive');
       }
 
-      if ($(this).attr('id') === 'ting-openformat-full-view-button-expanded'){
+      if ($(this).attr('id') === 'ting-openformat-full-view-button-expanded') {
         Drupal.settings.ting_openformat.full_view = true;
-        if (Drupal.settings.ting_openformat.full_view_all_loaded){
+        if (Drupal.settings.ting_openformat.full_view_all_loaded) {
           $('.work').addClass('is-toggled');
           TingOpenformat.setFullViewPref('1');
         }
-        else if (!Drupal.settings.ting_openformat.isLoadingFullView){
+        else if (!Drupal.settings.ting_openformat.isLoadingFullView) {
           Drupal.settings.ting_openformat.isLoadingFullView = true;
 
           $(this).toggleClass('ajax-progress');
@@ -61,7 +61,7 @@
     });
   };
 
-  TingOpenformat.setFullViewPref = function(pref, onSuccess){
+  TingOpenformat.setFullViewPref = function(pref, onSuccess) {
     $.ajax({
       type: "POST",
       url: Drupal.settings.ting_openformat.ajax_callback,

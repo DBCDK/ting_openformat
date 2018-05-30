@@ -39,7 +39,7 @@
   function toggleWorkEventListener(element){
     // Eventhandler to expand work on enter
     element.on( "keydown", function(e) {
-      if ((e.keyCode || e.which) == 13) {
+      if ((e.keyCode || e.which) === 13) {
         element.click();
       }
     });
