@@ -161,7 +161,12 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
     '#cover' => $cover,
     '#subworks' => $subworks,
     '#uid' => drupal_clean_css_identifier($bibdkWork->getId()),
-    '#recomole' => array('pids' => $pids, 'types' => $material_types),
+    '#recomole' => array(
+      'pids' => $pids,
+      'limit' => variable_get('bibdk_recommender_limit', 10),
+      'authorflood' => variable_get('bibdk_recommender_filters_authorflood', 3),
+      'types' => $material_types
+    ),
   );
 }
 

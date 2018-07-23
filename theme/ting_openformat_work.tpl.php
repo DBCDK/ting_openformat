@@ -71,6 +71,8 @@
   <div id="<?php print 'slick-recommender-' . $uid; ?>" 
        class="js-slick-recommender" 
        data-recomole-pids="<?php echo implode(',', $recomole['pids']); ?>" 
+       data-recomole-limit="<?php echo $recomole['limit']; ?>" 
+       data-recomole-authorflood="<?php echo $recomole['authorflood']; ?>" 
        data-recomole-types="<?php echo implode(',', $recomole['types']); ?>">
   </div>
 </div>
