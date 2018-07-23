@@ -140,13 +140,28 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   $cover = isset($work_fields['bibdk_cover_work']) ? $work_fields['bibdk_cover_work'] : null;
   unset($work_fields['bibdk_cover_work']);
   $subworks = ting_openformat_get_subworks($bibdkWork->getManifestations(), $bibdkWork->getId());
-
+  
+  // Recomole parameters.
+  $pids = array();
+  foreach ($subworks as $key => $group) { 
+    $pids = array_merge($pids, $group['subtype_order_ids']);
+  }
+  $material_types = array();
+  foreach ($subworks as $group) { 
+    $material_types = array_merge($material_types, array($group['tab']['#text']));
+  }
+  // Remove qualifiers. Ex.: 'Bog (Bind 19)' => 'Bog'. Lydbog (cd) (mappe 1) => Lydbog (cd).
+  foreach ($material_types as $key => $material_type) { 
+    $material_types[$key] = preg_replace('(\s?\\([\wæøåÆØÅ]+[\s]+[\wæøåÆØÅ0-9]+\))' , '', $material_type);
+  }
+  $material_types = array_unique($material_types);
   return array(
     '#theme' => 'ting_openformat_work',
     '#fields' => $work_fields,
     '#cover' => $cover,
     '#subworks' => $subworks,
     '#uid' => drupal_clean_css_identifier($bibdkWork->getId()),
+    '#recomole' => array('pids' => $pids, 'types' => $material_types),
   );
 }
 

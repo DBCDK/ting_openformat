@@ -30,6 +30,7 @@ function ting_openformat_theme() {
         'cover' => '',
         'subworks' => array(),
         'uid' => 0,
+        'recomole' => array(),
       ),
       'template' => 'ting_openformat_work',
     ),

@@ -9,6 +9,7 @@
  * $cover: Cover for a work
  * $subworks: Information about manifestations in work, grouped by type
  *  @see information about manifestation variables
+ * $recomole: pids, filters etc. for Recomole AJAX call.
  *
  * Manifestation variables
  * $tab: Type tab information
@@ -67,10 +68,9 @@
     </dl>
   </div><!-- work-accordion -->
   
-  <?php 
-  $uids = array(); 
-  foreach ($subworks as $key => $group) { $uids = array_merge($uids, $group['subtype_order_ids']); }
-  ?>
   <div id="<?php print 'slick-recommender-' . $uid; ?>" 
-       class="js-slick-recommender" data-uids="<?php echo implode(',', $uids); ?>"></div>
+       class="js-slick-recommender" 
+       data-recomole-pids="<?php echo implode(',', $recomole['pids']); ?>" 
+       data-recomole-types="<?php echo implode(',', $recomole['types']); ?>">
+  </div>
 </div>
