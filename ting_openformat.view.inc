@@ -140,15 +140,12 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
   $cover = isset($work_fields['bibdk_cover_work']) ? $work_fields['bibdk_cover_work'] : null;
   unset($work_fields['bibdk_cover_work']);
   $subworks = ting_openformat_get_subworks($bibdkWork->getManifestations(), $bibdkWork->getId());
-  
-  // Recomole parameters.
-  $pids = array();
-  foreach ($subworks as $key => $group) { 
-    $pids = array_merge($pids, $group['subtype_order_ids']);
-  }
-  $material_types = array();
+
+  // Recommender parameters.
+  $pids = $material_types = array();
   foreach ($subworks as $group) { 
-    $material_types = array_merge($material_types, array($group['tab']['#text']));
+    $pids = array_merge($pids, $group['subtype_order_ids']);
+    $material_types = array_merge($material_types, array($group['recomole']['material_type']));
   }
   // Remove qualifiers. Ex.: 'Bog (Bind 19)' => 'Bog'. Lydbog (cd) (mappe 1) => Lydbog (cd).
   foreach ($material_types as $key => $material_type) { 
@@ -211,6 +208,10 @@ function ting_openformat_get_subworks($manifestations, $work_id) {
       '#theme' => 'bibdk_icon',
       '#text' => t($subtype, array(), array('context' => 'material_type')),
       '#icon' => $manifestation->getType(),
+    );
+    // Recommender need the untranslated string.
+    $ordered_list[$key]['recomole'] = array(
+      'material_type' => $subtype,
     );
     $subwork_manifestations[$key][] = $manifestation;
     $ordered_list[$key]['manifestations'][] = ting_openformat_get_manifestation_for_subwork($manifestation, $view_mode = 'full', $langcode = NULL);
