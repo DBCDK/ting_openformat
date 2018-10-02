@@ -247,7 +247,7 @@ class ManifestationMaster {
     $elements = $this->_getDetails();
     $fields = array(
       'descriptionNoteLink' => array(
-        'descriptionNoteLink' => 'linkElements'
+        'descriptionNoteLink' => 'descriptionNoteLinkElement'
       ),
     );
     $result = TingOpenformatMethods::parseFields($elements, $fields);
