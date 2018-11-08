@@ -115,6 +115,10 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $descriptionNote = $entity->getContentPartialNote();
         $value = _ting_openformat_get_markup_for_field($descriptionNote, "<br />");
         break;
+      case 'bibdk_mani_description_note':
+        $desNote = $entity->getDescriptionNote();
+        $value = _ting_openformat_get_markup_for_field($desNote, "<br />");
+        break;
       case 'bibdk_mani_infotext':
         // entity is manifestation ( @see ting_openformat.entities.inc::manifestation )
         $infotext = $entity->getInfotext();
