@@ -161,7 +161,7 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
     '#recomole' => array(
       'pids' => $pids,
       'limit' => variable_get('bibdk_recommender_limit', 10),
-      'authorflood' => variable_get('bibdk_recommender_filters_authorflood', 3),
+      'authorflood' => variable_get('bibdk_recommender_filters_authorflood', 1),
       'types' => $material_types
     ),
   );
