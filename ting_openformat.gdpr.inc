@@ -19,18 +19,16 @@ function ting_openformat_bibdk_gdpr_items() {
     'label' => array(
       '#type' => 'html_tag',
       '#tag' => 'span',
-      '#value' => 'ting_openformat_fullview_usersetting'
+      '#value' => t('ting_openformat_fullview_usersetting', array(), array('context' => 'bibdk_gdpr'))
     ),
     'value' => array(
       '#type' => 'html_tag',
       '#tag' => 'span',
-      '#value' =>(bibdk_usersettings_user_settings_get('ting_openformat_fullview_usersetting', TRUE)) ? 
-        t('label_action_enabled', array(), array('context' => 'bibdk_gdpr')) : 
+      '#value' =>(bibdk_usersettings_user_settings_get('ting_openformat_fullview_usersetting', TRUE)) ?
+        t('label_action_enabled', array(), array('context' => 'bibdk_gdpr')) :
         t('label_action_disabled', array(), array('context' => 'bibdk_gdpr'))
     ),
   );
   $items['ting_openformat']['#content'] = $rows;
   return $items;
 }
-
-
