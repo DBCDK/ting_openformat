@@ -32,15 +32,11 @@ class TingOpenformatMethods {
   // Delete when new briefDisplay is in place (and support Blu-ray 4K -> workType:movie )
   /* \brief parse workType
    * @param array of stdObjects
-   * return array
+   * return string
    */
   public static function _parseWorkType($stdObject) {
-    $work_type = $stdObject->workType->{'$'};
     $type = $stdObject->type->{'$'};
-    if ($type == 'Blu-ray 4K') {
-      $work_type = 'movie';
-    }
-    return $work_type;
+    return ($type == 'Blu-ray 4K') ? 'movie' : $stdObject->workType->{'$'};
   }
   // </workaround>
 
