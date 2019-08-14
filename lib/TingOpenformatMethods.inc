@@ -27,6 +27,19 @@ class TingOpenformatMethods {
     return $ret;
   }
 
+  // <workaround>
+  // type 'Blu-ray 4K' has worktype:other. Requires an update of briefDisplay
+  // Delete when new briefDisplay is in place (and support Blu-ray 4K -> workType:movie )
+  /* \brief parse workType
+   * @param array of stdObjects
+   * return string
+   */
+  public static function _parseWorkType($stdObject) {
+    $type = $stdObject->type->{'$'};
+    return ($type == 'Blu-ray 4K') ? 'movie' : $stdObject->workType->{'$'};
+  }
+  // </workaround>
+
   public static function _getSearchCodeElement($stdObject) {
     if (isset($stdObject->{'$'})) {
       if (isset($stdObject->{'@phrase'}) && isset($stdObject->{'@phrase'}->{'$'})) {
@@ -92,6 +105,13 @@ class TingOpenformatMethods {
       elseif ($value == 'linkElements' && isset($object->$value)){
         $ret[$field][] = self::_parseLinkElement($object->$value);
       }
+      // <workaround>
+      // type 'Blu-ray 4K' has worktype:other. Requires an update of briefDisplay
+      // Delete when new briefDisplay is in place (and support Blu-ray 4K -> workType:movie )
+      elseif ($value == 'workType' && isset($object->workType)) {
+        $ret['workType'] = self::_parseWorkType($object);
+      }
+      // </workaround>
       elseif ($value == 'header' && isset($object->$field)) {
         $ret[$value] = $object->$field->{'$'};
       }
@@ -110,7 +130,6 @@ class TingOpenformatMethods {
         $ret[$value] = $object->$value->{'$'};
       }
     }
-
     return $ret;
   }
 

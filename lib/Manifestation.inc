@@ -344,13 +344,22 @@ class Manifestation extends ManifestationMaster {
    */
   public function getType() {
     $result = (isset($this->type)) ? array($this->type) : TingOpenformatMethods::parseFields($this->manifestation->adminData, array('typeGroup'));
-    
     // <hack>: Until openFormat is 'unfrozen', we'll use getOrsOrderMaterialType() to see if type is 'periodical'
     //         Delete once openFormat return periodical types.
     if ($result['typeGroup'] == 'none' && $this->getOrsOrderMaterialType() == 'journal') {
       return 'periodical';
     }
     // </hack>
+
+    // <workaround>: type 'Blu-ray 4K' has typeGroup:other. Requires an update of bibliotekdkWorkDisplay
+    // Delete when new openFormat is in place (and support Blu-ray 4K -> workType:movie )
+    elseif ($result['typeGroup'] == 'none') {
+      $type = isset($this->subType) ? $this->subType : TingOpenformatMethods::parseFields($this->manifestation->main, array('type'));
+      if ($type == 'Blu-ray 4K') {
+        return 'movie';
+      }
+    }
+    // </workaround>
 
     return (is_array($result)) ? reset($result) : $result;
   }
