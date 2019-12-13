@@ -259,7 +259,7 @@ function _ting_openformat_search_get_variables() {
 
   if (isset($_SESSION['search_settings']['full_view']) && $_SESSION['search_settings']['full_view'] == TRUE) {
     $params['collectionType'] = 'work-1';
-    $params['objectFormat'][] = 'bibliotekdkWorkDisplay';
+    $params['objectFormat'][] = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
     $params['relationData'][] = 'uri';
   }
 

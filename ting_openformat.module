@@ -425,10 +425,11 @@ function ting_openformat_form_ting_client_admin_webservices_settings_alter(&$for
     $element = & $form['webservices']['ting_search_openformat'];
     // change type to select
     $element['#type'] = 'select';
-    // set the original option (dkabm)
-    $element['#options']['dkabm'] = 'dkabm';
-    // add bibliotekdkWorkDisplay to options
-    $element['#options']['bibliotekdkWorkDisplay'] = 'bibliotekdkWorkDisplay';
+    $element['#options'] = array(
+      'dkabm' => 'dkabm',
+      'bibliotekdkWorkDisplay' => 'bibliotekdkWorkDisplay',
+      'bibdkWorkDisplay' => 'bibdkWorkDisplay'
+    );
   }
 }
 
