@@ -13,17 +13,67 @@ class TingOpenformatMethods {
     }
 
     foreach ($stdObjects as $key => $object) {
-      if (isset($object->searchCode) || isset($object->display)) {
-        $subject['searchCode'] = isset($object->searchCode) ? self::_getSearchCodeElement($object->searchCode) : NULL;
-        $subject['display'] = isset($object->display) ? $object->display->{'$'} : NULL;
-        $ret[] = $subject;
-      }
-      elseif (isset($object->{'$'})) {
-        $subject = $object->{'$'};
-        $ret[] = $subject;
-      }
+
+      // is this good enough ?? check for old or new display on '@phrase' attribute
+      $display = isset($stdObject->{'@phrase'}) ? 'old' : 'new';
+
+      switch ($display) {
+        case 'old':
+          if (isset($object->searchCode) || isset($object->display)) {
+            $subject['searchCode'] = isset($object->searchCode) ? self::_getSearchCodeElement($object->searchCode) : NULL;
+            $subject['display'] = isset($object->display) ? $object->display->{'$'} : NULL;
+            $ret[] = $subject;
+          }
+          break;
+        case 'new' :
+          $subject = array();
+          $subject['display'] = isset($object->searchString) ? $object->searchString->{'$'} : NULL;
+          // we know searchcodes is set - in new display we do NOT have attributes - get the value
+          if (empty($subject['searchCode'])) {
+            $subject['searchCode'] = $object->searchCode->{'$'} . '="' . $subject['display'] . '"';
+          }
+          if(!empty($subject)){
+            $ret[] = $subject;
+          }
+          break;
+
+        default:
+          break;
+
+     /* (isset($object->{'$'})){
+      $subject = $object->{'$'};
+      $ret[] = $subject;
+    }*/
     }
 
+
+    }
+
+    return $ret;
+  }
+
+  /**
+   * We have a new display - old display was with attributes like:
+   *
+  {  "searchCode": {  "$": "\"Latinamerika\"",  "@phrase": {  "$": "phrase.subject"  }
+  },  "display": {  "$": "Latinamerika"  } }
+
+   *new object is with no attributes like:
+  { "searchCode": {  "$": "phrase.subject"},  "searchString": {  "$": "Latinamerika" },
+  "value": {  "$": "Latinamerika" } }
+   *
+   * There are a few issues here - Notice escaped " (\") in old format - how do we
+   * handle that in new format ?
+   *
+   * We need to extract searchcode and value from new object
+   *
+   * @param $stdObjects
+   */
+  private static function parseBibkdSearchCode($stdObjects) {
+    $ret = array();
+    foreach ($stdObjects as $key => $object) {
+
+    }
     return $ret;
   }
 
@@ -43,9 +93,11 @@ class TingOpenformatMethods {
   public static function _getSearchCodeElement($stdObject) {
     if (isset($stdObject->{'$'})) {
       if (isset($stdObject->{'@phrase'}) && isset($stdObject->{'@phrase'}->{'$'})) {
+        $fisk = $stdObject->{'@phrase'}->{'$'} . '=' . $stdObject->{'$'};
         return $stdObject->{'@phrase'}->{'$'} . '=' . $stdObject->{'$'};
       }
       elseif (isset($stdObject->{'@word'}) && isset($stdObject->{'@word'}->{'$'})) {
+        $hest = $stdObject->{'@word'}->{'$'} . '=' . $stdObject->{'$'};
         return $stdObject->{'@word'}->{'$'} . '=' . $stdObject->{'$'};
       }
     }
