@@ -14,7 +14,7 @@ class TingOpenformatMethods {
     }
     foreach ($stdObjects as $key => $object) {
       if (isset($object->searchCode) || isset($object->display)) {
-        $subject['searchCode'] = isset($object->searchCode) ? self::_getSearchCodeElement($object->searchCode) : NULL;
+        $subject['searchCode'] = isset($object->searchCode) ? self::_getSearchCodeElementOld($object->searchCode) : NULL;
         $subject['display'] = isset($object->display) ? $object->display->{'$'} : NULL;
         $ret[] = $subject;
       }
