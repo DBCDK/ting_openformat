@@ -3,6 +3,30 @@
 class TingOpenformatMethods {
 
   /* \brief parse searchCode,display elements
+   * NB! OLD VERSION
+   * @param array of stdObjects
+   * return array of form []['display','searchCode']
+   */
+  public static function _parseSearchCodeOld($stdObjects) {
+    $ret = Array();
+    if (!is_array($stdObjects)) {
+      $stdObjects = array($stdObjects);
+    }
+    foreach ($stdObjects as $key => $object) {
+      if (isset($object->searchCode) || isset($object->display)) {
+        $subject['searchCode'] = isset($object->searchCode) ? self::_getSearchCodeElement($object->searchCode) : NULL;
+        $subject['display'] = isset($object->display) ? $object->display->{'$'} : NULL;
+        $ret[] = $subject;
+      }
+      elseif (isset($object->{'$'})) {
+        $subject = $object->{'$'};
+        $ret[] = $subject;
+      }
+    }
+    return $ret;
+  }
+
+  /* \brief parse searchCode,display elements
    * @param array of stdObjects
    * return array of form []['display','searchCode']
    */
@@ -11,68 +35,27 @@ class TingOpenformatMethods {
     if (!is_array($stdObjects)) {
       $stdObjects = array($stdObjects);
     }
-
     foreach ($stdObjects as $key => $object) {
-
-      // is this good enough ?? check for old or new display on '@phrase' attribute
-      $display = isset($stdObject->{'@phrase'}) ? 'old' : 'new';
-
-      switch ($display) {
-        case 'old':
-          if (isset($object->searchCode) || isset($object->display)) {
-            $subject['searchCode'] = isset($object->searchCode) ? self::_getSearchCodeElement($object->searchCode) : NULL;
-            $subject['display'] = isset($object->display) ? $object->display->{'$'} : NULL;
-            $ret[] = $subject;
+      if (isset($object->searchCode) || isset($object->value)) {
+        if (isset($object->searchCode) && isset($object->searchString)) {
+          if (!is_array($object->searchString)) {
+            $object->searchString = array($object->searchString);
           }
-          break;
-        case 'new' :
-          $subject = array();
-          $subject['display'] = isset($object->searchString) ? $object->searchString->{'$'} : NULL;
-          // we know searchcodes is set - in new display we do NOT have attributes - get the value
-          if (empty($subject['searchCode'])) {
-            $subject['searchCode'] = $object->searchCode->{'$'} . '="' . $subject['display'] . '"';
+          foreach ($object->searchString as $searchString) {
+            $subject['searchCode'] = $object->searchCode->{'$'} . '="' . $searchString->{'$'} . '"';
           }
-          if(!empty($subject)){
-            $ret[] = $subject;
-          }
-          break;
-
-        default:
-          break;
-
-     /* (isset($object->{'$'})){
-      $subject = $object->{'$'};
-      $ret[] = $subject;
-    }*/
-    }
-
-
-    }
-
-    return $ret;
-  }
-
-  /**
-   * We have a new display - old display was with attributes like:
-   *
-  {  "searchCode": {  "$": "\"Latinamerika\"",  "@phrase": {  "$": "phrase.subject"  }
-  },  "display": {  "$": "Latinamerika"  } }
-
-   *new object is with no attributes like:
-  { "searchCode": {  "$": "phrase.subject"},  "searchString": {  "$": "Latinamerika" },
-  "value": {  "$": "Latinamerika" } }
-   *
-   * There are a few issues here - Notice escaped " (\") in old format - how do we
-   * handle that in new format ?
-   *
-   * We need to extract searchcode and value from new object
-   *
-   * @param $stdObjects
-   */
-  private static function parseBibkdSearchCode($stdObjects) {
-    $ret = array();
-    foreach ($stdObjects as $key => $object) {
-
+        }
+        // Remove this when shelf from OpenFormat outputs 'searchString' instead of 'value'
+        elseif (isset($object->searchCode) && isset($object->value)) {
+          $subject['searchCode'] = $object->searchCode->{'$'} . '="' . $object->value->{'$'} . '"';
+        }
+        $subject['display'] = isset($object->value->{'$'}) ? $object->value->{'$'} : NULL;
+        $ret[] = $subject;
+      }
+      elseif (isset($object->{'$'})) {
+        $subject = $object->{'$'};
+        $ret[] = $subject;
+      }
     }
     return $ret;
   }
@@ -90,7 +73,12 @@ class TingOpenformatMethods {
   }
   // </workaround>
 
-  public static function _getSearchCodeElement($stdObject) {
+  /* \brief parse search code elements
+   * NB! OLD VERSION
+   * @param array of stdObjects
+   * return string
+   */
+  public static function _getSearchCodeElementOld($stdObject) {
     if (isset($stdObject->{'$'})) {
       if (isset($stdObject->{'@phrase'}) && isset($stdObject->{'@phrase'}->{'$'})) {
         $fisk = $stdObject->{'@phrase'}->{'$'} . '=' . $stdObject->{'$'};
@@ -144,15 +132,20 @@ class TingOpenformatMethods {
       }
       return $ret;
     }
+    $display_version = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
     foreach ($fields as $field => $value) {
       if (is_array($value) && isset($object->$field)) {
         $ret[$field][] = self::parseFields($object->$field, $value);
       }
       elseif ($value == 'searchCode' && isset($object->$field)) {
-        $ret[$field][] = self::_parseSearchCode($object->$field);
+        $ret[$field][] = ($display_version === 'bibdkWorkDisplay') ?
+          self::_parseSearchCode($object->$field) :
+          self::_parseSearchCodeOld($object->$field);
       }
       elseif ($value == 'searchCode' && isset($object->$value)) {
-        $ret[$field][] = self::_parseSearchCode($object);
+        $ret[$field][] = ($display_version === 'bibdkWorkDisplay') ?
+        self::_parseSearchCode($object) :
+        self::_parseSearchCodeOld($object);
       }
       elseif ($value == 'linkElements' && isset($object->$value)){
         $ret[$field][] = self::_parseLinkElement($object->$value);
