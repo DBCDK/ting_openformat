@@ -106,11 +106,14 @@ class ManifestationMaster {
 
   public function getRelatedSeriesTitle() {
     $elements = $this->_getDetails();
+    $display_version = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
+    $description = ($display_version === 'bibdkWorkDisplay') ? 'seriesDescription' : 'header';
+    $titles = ($display_version === 'bibdkWorkDisplay') ? 'titles' : 'relatedSeries';
     $fields = array(
       'relatedSeriesTitles' => array(
         'relatedSeriesTitle' => array(
-          'relatedSeriesDescription' => 'header',
-          'relatedSeries' => array( 'linkElements','searchCode'),
+          'relatedSeriesDescription' => $description,
+          $titles => array( 'linkElements','searchCode'),
         ),
       ),
     );
