@@ -93,9 +93,24 @@ class ManifestationMaster {
 
   public function getSeriesTitle() {
     $elements = $this->_getDetails();
-    $fields = array('seriesTitle' => array('seriesHeader' => 'header', 'series' => array('searchCode'),'seriesNumber'));
-    $result = TingOpenformatMethods::parseFields($elements, $fields);
-    return $result;
+    $display_version = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
+    $fields = ($display_version === 'bibdkWorkDisplay') ?
+    array(
+      'seriesTitle' => array(
+        'series' => array(
+          'seriesHeader' => 'seriesDescription',
+          'titles' => array('searchCode')
+        )
+      )
+    ) :
+    array(
+      'seriesTitle' => array(
+        'seriesHeader' => 'header',
+        'series' => array('searchCode'),
+        'seriesNumber'
+      )
+    );
+    return TingOpenformatMethods::parseFields($elements, $fields);
   }
 
   /* \brief relatedSeriesTitle
@@ -118,9 +133,7 @@ class ManifestationMaster {
       ),
     );
 
-    $result = TingOpenformatMethods::parseFields($elements, $fields);
-
-    return $result;
+    return TingOpenformatMethods::parseFields($elements, $fields);
   }
 
   /* \brief readabilityIndexes

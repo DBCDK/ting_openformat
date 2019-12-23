@@ -45,10 +45,6 @@ class TingOpenformatMethods {
             $subject['searchCode'] = $object->searchCode->{'$'} . '="' . $searchString->{'$'} . '"';
           }
         }
-        // Remove this when shelf from OpenFormat outputs 'searchString' instead of 'value'
-        elseif (isset($object->searchCode) && isset($object->value)) {
-          $subject['searchCode'] = $object->searchCode->{'$'} . '="' . $object->value->{'$'} . '"';
-        }
         $subject['display'] = isset($object->value->{'$'}) ? $object->value->{'$'} : NULL;
         $ret[] = $subject;
       }
