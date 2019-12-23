@@ -46,6 +46,7 @@ class TingOpenformatMethods {
           }
         }
         $subject['display'] = isset($object->value->{'$'}) ? $object->value->{'$'} : NULL;
+        $subject['display'] = isset($object->name->{'$'}) ? $object->name->{'$'} : $subject['display'];
         $ret[] = $subject;
       }
       elseif (isset($object->{'$'})) {
