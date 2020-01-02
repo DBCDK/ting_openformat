@@ -3,12 +3,12 @@
 class TingOpenformatMethods {
 
   /* \brief parse searchCode,display elements
-   * NB! OLD VERSION
+   * NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is implementet fully
    * @param array of stdObjects
    * return array of form []['display','searchCode']
    */
   public static function _parseSearchCodeOld($stdObjects) {
-    $ret = Array();
+    $ret = array();
     if (!is_array($stdObjects)) {
       $stdObjects = array($stdObjects);
     }
@@ -31,19 +31,14 @@ class TingOpenformatMethods {
    * return array of form []['display','searchCode']
    */
   public static function _parseSearchCode($stdObjects) {
-    $ret = Array();
+    $ret = array();
     if (!is_array($stdObjects)) {
       $stdObjects = array($stdObjects);
     }
     foreach ($stdObjects as $key => $object) {
       if (isset($object->searchCode) || isset($object->value)) {
-        if (isset($object->searchCode) && isset($object->searchString)) {
-          if (!is_array($object->searchString)) {
-            $object->searchString = array($object->searchString);
-          }
-          foreach ($object->searchString as $searchString) {
-            $subject['searchCode'] = $object->searchCode->{'$'} . '="' . $searchString->{'$'} . '"';
-          }
+        if (isset($object->searchCode->{'$'}) && isset($object->searchString->{'$'})) {
+          $subject['searchCode'] = $object->searchCode->{'$'} . '="' . $object->searchString->{'$'} . '"';
         }
         $subject['display'] = isset($object->value->{'$'}) ? $object->value->{'$'} : NULL;
         $subject['display'] = isset($object->name->{'$'}) ? $object->name->{'$'} : $subject['display'];
@@ -71,18 +66,16 @@ class TingOpenformatMethods {
   // </workaround>
 
   /* \brief parse search code elements
-   * NB! OLD VERSION
+   * NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is implementet fully
    * @param array of stdObjects
    * return string
    */
   public static function _getSearchCodeElementOld($stdObject) {
     if (isset($stdObject->{'$'})) {
       if (isset($stdObject->{'@phrase'}) && isset($stdObject->{'@phrase'}->{'$'})) {
-        $fisk = $stdObject->{'@phrase'}->{'$'} . '=' . $stdObject->{'$'};
         return $stdObject->{'@phrase'}->{'$'} . '=' . $stdObject->{'$'};
       }
       elseif (isset($stdObject->{'@word'}) && isset($stdObject->{'@word'}->{'$'})) {
-        $hest = $stdObject->{'@word'}->{'$'} . '=' . $stdObject->{'$'};
         return $stdObject->{'@word'}->{'$'} . '=' . $stdObject->{'$'};
       }
     }
@@ -95,7 +88,7 @@ class TingOpenformatMethods {
    * return array[url,display]
    */
   public static function _parseLinkElement($stdObjects) {
-    $ret = Array();
+    $ret = array();
     if (!is_array($stdObjects)) {
       $stdObjects = array($stdObjects);
     }
