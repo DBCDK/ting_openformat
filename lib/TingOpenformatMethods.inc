@@ -3,18 +3,18 @@
 class TingOpenformatMethods {
 
   /* \brief parse searchCode,display elements
+   * NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is implementet fully
    * @param array of stdObjects
    * return array of form []['display','searchCode']
    */
-  public static function _parseSearchCode($stdObjects) {
-    $ret = Array();
+  public static function _parseSearchCodeOld($stdObjects) {
+    $ret = array();
     if (!is_array($stdObjects)) {
       $stdObjects = array($stdObjects);
     }
-
     foreach ($stdObjects as $key => $object) {
       if (isset($object->searchCode) || isset($object->display)) {
-        $subject['searchCode'] = isset($object->searchCode) ? self::_getSearchCodeElement($object->searchCode) : NULL;
+        $subject['searchCode'] = isset($object->searchCode) ? self::_getSearchCodeElementOld($object->searchCode) : NULL;
         $subject['display'] = isset($object->display) ? $object->display->{'$'} : NULL;
         $ret[] = $subject;
       }
@@ -23,7 +23,32 @@ class TingOpenformatMethods {
         $ret[] = $subject;
       }
     }
+    return $ret;
+  }
 
+  /* \brief parse searchCode,display elements
+   * @param array of stdObjects
+   * return array of form []['display','searchCode']
+   */
+  public static function _parseSearchCode($stdObjects) {
+    $ret = array();
+    if (!is_array($stdObjects)) {
+      $stdObjects = array($stdObjects);
+    }
+    foreach ($stdObjects as $key => $object) {
+      if (isset($object->searchCode) || isset($object->value)) {
+        if (isset($object->searchCode->{'$'}) && isset($object->searchString->{'$'})) {
+          $subject['searchCode'] = $object->searchCode->{'$'} . '="' . $object->searchString->{'$'} . '"';
+        }
+        $subject['display'] = isset($object->value->{'$'}) ? $object->value->{'$'} : NULL;
+        $subject['display'] = isset($object->name->{'$'}) ? $object->name->{'$'} : $subject['display'];
+        $ret[] = $subject;
+      }
+      elseif (isset($object->{'$'})) {
+        $subject = $object->{'$'};
+        $ret[] = $subject;
+      }
+    }
     return $ret;
   }
 
@@ -40,7 +65,12 @@ class TingOpenformatMethods {
   }
   // </workaround>
 
-  public static function _getSearchCodeElement($stdObject) {
+  /* \brief parse search code elements
+   * NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is implementet fully
+   * @param array of stdObjects
+   * return string
+   */
+  public static function _getSearchCodeElementOld($stdObject) {
     if (isset($stdObject->{'$'})) {
       if (isset($stdObject->{'@phrase'}) && isset($stdObject->{'@phrase'}->{'$'})) {
         return $stdObject->{'@phrase'}->{'$'} . '=' . $stdObject->{'$'};
@@ -58,7 +88,7 @@ class TingOpenformatMethods {
    * return array[url,display]
    */
   public static function _parseLinkElement($stdObjects) {
-    $ret = Array();
+    $ret = array();
     if (!is_array($stdObjects)) {
       $stdObjects = array($stdObjects);
     }
@@ -92,15 +122,20 @@ class TingOpenformatMethods {
       }
       return $ret;
     }
+    $display_version = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
     foreach ($fields as $field => $value) {
       if (is_array($value) && isset($object->$field)) {
         $ret[$field][] = self::parseFields($object->$field, $value);
       }
       elseif ($value == 'searchCode' && isset($object->$field)) {
-        $ret[$field][] = self::_parseSearchCode($object->$field);
+        $ret[$field][] = ($display_version === 'bibdkWorkDisplay') ?
+          self::_parseSearchCode($object->$field) :
+          self::_parseSearchCodeOld($object->$field);
       }
       elseif ($value == 'searchCode' && isset($object->$value)) {
-        $ret[$field][] = self::_parseSearchCode($object);
+        $ret[$field][] = ($display_version === 'bibdkWorkDisplay') ?
+        self::_parseSearchCode($object) :
+        self::_parseSearchCodeOld($object);
       }
       elseif ($value == 'linkElements' && isset($object->$value)){
         $ret[$field][] = self::_parseLinkElement($object->$value);
