@@ -23,8 +23,14 @@ class ManifestationMaster {
     return isset($this->fields->publicationDetails) ? $this->fields->publicationDetails : NULL;
   }
 
+  /**
+   * Get tracks from bibdkWorkDisplay.
+   *
+   * @return array|null
+   *
+   */
   private function _getTracks() {
-    return isset($this->fields->tracks) ? $this->fields->tracks : NULL;
+    return $this->fields->tracks ?? NULL;
   }
 
   private function _getContent() {
@@ -504,9 +510,11 @@ class ManifestationMaster {
     return $result;
   }
 
-  /* parses track elements from bibdkWorkDisplay
+  /**
+   * Get track elements from bibdkWorkDisplay.
    *
-   * return array
+   * @return array
+   *
    */
   public function getTrackContent() {
     $fields = array(
@@ -516,8 +524,7 @@ class ManifestationMaster {
         'details' => 'details'
       )
     );
-    $result = TingOpenformatMethods::parseFields($this->_getTracks(), $fields);
-    return $result;
+    return TingOpenformatMethods::parseFields($this->_getTracks(), $fields);
   }
 
 

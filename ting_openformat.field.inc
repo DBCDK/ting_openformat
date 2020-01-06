@@ -544,9 +544,7 @@ function _ting_openformat_parse_tracks($tracks, $entity = NULL, $options = array
   foreach ($tracks as $element) {
     $render_array = _ting_openformat_parse_tracks_element($element['track'][0]);
   }
-
-  $render_array = ting_openformat_text_summary($render_array);
-  return $render_array;
+  return ting_openformat_text_summary($render_array);
 }
 
 /**
@@ -566,24 +564,19 @@ function _ting_openformat_parse_tracks_element($element) {
     end($value);
     $last_key = key($value);
     foreach ($value as $k => $v) {
-      $markup = _ting_openformat_get_markup_for_field($v, " ");
+      $markup = (_ting_openformat_get_markup_for_field($v, " ") !== NULL) ? _ting_openformat_get_markup_for_field($v, " ") : [];
       if ($k === 'creator') {
-        $markup[] = array(
-          '#markup' => ": ",
-        );
+        $delimiter = ': ';
       } else {
         if (isset($value['creator'])) {
           $delimiter = ($count > $i && $k === $last_key) ? '</br>' : '';
-          $markup[] = array(
-            '#markup' => $delimiter,
-          );
         } else {
           $delimiter = ($count > $i) ? ' ; ' : '';
-          $markup[] = array(
-            '#markup' => $delimiter,
-          );
         }
       }
+      $markup[] = array(
+        '#markup' => $delimiter,
+      );
       $render_array = array_merge($render_array, $markup);
     }
   }
