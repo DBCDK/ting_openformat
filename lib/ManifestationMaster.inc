@@ -93,9 +93,24 @@ class ManifestationMaster {
 
   public function getSeriesTitle() {
     $elements = $this->_getDetails();
-    $fields = array('seriesTitle' => array('seriesHeader' => 'header', 'series' => array('searchCode'),'seriesNumber'));
-    $result = TingOpenformatMethods::parseFields($elements, $fields);
-    return $result;
+    $display_version = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
+    $fields = ($display_version === 'bibdkWorkDisplay') ?
+    array(
+      'seriesTitle' => array(
+        'series' => array(
+          'seriesHeader' => 'seriesDescription',
+          'titles' => array('searchCode')
+        )
+      )
+    ) :
+    array(
+      'seriesTitle' => array(
+        'seriesHeader' => 'header',
+        'series' => array('searchCode'),
+        'seriesNumber'
+      )
+    );
+    return TingOpenformatMethods::parseFields($elements, $fields);
   }
 
   /* \brief relatedSeriesTitle
@@ -106,18 +121,19 @@ class ManifestationMaster {
 
   public function getRelatedSeriesTitle() {
     $elements = $this->_getDetails();
+    $display_version = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
+    $description = ($display_version === 'bibdkWorkDisplay') ? 'seriesDescription' : 'header';
+    $titles = ($display_version === 'bibdkWorkDisplay') ? 'titles' : 'relatedSeries';
     $fields = array(
       'relatedSeriesTitles' => array(
         'relatedSeriesTitle' => array(
-          'relatedSeriesDescription' => 'header',
-          'relatedSeries' => array( 'linkElements','searchCode'),
+          'relatedSeriesDescription' => $description,
+          $titles => array( 'linkElements','searchCode'),
         ),
       ),
     );
 
-    $result = TingOpenformatMethods::parseFields($elements, $fields);
-
-    return $result;
+    return TingOpenformatMethods::parseFields($elements, $fields);
   }
 
   /* \brief readabilityIndexes
