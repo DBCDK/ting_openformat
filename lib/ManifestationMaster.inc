@@ -23,6 +23,10 @@ class ManifestationMaster {
     return isset($this->fields->publicationDetails) ? $this->fields->publicationDetails : NULL;
   }
 
+  private function _getTracks() {
+    return isset($this->fields->tracks) ? $this->fields->tracks : NULL;
+  }
+
   private function _getContent() {
     return isset($this->fields->content) ? $this->fields->content : NULL;
   }
@@ -490,12 +494,29 @@ class ManifestationMaster {
     return $result;
   }
 
+  // NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
   public function getAnalyticContent() {
     $fields = array('analyticContent' => array(
         'analyticContributor' => 'searchCode',
         'analyticTitle' => array('analyticTitleMain' => 'searchCode', 'analyticRestOfTitle')
         ));
     $result = TingOpenformatMethods::parseFields($this->_getContent(), $fields);
+    return $result;
+  }
+
+  /* parses track elements from bibdkWorkDisplay
+   *
+   * return array
+   */
+  public function getTrackContent() {
+    $fields = array(
+      'track' => array(
+        'creator' => 'searchCode',
+        'title' => 'title',
+        'details' => 'details'
+      )
+    );
+    $result = TingOpenformatMethods::parseFields($this->_getTracks(), $fields);
     return $result;
   }
 
