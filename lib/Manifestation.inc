@@ -17,7 +17,10 @@ class Manifestation extends ManifestationMaster {
     if (isset($this->manifestation->main)) {
       $this->fields = $this->manifestation->main;
     }
+    // NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
     $this->getAnalyticContent();
+    // New bibdkWorkDisplay
+    $this->getTrackContent();
   }
 
   /**

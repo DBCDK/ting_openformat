@@ -78,7 +78,6 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
   $element = array();
   foreach ($items as $delta => $item) {
     switch ($field['field_name']) {
-
       case 'ting_openformat_mani_subjects':
       case 'ting_openformat_work_subjects':
         // one or more subjects
@@ -125,9 +124,15 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $infotext = ($infotext) ? t('drupal_text_' . $infotext, array(), array('context' => 'bibdk_openformat')) : NULL;
         $value = _ting_openformat_get_markup_for_field($infotext);
         break;
+        // NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
       case 'bibdk_mani_analytic_content':
         $analytic = $entity->getAnalyticContent();
         $value = _ting_openformat_parse_analytic_content($analytic);
+        break;
+        // New bibdkWorkDisplay
+      case 'bibdk_mani_tracks':
+        $tracks = $entity->getTrackContent();
+        $value = _ting_openformat_parse_tracks($tracks, $count);
         break;
       case 'bibdk_mani_access_information':
         $urls = $entity->getAccessInformation();
@@ -466,6 +471,7 @@ function _ting_openformat_parse_urls($urls) {
 
 /**
  * Helper function to parse analytic content
+ * // NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
  * @param $analytic_content
  * @param null $entity
  * @param array $options
@@ -504,6 +510,7 @@ function _ting_openformat_parse_analytic_content($analytic_content, $entity = NU
 }
 
 /**
+ * // NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
  * @param $element
  * @return string
  */
@@ -517,6 +524,61 @@ function _ting_openformat_parse_analytic_content_element($element) {
       );
     }
     $render_array = array_merge($render_array, $markup);
+  }
+  return $render_array;
+
+}
+
+/**
+ * Helper function to parse tracks
+ * @param $tracks
+ * @param null $entity
+ * @param array $options
+ * @return array|null
+ */
+function _ting_openformat_parse_tracks($tracks, $entity = NULL, $options = array()) {
+  if (!isset($tracks) || !isset($tracks[1]['track'])) {
+    return null;
+  }
+  $render_array = array();
+  foreach ($tracks as $element) {
+    $render_array = _ting_openformat_parse_tracks_element($element['track'][0]);
+  }
+  return ting_openformat_text_summary($render_array);
+}
+
+/**
+ * Helper function to parse track elements
+ * @param $element
+ * @return string
+ */
+function _ting_openformat_parse_tracks_element($element) {
+  $render_array = array();
+  if ($element === NULL) {
+    return $render_array;
+  }
+  $count = count($element);
+  $i = 0;
+  foreach ($element as $key => $value) {
+    $i++;
+    end($value);
+    $last_key = key($value);
+    foreach ($value as $k => $v) {
+      $markup = (_ting_openformat_get_markup_for_field($v, " ") !== NULL) ? _ting_openformat_get_markup_for_field($v, " ") : [];
+      if ($k === 'creator') {
+        $delimiter = ': ';
+      } else {
+        if (isset($value['creator'])) {
+          $delimiter = ($count > $i && $k === $last_key) ? '</br>' : '';
+        } else {
+          $delimiter = ($count > $i) ? ' ; ' : '';
+        }
+      }
+      $markup[] = array(
+        '#markup' => $delimiter,
+      );
+      $render_array = array_merge($render_array, $markup);
+    }
   }
   return $render_array;
 

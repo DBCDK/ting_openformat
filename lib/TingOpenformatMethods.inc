@@ -3,7 +3,7 @@
 class TingOpenformatMethods {
 
   /* \brief parse searchCode,display elements
-   * NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is implementet fully
+   * NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
    * @param array of stdObjects
    * return array of form []['display','searchCode']
    */
@@ -66,7 +66,7 @@ class TingOpenformatMethods {
   // </workaround>
 
   /* \brief parse search code elements
-   * NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is implementet fully
+   * NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
    * @param array of stdObjects
    * return string
    */
