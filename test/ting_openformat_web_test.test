@@ -12,7 +12,7 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     return array(
       'name' => t('Ting OpenFormat Webtest'),
       'description' => t('Tests methods in ting_openformat module that requires database access'),
-      'group' => t('Ting Openformat'),
+      'group' => t('FIX ME')//t('Ting Openformat'),
     );
   }
 
@@ -76,7 +76,7 @@ class TingOpenFormatWebTestCase extends DrupalWebTestCase {
     $element = drupal_json_decode(file_get_contents(drupal_get_path('module', 'ting_openformat') . '/test/mockup/element.json'));
     //ensuring that a link by default is returned as part of the value of the #markup key
     $response = _ting_openformat_get_markup_for_field($element);
-    
+
     $this->assertTrue(array_key_exists('#theme', $response[0]), t('\'#theme\' present in response from _ting_openformat_get_markup_for_field()'));
     $this->assertTrue(array_key_exists('#openformat_field', $response[0]), t('\'#openformat_field\' present in response from _ting_openformat_get_markup_for_field()'));
     $result = ($response[0]['#theme'] == 'ting_openformat_field');

@@ -6,7 +6,7 @@ class TingOpenFormatFieldShownTestCase extends DrupalWebTestCase {
     return array(
       'name' => 'Ting OpenFormat Field tests',
       'description' => 'Test that fields get shown for material that has this information',
-      'group' => 'Ting Openformat',
+      'group' => 'FIX ME',//'Ting Openformat',
     );
   }
 
