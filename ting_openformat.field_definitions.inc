@@ -365,12 +365,21 @@ function ting_openformat_bibdk_fields() {
       'description' => 'Content Note of manifestation',
       'callback method' =>  'getContentPartialNote',
     ),
+    // NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
     'bibdk_mani_analytic_content' => array(
       'label' => 'Analytic Content',
       'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
       'display' => array('full'),
       'description' => 'Analytic content of manifestation',
       'callback method' =>  'getAnalyticContent',
+    ),
+    // New bibdkWorkDisplay
+    'bibdk_mani_tracks' => array(
+      'label' => 'Tracks',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
+      'display' => array('full'),
+      'description' => 'Track content of manifestation',
+      'callback method' =>  'getTrackContent',
     ),
     'bibdk_mani_originals' => array(
       'label' => 'Originals',
@@ -491,6 +500,5 @@ function ting_openformat_bibdk_fields() {
   if (!empty($hooks)) {
     $fields = module_invoke_all('ting_openformat_fields', $fields);
   }
-
   return $fields;
 }
