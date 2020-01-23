@@ -271,11 +271,16 @@ class ManifestationMaster {
 
   public function getDescriptionNote() {
     $elements = $this->_getDetails();
-    $fields = array(
-      'descriptionNoteLink' => array(
-        'descriptionNoteLink' => 'descriptionNoteLinkElement'
-      ),
-    );
+    $display_version = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
+    if ($display_version === 'bibliotekdkWorkDisplay') {
+      $fields = array(
+        'descriptionNoteLink' => array(
+          'descriptionNoteLink' => 'descriptionNoteLinkElement'
+        ),
+      );
+    } else {
+      $fields = array('descriptionNote');
+    }
     $result = TingOpenformatMethods::parseFields($elements, $fields);
     return (is_array($result)) ? reset($result) : $result;
   }
