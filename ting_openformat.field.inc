@@ -114,6 +114,10 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $descriptionNote = $entity->getContentPartialNote();
         $value = _ting_openformat_get_markup_for_field($descriptionNote, "<br />");
         break;
+      case 'bibdk_mani_contribs':
+        $contrib = $entity->getContributors();
+        $value = _ting_openformat_parse_contributors($contrib);
+        break;
       case 'bibdk_mani_description_note':
         $desNote = $entity->getDescriptionNote();
         $value = _ting_openformat_get_markup_for_field($desNote, "<br />");
@@ -527,6 +531,53 @@ function _ting_openformat_parse_analytic_content_element($element) {
   }
   return $render_array;
 
+}
+
+/**
+ * Helper function to parse contributors
+ * @param $contributors
+ * @param null $entity
+ * @param array $options
+ * @return array|null
+ */
+function _ting_openformat_parse_contributors($contributors) {
+  if (!isset($contributors)) {
+    return null;
+  }
+  $render_array = array();
+  // Parse through elements
+  if(gettype($contributors["contributors"]) === string) {
+    return _ting_openformat_get_markup_for_field($contributors, ": ");
+  }
+  if (!is_array($contributors["contributors"][0][0])) {
+      $contributors["contributors"][0] = array($contributors["contributors"][0]);
+  }
+  foreach ($contributors['contributors'] as $contributor) {
+      $i = 0;
+      $count = count($contributor);
+      foreach($contributor as $key => $value) {
+          $function = $value["functionSingular"];
+          $prev_function = ($i > 0) ? $contributor[$i-1]["functionSingular"] : '';
+          $i++;
+          $next_function = $contributor[$i]["functionSingular"];
+          if ($function === $next_function) {
+              unset($value['functionSingular']);
+          } else if ($function === $prev_function) {
+              unset($value['functionPlural']);
+              unset($value['functionSingular']);
+          } else {
+              unset($value['functionPlural']);
+          }
+          $markup = _ting_openformat_get_markup_for_field($value, ": ");
+          if ($i !== $count) {
+              $markup[] = array(
+                '#markup' => " ; ",
+              );
+          }
+          $render_array = array_merge($render_array, $markup);
+      }
+  }
+  return $render_array;
 }
 
 /**
