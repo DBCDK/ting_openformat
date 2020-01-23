@@ -71,8 +71,7 @@ class ManifestationMaster {
 
   public function getContributors() {
     $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('contributors' => array('functionSingular','functionPlural', 'searchCode')));
-    $result = ($result["contributors"][0] === NULL) ? TingOpenformatMethods::parseFields($this->_getDetails(), array('contributors')) : $result;
-    return $result;
+    return(is_null($result["contributors"][0])) ? TingOpenformatMethods::parseFields($this->_getDetails(), array('contributors')) : $result;
   }
 
   /* \brief contributors without functionCode
@@ -80,8 +79,7 @@ class ManifestationMaster {
    */
 
   public function getContributorsNoFunction() {
-    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('contributors' => array('searchCode')));
-    return $result;
+    return TingOpenformatMethods::parseFields($this->_getDetails(), array('contributors' => array('searchCode')));
   }
 
   /* \brief format

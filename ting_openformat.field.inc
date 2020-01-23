@@ -536,17 +536,12 @@ function _ting_openformat_parse_analytic_content_element($element) {
 /**
  * Helper function to parse contributors
  * @param $contributors
- * @param null $entity
- * @param array $options
- * @return array|null
+ * @return array
  */
 function _ting_openformat_parse_contributors($contributors) {
-  if (!isset($contributors)) {
-    return null;
-  }
   $render_array = array();
   // Parse through elements
-  if(gettype($contributors["contributors"]) === string) {
+  if(is_string($contributors["contributors"])) {
     return _ting_openformat_get_markup_for_field($contributors, ": ");
   }
   if (!is_array($contributors["contributors"][0][0])) {
