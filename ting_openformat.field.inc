@@ -605,6 +605,9 @@ function _ting_openformat_parse_tracks_element($element) {
   }
   $count = count($element);
   $i = 0;
+  if (isset($element['title'])) {
+      $element = array($element);
+  }
   foreach ($element as $key => $value) {
     $i++;
     end($value);
