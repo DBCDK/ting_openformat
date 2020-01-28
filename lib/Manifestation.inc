@@ -162,6 +162,14 @@ class Manifestation extends ManifestationMaster {
       return $requestMethod;
     }
 
+    $display_version = variable_get('ting_search_openformat', 'bibliotekdkWorkDisplay');
+
+    if ($display_version === 'bibdkWorkDisplay' &&
+        $this->getTypeGroup() !== 'online' && $this->getTypeGroup() !== 'article' &&
+        $this->getHoldingsCount() === '0') {
+      return 'noHoldings';
+    }
+
     // #US-2018 and bug: 20616 - special case
     if (isset($requestMethod) && $requestMethod == 'none' && $restrictedUse == '') {
       return 'restrictedAccessNoLink';
@@ -197,6 +205,28 @@ class Manifestation extends ManifestationMaster {
       return FALSE;
     }
     $result = TingOpenformatMethods::parseFields($this->manifestation->adminData, array('requestButton'));
+
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
+  /**
+   * typeGroup
+   * zero or one occurence
+   * @return string|null
+   */
+  public function getTypeGroup() {
+    $result = TingOpenformatMethods::parseFields($this->manifestation->adminData, array('typeGroup'));
+
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
+  /**
+   * holdingsCount
+   * zero or one occurence
+   * @return string|null
+   */
+  public function getHoldingsCount() {
+    $result = TingOpenformatMethods::parseFields($this->manifestation->adminData, array('holdingsCount'));
 
     return (is_array($result)) ? reset($result) : $result;
   }
