@@ -143,12 +143,12 @@ function ting_openformat_work_view($bibdkWork, $view_mode = 'full', $langcode = 
 
   // Recommender parameters.
   $pids = $material_types = array();
-  foreach ($subworks as $group) { 
+  foreach ($subworks as $group) {
     $pids = array_merge($pids, $group['subtype_order_ids']);
     $material_types = array_merge($material_types, array($group['recomole']['material_type']));
   }
   // Remove qualifiers. Ex.: 'Bog (Bind 19)' => 'Bog'. Lydbog (cd) (mappe 1) => Lydbog (cd).
-  foreach ($material_types as $key => $material_type) { 
+  foreach ($material_types as $key => $material_type) {
     $material_types[$key] = preg_replace('(\s?\\([\wæøåÆØÅ]+[\s]+[\wæøåÆØÅ0-9]+\))' , '', $material_type);
   }
   $material_types = array_unique($material_types);
@@ -494,6 +494,24 @@ function ting_openformat_worktabs_items(BibdkWork $entity) {
       $subjects_divider[] = $arr;
     }
     $elements['subject'] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array('work-subject'),
+      ),
+      'subjects' => $subjects_divider,
+    );
+  }
+
+  if ($subjects = _ting_openformat_parse_element($entity->getLaesekompasSubjects())) {
+    $divider = array('#markup' => '. ');
+    $subjects_divider = array();
+    foreach ($subjects as $key => $arr) {
+      if ( $subjects_divider ) {
+        $subjects_divider[] = $divider;
+      }
+      $subjects_divider[] = $arr;
+    }
+    $elements['laesekompassubject'] = array(
       '#type' => 'container',
       '#attributes' => array(
         'class' => array('work-subject'),

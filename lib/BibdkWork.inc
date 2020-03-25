@@ -191,6 +191,16 @@ class BibdkWork {
     return (is_array($result)) ? reset($result) : $result;
   }
 
+  /** \brief laesekompas subject(s) of work
+   * zero or more occurences
+   */
+  public function getLaesekompasSubjects() {
+    $fields = array('subjectsLaesekompas' => array('subjectHeader' => 'header', 'subject' => 'searchCode'));
+    $elements = $this->_getDescription();
+    $result = TingOpenformatMethods::parseFields($elements, $fields);
+    return (is_array($result)) ? reset($result) : $result;
+  }
+
   /**
    * @return array|mixed|null
    */

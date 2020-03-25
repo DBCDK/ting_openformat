@@ -23,7 +23,7 @@ function ting_openformat_search_content_type_render($subtype, $conf, $panel_args
       $total = $results->numTotalObjects;
       $block->title = t('Search results text');
       $block->content =
-          '<div class="ting-openformat-search-amount-block"><span>' .
+          '<div class="ting-openformat-search-amount-block">' .
                        ting_openformat_search_content_help_render('input-search-result',
                                                                   format_plural($total,'1 result','@count results', array()),
                                                                   t('Search_help_result', array(), array('context' => 'bibdk_theme'))) .
@@ -65,7 +65,8 @@ function ting_openformat_search_content_help_render($element_id, $result_text, $
          aria-label='$helptxt'
          role='button'>
          <svg class='svg-icon svg-question'>
-           <use xlink:href='#svg-question' xmlns:xlink='http://www.w3.org/1999/xlink'>
+           <title>$helptxt</title>
+           <use xlink:href='#svg-question' xmlns:xlink='http://www.w3.org/1999/xlink'/>
          </svg>
       </a>
       </p>
@@ -81,4 +82,3 @@ function ting_openformat_search_content_help_render($element_id, $result_text, $
     </div>";
     return $helptext;
 }
-

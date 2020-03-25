@@ -79,11 +79,17 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
   foreach ($items as $delta => $item) {
     switch ($field['field_name']) {
       case 'ting_openformat_mani_subjects':
-        case 'ting_openformat_work_subjects':
-          // one or more subjects
-          $subjects = $entity->getSubjects();
-          $value = _ting_openformat_get_markup_for_field($subjects, '; ', FALSE);
-          break;
+      case 'ting_openformat_work_subjects':
+        // one or more subjects
+        $subjects = $entity->getSubjects();
+        $value = _ting_openformat_get_markup_for_field($subjects, '; ', FALSE);
+        break;
+      case 'ting_openformat_mani_laesekompas_subjects':
+      case 'ting_openformat_work_laesekompas_subjects':
+        // one or more laesekompas subjects
+        $subjects = $entity->getLaesekompasSubjects();
+        $value = _ting_openformat_get_markup_for_field($subjects, '; ', FALSE);
+        break;
           case 'bibdk_mani_creators':
           $content = _ting_openformat_default_field_view_content($field['field_name'], $entity);
           $value = _ting_openformat_get_markup_for_field($content, "<br />");
