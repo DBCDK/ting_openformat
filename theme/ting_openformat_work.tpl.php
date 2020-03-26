@@ -28,7 +28,7 @@
       <div class="work-description-wrapper show-for-small small-16 columns">
         <?php print drupal_render($fields['ting_openformat_work_abstract']); ?>
         <?php print drupal_render($fields['ting_openformat_work_subjects']); ?>
-        <?php print drupal_render($fields['ting_openformat_work_laesekompas_subjects']); ?>
+        <?php print drupal_render($fields['ting_openformat_work_lk_subjects']); ?>
       </div>
       <div class="work-tabs hide-for-small medium-16 large-18 columns">
         <?php print drupal_render($fields); ?>

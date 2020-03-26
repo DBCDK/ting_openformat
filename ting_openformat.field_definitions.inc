@@ -31,7 +31,7 @@ function ting_openformat_bibdk_fields() {
       'callback method' =>  'getSubjects',
 
     ),
-    'ting_openformat_work_laesekompas_subjects' => array(
+    'ting_openformat_work_lk_subjects' => array(
       'label' => 'Work Laesekompas subjects',
       'entity_type' => array('bibdkWorkEntity'),
       'display' => array('full'),
@@ -71,7 +71,7 @@ function ting_openformat_bibdk_fields() {
       'description' => 'Subjects of work',
       'callback method' =>  'getSubjects',
     ),
-    'ting_openformat_mani_laesekompas_subjects' => array(
+    'ting_openformat_mani_lk_subjects' => array(
       'label' => 'Work Laesekompas subjects',
       'entity_type' => array('bibdkManifestation'),
       'display' => array('full'),
