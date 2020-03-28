@@ -485,7 +485,7 @@ function ting_openformat_worktabs_items(BibdkWork $entity) {
   }
 
   if ($subjects = _ting_openformat_parse_element($entity->getSubjects())) {
-    $divider = array('#markup' => '. ');
+    $divider = array('#markup' => ', ');
     $subjects_divider = array();
     foreach ($subjects as $key => $arr) {
       if ( $subjects_divider ) {
@@ -493,8 +493,10 @@ function ting_openformat_worktabs_items(BibdkWork $entity) {
       }
       $subjects_divider[] = $arr;
     }
+    $label = t('subjects_label', array(), array('context' => 'ting_openformat'));
     $elements['subject'] = array(
       '#type' => 'container',
+      '#prefix' => '<div class="field-label work-field-label">' . $label . '</div>',
       '#attributes' => array(
         'class' => array('work-subject'),
       ),
@@ -503,7 +505,7 @@ function ting_openformat_worktabs_items(BibdkWork $entity) {
   }
 
   if ($subjects = _ting_openformat_parse_element($entity->getLaesekompasSubjects())) {
-    $divider = array('#markup' => '. ');
+    $divider = array('#markup' => ', ');
     $subjects_divider = array();
     foreach ($subjects as $key => $arr) {
       if ( $subjects_divider ) {
@@ -511,8 +513,10 @@ function ting_openformat_worktabs_items(BibdkWork $entity) {
       }
       $subjects_divider[] = $arr;
     }
+    $label = t('lk_subjects_label', array(), array('context' => 'ting_openformat'));
     $elements['laesekompassubject'] = array(
       '#type' => 'container',
+      '#prefix' => '<div class="field-label work-field-label">' . $label . '</div>',
       '#attributes' => array(
         'class' => array('work-subject'),
       ),
