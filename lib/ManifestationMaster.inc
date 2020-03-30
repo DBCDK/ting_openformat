@@ -70,8 +70,18 @@ class ManifestationMaster {
    */
 
   public function getContributors() {
-    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('contributors' => array('functionSingular','functionPlural', 'searchCode')));
-    return(is_null($result["contributors"][0])) ? TingOpenformatMethods::parseFields($this->_getDetails(), array('contributors')) : $result;
+    $elements = $this->_getDetails();
+    $fields = array(
+      'contributors' => array(
+        'contributor' => array(
+          'functionSingular',
+          'functionPlural',
+          'searchCode'
+        )
+      )
+    );
+    $result = TingOpenformatMethods::parseFields($elements, $fields);
+    return $result['contributors'];
   }
 
   /* \brief contributors without functionCode
@@ -413,7 +423,7 @@ class ManifestationMaster {
         'languageElement',
         ));
     $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
-    return (count($result['language'][0]['languageElement']) > 1) ? array() : $result;
+    return (is_countable($result['language'][0]['languageElement']) && count($result['language'][0]['languageElement']) > 1) ? array() : $result;
   }
 
   /**
