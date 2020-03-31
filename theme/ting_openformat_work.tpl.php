@@ -28,6 +28,7 @@
       <div class="work-description-wrapper show-for-small small-16 columns">
         <?php print drupal_render($fields['ting_openformat_work_abstract']); ?>
         <?php print drupal_render($fields['ting_openformat_work_subjects']); ?>
+        <?php print drupal_render($fields['ting_openformat_work_lk_subjects']); ?>
       </div>
       <div class="work-tabs hide-for-small medium-16 large-18 columns">
         <?php print drupal_render($fields); ?>
@@ -41,8 +42,8 @@
     <dl class="accordion" data-accordion>
       <?php foreach ($subworks as $key => $group) : ?>
         <dd class="accordion-navigation <?php print $group['active']; ?>">
-          <a id="manifestation-toggle-button-<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>" 
-             href="#<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>" 
+          <a id="manifestation-toggle-button-<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>"
+             href="#<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>"
              data-manifestation-toggle="<?php print preg_replace('/[^\00-\255]+/u', '', $key); ?>"
              data-subtype-orderids="<?php print implode(',', $group['subtype_order_ids']); ?>">
             <?php print drupal_render($group['tab']); ?>
@@ -67,12 +68,12 @@
       <?php endforeach; ?>
     </dl>
   </div><!-- work-accordion -->
-  
-  <div id="<?php print 'slick-recommender-' . $uid; ?>" 
-       class="js-slick-recommender" 
-       data-recomole-pids="<?php echo implode(',', $recomole['pids']); ?>" 
-       data-recomole-limit="<?php echo $recomole['limit']; ?>" 
-       data-recomole-authorflood="<?php echo $recomole['authorflood']; ?>" 
+
+  <div id="<?php print 'slick-recommender-' . $uid; ?>"
+       class="js-slick-recommender"
+       data-recomole-pids="<?php echo implode(',', $recomole['pids']); ?>"
+       data-recomole-limit="<?php echo $recomole['limit']; ?>"
+       data-recomole-authorflood="<?php echo $recomole['authorflood']; ?>"
        data-recomole-types="<?php echo implode(',', $recomole['types']); ?>">
   </div>
 </div>

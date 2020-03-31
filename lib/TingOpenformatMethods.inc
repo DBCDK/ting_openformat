@@ -148,11 +148,15 @@ class TingOpenformatMethods {
       }
       // </workaround>
       elseif ($value == 'header' && isset($object->$field)) {
-        $ret[$value] = $object->$field->{'$'};
+        if (isset($object->$field->{'$'})) {
+           $ret[$value] = $object->$field->{'$'};
+        }
       }
       elseif (!is_array($value) && isset($object->$value) && is_array($object->$value)) {
         foreach ($object->$value as $val) {
-          $ret[$value][] = $val->{'$'};
+          if (isset($val->{'$'})) {
+            $ret[$value][] = $val->{'$'};
+          }
         }
 
         // When using briefDisplay as format sometimes an array is encapsulating the value
@@ -162,7 +166,9 @@ class TingOpenformatMethods {
         }
       }
       elseif (!is_array($value) && isset($object->$value) && is_object($object->$value)) {
-        $ret[$value] = $object->$value->{'$'};
+        if (isset($object->$value->{'$'})) {
+          $ret[$value] = $object->$value->{'$'};
+        }
       }
     }
     return $ret;

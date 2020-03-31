@@ -215,3 +215,17 @@ function ting_openformat_update_7033() {
 function ting_openformat_update_7034() {
   ding_entity_modules_enabled(array('ting_openformat'));
 }
+
+/**
+ * update field information
+ */
+function ting_openformat_update_7035() {
+  ding_entity_modules_enabled(array('ting_openformat'));
+}
+
+/**
+ * update field information
+ */
+function ting_openformat_update_7036() {
+  ding_entity_modules_enabled(array('ting_openformat'));
+}

@@ -31,6 +31,14 @@ function ting_openformat_bibdk_fields() {
       'callback method' =>  'getSubjects',
 
     ),
+    'ting_openformat_work_lk_subjects' => array(
+      'label' => 'Work Laesekompas subjects',
+      'entity_type' => array('bibdkWorkEntity'),
+      'display' => array('full'),
+      'description' => 'Laesekompas Subjects of work',
+      'callback method' =>  'getLaesekompasSubjects',
+
+    ),
     /********* MANIFESTATION ************/
     'bibdk_dependent_title'  => array(
       'label' => 'DependentTitle',
@@ -62,6 +70,14 @@ function ting_openformat_bibdk_fields() {
       'display' => array('full'),
       'description' => 'Subjects of work',
       'callback method' =>  'getSubjects',
+    ),
+    'ting_openformat_mani_lk_subjects' => array(
+      'label' => 'Work Laesekompas subjects',
+      'entity_type' => array('bibdkManifestation'),
+      'display' => array('full'),
+      'description' => 'Laesekompas Subjects of work',
+      'callback method' =>  'getLaesekompasSubjects',
+
     ),
     'bibdk_mani_infotext' => array(
       'label' => 'Info text',

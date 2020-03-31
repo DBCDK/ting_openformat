@@ -81,6 +81,17 @@ class Manifestation extends ManifestationMaster {
     return $result;
   }
 
+  /** \brief subject(s) of work
+   * zero or more occurences
+   */
+  public function getLaesekompasSubjects() {
+    $fields = array('subjectsLaesekompas' => array('subjectHeader' => 'header', 'subject' => 'searchCode'));
+    $elements = isset($this->getWork()->description) ? $this->getWork()->description : NULL;
+    $result = TingOpenformatMethods::parseFields($elements, $fields);
+
+    return $result;
+  }
+
   public function getAbstract() {
     $fields = array('abstract' => array('abstractElement'));
 

@@ -1,14 +1,14 @@
 <?php
 
 /**
- * @file
- * Field hook implementations.
- */
+* @file
+* Field hook implementations.
+*/
 
 /**
- * Implements hook_field_info().
- * @return array
- */
+* Implements hook_field_info().
+* @return array
+*/
 function ting_openformat_field_info() {
 
   $field_default = array(
@@ -31,8 +31,8 @@ function ting_openformat_field_info() {
 }
 
 /**
- * Implements hook_field_formatter_info
- * */
+* Implements hook_field_formatter_info
+* */
 function ting_openformat_field_formatter_info() {
   $fields = ting_openformat_field_info();
   foreach ($fields as $field => $data) {
@@ -47,8 +47,8 @@ function ting_openformat_field_formatter_info() {
 }
 
 /**
- * Implements hook_field_load()
- */
+* Implements hook_field_load()
+*/
 function ting_openformat_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
   foreach ($entities as $id => $entity) {
     $items[$id][0] = array(
@@ -58,22 +58,22 @@ function ting_openformat_field_load($entity_type, $entities, $field, $instances,
 }
 
 /**
- * Implements hook_field_formatter_view
- * it is possible to extract values directly from bibdkWork->work or bibdkWork->manifestations, but it is preferable to
- * add a method to bibdkWork class e.g
- *
- * @see  ting_openformat.entities.inc::bibdkWork::getCreator().) ... there will be changes in format
- *
- * @param $entity_type
- * @param BibdkWork | Manifestation $entity
- * @param $field
- * @param $instance
- * @param $langcode
- * @param $items
- * @param $display
- * @return array
- * @see  ting_openformat.entities.inc
- */
+* Implements hook_field_formatter_view
+* it is possible to extract values directly from bibdkWork->work or bibdkWork->manifestations, but it is preferable to
+* add a method to bibdkWork class e.g
+*
+* @see  ting_openformat.entities.inc::bibdkWork::getCreator().) ... there will be changes in format
+*
+* @param $entity_type
+* @param BibdkWork | Manifestation $entity
+* @param $field
+* @param $instance
+* @param $langcode
+* @param $items
+* @param $display
+* @return array
+* @see  ting_openformat.entities.inc
+*/
 function ting_openformat_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
   foreach ($items as $delta => $item) {
@@ -83,6 +83,20 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         // one or more subjects
         $subjects = $entity->getSubjects();
         $value = _ting_openformat_get_markup_for_field($subjects, '; ', FALSE);
+        break;
+      case 'ting_openformat_mani_lk_subjects':
+      case 'ting_openformat_work_lk_subjects':
+        // one or more laesekompas subjects
+        $subjects = $entity->getLaesekompasSubjects();
+        $value = _ting_openformat_get_markup_for_field($subjects, '; ', FALSE);
+        break;
+      case 'bibdk_mani_series':
+        $content = _ting_openformat_default_field_view_content($field['field_name'], $entity);
+        $value = _ting_openformat_get_markup_for_field($content, '');
+        break;
+      case 'bibdk_mani_related_series':
+        $content = _ting_openformat_default_field_view_content($field['field_name'], $entity);
+        $value = _ting_openformat_get_markup_for_field($content, '');
         break;
       case 'bibdk_mani_creators':
         $content = _ting_openformat_default_field_view_content($field['field_name'], $entity);
@@ -128,15 +142,15 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $infotext = ($infotext) ? t('drupal_text_' . $infotext, array(), array('context' => 'bibdk_openformat')) : NULL;
         $value = _ting_openformat_get_markup_for_field($infotext);
         break;
-        // NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
+      // NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
       case 'bibdk_mani_analytic_content':
         $analytic = $entity->getAnalyticContent();
         $value = _ting_openformat_parse_analytic_content($analytic);
         break;
-        // New bibdkWorkDisplay
-      case 'bibdk_mani_tracks':
+      // New bibdkWorkDisplay
+        case 'bibdk_mani_tracks':
         $tracks = $entity->getTrackContent();
-        $value = _ting_openformat_parse_tracks($tracks, $count);
+        $value = _ting_openformat_parse_tracks($tracks);
         break;
       case 'bibdk_mani_access_information':
         $urls = $entity->getAccessInformation();
@@ -161,11 +175,11 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
 
 
 /** Generic Helper function to get content elements for a speficic field
- * @param $field_name
- * @param $entity
- * @throws Exception
- * @return null
- */
+* @param $field_name
+* @param $entity
+* @throws Exception
+* @return null
+*/
 function _ting_openformat_default_field_view_content($field_name, $entity) {
   $value = null;
   $field_definitions = ting_openformat_bibdk_fields();
@@ -177,7 +191,7 @@ function _ting_openformat_default_field_view_content($field_name, $entity) {
     }
     else {
       throw new Exception(format_string('Method @method does not excist on object @object', array(
-       '@method' => $method,
+        '@method' => $method,
         '@object' => get_class($entity),
       )));
     }
@@ -187,12 +201,12 @@ function _ting_openformat_default_field_view_content($field_name, $entity) {
 
 
 /**
- * @param $elements
- * @param string $divider
- * @param bool $use_header
- * @param bool $return_link If FALSE value will be returned without markup for href. Otherwise complete markup for href is returned
- * @return array|null
- */
+* @param $elements
+* @param string $divider
+* @param bool $use_header
+* @param bool $return_link If FALSE value will be returned without markup for href. Otherwise complete markup for href is returned
+* @return array|null
+*/
 function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_header = TRUE, $return_link = TRUE) {
   if (!is_array($elements)) {
     $elements = array($elements);
@@ -223,14 +237,14 @@ function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_
 
 
 /**
- * Method for converting text blocks to trimmed text with a show more link.
- *
- * The text are trimmed at the last space within the range given
- *
- * @param $text
- * @param int $length
- * @return string
- */
+* Method for converting text blocks to trimmed text with a show more link.
+*
+* The text are trimmed at the last space within the range given
+*
+* @param $text
+* @param int $length
+* @return string
+*/
 function ting_openformat_text_summary($render_array, $length = 290) {
   $trimmed = $more = array();
   $text = '';
@@ -248,7 +262,7 @@ function ting_openformat_text_summary($render_array, $length = 290) {
   foreach ($render_array as $item) {
     $text = _ting_openformat_get_render_string($item);
     if (mb_strlen($text) >= $length - $text_len && $text_len < $length) {
-     // add break in middle of item text
+      // add break in middle of item text
       list($item_trimmed, $item_more) = ting_openformat_trim_string_by_length($text, $length);
       $trimmed[] = array(
         '#theme' => 'ting_openformat_field',
@@ -282,14 +296,14 @@ function ting_openformat_text_summary($render_array, $length = 290) {
 
 
 /**
- * Trim a textstring by length (to the nearest space)
- *
- * Returns an array with the trimmed text and the text that is trimmed off
- *
- * @param $text
- * @param $length
- * @return array
- */
+* Trim a textstring by length (to the nearest space)
+*
+* Returns an array with the trimmed text and the text that is trimmed off
+*
+* @param $text
+* @param $length
+* @return array
+*/
 function ting_openformat_trim_string_by_length($text, $length) {
   // If text is smaller than specified length return string and empty more
   // If text contains html we exclude it to make sure we don't break the html
@@ -311,18 +325,18 @@ function ting_openformat_trim_string_by_length($text, $length) {
 
 
 /**
- * Recursive find value of key in array
- *
- * Returns value of key $needle
- *
- * @param $array
- * @param $needle
- * @return mixed
- */
+* Recursive find value of key in array
+*
+* Returns value of key $needle
+*
+* @param $array
+* @param $needle
+* @return mixed
+*/
 function ting_openformat_recursive_find(array $array, $needle) {
   $iterator  = new RecursiveArrayIterator($array);
   $recursive = new RecursiveIteratorIterator($iterator,
-                   RecursiveIteratorIterator::SELF_FIRST);
+  RecursiveIteratorIterator::SELF_FIRST);
   foreach ($recursive as $key => $value) {
     if ($key === $needle) {
       return $value;
@@ -332,15 +346,15 @@ function ting_openformat_recursive_find(array $array, $needle) {
 
 
 /**
- * Parses a field array from a manifestation/work entity. returns a render array.
- * searchCode and header are specialcases what generates a field-label and a link
- *
- * @param array|string|null $elements
- * @param string $divider
- * @param bool $use_header
- * @param bool $return_link If FALSE value will be returned without markup for href. Otherwise complete markup for href is returned
- * @return render array
- */
+* Parses a field array from a manifestation/work entity. returns a render array.
+* searchCode and header are specialcases what generates a field-label and a link
+*
+* @param array|string|null $elements
+* @param string $divider
+* @param bool $use_header
+* @param bool $return_link If FALSE value will be returned without markup for href. Otherwise complete markup for href is returned
+* @return render array
+*/
 function _ting_openformat_parse_element($elements = NULL, $render_array = array(), $divider = FALSE, $use_header = TRUE, $return_link = TRUE) {
   if (!$elements) {
     return array();
@@ -455,9 +469,9 @@ function _ting_openformat_parse_element($elements = NULL, $render_array = array(
 }
 
 /**
- * @param array $urls
- * @return null|string
- */
+* @param array $urls
+* @return null|string
+*/
 function _ting_openformat_parse_urls($urls) {
   if(!is_array($urls) || !isset($urls['accessInformation'][0]['accessUrl'])){
     return NULL;
@@ -474,13 +488,13 @@ function _ting_openformat_parse_urls($urls) {
 }
 
 /**
- * Helper function to parse analytic content
- * // NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
- * @param $analytic_content
- * @param null $entity
- * @param array $options
- * @return array|null
- */
+* Helper function to parse analytic content
+* // NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
+* @param $analytic_content
+* @param null $entity
+* @param array $options
+* @return array|null
+*/
 function _ting_openformat_parse_analytic_content($analytic_content, $entity = NULL, $options = array()) {
   // Check variables
   if (!isset($analytic_content) || !isset($analytic_content['analyticContent'][0])) {
@@ -514,10 +528,10 @@ function _ting_openformat_parse_analytic_content($analytic_content, $entity = NU
 }
 
 /**
- * // NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
- * @param $element
- * @return string
- */
+* // NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
+* @param $element
+* @return string
+*/
 function _ting_openformat_parse_analytic_content_element($element) {
   $render_array = array();
   foreach ($element as $key => $value) {
@@ -534,54 +548,74 @@ function _ting_openformat_parse_analytic_content_element($element) {
 }
 
 /**
- * Helper function to parse contributors
- * @param $contributors
- * @return array
- */
+* Helper function to parse contributors
+* @param $contributors
+* @return array
+*/
 function _ting_openformat_parse_contributors($contributors) {
+  if ($contributors === NULL) {
+    return;
+  }
   $render_array = array();
-  // Parse through elements
-  if(is_string($contributors["contributors"])) {
+  if(is_string($contributors['contributor'])) {
     return _ting_openformat_get_markup_for_field($contributors, ": ");
   }
-  if (!is_array($contributors["contributors"][0][0])) {
-      $contributors["contributors"][0] = array($contributors["contributors"][0]);
-  }
-  foreach ($contributors['contributors'] as $contributor) {
-      $i = 0;
-      $count = count($contributor);
-      foreach($contributor as $key => $value) {
-          $function = $value["functionSingular"];
-          $prev_function = ($i > 0) ? $contributor[$i-1]["functionSingular"] : '';
-          $i++;
-          $next_function = $contributor[$i]["functionSingular"];
-          if ($function === $next_function) {
-              unset($value['functionSingular']);
-          } else if ($function === $prev_function) {
-              unset($value['functionPlural']);
-              unset($value['functionSingular']);
-          } else {
-              unset($value['functionPlural']);
+  foreach ($contributors as $key => $contributor) {
+    if (!is_array($contributor['contributor'][0][0])) {
+      $contributor['contributor'][0] = array($contributor['contributor'][0]);
+    }
+    $persons = $contributor['contributor'][0];
+    $count = count($persons);
+    $i = 0;
+    foreach ($persons as $key => $value) {
+      $function = (isset($value["functionSingular"])) ? $value["functionSingular"] : '';
+      if ($function !== '') {
+        $prev_function = ($i > 0) ? $contributor[$i-1]["functionSingular"] : '';
+        $i++;
+        $next_function = (isset($contributor[$i]) && isset($contributor[$i]["functionSingular"])) ? $contributor[$i]["functionSingular"] : '';
+        if ($next_function !== '' && $function === $next_function) {
+          if (isset($value['functionSingular'])) {
+            unset($value['functionSingular']);
           }
-          $markup = _ting_openformat_get_markup_for_field($value, ": ");
-          if ($i !== $count) {
-              $markup[] = array(
-                '#markup' => " ; ",
-              );
+        } else if ($prev_function !== '' && $function === $prev_function) {
+          if (isset($value['functionPlural'])) {
+            unset($value['functionPlural']);
           }
-          $render_array = array_merge($render_array, $markup);
+          if (isset($value['functionSingular'])) {
+            unset($value['functionSingular']);
+          }
+        } else {
+          if (isset($value['functionPlural'])) {
+            unset($value['functionPlural']);
+          }
+        }
+        $markup = _ting_openformat_get_markup_for_field($value, ": ");
+        if ($i === 1) {
+          $markup[] = array(
+            '#markup' => "",
+          );
+        }
+        else if ($i < $count) {
+          $markup[] = array(
+            '#markup' => " ; ",
+          );
+        }
+      } else {
+        $markup = _ting_openformat_get_markup_for_field($value, "");
       }
+      $render_array = array_merge($render_array, $markup);
+    }
   }
   return $render_array;
 }
 
 /**
- * Helper function to parse tracks
- * @param $tracks
- * @param null $entity
- * @param array $options
- * @return array|null
- */
+* Helper function to parse tracks
+* @param $tracks
+* @param null $entity
+* @param array $options
+* @return array|null
+*/
 function _ting_openformat_parse_tracks($tracks, $entity = NULL, $options = array()) {
   if (!isset($tracks) || !isset($tracks[1]['track'])) {
     return null;
@@ -594,10 +628,10 @@ function _ting_openformat_parse_tracks($tracks, $entity = NULL, $options = array
 }
 
 /**
- * Helper function to parse track elements
- * @param $element
- * @return string
- */
+* Helper function to parse track elements
+* @param $element
+* @return string
+*/
 function _ting_openformat_parse_tracks_element($element) {
   $render_array = array();
   if ($element === NULL) {
@@ -606,7 +640,7 @@ function _ting_openformat_parse_tracks_element($element) {
   $count = count($element);
   $i = 0;
   if (isset($element['title'])) {
-      $element = array($element);
+    $element = array($element);
   }
   foreach ($element as $key => $value) {
     $i++;
@@ -633,20 +667,19 @@ function _ting_openformat_parse_tracks_element($element) {
 
 }
 
-
 /**
- * Implements hook_field_is_empty().
- * @return boolean
- */
+* Implements hook_field_is_empty().
+* @return boolean
+*/
 function ting_openformat_field_is_empty($item, $field) {
   return empty($item['value']) && (string) $item['value'] !== '0';
 }
 
 /**
- * Helper function to return text part of a render array
- * @param $render_array
- * @return string
- */
+* Helper function to return text part of a render array
+* @param $render_array
+* @return string
+*/
 function _ting_openformat_get_render_string($render_array) {
   if ( is_string($render_array)){
     return $render_array;
@@ -660,6 +693,5 @@ function _ting_openformat_get_render_string($render_array) {
   array_walk_recursive($render_array, $callback);
   return $item;
 }
-
 
 //900 lines before refactoring
