@@ -121,7 +121,13 @@ function ting_openformat_bibdk_fields() {
       'display' => array('full'),
       'description' => 'contributors to manifestation',
       'callback method' =>  'getContributors',
-
+    ),
+    'bibdk_mani_contribs_extra' => array(
+      'label' => 'Contributors extra',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
+      'display' => array('full'),
+      'description' => 'contributors extra to manifestation',
+      'callback method' =>  'getContributorExtra',
     ),
     'bibdk_mani_type' => array(
       'label' => 'Manifestation type',

@@ -96,6 +96,15 @@ class ManifestationMaster {
    * zero or more occurence(s)
    */
 
+  public function getContributorExtra() {
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('contributors' => array('contributorExtra')));
+    return $result;
+  }
+
+  /* \brief format
+   * zero or more occurence(s)
+   */
+
   public function getFormat() {
     $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('format'));
     return $result;
