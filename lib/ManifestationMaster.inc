@@ -61,7 +61,7 @@ class ManifestationMaster {
    */
 
   public function getAlternativeTitle() {
-    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('alternativeTitle' => array('alternativeTitleDescriptor' => 'header', "alternativeTitleElement")));
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('alternativeTitle' => array('alternativeTitleDescriptor' => 'header', "alternativeTitle")));
     return $result;
   }
 
