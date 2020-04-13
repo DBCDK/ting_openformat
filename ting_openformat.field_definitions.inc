@@ -445,6 +445,13 @@ function ting_openformat_bibdk_fields() {
       'description' => 'Shelf of manifestation',
       'callback method' =>  'getShelf',
     ),
+    'bibdk_mani_shelf_public' => array(
+      'label' => 'Shelf Public Libraries',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
+      'display' => array('full'),
+      'description' => 'Shelf public libraries to manifestation',
+      'callback method' =>  'getShelfPublicLibrary',
+    ),
     'bibdk_mani_section' => array(
       'entity_type' => array('bibdkManifestation'),
       'label' => 'Section',

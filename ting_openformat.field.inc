@@ -130,11 +130,11 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         break;
       case 'bibdk_mani_contribs':
         $contrib = $entity->getContributors();
-        $value = _ting_openformat_parse_contributors($contrib);
+        $value = _ting_openformat_parse_contributors($contrib, " ; ");
         break;
       case 'bibdk_mani_contribs_extra':
         $contrib_extra = $entity->getContributorExtra();
-        $value = _ting_openformat_get_markup_for_field($contrib_extra, "<br />");
+        $value = _ting_openformat_get_markup_for_field($contrib_extra, " ; ");
         break;
       case 'bibdk_mani_description_note':
         $desNote = $entity->getDescriptionNote();
