@@ -61,7 +61,7 @@ class ManifestationMaster {
    */
 
   public function getAlternativeTitle() {
-    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('alternativeTitle' => array('alternativeTitleDescriptor' => 'header', "alternativeTitleElement")));
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('alternativeTitle' => array('alternativeTitleDescriptor' => 'header', "alternativeTitle")));
     return $result;
   }
 
@@ -90,6 +90,15 @@ class ManifestationMaster {
 
   public function getContributorsNoFunction() {
     return TingOpenformatMethods::parseFields($this->_getDetails(), array('contributors' => array('searchCode')));
+  }
+
+  /* \brief format
+   * zero or more occurence(s)
+   */
+
+  public function getContributorExtra() {
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('contributors' => array('contributorExtra')));
+    return $result;
   }
 
   /* \brief format
@@ -198,6 +207,15 @@ class ManifestationMaster {
     $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
 
     return (is_array($result)) ? reset($result) : $result;
+  }
+
+  /* \brief shelfPublicLibrary
+   * zero or more occurence(s)
+   */
+
+  public function getShelfPublicLibrary() {
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), array('shelf' => array('shelfPublicLibrary')));
+    return $result;
   }
 
   /* \brief textlevels

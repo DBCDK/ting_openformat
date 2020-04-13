@@ -121,7 +121,13 @@ function ting_openformat_bibdk_fields() {
       'display' => array('full'),
       'description' => 'contributors to manifestation',
       'callback method' =>  'getContributors',
-
+    ),
+    'bibdk_mani_contribs_extra' => array(
+      'label' => 'Contributors extra',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
+      'display' => array('full'),
+      'description' => 'contributors extra to manifestation',
+      'callback method' =>  'getContributorExtra',
     ),
     'bibdk_mani_type' => array(
       'label' => 'Manifestation type',
@@ -438,6 +444,13 @@ function ting_openformat_bibdk_fields() {
       'display' => array('full'),
       'description' => 'Shelf of manifestation',
       'callback method' =>  'getShelf',
+    ),
+    'bibdk_mani_shelf_public' => array(
+      'label' => 'Shelf Public Libraries',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
+      'display' => array('full'),
+      'description' => 'Shelf public libraries to manifestation',
+      'callback method' =>  'getShelfPublicLibrary',
     ),
     'bibdk_mani_section' => array(
       'entity_type' => array('bibdkManifestation'),
