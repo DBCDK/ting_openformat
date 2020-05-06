@@ -587,25 +587,26 @@ function _ting_openformat_parse_contributors($contributors) {
           if (isset($value['functionSingular'])) {
             unset($value['functionSingular']);
           }
-
         } else {
           if (isset($value['functionPlural'])) {
             unset($value['functionPlural']);
           }
         }
         $markup = _ting_openformat_get_markup_for_field($value, ": ");
-        if ($i === 0) {
+        if ($i < $count) {
           $markup[] = array(
-            '#markup' => "",
-          );
-        }
-        else if ($i < $count) {
-          $markup[] = array(
-            '#markup' => ", ",
+            '#markup' => "; ",
           );
         }
       } else {
-        $markup = _ting_openformat_get_markup_for_field($value, " ; ");
+        $i++;
+        $markup = _ting_openformat_get_markup_for_field($value, "");
+        if ($i < $count) {
+          $markup[] = array(
+            '#markup' => "; ",
+          );
+        }
+
       }
       $render_array = array_merge($render_array, $markup);
     }
