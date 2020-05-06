@@ -89,7 +89,16 @@ class ManifestationMaster {
    */
 
   public function getContributorsNoFunction() {
-    return TingOpenformatMethods::parseFields($this->_getDetails(), array('contributors' => array('searchCode')));
+    $elements = $this->_getDetails();
+    $fields = array(
+      'contributors' => array(
+        'contributor' => array(
+          'searchCode'
+        )
+      )
+    );
+    $result = TingOpenformatMethods::parseFields($elements, $fields);
+    return $result['contributors'];
   }
 
   /* \brief format

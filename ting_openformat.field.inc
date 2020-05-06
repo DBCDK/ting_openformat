@@ -130,7 +130,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         break;
       case 'bibdk_mani_contribs':
         $contrib = $entity->getContributors();
-        $value = _ting_openformat_parse_contributors($contrib, " ; ");
+        $value = _ting_openformat_parse_contributors($contrib);
         break;
       case 'bibdk_mani_contribs_extra':
         $contrib_extra = $entity->getContributorExtra();
@@ -447,7 +447,6 @@ function _ting_openformat_parse_element($elements = NULL, $render_array = array(
       );
     }
   }
-
   if (sizeof($render_array) > 1 && $divider) {
     $tmp_array = array();
     foreach ($render_array as $key => $element) {
@@ -574,38 +573,39 @@ function _ting_openformat_parse_contributors($contributors) {
     foreach ($persons as $key => $value) {
       $function = (isset($value["functionSingular"])) ? $value["functionSingular"] : '';
       if ($function !== '') {
-        $prev_function = ($i > 0) ? $contributor[$i-1]["functionSingular"] : '';
+        $prev_function = ($i > 0) ? $persons[$i-1]["functionSingular"] : '';
         $i++;
-        $next_function = (isset($contributor[$i]) && isset($contributor[$i]["functionSingular"])) ? $contributor[$i]["functionSingular"] : '';
-        if ($next_function !== '' && $function === $next_function) {
-          if (isset($value['functionSingular'])) {
-            unset($value['functionSingular']);
-          }
-        } else if ($prev_function !== '' && $function === $prev_function) {
+        $next_function = (isset($persons[$i]) && isset($persons[$i]["functionSingular"])) ? $persons[$i]["functionSingular"] : '';
+        if ($function === $prev_function) {
           if (isset($value['functionPlural'])) {
             unset($value['functionPlural']);
           }
           if (isset($value['functionSingular'])) {
             unset($value['functionSingular']);
           }
+        } else if ($function === $next_function) {
+          if (isset($value['functionSingular'])) {
+            unset($value['functionSingular']);
+          }
+
         } else {
           if (isset($value['functionPlural'])) {
             unset($value['functionPlural']);
           }
         }
         $markup = _ting_openformat_get_markup_for_field($value, ": ");
-        if ($i === 1) {
+        if ($i === 0) {
           $markup[] = array(
             '#markup' => "",
           );
         }
         else if ($i < $count) {
           $markup[] = array(
-            '#markup' => " ; ",
+            '#markup' => ", ",
           );
         }
       } else {
-        $markup = _ting_openformat_get_markup_for_field($value, "");
+        $markup = _ting_openformat_get_markup_for_field($value, " ; ");
       }
       $render_array = array_merge($render_array, $markup);
     }
