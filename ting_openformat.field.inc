@@ -374,8 +374,8 @@ function _ting_openformat_parse_element($elements = NULL, $render_array = array(
       '#openformat_field' => array('#markup' => $render_array),
     );
   }
-  $has_search_code = false;
-  foreach ($elements as $key => $value) {  
+  $has_search_code = FALSE;
+  foreach ($elements as $key => $value) {
     if ( is_array($value) && array_key_exists('accessUrl', $value ) ) {
       $txt = '';
       if (!empty($value['accessUrlDescriptor'])) {
@@ -415,7 +415,7 @@ function _ting_openformat_parse_element($elements = NULL, $render_array = array(
       }
     }
     elseif ($key === 'searchCode') {
-      $has_search_code = true;
+      $has_search_code = TRUE;
       if ($return_link && isset($elements['searchCode'])) {
         $render_array[] = array(
           '#theme' => 'ting_openformat_field',
@@ -439,7 +439,7 @@ function _ting_openformat_parse_element($elements = NULL, $render_array = array(
         );
       }
     }
-    elseif (!$has_search_code && $key === display) {
+    elseif (!$has_search_code && $key === 'display') {
       $render_array[] = array(
         '#theme' => 'ting_openformat_field',
         '#openformat_field' => array('#markup' => $elements['display']),
