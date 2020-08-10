@@ -9,7 +9,7 @@
  * implemented (requires bibdk_reservation module)
  *
  * @param BibdkCollection $bibdkobject
- * @return string
+ * @return array
  */
 function ting_openformat_collection_view(BibdkCollection $bibdkobject, $full_view) {
   //@todo use drupal_clean_css_identifier() -> This requires a lot of py tests to be updated
@@ -79,7 +79,7 @@ function _ting_openformat_collection_full_view(BibdkCollection $bibdkobject, $ui
  * @param $ids
  * @param $uid
  * @param int $tracking_id
- * @return string
+ * @return array
  */
 function ting_openformat_load_single_full_work($collection, $ids, $uid, $tracking_id = 0) {
   module_invoke_all('show_manifestation_info_prerender', $ids, $uid);
@@ -345,7 +345,7 @@ function _ting_openformat_brief_display_title(BibdkCollection $collection) {
  * collection
  *
  * @param BibdkCollection $bibdkobject
- * @return String html
+ * @return array
  */
 function _ting_openformat_get_types_list($bibdkobject) {
   $list = $bibdkobject->getWorkTypes();
@@ -408,9 +408,9 @@ function ting_openformat_show_info_get_form($form, $form_state, $bibdkObject, $u
 /**
  * Ajax callback. Called when user clicks 'view more information' on a work on search results page
  *
- * @param type $form
- * @param type $form_state
- * @return type
+ * @param array $form
+ * @param array $form_state
+ * @return array
  */
 function ting_openformat_show_info_ajax_callback(&$form, $form_state) {
   $ids = $form_state['clicked_button']['#ids'];
