@@ -134,7 +134,7 @@ function theme_ting_openformat_toggle_link($variables) {
     'class' => array('toggle-text', 'toggle-hide'))
   );
   $options = array(
-    'html' => FALSE,
+    'html' => TRUE,
     'fragment' => 'toggle-link',
     'external' => TRUE,
     'attributes' => $variables['attributes'] + array('data-toggle-link' => TRUE),

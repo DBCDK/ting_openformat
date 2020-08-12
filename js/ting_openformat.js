@@ -5,7 +5,7 @@
  *
  */
 
-(function tingOpenformat($){
+(function tingOpenformat($) {
 
   if (typeof(Drupal.ajax) !== "undefined") {
 
