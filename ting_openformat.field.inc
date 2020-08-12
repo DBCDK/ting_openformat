@@ -160,6 +160,10 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $urls = $entity->getAccessInformation();
         $value = _ting_openformat_get_markup_for_field($urls, '<br/>');
         break;
+      case 'bibdk_mani_access_note':
+        $urls = $entity->getAccessNote();
+        $value = _ting_openformat_get_markup_for_field($urls, '<br/>');
+        break;
       case 'bibdk_mani_edition':
         $edition = $entity->getEdition();
         $value = _ting_openformat_get_markup_for_field($edition, ', ');
@@ -215,7 +219,6 @@ function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_
   if (!is_array($elements)) {
     $elements = array($elements);
   }
-
   $empty = TRUE;
   $callback = function($value, $key) use (&$empty) {
     if (!empty($value)) {
@@ -376,7 +379,49 @@ function _ting_openformat_parse_element($elements = NULL, $render_array = array(
   }
   $has_search_code = FALSE;
   foreach ($elements as $key => $value) {
-    if ( is_array($value) && array_key_exists('accessUrl', $value ) ) {
+    if ($key === 'accessInformationNote' && is_array($value)) {
+      foreach ($value as $k => $v) {
+        if (array_key_exists('accessUrl', $v )) {
+          $header = array(
+            '#theme' => 'ting_openformat_field',
+            '#openformat_header' =>  array('#markup' => check_plain($v['accessUrlDescriptor'])),
+          );
+          $render_array[] = array(
+            '#theme' => 'ting_openformat_field',
+            '#openformat_field' => array(
+              '#theme' => 'link',
+              '#text' => $v['accessUrlDisplay'],
+              '#path' => $v['accessUrl'],
+              '#options' => array(
+                'attributes' => array('target' => '_blank'),
+                'html' => TRUE,
+              ),
+            ),
+          );
+        }
+        else if (is_array($value)) {
+          foreach ($v as $element) {
+            $header = array(
+              '#theme' => 'ting_openformat_field',
+              '#openformat_header' =>  array('#markup' => check_plain($element['accessUrlDescriptor'])),
+            );
+            $render_array[] = array(
+              '#theme' => 'ting_openformat_field',
+              '#openformat_field' => array(
+                '#theme' => 'link',
+                '#text' => $element['accessUrlDisplay'],
+                '#path' => $element['accessUrl'],
+                '#options' => array(
+                  'attributes' => array('target' => '_blank'),
+                  'html' => TRUE,
+                ),
+              ),
+            );
+          }
+        }
+      }
+    }
+    else if ( is_array($value) && array_key_exists('accessUrl', $value ) ) {
       $txt = '';
       if (!empty($value['accessUrlDescriptor'])) {
         // NOTE - pjo 200315 can this be an array ?? - for now grab the first

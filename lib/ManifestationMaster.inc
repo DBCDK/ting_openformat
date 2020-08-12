@@ -474,6 +474,27 @@ class ManifestationMaster {
     return $result;
   }
 
+  /**
+   * Checks accessInformationNote on the manifestation and returns any URL's found.
+   * Returning NULL if none is found.
+   *
+   * accessInformation zero or 1 occurence
+   * accessUrl 1 or more occurence(s)
+   *
+   * @return array|null
+   */
+  public function getAccessNote() {
+    $fields = array(
+      'accessInformationNote' => array(
+        'accessUrl',
+        'accessUrlDescriptor',
+        'accessUrlDisplay',
+      )
+    );
+    $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
+    return $result;
+  }
+
   /* \brief publisher
    * zero or more occurences
    */

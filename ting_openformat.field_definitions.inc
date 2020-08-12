@@ -431,6 +431,13 @@ function ting_openformat_bibdk_fields() {
       'description' => 'Access Information of manifestation',
       'callback method' =>  'getAccessInformation',
     ),
+    'bibdk_mani_access_note' => array(
+      'label' => 'Access Note',
+      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
+      'display' => array('full'),
+      'description' => 'Access Note of manifestation',
+      'callback method' =>  'getAccessNote',
+    ),
     'bibdk_mani_pub_format' => array(
       'label' => 'Publication Format',
       'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
