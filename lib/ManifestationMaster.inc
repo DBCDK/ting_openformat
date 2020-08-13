@@ -470,8 +470,7 @@ class ManifestationMaster {
         'accessUrlDisplay',
       )
     );
-    $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
-    return $result;
+    return TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
   }
 
   /**
@@ -491,8 +490,7 @@ class ManifestationMaster {
         'accessUrlDisplay',
       )
     );
-    $result = TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
-    return $result;
+    return TingOpenformatMethods::parseFields($this->_getDetails(), $fields);
   }
 
   /* \brief publisher
