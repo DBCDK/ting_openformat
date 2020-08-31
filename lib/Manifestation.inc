@@ -192,7 +192,10 @@ class Manifestation extends ManifestationMaster {
   /**
    * @return array|mixed|null
    */
-  public function getMessageCategory(){
+  public function getMessageCategory() {
+    if (!isset($this->manifestation->adminData)) {
+      return FALSE;
+    }
     $result = TingOpenformatMethods::parseFields($this->manifestation->adminData, array('messageCategory'));
     return (is_array($result)) ? reset($result) : $result;
   }
@@ -226,6 +229,9 @@ class Manifestation extends ManifestationMaster {
    * @return string|null
    */
   public function getTypeGroup() {
+    if (!isset($this->manifestation->adminData)) {
+      return FALSE;
+    }
     $result = TingOpenformatMethods::parseFields($this->manifestation->adminData, array('typeGroup'));
 
     return (is_array($result)) ? reset($result) : $result;
@@ -237,6 +243,9 @@ class Manifestation extends ManifestationMaster {
    * @return string|null
    */
   public function getHoldingsCount() {
+    if (!isset($this->manifestation->adminData)) {
+      return FALSE;
+    }
     $result = TingOpenformatMethods::parseFields($this->manifestation->adminData, array('holdingsCount'));
 
     return (is_array($result)) ? reset($result) : $result;
@@ -247,6 +256,9 @@ class Manifestation extends ManifestationMaster {
    * zero or one occurence
    */
   public function getRequestMethod() {
+    if (!isset($this->manifestation->adminData)) {
+      return FALSE;
+    }
     $result = TingOpenformatMethods::parseFields($this->manifestation->adminData, array('requestMethod'));
 
     return (is_array($result)) ? reset($result) : $result;
@@ -257,6 +269,9 @@ class Manifestation extends ManifestationMaster {
    * zero or one occurence
    */
   public function getRestrictedUse() {
+    if (!isset($this->manifestation->adminData)) {
+      return FALSE;
+    }
     $result = TingOpenformatMethods::parseFields($this->manifestation->adminData, array('restrictedUse'));
 
     return (is_array($result)) ? reset($result) : $result;
@@ -353,6 +368,9 @@ class Manifestation extends ManifestationMaster {
    * 1 occurence
    */
   public function getSubType() {
+    if (!isset($this->manifestation->main)) {
+      return FALSE;
+    }
     $result = isset($this->subType) ? $this->subType : TingOpenformatMethods::parseFields($this->manifestation->main, array('type'));
     if (isset($result['type']) && is_array($result['type'])) {
       $result['type'] = implode(' + ', $result['type']);
@@ -366,6 +384,9 @@ class Manifestation extends ManifestationMaster {
    * @return array|mixed|null
    */
   public function getOrsOrderMaterialType() {
+    if (!isset($this->manifestation->adminData)) {
+      return FALSE;
+    }
     $result = TingOpenformatMethods::parseFields($this->manifestation->adminData, array('orsOrderMaterialType'));
     return (is_array($result)) ? reset($result) : $result;
   }
@@ -376,6 +397,9 @@ class Manifestation extends ManifestationMaster {
    * @return array|mixed|null
    */
   public function getWebArchive() {
+    if (!isset($this->manifestation->adminData)) {
+      return FALSE;
+    }
     $result = TingOpenformatMethods::parseFields($this->manifestation->adminData, array('webArchive'));
     return (is_array($result)) ? reset($result) : $result;
   }
@@ -387,6 +411,9 @@ class Manifestation extends ManifestationMaster {
    * @see getSubType()
    */
   public function getType() {
+    if (!isset($this->manifestation->adminData)) {
+      return FALSE;
+    }
     $result = (isset($this->type)) ? array($this->type) : TingOpenformatMethods::parseFields($this->manifestation->adminData, array('typeGroup'));
     // <hack>: Until openFormat is 'unfrozen', we'll use getOrsOrderMaterialType() to see if type is 'periodical'
     //         Delete once openFormat return periodical types.
@@ -605,6 +632,9 @@ class Manifestation extends ManifestationMaster {
    * @return array|mixed|null
    */
   public function getHostPublicationID() {
+    if (!isset($this->manifestation->adminData)) {
+      return FALSE;
+    }
     $result = TingOpenformatMethods::parseFields($this->manifestation->adminData, array('hostPublicationID'));
 
     return (is_array($result)) ? reset($result) : $result;
