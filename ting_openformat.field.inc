@@ -160,6 +160,10 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $urls = $entity->getAccessInformation();
         $value = _ting_openformat_get_markup_for_field($urls, '<br/>');
         break;
+      case 'bibdk_mani_access_note':
+        $urls = $entity->getAccessNote();
+        $value = _ting_openformat_get_markup_for_field($urls, '<br/>');
+        break;
       case 'bibdk_mani_edition':
         $edition = $entity->getEdition();
         $value = _ting_openformat_get_markup_for_field($edition, ', ');
@@ -215,7 +219,6 @@ function _ting_openformat_get_markup_for_field($elements, $divider = ", ", $use_
   if (!is_array($elements)) {
     $elements = array($elements);
   }
-
   $empty = TRUE;
   $callback = function($value, $key) use (&$empty) {
     if (!empty($value)) {
@@ -375,27 +378,72 @@ function _ting_openformat_parse_element($elements = NULL, $render_array = array(
     );
   }
   $has_search_code = FALSE;
-  foreach ($elements as $key => $value) {
-    if ( is_array($value) && array_key_exists('accessUrl', $value ) ) {
-      $txt = '';
-      if (!empty($value['accessUrlDescriptor'])) {
-        // NOTE - pjo 200315 can this be an array ?? - for now grab the first
-        if (is_array($value['accessUrlDescriptor'])) {
-          $txt = reset($value['accessUrlDescriptor']);
-        }
-        else {
-          $txt = $value['accessUrlDescriptor'];
+  foreach ($elements as $key => $element) {
+    if ($key === 'accessInformationNote' && is_array($element)) {
+      foreach ($element as $element_key => $element_value) {
+        if (array_key_exists('accessUrl', $element_value )) {
+          if (!empty($element_value['accessUrlDescriptor'])) {
+            $header = array(
+              '#theme' => 'ting_openformat_field',
+              '#openformat_header' =>  array('#markup' => check_plain($element_value['accessUrlDescriptor'])),
+            );
+          }
+          $render_array[] = array(
+            '#theme' => 'ting_openformat_field',
+            '#openformat_field' => array(
+              '#theme' => 'link',
+              '#text' => $element_value['accessUrlDisplay'],
+              '#path' => $element_value['accessUrl'],
+              '#options' => array(
+                'attributes' => array('target' => '_blank'),
+                'html' => TRUE,
+              ),
+            ),
+          );
+        } else {
+          foreach ($element_value as $k => $v) {
+            if (!empty($v['accessUrlDescriptor'])) {
+              $header = array(
+                '#theme' => 'ting_openformat_field',
+                '#openformat_header' =>  array('#markup' => check_plain($v['accessUrlDescriptor'])),
+              );
+            }
+            $render_array[] = array(
+              '#theme' => 'ting_openformat_field',
+              '#openformat_field' => array(
+                '#theme' => 'link',
+                '#text' => $v['accessUrlDisplay'],
+                '#path' => $v['accessUrl'],
+                '#options' => array(
+                  'attributes' => array('target' => '_blank'),
+                  'html' => TRUE,
+                ),
+              ),
+            );
+          }
         }
       }
-      elseif (!empty($value['accessUrlDisplay'])) {
-        $txt = t($value['accessUrlDisplay'], array(), array('context' => 'bibdk_openformat'));
+    }
+    else if ( is_array($element) && array_key_exists('accessUrl', $element ) ) {
+      $txt = '';
+      if (!empty($element['accessUrlDescriptor'])) {
+        // NOTE - pjo 200315 can this be an array ?? - for now grab the first
+        if (is_array($element['accessUrlDescriptor'])) {
+          $txt = reset($element['accessUrlDescriptor']);
+        }
+        else {
+          $txt = $element['accessUrlDescriptor'];
+        }
+      }
+      elseif (!empty($element['accessUrlDisplay'])) {
+        $txt = t($element['accessUrlDisplay'], array(), array('context' => 'bibdk_openformat'));
       }
       $render_array[] = array(
         '#theme' => 'ting_openformat_field',
         '#openformat_field' => array(
           '#theme' => 'link',
-          '#text' => ( !empty($txt) ) ? $txt : $value['accessUrl'],
-          '#path' => $value['accessUrl'],
+          '#text' => ( !empty($txt) ) ? $txt : $element['accessUrl'],
+          '#path' => $element['accessUrl'],
           '#options' => array(
             'attributes' => array('target' => '_blank'),
             'html' => TRUE,
@@ -403,14 +451,14 @@ function _ting_openformat_parse_element($elements = NULL, $render_array = array(
         ),
       );
     }
-    else if (is_array($value)) {
-      $render_array = _ting_openformat_parse_element($value, $render_array, FALSE, $use_header, $return_link);
+    else if (is_array($element)) {
+      $render_array = _ting_openformat_parse_element($element, $render_array, FALSE, $use_header, $return_link);
     }
     elseif ($key === "header") {
       if ($use_header) {
         $header = array(
           '#theme' => 'ting_openformat_field',
-          '#openformat_header' =>  array('#markup' => check_plain($value)),
+          '#openformat_header' =>  array('#markup' => check_plain($element)),
         );
       }
     }
@@ -450,7 +498,7 @@ function _ting_openformat_parse_element($elements = NULL, $render_array = array(
     else {
       $render_array[] = array(
         '#theme' => 'ting_openformat_field',
-        '#openformat_field' => array('#markup' => check_plain($value)),
+        '#openformat_field' => array('#markup' => check_plain($element)),
       );
     }
   }
