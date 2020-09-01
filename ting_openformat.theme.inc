@@ -115,13 +115,6 @@ function theme_ting_openformat_toggle_link($variables) {
   $toggle[] = array(
     '#theme' => 'html_tag',
     '#tag' => 'span',
-    '#value' => '&nbsp;',
-    '#attributes' =>  array(
-    'class' => array('toggle-link-icon') + array($variables['icon']))
-  );
-  $toggle[] = array(
-    '#theme' => 'html_tag',
-    '#tag' => 'span',
     '#value' => $variables['show'],
     '#attributes' =>  array(
     'class' => array('toggle-text'))
