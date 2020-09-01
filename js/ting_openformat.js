@@ -120,7 +120,7 @@
   function toggleManifestationsEventListener(element) {
     element.on( "click", function(e) {
       // The link needs to change when activated.
-      $(".manifestation-toggle-link").toggleClass("is-toggled");
+      $(this).find(".manifestation-toggle-link").toggleClass("is-toggled");
       $(this).siblings(".manifestations").toggleClass("is-toggled");
     });
   }
