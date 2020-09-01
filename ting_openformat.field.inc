@@ -663,7 +663,7 @@ function _ting_openformat_parse_contributors($contributors) {
         }
 
       }
-      $render_array = array_merge($render_array, $markup);
+      $render_array = isset($markup) ? array_merge($render_array, $markup) : $render_array;
     }
   }
   return $render_array;
