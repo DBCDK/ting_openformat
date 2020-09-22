@@ -458,10 +458,11 @@ class Manifestation extends ManifestationMaster {
   /**
    * @return bool
    */
-  public function getSpecifyArticleData() {
-    $result = TingOpenformatMethods::parseFields($this->manifestation->adminData, array('specifyArticleData'));
-    return filter_var(reset($result), FILTER_VALIDATE_BOOLEAN);
-  }
+   public function getSpecifyArticleData() {
+     $result = TingOpenformatMethods::parseFields($this->manifestation->adminData, array('specifyArticleData')) !== NULL ?
+       TingOpenformatMethods::parseFields($this->manifestation->adminData, array('specifyArticleData')) : array();
+     return filter_var(reset($result), FILTER_VALIDATE_BOOLEAN);
+   }
 
   /**
    * @return null|array
