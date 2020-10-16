@@ -615,12 +615,14 @@ function _ting_openformat_parse_contributors($contributors) {
     return;
   }
   $render_array = array();
-  if(is_string($contributors['contributor'])) {
+  if (isset($contributors['contributor']) &&
+      is_string($contributors['contributor'])) {
     return _ting_openformat_get_markup_for_field($contributors, ": ");
   }
   foreach ($contributors as $key => $contributor) {
     if (isset($contributor['contributor'])) {
-      if (!is_array($contributor['contributor'][0][0])) {
+      if (isset($contributor['contributor'][0][0]) &&
+         !is_array($contributor['contributor'][0][0])) {
         $contributor['contributor'][0] = array($contributor['contributor'][0]);
       }
       $persons = $contributor['contributor'][0];

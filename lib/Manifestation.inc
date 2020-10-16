@@ -458,10 +458,11 @@ class Manifestation extends ManifestationMaster {
   /**
    * @return bool
    */
-  public function getSpecifyArticleData() {
-    $result = TingOpenformatMethods::parseFields($this->manifestation->adminData, array('specifyArticleData'));
-    return filter_var(reset($result), FILTER_VALIDATE_BOOLEAN);
-  }
+   public function getSpecifyArticleData() {
+     $result = TingOpenformatMethods::parseFields($this->manifestation->adminData, array('specifyArticleData')) !== NULL ?
+       TingOpenformatMethods::parseFields($this->manifestation->adminData, array('specifyArticleData')) : array();
+     return filter_var(reset($result), FILTER_VALIDATE_BOOLEAN);
+   }
 
   /**
    * @return null|array
@@ -578,13 +579,12 @@ class Manifestation extends ManifestationMaster {
    * @return array
    */
   public function getMaterialReview() {
-
     if (!isset($this->manifestation->relationsData)) {
       return array();
     }
     $reviews = array();
     foreach ($this->manifestation->relationsData as $relation) {
-      if ($relation->relationType == 'dbcaddi:hasReview' && strpos($relation->relationUri, '870976-anmeld') !== FALSE) {
+      if ($relation->relationType == 'dbcaddi:hasReview' || $relation->relationType == 'dbcaddi:hasReusedReview' && strpos($relation->relationUri, '870976-anmeld') !== FALSE) {
         $reviews[] = $relation->relationUri;
       }
     }
