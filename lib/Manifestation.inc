@@ -584,7 +584,7 @@ class Manifestation extends ManifestationMaster {
     }
     $reviews = array();
     foreach ($this->manifestation->relationsData as $relation) {
-      if ($relation->relationType == 'dbcaddi:hasReview' || $relation->relationType == 'dbcaddi:hasReusedReview' && strpos($relation->relationUri, '870976-anmeld') !== FALSE) {
+      if (($relation->relationType == 'dbcaddi:hasReview' || $relation->relationType == 'dbcaddi:hasReusedReview') && strpos($relation->relationUri, '870976-anmeld') !== FALSE) {
         $reviews[] = $relation->relationUri;
       }
     }
