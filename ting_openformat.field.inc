@@ -621,8 +621,7 @@ function _ting_openformat_parse_contributors($contributors) {
   }
   foreach ($contributors as $key => $contributor) {
     if (isset($contributor['contributor'])) {
-      if (isset($contributor['contributor'][0][0]) &&
-         !is_array($contributor['contributor'][0][0])) {
+      if (!isset($contributor['contributor'][0][0])) {
         $contributor['contributor'][0] = array($contributor['contributor'][0]);
       }
       $persons = $contributor['contributor'][0];
