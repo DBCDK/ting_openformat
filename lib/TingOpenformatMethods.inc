@@ -37,6 +37,9 @@ class TingOpenformatMethods {
     }
     foreach ($stdObjects as $key => $object) {
       if (isset($object->searchCode) || isset($object->value)) {
+        if (is_array($object->searchCode)) {
+          $object->searchCode = $object->searchCode[0];
+        }
         if (isset($object->searchCode->{'$'}) && isset($object->searchString->{'$'})) {
           $subject['searchCode'] = $object->searchCode->{'$'} . '="' . $object->searchString->{'$'} . '"';
         }
