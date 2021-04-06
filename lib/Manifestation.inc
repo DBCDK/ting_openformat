@@ -61,8 +61,6 @@ class Manifestation extends ManifestationMaster {
    * @return string|null
    */
   public function getTitleExtra() {
-    $fields = array('titleSpecific');
-    $elements = isset($this->getWork()->title) ? $this->getWork()->title : NULL;
     $specific = $this->getTitleSpecific();
     $full = $this->getTitle();
 
