@@ -62,9 +62,10 @@ class Manifestation extends ManifestationMaster {
    */
   public function getTitleExtra() {
     $specific = $this->getTitleSpecific();
-    $full = $this->getTitle();
+    $extra = $this->getTitle();
 
-    return ($specific !== $full) ? $full : NULL;
+    // We only need the extra title, when it is not the same as the specific title.
+    return ($specific !== $extra) ? $extra : NULL;
   }
 
   /**
