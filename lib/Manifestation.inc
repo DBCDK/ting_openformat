@@ -17,9 +17,6 @@ class Manifestation extends ManifestationMaster {
     if (isset($this->manifestation->main)) {
       $this->fields = $this->manifestation->main;
     }
-    // NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
-    $this->getAnalyticContent();
-    // New bibdkWorkDisplay
     $this->getTrackContent();
   }
 
@@ -45,6 +42,7 @@ class Manifestation extends ManifestationMaster {
     $fields = array('titleFull');
     $elements = isset($this->getWork()->title) ? $this->getWork()->title : NULL;
     $result = TingOpenformatMethods::parseFields($elements, $fields);
+
     return (is_array($result)) ? reset($result) : $result;
   }
 
@@ -57,6 +55,17 @@ class Manifestation extends ManifestationMaster {
     $result = TingOpenformatMethods::parseFields($elements, $fields);
 
     return (is_array($result)) ? reset($result) : $result;
+  }
+
+  /**
+   * @return string|null
+   */
+  public function getTitleExtra() {
+    $specific = $this->getTitleSpecific();
+    $extra = $this->getTitle();
+
+    // We only need the extra title, when it is not the same as the specific title.
+    return ($specific !== $extra) ? $extra : NULL;
   }
 
   /**

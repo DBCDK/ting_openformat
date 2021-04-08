@@ -146,13 +146,7 @@ function ting_openformat_field_formatter_view($entity_type, $entity, $field, $in
         $infotext = ($infotext) ? t('drupal_text_' . $infotext, array(), array('context' => 'bibdk_openformat')) : NULL;
         $value = _ting_openformat_get_markup_for_field($infotext);
         break;
-      // NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
-      case 'bibdk_mani_analytic_content':
-        $analytic = $entity->getAnalyticContent();
-        $value = _ting_openformat_parse_analytic_content($analytic);
-        break;
-      // New bibdkWorkDisplay
-        case 'bibdk_mani_tracks':
+      case 'bibdk_mani_tracks':
         $tracks = $entity->getTrackContent();
         $value = _ting_openformat_parse_tracks($tracks);
         break;
@@ -543,66 +537,6 @@ function _ting_openformat_parse_urls($urls) {
   }
 
   return $links;
-}
-
-/**
-* Helper function to parse analytic content
-* // NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
-* @param $analytic_content
-* @param null $entity
-* @param array $options
-* @return array|null
-*/
-function _ting_openformat_parse_analytic_content($analytic_content, $entity = NULL, $options = array()) {
-  // Check variables
-  if (!isset($analytic_content) || !isset($analytic_content['analyticContent'][0])) {
-    return null;
-  }
-  $analytic_content = reset($analytic_content['analyticContent']);
-  $render_array = array();
-
-  // Parse through elements
-  foreach ($analytic_content as $element) {
-    $element_markup = _ting_openformat_parse_analytic_content_element($element);
-    // if element has analyticContributor it should start on a new line else it should be divided with ;
-    if (!empty($render_array)) {
-      if (array_key_exists('analyticContributor', $element) || (isset($prevElement) && array_key_exists('analyticContributor', $prevElement))) {
-        $render_array[] = array('#markup' => "<br/>");
-        $render_array = array_merge($render_array, $element_markup);
-      }
-      else {
-        $render_array[] = array('#markup' => " ; ");
-        $render_array = array_merge($render_array, $element_markup);
-      }
-    } else {
-      $render_array = $element_markup;
-    }
-    $prevElement = $element;
-  }
-
-  $render_array = ting_openformat_text_summary($render_array);
-
-  return $render_array;
-}
-
-/**
-* // NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
-* @param $element
-* @return string
-*/
-function _ting_openformat_parse_analytic_content_element($element) {
-  $render_array = array();
-  foreach ($element as $key => $value) {
-    $markup = _ting_openformat_get_markup_for_field($value, " ");
-    if ($key == 'analyticContributor') {
-      $markup[] = array(
-        '#markup' => ": ",
-      );
-    }
-    $render_array = array_merge($render_array, $markup);
-  }
-  return $render_array;
-
 }
 
 /**
