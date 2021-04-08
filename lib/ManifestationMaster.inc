@@ -569,16 +569,6 @@ class ManifestationMaster {
     return $result;
   }
 
-  // NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
-  public function getAnalyticContent() {
-    $fields = array('analyticContent' => array(
-        'analyticContributor' => 'searchCode',
-        'analyticTitle' => array('analyticTitleMain' => 'searchCode', 'analyticRestOfTitle')
-        ));
-    $result = TingOpenformatMethods::parseFields($this->_getContent(), $fields);
-    return $result;
-  }
-
   /**
    * Get track elements from bibdkWorkDisplay.
    *

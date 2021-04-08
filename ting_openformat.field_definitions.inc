@@ -108,6 +108,13 @@ function ting_openformat_bibdk_fields() {
       'description' => 'Specific title of manifestation',
       'callback method' =>  'getTitleSpecific',
     ),
+    'bibdk_mani_title_extra' => array(
+      'entity_type' => array('bibdkManifestation'),
+      'label' => 'Title Extra',
+      'display' => array('reservation', 'full'),
+      'description' => 'Extra title of manifestation',
+      'callback method' =>  'getTitleExtra',
+    ),
     'bibdk_mani_creators' => array(
       'label' => 'Creators',
       'entity_type' => array('bibdkManifestation'),
@@ -387,15 +394,6 @@ function ting_openformat_bibdk_fields() {
       'description' => 'Content Note of manifestation',
       'callback method' =>  'getContentPartialNote',
     ),
-    // NB! OLD VERSION - to be removed when new bibdkWorkDisplay format is fully implemented
-    'bibdk_mani_analytic_content' => array(
-      'label' => 'Analytic Content',
-      'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
-      'display' => array('full'),
-      'description' => 'Analytic content of manifestation',
-      'callback method' =>  'getAnalyticContent',
-    ),
-    // New bibdkWorkDisplay
     'bibdk_mani_tracks' => array(
       'label' => 'Tracks',
       'entity_type' => array('bibdkManifestation', 'bibdkManifestationVolume', 'bibdkManifestationSection'),
